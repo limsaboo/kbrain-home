@@ -2,3 +2,5 @@ User-agent: *
 Allow: /
 
 Sitemap: https://www.k-brain.co.kr/sitemap.xml
+
+#DaumWebMasterTool:d65b67229b199c1b69c6a04007ce8b8be40b69ba3e8778dd0387f2e33a17ecde:y4BS2xcP26jbKkk88qfvuA==
