@@ -227,6 +227,12 @@
   .form-submit:hover{background:#232855;}
 
   .senior-info-grid{grid-template-columns:repeat(2,1fr) !important;}
+  .senior-photo-wrap{margin:32px auto 0;border-radius:18px;overflow:hidden;max-width:380px !important;width:100%;box-shadow:0 10px 22px -16px rgba(20,22,44,.28);}
+  .senior-photo-wrap img.senior-photo{width:100% !important;max-width:100% !important;height:238px !important;aspect-ratio:16/10 !important;object-fit:cover !important;object-position:center 20% !important;display:block !important;}
+  @media(max-width:480px){
+    .senior-photo-wrap{max-width:300px !important;}
+    .senior-photo-wrap img.senior-photo{height:188px !important;}
+  }
   @media(max-width:480px){
     .senior-info-grid{gap:14px !important;}
     .senior-info-grid > div{padding:20px !important;}
