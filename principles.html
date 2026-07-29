@@ -7,8 +7,17 @@
 <meta name="description" content="한국뇌심리연구소의 개발 원칙, 철학, 교육 목적, 윤리 원칙을 소개합니다. 모든 진단·체크 프로그램은 의료적 진단이 아닌 교육 목적으로 설계되었습니다.">
 <meta name="robots" content="index,follow">
 <link rel="canonical" href="https://www.k-brain.co.kr/principles.html">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:title" content="개발 원칙 | 한국뇌심리연구소">
+<meta property="og:description" content="한국뇌심리연구소의 개발 원칙과 철학을 소개합니다.">
+<meta property="og:image" content="https://www.k-brain.co.kr/og-image.png">
+<meta property="og:url" content="https://www.k-brain.co.kr/principles.html">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://www.k-brain.co.kr/og-image.png">
 <meta name="theme-color" content="#161a3d">
-<style>
 <style>
   :root{
     --bg:#f3faf8;
@@ -278,6 +287,9 @@
 
   .skip-link{position:absolute;left:-999px;top:0;background:var(--navy);color:#fff;padding:12px 20px;z-index:1000;border-radius:0 0 8px 0;}
   .skip-link:focus{left:0;}
+  a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid var(--teal);outline-offset:2px;border-radius:4px;}
+  .navlinks a:focus-visible{outline-offset:-2px;}
+  .navlinks a[aria-current="true"]{color:var(--teal);}
 
   /* ---------- Success modal ---------- */
   .modal-overlay{position:fixed;inset:0;background:rgba(20,22,44,.55);display:none;align-items:center;justify-content:center;z-index:1000;padding:20px;}
@@ -308,14 +320,39 @@
       width:72px !important;
       height:104px !important;
     }
-    section, .wrap, header, footer, .sns-band, .hero-band, .hero-highlight, .age-strip{
+    section, .wrap, header, footer, .sns-band, .hero-highlight{
       max-width:100vw !important;
       overflow-x:hidden !important;
     }
     img{ max-width:100% !important; height:auto !important; }
   }
+  .who-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+  @media(min-width:640px){.who-grid{grid-template-columns:repeat(5,1fr);}}
+  @media(min-width:1024px){.who-grid{grid-template-columns:repeat(9,1fr);}}
+  .who-item{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px 10px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:8px;font-size:13px;font-weight:700;color:var(--ink);box-shadow:0 8px 20px -18px rgba(20,22,44,.25);transition:.2s;}
+  .who-item:hover{transform:translateY(-3px);box-shadow:0 14px 26px -14px rgba(20,22,44,.3);}
+  .who-ic{font-size:26px;}
+  .process-track{display:flex;flex-direction:column;gap:0;max-width:640px;margin:0 auto;}
+  @media(min-width:800px){.process-track{flex-direction:row;align-items:flex-start;max-width:none;}}
+  .process-step{flex:1;display:flex;flex-direction:column;align-items:center;text-align:center;padding:20px 14px;position:relative;}
+  .process-num{width:44px;height:44px;border-radius:50%;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;margin-bottom:12px;flex-shrink:0;}
+  .process-title{font-weight:800;font-size:15px;color:var(--ink);margin-bottom:6px;}
+  .process-desc{font-size:13px;color:var(--body);line-height:1.6;}
+  .process-arrow{display:flex;align-items:center;justify-content:center;color:var(--line);font-size:20px;padding:0 4px;}
+  @media(max-width:799px){.process-arrow{transform:rotate(90deg);padding:2px 0;}}
+  .faq-item{background:#fff;border:1px solid var(--line);border-radius:14px;padding:22px 24px;margin-bottom:14px;box-shadow:0 8px 20px -18px rgba(20,22,44,.22);}
+  .faq-q{font-weight:800;font-size:15px;color:var(--ink);display:flex;gap:10px;margin-bottom:8px;}
+  .faq-q .qmark{color:var(--teal);flex-shrink:0;}
+  .faq-a{font-size:14px;color:var(--body);line-height:1.8;padding-left:26px;}
+  .trust-cta{background:var(--navy);color:#fff;text-align:center;padding:72px 0;}
+  .trust-cta h2{font-size:clamp(24px,4vw,36px);font-weight:800;line-height:1.5;}
+  .trust-cta .accent{color:var(--gold);}
+  .foot-links{display:flex;flex-wrap:wrap;justify-content:center;gap:14px;font-size:12.5px;margin-top:6px;}
+  .foot-links a{color:var(--body);}
+  .foot-links a:hover{color:var(--teal);}
 </style>
 
+<style>
 .pr-hero{background:var(--navy);color:#fff;padding:88px 0 64px;text-align:center;}
 .pr-hero .sec-eyebrow{justify-content:center;}
 .pr-hero h1{color:#fff;font-size:clamp(28px,4vw,40px);font-weight:800;margin-top:14px;line-height:1.4;}
@@ -332,14 +369,15 @@
 </style>
 </head>
 <body>
+<a href="#main" class="skip-link">본문 바로가기</a>
 <header id="siteHeader">
   <div class="wrap nav">
     <a class="brand" href="index.html#top">
       <span class="dotmark"><span class="d1"></span><span class="d2"></span><span class="d3"></span><span class="d4"></span></span>
       <span class="brand-text"><b>한국뇌심리연구소</b><small>KOREA BRAIN PSYCHOLOGY INSTITUTE</small></span>
     </a>
-    <button class="navtoggle" id="navToggle" aria-label="메뉴">☰</button>
-    <nav class="navlinks" id="navLinks">
+    <button class="navtoggle" id="navToggle" aria-label="메뉴 열기" aria-expanded="false" aria-controls="navLinks">☰</button>
+    <nav class="navlinks" id="navLinks" aria-label="주요 메뉴">
       <a href="index.html#about">소장소개</a>
       <a href="index.html#systems">분석시스템</a>
       <a href="brain-picture-test-intro.html">그림검사 소개</a>
@@ -355,9 +393,12 @@
       </a>
       <a class="iconbtn" href="index.html#contact" title="제휴 문의" aria-label="문의">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </a>
+    </div>
+  </div>
+</header>
 
-
-<!-- Hero -->
+<main id="main">
 <section class="pr-hero">
   <div class="wrap">
     <div class="sec-eyebrow"><span class="dot" style="background:var(--gold)"></span>PRINCIPLES</div>
@@ -429,6 +470,26 @@
   <a href="index.html#about" class="btn btn-primary">홈페이지로 돌아가기 →</a>
 </div>
 
+
+</main>
+<footer>
+  <div class="wrap foot-row">
+    <div><b>한국뇌심리연구소</b> | Korea Brain Psychology Institute | 대표: 임찬우</div>
+    <div>부설 시니어인지건강센터</div>
+    <div>이메일: brain.saboo@gmail.com | 문의전화: 010-4119-0031</div>
+    <div>공식 도메인: www.k-brain.co.kr</div>
+    <div class="foot-links">
+      <a href="principles.html">개발 원칙</a>
+      <a href="index.html#about">센터소개</a>
+      <a href="index.html#systems">프로그램</a>
+      <a href="index.html#contact">상담문의</a>
+      <a href="privacy.html">개인정보처리방침</a>
+      <a href="terms.html">이용약관</a>
+    </div>
+    <div style="opacity:.4;font-size:10.5px;">build 2026-07-29-v8</div>
+  </div>
+</footer>
+
 <script>
   var header = document.getElementById('siteHeader');
   window.addEventListener('scroll', function(){
@@ -439,20 +500,10 @@
   var navLinks = document.getElementById('navLinks');
   if(navToggle && navLinks){
     navToggle.addEventListener('click', function(){
-      navLinks.classList.toggle('open');
+      var isOpen = navLinks.classList.toggle('open');
+      navToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
     });
   }
 </script>
-
-
-<footer>
-  <div class="wrap foot-row">
-    <div><b>한국뇌심리연구소</b> | Korea Brain Psychology Institute | 대표: 임찬우</div>
-    <div>부설 시니어인지건강센터</div>
-    <div>이메일: brain.saboo@gmail.com | 문의전화: 010-4119-0031</div>
-    <div>공식 도메인: www.k-brain.co.kr</div>
-    <div><a href="principles.html" style="color:var(--teal);font-weight:700;">개발 원칙 보기</a></div>
-    <div style="opacity:.4;font-size:10.5px;">build 2026-07-29-v6</div>
-
 </body>
 </html>
