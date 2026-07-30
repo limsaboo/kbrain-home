@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>회원 관리 (개인정보 취급주의) | 한국뇌심리연구소</title>
+<meta name="robots" content="noindex,nofollow">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  :root{
+    --bg:#f3faf8;--bg2:#e8f5f0;--bg3:#dcefe6;--ink:#14162c;--body:#2b2e40;
+    --line:#dceae4;--teal:#14b8ad;--orange:#f5a524;--purple:#7c5cff;--gold:#c9a84c;--navy:#161a3d;--danger:#e5484d;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;}
+
+  #gate{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:var(--navy);}
+  .gate-box{background:#fff;border-radius:18px;padding:40px 32px;max-width:380px;width:100%;box-shadow:0 20px 50px -30px rgba(0,0,0,.5);text-align:center;}
+  .gate-box h1{font-size:19px;font-weight:900;color:var(--navy);margin-bottom:8px;}
+  .gate-box .warn{background:#fdeceb;border:1.5px solid rgba(229,72,77,.3);border-radius:10px;padding:12px 14px;font-size:12px;color:#a3282c;font-weight:700;margin-bottom:18px;text-align:left;line-height:1.6;}
+  .gate-box input{width:100%;padding:13px 14px;border:1.5px solid var(--line);border-radius:10px;font-size:15px;margin-bottom:12px;text-align:center;letter-spacing:2px;}
+  .gate-box button{width:100%;padding:13px;background:var(--danger);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:800;cursor:pointer;}
+  .gate-err{color:#e5484d;font-size:12.5px;margin-top:10px;min-height:16px;font-weight:700;}
+
+  #dash{display:none;max-width:1180px;margin:0 auto;padding:24px 18px 60px;}
+  .pii-banner{background:#fdeceb;border:1.5px solid rgba(229,72,77,.35);border-radius:12px;padding:14px 18px;font-size:12.5px;font-weight:700;color:#a3282c;line-height:1.7;margin-bottom:20px;}
+  .dash-head{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:18px;}
+  .dash-head h1{font-size:22px;font-weight:900;color:var(--navy);}
+  .dash-head .links a{font-size:12.5px;font-weight:700;color:var(--navy);margin-right:14px;}
+  .refresh-btn{background:var(--teal);color:#fff;border:none;padding:10px 18px;border-radius:9px;font-size:13.5px;font-weight:800;cursor:pointer;}
+
+  .summary-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:22px;}
+  .sum-card{background:var(--navy);color:#fff;border-radius:14px;padding:18px;}
+  .sum-card .num{font-size:26px;font-weight:900;}
+  .sum-card .lbl{font-size:12.5px;font-weight:700;color:var(--gold);margin-top:4px;}
+
+  .controls{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;align-items:center;}
+  .controls input{flex:1;min-width:200px;padding:10px 12px;border:1.5px solid var(--line);border-radius:9px;font-size:13.5px;}
+  .mask-toggle{display:flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;color:var(--body);}
+
+  table{width:100%;border-collapse:collapse;background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 8px 20px -18px rgba(20,22,44,.25);}
+  thead th{background:var(--navy);color:#fff;font-size:11.5px;font-weight:800;padding:10px 8px;text-align:left;white-space:nowrap;}
+  tbody td{padding:9px 8px;font-size:12.5px;border-top:1px solid var(--line);white-space:nowrap;}
+  tbody tr:nth-child(even){background:var(--bg);}
+  .badge-ref{background:#eaf1ff;color:#2f6fed;border-radius:14px;padding:2px 8px;font-size:11px;font-weight:800;}
+  .empty-msg{text-align:center;padding:30px;color:var(--body);font-size:13px;}
+  .table-wrap{overflow-x:auto;}
+</style>
+</head>
+<body>
+
+<div id="gate">
+  <div class="gate-box">
+    <h1>🔒 회원 관리 (개인정보)</h1>
+    <div class="warn">⚠️ 이 페이지는 회원의 이름·이메일·연락처 등 개인정보를 다룹니다. 화면 캡처·공유를 금지하고, 조회 후 반드시 창을 닫아주세요. 개인정보보호법에 따라 목적 외 이용이 제한됩니다.</div>
+    <input type="password" id="pw" placeholder="회원관리 전용 비밀번호" onkeydown="if(event.key==='Enter'){checkPw();}">
+    <button onclick="checkPw()">입장</button>
+    <div class="gate-err" id="gateErr"></div>
+  </div>
+</div>
+
+<div id="dash">
+  <div class="pii-banner">🔐 개인정보 취급 유의: 이 페이지의 정보는 회원 서비스 운영 목적 외 사용을 금지합니다. 조회 화면을 외부로 공유하지 마세요.</div>
+  <div class="dash-head">
+    <div>
+      <h1>👥 회원 관리</h1>
+      <div class="links" style="margin-top:6px;">
+        <a href="admin-coupons.html">쿠폰 관리</a>
+        <a href="admin-analytics.html">방문자 통계</a>
+      </div>
+    </div>
+    <button class="refresh-btn" onclick="loadAll()">새로고침</button>
+  </div>
+
+  <div class="summary-grid" id="summaryGrid"></div>
+
+  <div class="controls">
+    <input type="text" id="searchInput" placeholder="이름 또는 이메일 검색..." oninput="renderTable()">
+    <label class="mask-toggle"><input type="checkbox" id="maskToggle" checked onchange="renderTable()"> 이메일/연락처 마스킹</label>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>가입일</th><th>이름</th><th>이메일</th><th>연락처</th><th>내 추천코드</th><th>추천받음</th><th>마일리지</th><th>마케팅동의</th></tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+const ADMIN_PASS = "brain2025!members";
+const SB_URL = "https://grxqfaeznqqohnlltged.supabase.co";
+const SB_KEY = "sb_publishable_Sgv6BVPo1dOnVICcX1tfzA_gf7T5Z4I";
+let sb = null;
+let allMembers = [];
+
+function checkPw(){
+  const pw = document.getElementById('pw').value;
+  if(pw === ADMIN_PASS){
+    document.getElementById('gate').style.display = 'none';
+    document.getElementById('dash').style.display = 'block';
+    sb = window.supabase.createClient(SB_URL, SB_KEY);
+    loadAll();
+  } else {
+    document.getElementById('gateErr').textContent = '비밀번호가 올바르지 않습니다.';
+  }
+}
+
+function maskEmail(email){
+  const [id, domain] = email.split('@');
+  if(!domain) return email;
+  const visible = id.slice(0, Math.min(2, id.length));
+  return `${visible}${'*'.repeat(Math.max(id.length-2,1))}@${domain}`;
+}
+function maskPhone(phone){
+  if(!phone) return '-';
+  return phone.replace(/(\d{3})-?\d{3,4}-?(\d{4})/, '$1-****-$2');
+}
+
+async function loadAll(){
+  try{
+    const { data, error } = await sb.from('members').select('*').order('created_at', {ascending:false});
+    if(error) throw error;
+    allMembers = data || [];
+    renderSummary();
+    renderTable();
+  }catch(e){
+    document.getElementById('tbody').innerHTML = `<tr><td colspan="8" class="empty-msg">데이터를 불러오지 못했습니다: ${e.message||e}</td></tr>`;
+  }
+}
+
+function renderSummary(){
+  const today = new Date(); today.setHours(0,0,0,0);
+  const todayCount = allMembers.filter(m => new Date(m.created_at) >= today).length;
+  const referred = allMembers.filter(m => m.referred_by).length;
+  const totalMileage = allMembers.reduce((s,m)=> s + (m.mileage_balance||0), 0);
+  document.getElementById('summaryGrid').innerHTML = `
+    <div class="sum-card"><div class="num">${allMembers.length}</div><div class="lbl">전체 회원</div></div>
+    <div class="sum-card"><div class="num">${todayCount}</div><div class="lbl">오늘 신규가입</div></div>
+    <div class="sum-card"><div class="num">${referred}</div><div class="lbl">추천으로 가입</div></div>
+    <div class="sum-card"><div class="num">${totalMileage.toLocaleString()}</div><div class="lbl">전체 마일리지 합계</div></div>
+  `;
+}
+
+function renderTable(){
+  const q = document.getElementById('searchInput').value.trim().toLowerCase();
+  const masked = document.getElementById('maskToggle').checked;
+  let rows = allMembers.filter(m =>
+    !q || (m.name||'').toLowerCase().includes(q) || (m.email||'').toLowerCase().includes(q)
+  );
+  if(!rows.length){
+    document.getElementById('tbody').innerHTML = '<tr><td colspan="8" class="empty-msg">조건에 맞는 회원이 없습니다.</td></tr>';
+    return;
+  }
+  document.getElementById('tbody').innerHTML = rows.map(m=>{
+    const date = new Date(m.created_at).toLocaleDateString('ko-KR');
+    const email = masked ? maskEmail(m.email) : m.email;
+    const phone = masked ? maskPhone(m.phone) : (m.phone || '-');
+    const refBy = m.referred_by ? `<span class="badge-ref">${m.referred_by}</span>` : '-';
+    return `<tr>
+      <td>${date}</td>
+      <td><b>${m.name}</b></td>
+      <td>${email}</td>
+      <td>${phone}</td>
+      <td>${m.referral_code}</td>
+      <td>${refBy}</td>
+      <td>${(m.mileage_balance||0).toLocaleString()}</td>
+      <td>${m.marketing_agree ? '✅' : '—'}</td>
+    </tr>`;
+  }).join('');
+}
+</script>
+</body>
+</html>

@@ -421,5 +421,20 @@ if('serviceWorker' in navigator){
   });
 }
 </script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+(function(){
+  try{
+    var sb = window.supabase.createClient(
+      "https://grxqfaeznqqohnlltged.supabase.co",
+      "sb_publishable_Sgv6BVPo1dOnVICcX1tfzA_gf7T5Z4I"
+    );
+    sb.from('page_visits').insert({
+      page: 'brain-picture-test-intro',
+      referrer: document.referrer || null
+    }).then(function(){}).catch(function(){});
+  }catch(e){}
+})();
+</script>
 </body>
 </html>
