@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>쿠폰 관리 대시보드 | 한국뇌심리연구소</title>
+<meta name="robots" content="noindex,nofollow">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  :root{
+    --bg:#f3faf8;--bg2:#e8f5f0;--bg3:#dcefe6;--ink:#14162c;--body:#63667a;
+    --line:#dceae4;--teal:#14b8ad;--orange:#f5a524;--purple:#7c5cff;--gold:#c9a84c;--navy:#161a3d;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;}
+
+  /* ---- login gate ---- */
+  #gate{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;}
+  .gate-box{background:#fff;border-radius:18px;padding:40px 32px;max-width:360px;width:100%;box-shadow:0 20px 50px -30px rgba(20,22,44,.3);text-align:center;}
+  .gate-box h1{font-size:19px;font-weight:900;color:var(--navy);margin-bottom:8px;}
+  .gate-box p{font-size:13px;color:var(--body);margin-bottom:20px;}
+  .gate-box input{width:100%;padding:13px 14px;border:1.5px solid var(--line);border-radius:10px;font-size:15px;margin-bottom:12px;text-align:center;letter-spacing:2px;}
+  .gate-box button{width:100%;padding:13px;background:var(--navy);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:800;cursor:pointer;}
+  .gate-err{color:#e5484d;font-size:12.5px;margin-top:10px;min-height:16px;font-weight:700;}
+
+  /* ---- dashboard ---- */
+  #dash{display:none;max-width:1180px;margin:0 auto;padding:28px 18px 60px;}
+  .dash-head{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:22px;}
+  .dash-head h1{font-size:22px;font-weight:900;color:var(--navy);}
+  .refresh-btn{background:var(--teal);color:#fff;border:none;padding:10px 18px;border-radius:9px;font-size:13.5px;font-weight:800;cursor:pointer;}
+  .refresh-btn:disabled{opacity:.5;}
+
+  .summary-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-bottom:28px;}
+  .sum-card{background:var(--navy);color:#fff;border-radius:16px;padding:20px 22px;}
+  .sum-card .sys-label{font-size:13px;font-weight:800;color:var(--gold);margin-bottom:10px;letter-spacing:.02em;}
+  .sum-row{display:flex;justify-content:space-between;font-size:13px;color:#c8cbef;padding:3px 0;}
+  .sum-row b{color:#fff;font-size:14px;}
+  .sum-card .bar{height:8px;border-radius:6px;background:#2a2f5c;margin-top:12px;overflow:hidden;}
+  .sum-card .bar-fill{height:100%;background:var(--teal);border-radius:6px;}
+
+  .controls{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px;}
+  .controls select,.controls input{padding:10px 12px;border:1.5px solid var(--line);border-radius:9px;font-size:13.5px;background:#fff;}
+  .controls input{flex:1;min-width:180px;}
+
+  table{width:100%;border-collapse:collapse;background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 8px 20px -18px rgba(20,22,44,.25);}
+  thead th{background:var(--navy);color:#fff;font-size:12px;font-weight:800;padding:12px 10px;text-align:left;white-space:nowrap;}
+  tbody td{padding:11px 10px;font-size:13px;border-top:1px solid var(--line);white-space:nowrap;}
+  tbody tr:nth-child(even){background:var(--bg);}
+  .badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:800;}
+  .badge.used{background:#fdeceb;color:#e5484d;}
+  .badge.avail{background:#e9f9f2;color:#0f9d68;}
+  .badge.free{background:#eaf1ff;color:#2f6fed;}
+  .badge.paid{background:#fdf6e3;color:#b8860b;}
+  .empty-msg{text-align:center;padding:40px;color:var(--body);font-size:13.5px;}
+  .table-wrap{overflow-x:auto;}
+  .footer-note{font-size:11.5px;color:var(--body);margin-top:18px;text-align:center;}
+</style>
+</head>
+<body>
+
+<div id="gate">
+  <div class="gate-box">
+    <h1>🔒 쿠폰 관리 대시보드</h1>
+    <p>관리자 비밀번호를 입력하세요.</p>
+    <input type="password" id="pw" placeholder="비밀번호" onkeydown="if(event.key==='Enter'){checkPw();}">
+    <button onclick="checkPw()">입장</button>
+    <div class="gate-err" id="gateErr"></div>
+  </div>
+</div>
+
+<div id="dash">
+  <div class="dash-head">
+    <h1>🎟️ 전체 쿠폰 관리 대시보드</h1>
+    <button class="refresh-btn" id="refreshBtn" onclick="loadAll()">새로고침</button>
+  </div>
+
+  <div class="summary-grid" id="summaryGrid"></div>
+
+  <div class="controls">
+    <select id="filterSystem" onchange="renderTable()">
+      <option value="">전체 시스템</option>
+    </select>
+    <select id="filterStatus" onchange="renderTable()">
+      <option value="">전체 상태</option>
+      <option value="avail">사용 가능</option>
+      <option value="used">사용 완료</option>
+    </select>
+    <input type="text" id="filterSearch" placeholder="쿠폰코드 검색..." oninput="renderTable()">
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>쿠폰코드</th><th>시스템</th><th>유형</th><th>상태</th><th>잔여</th><th>사용</th><th>비고</th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </div>
+  <div class="footer-note">한국뇌심리연구소 내부 관리용 페이지입니다 · 외부 공유 금지</div>
+</div>
+
+<script>
+const ADMIN_PASS = "brain2025!";
+const SB_URL = "https://grxqfaeznqqohnlltged.supabase.co";
+const SB_KEY = "sb_publishable_Sgv6BVPo1dOnVICcX1tfzA_gf7T5Z4I";
+let sb = null;
+let allCoupons = [];
+
+const SYSTEM_LABELS = {
+  goonghap: "뇌궁합 분석시스템",
+  senior: "시니어인지건강체크",
+  bama: "뇌심리성향진단시스템 (BAMA)",
+  btpa: "뇌기반진로적성 탐색시스템 (BTPA)",
+  bblat: "뇌컨디션 체크시스템 (BBLAT)",
+  all: "공통(전체 시스템)"
+};
+
+function checkPw(){
+  const pw = document.getElementById('pw').value;
+  if(pw === ADMIN_PASS){
+    document.getElementById('gate').style.display = 'none';
+    document.getElementById('dash').style.display = 'block';
+    sb = window.supabase.createClient(SB_URL, SB_KEY);
+    loadAll();
+  } else {
+    document.getElementById('gateErr').textContent = '비밀번호가 올바르지 않습니다.';
+  }
+}
+
+async function loadAll(){
+  const btn = document.getElementById('refreshBtn');
+  btn.disabled = true; btn.textContent = '불러오는 중...';
+  try{
+    const { data, error } = await sb.from('coupons').select('*').order('coupon_code', {ascending:true});
+    if(error){ throw error; }
+    allCoupons = data || [];
+    buildSystemFilter();
+    renderSummary();
+    renderTable();
+  }catch(e){
+    document.getElementById('tbody').innerHTML = `<tr><td colspan="7" class="empty-msg">데이터를 불러오지 못했습니다: ${e.message||e}</td></tr>`;
+  }
+  btn.disabled = false; btn.textContent = '새로고침';
+}
+
+function buildSystemFilter(){
+  const sel = document.getElementById('filterSystem');
+  const current = sel.value;
+  const systems = [...new Set(allCoupons.map(c=>c.system_type))].sort();
+  sel.innerHTML = '<option value="">전체 시스템</option>' + systems.map(s=>`<option value="${s}">${SYSTEM_LABELS[s]||s}</option>`).join('');
+  sel.value = current;
+}
+
+function renderSummary(){
+  const grid = document.getElementById('summaryGrid');
+  const systems = [...new Set(allCoupons.map(c=>c.system_type))].sort();
+  grid.innerHTML = systems.map(sys=>{
+    const rows = allCoupons.filter(c=>c.system_type===sys);
+    const total = rows.length;
+    const used = rows.filter(c=>(c.remain_count||0) <= 0).length;
+    const avail = total - used;
+    const pct = total ? Math.round((used/total)*100) : 0;
+    return `<div class="sum-card">
+      <div class="sys-label">${SYSTEM_LABELS[sys]||sys}</div>
+      <div class="sum-row"><span>총 발급</span><b>${total}개</b></div>
+      <div class="sum-row"><span>사용됨</span><b>${used}개</b></div>
+      <div class="sum-row"><span>잔여</span><b>${avail}개</b></div>
+      <div class="bar"><div class="bar-fill" style="width:${pct}%;"></div></div>
+    </div>`;
+  }).join('') || '<div class="empty-msg">등록된 쿠폰이 없습니다.</div>';
+}
+
+function renderTable(){
+  const sys = document.getElementById('filterSystem').value;
+  const status = document.getElementById('filterStatus').value;
+  const q = document.getElementById('filterSearch').value.trim().toUpperCase();
+
+  let rows = allCoupons.filter(c=>{
+    if(sys && c.system_type !== sys) return false;
+    const isUsed = (c.remain_count||0) <= 0;
+    if(status==='avail' && isUsed) return false;
+    if(status==='used' && !isUsed) return false;
+    if(q && !(c.coupon_code||'').toUpperCase().includes(q)) return false;
+    return true;
+  });
+
+  const tbody = document.getElementById('tbody');
+  if(!rows.length){
+    tbody.innerHTML = `<tr><td colspan="7" class="empty-msg">조건에 맞는 쿠폰이 없습니다.</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = rows.map(c=>{
+    const isUsed = (c.remain_count||0) <= 0;
+    const typeLabel = c.coupon_type === 'free' ? '<span class="badge free">무료</span>' : (c.coupon_type==='admin' ? '<span class="badge free">관리자</span>' : '<span class="badge paid">유료</span>');
+    const statusLabel = isUsed ? '<span class="badge used">사용완료</span>' : '<span class="badge avail">사용가능</span>';
+    return `<tr>
+      <td><b>${c.coupon_code}</b></td>
+      <td>${SYSTEM_LABELS[c.system_type]||c.system_type}</td>
+      <td>${typeLabel}</td>
+      <td>${statusLabel}</td>
+      <td>${c.remain_count ?? '-'}</td>
+      <td>${c.used_count ?? 0}</td>
+      <td>${c.buyer_memo || ''}</td>
+    </tr>`;
+  }).join('');
+}
+</script>
+</body>
+</html>
