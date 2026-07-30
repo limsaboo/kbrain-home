@@ -365,9 +365,8 @@
     }
     img{ max-width:100% !important; height:auto !important; }
   }
-  .who-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+  .who-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;}
   @media(min-width:640px){.who-grid{grid-template-columns:repeat(5,1fr);}}
-  @media(min-width:1024px){.who-grid{grid-template-columns:repeat(9,1fr);}}
   .who-item{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px 10px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:8px;font-size:13px;font-weight:700;color:var(--ink);box-shadow:0 8px 20px -18px rgba(20,22,44,.25);transition:.2s;}
   .who-item:hover{transform:translateY(-3px);box-shadow:0 14px 26px -14px rgba(20,22,44,.3);}
   .who-ic{font-size:26px;}
