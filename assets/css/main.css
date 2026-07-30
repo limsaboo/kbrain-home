@@ -185,6 +185,54 @@
   .evi-name{font-size:14.5px;font-weight:800;}
   .evi-desc{font-size:12.5px;color:var(--body);margin-top:4px;}
 
+  /* ---------- BI 로고 의미 ---------- */
+  .bi-logo-card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:28px 30px;box-shadow:0 10px 26px -20px rgba(20,22,44,.22);display:flex;gap:26px;align-items:flex-start;flex-wrap:wrap;}
+  .bi-logo-mark{width:60px;height:54px;flex-shrink:0;display:flex;align-items:flex-start;justify-content:center;padding-top:2px;}
+  .bi-logo-text{min-width:0;flex:1;}
+  .bi-logo-title{font-size:16px;font-weight:900;color:var(--ink);margin-bottom:8px;}
+  .bi-logo-desc{font-size:13.5px;color:var(--body);line-height:1.75;margin-bottom:18px;word-break:keep-all;}
+  .bi-logo-legend{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;}
+  @media(max-width:700px){.bi-logo-legend{grid-template-columns:repeat(2,minmax(0,1fr));}}
+  .bi-legend-item{display:flex;flex-direction:column;gap:3px;font-size:12px;color:var(--body);}
+  .bi-legend-item b{font-size:13.5px;color:var(--ink);display:flex;align-items:center;gap:7px;}
+  .bi-legend-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+
+  /* ---------- 조직도 ---------- */
+  .org-chart{margin-top:8px;}
+  .org-root-wrap{display:flex;justify-content:center;position:relative;}
+  .org-root-card{background:var(--navy);color:#fff;font-weight:900;font-size:16px;padding:16px 32px;border-radius:14px;box-shadow:0 10px 26px -16px rgba(20,22,44,.4);position:relative;z-index:1;}
+  .org-root-wrap::after{content:'';position:absolute;top:100%;left:50%;width:2px;height:32px;background:var(--line);transform:translateX(-50%);}
+  .org-branches{display:flex;gap:24px;margin-top:32px;position:relative;padding-top:0;}
+  .org-branches::before{content:'';position:absolute;top:0;left:calc(100%/6);right:calc(100%/6);height:2px;background:var(--line);}
+  .org-branch{flex:1;min-width:0;position:relative;padding-top:32px;}
+  .org-branch::before{content:'';position:absolute;top:0;left:50%;width:2px;height:32px;background:var(--line);transform:translateX(-50%);}
+  .org-dept-card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:24px 22px;height:100%;transition:.2s;box-shadow:0 10px 26px -20px rgba(20,22,44,.22);}
+  .org-dept-card:hover{box-shadow:0 18px 36px -18px rgba(20,22,44,.28);transform:translateY(-3px);}
+  .org-dept-card h3{font-size:15.5px;font-weight:900;color:var(--ink);display:flex;align-items:center;gap:9px;margin-bottom:14px;word-break:keep-all;}
+  .org-dept-card h3 .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+  .org-dept-card ul{list-style:none;display:flex;flex-direction:column;gap:9px;}
+  .org-dept-card li{font-size:13px;color:var(--body);padding-left:14px;position:relative;word-break:keep-all;}
+  .org-dept-card li::before{content:'';position:absolute;left:0;top:7px;width:5px;height:5px;border-radius:50%;background:var(--line);}
+  .org-senior-wrap{display:flex;justify-content:center;position:relative;margin-top:0;}
+  .org-senior-wrap::before{content:'';position:absolute;bottom:100%;left:50%;width:2px;height:32px;background:var(--line);transform:translateX(-50%);}
+  .org-senior-card{margin-top:32px;width:100%;max-width:620px;background:linear-gradient(135deg,var(--teal),#0f9488);color:#fff;border-radius:18px;padding:28px 30px;text-align:center;box-shadow:0 16px 34px -18px rgba(20,184,173,.45);}
+  .org-senior-card h3{font-size:17px;font-weight:900;margin-bottom:4px;}
+  .org-senior-card p{font-size:12.5px;color:rgba(255,255,255,.85);margin-bottom:18px;}
+  .org-senior-tags{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;}
+  .org-senior-tags span{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.3);border-radius:20px;padding:7px 14px;font-size:12.5px;font-weight:700;white-space:nowrap;}
+  .org-footnote{text-align:center;color:var(--body);font-size:13px;margin-top:32px;word-break:keep-all;}
+
+  @media(max-width:760px){
+    .org-branches{flex-direction:column;gap:20px;}
+    .org-branches::before{display:none;}
+    .org-branch{padding-top:0;}
+    .org-branch::before{display:none;}
+    .org-root-wrap::after{height:20px;}
+    .org-senior-wrap::before{height:20px;}
+    .org-senior-card{margin-top:20px;padding:24px 20px;}
+    .bi-logo-card{padding:22px 20px;}
+  }
+
   /* ---------- Contact ---------- */
   .contact-wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:56px;}
   @media(max-width:860px){.contact-wrap{grid-template-columns:1fr;}}
@@ -291,11 +339,11 @@
   /* 위에서 어떤 미세한 버그가 남아있든, 모바일에서는 무조건 세로 1열로 쌓여서
      절대 잘리거나 찌그러지지 않도록 최종 강제 적용 (우선순위 최상) */
   @media(max-width:640px){
-    .hl-grid, .sys-grid, .book-grid, .stat-row, .evi-grid, .sns-grid, .contact-wrap{
+    .hl-grid, .sys-grid, .book-grid, .stat-row, .evi-grid, .sns-grid, .contact-wrap, .org-branches{
       grid-template-columns:1fr !important;
       gap:16px !important;
     }
-    .hl-item, .sys-card, .book-card, .stat-card, .evi-card, .sns-card{
+    .hl-item, .sys-card, .book-card, .stat-card, .evi-card, .sns-card, .org-dept-card, .org-senior-card{
       width:100% !important;
       max-width:100% !important;
       min-width:0 !important;
