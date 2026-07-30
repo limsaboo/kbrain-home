@@ -10,6 +10,12 @@
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#161a3d">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="뇌심리연구소">
 <meta property="og:type" content="website">
 <meta property="og:title" content="이용약관 | 한국뇌심리연구소">
 <meta property="og:image" content="https://www.k-brain.co.kr/og-image.png">
@@ -127,6 +133,13 @@
       navToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
     });
   }
+</script>
+<script>
+if('serviceWorker' in navigator){
+  window.addEventListener('load', function(){
+    navigator.serviceWorker.register('/sw.js').catch(function(){});
+  });
+}
 </script>
 </body>
 </html>
