@@ -130,9 +130,10 @@
   .mt-year{font-size:12.5px;font-weight:900;color:var(--ink);}
   .mt-desc{font-size:11.5px;color:var(--body);margin-top:4px;line-height:1.5;}
 
-  .greeting{margin-top:28px;background:var(--navy);color:#fff;border-radius:16px;padding:28px 30px;font-size:14.5px;line-height:1.85;word-break:keep-all;position:relative;}
-  .greeting::before{content:'"';position:absolute;top:6px;left:18px;font-size:44px;color:rgba(255,255,255,.18);font-family:Georgia,serif;}
-  .greeting-sign{margin-top:16px;font-weight:700;font-size:13px;color:#cfd3ff;}
+  .greeting{margin-top:32px;background:linear-gradient(135deg,#fdf6e3,#f6ead0);color:var(--navy);border:1px solid #ecdba8;border-radius:18px;padding:34px 38px;font-size:18px;font-weight:800;line-height:1.9;word-break:keep-all;position:relative;box-shadow:0 12px 26px -20px rgba(20,22,44,.25);}
+  .greeting::before{content:'"';position:absolute;top:2px;left:20px;font-size:56px;color:rgba(22,26,61,.14);font-family:Georgia,serif;}
+  .greeting-sign{margin-top:18px;font-weight:900;font-size:15.5px;color:var(--teal);}
+  @media(max-width:600px){.greeting{padding:26px 24px;font-size:16px;}}
 
   /* ---------- Services ---------- */
   .sys-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;}
