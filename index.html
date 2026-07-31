@@ -107,7 +107,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/main.css?v=20260729f">
+<link rel="stylesheet" href="assets/css/main.css?v=20260731torch">
 </head>
 <body>
 <a href="#main" class="skip-link">본문 바로가기</a>
@@ -140,6 +140,114 @@
     </div>
   </div>
 </header>
+
+<!-- ============================================================
+     TORCH HERO — 촛불에서 횃불로, 빛의 길이 되는 브랜드 경험
+     ============================================================ -->
+<section class="torch-hero" id="torch-hero" aria-label="한국뇌심리연구소 브랜드 필름">
+  <div class="torch-video-wrap">
+    <video
+      class="torch-video"
+      autoplay
+      muted
+      loop
+      playsinline
+      preload="auto"
+      poster="/assets/video/hero-poster.jpg"
+      aria-hidden="true">
+      <source src="/assets/video/hero.webm" type="video/webm">
+      <source src="/assets/video/hero.mp4" type="video/mp4">
+    </video>
+    <!-- 영상 로드 실패/구형 브라우저용 정지 배경 (영상과 동일 톤의 다크 네이비+골드 그라디언트) -->
+    <div class="torch-video-fallback" aria-hidden="true"></div>
+    <div class="torch-overlay" aria-hidden="true"></div>
+  </div>
+
+  <div class="torch-copy">
+    <p class="torch-eyebrow">KOREA BRAIN PSYCHOLOGY INSTITUTE</p>
+    <h1 class="torch-headline">
+      우리는 촛불을 만드는 연구소가 아닙니다.<br>
+      우리는 <span class="torch-gold-text">횃불</span>을 만드는 연구소입니다.
+    </h1>
+    <p class="torch-sub">
+      사람을 이해하여<br class="torch-sub-br">
+      사람을 성장시킨다.
+    </p>
+    <div class="torch-cta">
+      <a href="#systems" class="torch-btn torch-btn-primary">사람 이해 여정을 시작합니다 →</a>
+      <a href="#creed" class="torch-btn torch-btn-ghost">한국뇌심리연구소 철학 보기</a>
+    </div>
+  </div>
+
+  <button class="torch-mute-toggle" id="torchMuteToggle" type="button" aria-pressed="true">
+    <svg class="ico-muted" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5 6 9H2v6h4l5 4V5Z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
+    <svg class="ico-unmuted" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" style="display:none;"><path d="M11 5 6 9H2v6h4l5 4V5Z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/></svg>
+    <span class="torch-mute-label">음소거</span>
+  </button>
+
+  <div class="torch-scroll-cue" aria-hidden="true"><span></span>Scroll</div>
+</section>
+
+
+<!-- ============================================================
+     MISSION / VISION / FOUNDING CREED / CORE VALUES
+     ============================================================ -->
+<section class="creed-section" id="creed">
+  <div class="wrap creed-wrap">
+
+    <div class="creed-mv-grid">
+      <div class="creed-mv-card">
+        <span class="creed-mv-label">MISSION</span>
+        <p class="creed-mv-text">사람을 이해하여<br>사람을 성장시킨다.</p>
+      </div>
+      <div class="creed-mv-card">
+        <span class="creed-mv-label">VISION</span>
+        <p class="creed-mv-text">대한민국을 대표하는<br>사람 이해 교육·연구 플랫폼</p>
+      </div>
+    </div>
+
+    <div class="creed-divider"><span></span></div>
+
+    <div class="creed-statement">
+      <span class="creed-eyebrow">FOUNDING CREED</span>
+      <p class="creed-line">우리는 촛불을 만드는 연구소가 아니라<br>횃불을 만드는 연구소가 되고자 합니다.</p>
+      <p class="creed-line creed-line-muted">촛불은 자신을 밝힙니다.<br>그러나 횃불은 길을 밝히고, 또 다른 횃불을 만들어 냅니다.</p>
+      <p class="creed-line creed-line-muted">한국뇌심리연구소는 한 사람의 변화에서 멈추지 않습니다.<br>
+      한 사람이 또 다른 사람의 희망이 되고, 그 희망이 다시 또 다른 사람에게 이어지는<br>
+      횃불의 선순환을 만드는 것을 존재 이유로 삼습니다.</p>
+    </div>
+
+    <div class="creed-divider"><span></span></div>
+
+    <div class="creed-values">
+      <span class="creed-eyebrow" style="text-align:center;display:block;">CORE VALUES</span>
+      <div class="creed-values-grid">
+        <div class="creed-value">
+          <span class="creed-value-kr">이해</span><span class="creed-value-en">Understanding</span>
+          <p>사람을 판단하기 전에 이해한다.</p>
+        </div>
+        <div class="creed-value">
+          <span class="creed-value-kr">성장</span><span class="creed-value-en">Growth</span>
+          <p>배움은 자신을 변화시키는 첫걸음이다.</p>
+        </div>
+        <div class="creed-value">
+          <span class="creed-value-kr">나눔</span><span class="creed-value-en">Sharing</span>
+          <p>성장은 나눌 때 더 큰 가치를 만든다.</p>
+        </div>
+        <div class="creed-value">
+          <span class="creed-value-kr">실천</span><span class="creed-value-en">Practice</span>
+          <p>지식은 행동으로 이어질 때 의미가 있다.</p>
+        </div>
+        <div class="creed-value creed-value-torch">
+          <span class="creed-value-kr">횃불</span><span class="creed-value-en">Torch</span>
+          <p>우리는 자신만을 밝히는 사람이 아니라, 다른 사람의 길을 밝히는 사람이 된다.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
 
 <main id="main">
 <!-- Hero -->
@@ -1011,6 +1119,61 @@ if('serviceWorker' in navigator){
     navigator.serviceWorker.register('/sw.js').catch(function(){});
   });
 }
+</script>
+
+<script>
+(function(){
+  var hero = document.getElementById('torch-hero');
+  var video = hero && hero.querySelector('.torch-video');
+  var copy = hero && hero.querySelector('.torch-copy');
+  var muteBtn = document.getElementById('torchMuteToggle');
+  if(!hero || !video) return;
+
+  // 큐 타이밍(초): 스토리보드 기준값. data-* 속성으로 실제 영상 길이에 맞춰 조정 가능
+  // 예: <video class="torch-video" data-text-in="27" data-sub-in="30">
+  var textInAt = parseFloat(video.getAttribute('data-text-in')) || 27;
+  var subInAt  = parseFloat(video.getAttribute('data-sub-in'))  || 30;
+  var revealed = false, subRevealed = false;
+
+  function resetCues(){
+    revealed = false; subRevealed = false;
+    copy.classList.remove('torch-show-text', 'torch-show-sub');
+  }
+
+  video.addEventListener('loadeddata', function(){
+    hero.classList.add('torch-video-ready');
+  });
+
+  video.addEventListener('timeupdate', function(){
+    var t = video.currentTime;
+    if(t < 0.5 && (revealed || subRevealed)) resetCues(); // 반복재생 되돌아옴 감지
+    if(!revealed && t >= textInAt){
+      revealed = true;
+      copy.classList.add('torch-show-text');
+    }
+    if(!subRevealed && t >= subInAt){
+      subRevealed = true;
+      copy.classList.add('torch-show-sub');
+    }
+  });
+
+  // 자동재생이 브라우저 정책으로 막히면 텍스트는 항상 보이게 유지(기본 CSS 상태 유지)
+  var playPromise = video.play();
+  if(playPromise && playPromise.catch){
+    playPromise.catch(function(){ hero.classList.remove('torch-video-ready'); });
+  }
+  video.addEventListener('error', function(){ hero.classList.remove('torch-video-ready'); });
+
+  if(muteBtn){
+    muteBtn.addEventListener('click', function(){
+      video.muted = !video.muted;
+      muteBtn.setAttribute('aria-pressed', video.muted ? 'true' : 'false');
+      muteBtn.querySelector('.ico-muted').style.display = video.muted ? '' : 'none';
+      muteBtn.querySelector('.ico-unmuted').style.display = video.muted ? 'none' : '';
+      muteBtn.querySelector('.torch-mute-label').textContent = video.muted ? '음소거' : '소리 켜짐';
+    });
+  }
+})();
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
