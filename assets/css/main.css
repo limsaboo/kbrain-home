@@ -39,6 +39,27 @@
   .nav{display:flex;align-items:center;justify-content:space-between;width:100%;}
   .brand{display:flex;align-items:center;gap:14px;}
   .dotmark{position:relative;width:70px;height:63px;flex-shrink:0;}
+  .dotmark::before{
+    content:'';position:absolute;inset:-10px;border-radius:50%;
+    background:radial-gradient(circle, rgba(20,184,173,.35), rgba(245,165,36,.22) 45%, transparent 72%);
+    filter:blur(4px);
+    animation:logoGlow 2.6s ease-in-out infinite;
+    z-index:-1;
+  }
+  @keyframes logoGlow{
+    0%,100%{opacity:.55;transform:scale(.92);}
+    50%{opacity:1;transform:scale(1.12);}
+  }
+  .brand-text b{
+    background:linear-gradient(100deg, var(--navy) 40%, #fff 50%, var(--navy) 60%);
+    background-size:220% 100%;
+    -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
+    animation:brandShine 3.2s ease-in-out infinite;
+  }
+  @keyframes brandShine{
+    0%{background-position:180% 0;}
+    55%,100%{background-position:-40% 0;}
+  }
   .dotmark span{position:absolute;border-radius:50%;}
   .dotmark .d1{width:30px;height:30px;background:var(--teal);left:0;top:16px;}
   .dotmark .d2{width:18px;height:18px;background:var(--orange);left:29px;top:0;}
