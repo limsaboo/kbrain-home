@@ -895,9 +895,16 @@ function startSequential(p, cards, idx, area) {
     var doneBtn=document.createElement("button");
     doneBtn.className="btn-primary";
     doneBtn.textContent="다음 단계로 →";
-    var _p=p;
-    doneBtn.onclick=(function(person){return function(){doneCards(person);};})(p);
+    // 클로저로 p값 안전하게 캡처
+    doneBtn.setAttribute("data-person", p);
+    (function(person) {
+      doneBtn.onclick = function() {
+        console.log("🎯 버튼 클릭됨! person=" + person);
+        doneCards(person);
+      };
+    })(p);
     area.appendChild(doneBtn);
+    console.log("✅ 버튼 추가됨! onclick:", doneBtn.onclick, "person:", p);
     return;
   }
 
