@@ -1054,14 +1054,122 @@ function switchTab(pair) {
   buildPartnerProfile(s1,s2,keys);
 }
 
+
+function showResult3() {
+  var sA=calcScore(state.A.sel),sB=calcScore(state.B.sel);
+  var sC=calcScore(state.C.sel);
+  var keys=["좌뇌","우뇌","전뇌","컨디션","조절력"];
+  
+  // 3인 모드 UI
+  // 2인 탭 완전 숨김
+  document.getElementById("pairTab").style.display="none";
+  // 3인 탭 표시
+  document.getElementById("tripleTab").style.display="block";
+  document.getElementById("tripleRadarSec").style.display="block";
+  document.getElementById("tripleSumSec").style.display="block";
+    // step-badge 업데이트
+    var sb=document.getElementById("stepA"); if(sb) sb.textContent="1 / 7";
+    // 3쌍 요약
+    var sC=calcScore(state.C.sel);
+    var pairs=[
+      {id:"AB",n1:state.A.name,n2:state.B.name,s1:sA,s2:sB,icon:"👫"},
+      {id:"AC",n1:state.A.name,n2:state.C.name,s1:sA,s2:sC,icon:"💫"},
+      {id:"BC",n1:state.B.name,n2:state.C.name,s1:sB,s2:sC,icon:"🔗"}
+    ];
+    var sumDiv=document.getElementById("tripleSummary");
+    sumDiv.innerHTML="";
+    pairs.forEach(function(p){
+      var sim=calcSim(p.s1,p.s2);
+      var type=TYPES.find(function(t){return sim>=t.min;})||TYPES[TYPES.length-1];
+      var card=document.createElement("div");
+      card.style.cssText="display:flex;align-items:center;gap:12px;background:var(--bg3);border:1.5px solid var(--border);border-radius:12px;padding:12px 14px;margin-bottom:8px;cursor:pointer;transition:all .2s;";
+      card.onclick=(function(pid){return function(){switchTab(pid);};})(p.id);
+      var grade_color=sim>=80?"var(--gold2)":sim>=70?"#a78bfa":sim>=60?"#fbbf24":"#f87171";
+      card.innerHTML=
+        '<span style="font-size:20px;">'+p.icon+'</span>'
+        +'<div style="flex:1;">'
+        +'<div style="font-size:13px;font-weight:700;color:var(--tx);">'+p.n1+' ↔ '+p.n2+'</div>'
+        +'<div style="font-size:12px;color:var(--tx2);">'+type.name+'</div>'
+        +'</div>'
+        +'<div style="text-align:right;">'
+        +'<div style="font-size:22px;font-weight:900;color:'+grade_color+';">'+sim+'%</div>'
+        +'<div style="font-size:11px;color:var(--tx2);">'+type.grade+'등급</div>'
+        +'</div>';
+      sumDiv.appendChild(card);
+    });
+    // 3인 삼각 레이더
+    drawRadarTriple(sA,sB,sC,keys);
+    document.getElementById("legTA").textContent=state.A.name;
+    document.getElementById("legTB").textContent=state.B.name;
+    document.getElementById("legTC").textContent=state.C.name;
+  } else {
+    document.getElementById("tripleTab").style.display="none";
+    document.getElementById("tripleRadarSec").style.display="none";
+    document.getElementById("tripleSumSec").style.display="none";
+  }
+  var sim=calcSim(sA,sB);
+  var type=TYPES.find(function(t){return sim>=t.min;})||TYPES[TYPES.length-1];
+  document.getElementById("rGrade").textContent=type.grade;
+  document.getElementById("rType").textContent=type.name;
+  document.getElementById("rScore").textContent=sim;
+  document.getElementById("rNA").textContent=state.A.name;
+  document.getElementById("rNB").textContent=state.B.name;
+  document.getElementById("legA").textContent=state.A.name;
+  document.getElementById("legB").textContent=state.B.name;
+  var catEmoji={좌뇌:"🔵",우뇌:"🟣",전뇌:"🟡",컨디션:"🟢",조절력:"🔴"};
+  var barsDiv=document.getElementById("bars"); barsDiv.innerHTML="";
+  keys.forEach(function(k) {
+    var row=document.createElement("div"); row.className="bar-r";
+    row.innerHTML='<span class="bar-lbl">'+catEmoji[k]+" "+k+'</span>'
+      +'<div class="bar-track"><div class="bar-fa" style="width:'+sA[k]+'%"></div>'
+      +'<div class="bar-fb" style="width:'+sB[k]+'%"></div></div>'
+      +'<div class="bar-sc"><span class="sca">'+sA[k]+'</span>'
+      +'<span style="color:var(--tx2);font-size:10px;">/</span>'
+      +'<span class="scb">'+sB[k]+'</span></div>';
+    barsDiv.appendChild(row);
+  });
+  // 3인이면 3쌍 분석 모두 생성, 2인이면 기존
+  if(state.numPeople===3){
+    var sC3=calcScore(state.C.sel);
+    var simAB=calcSim(sA,sB), simAC=calcSim(sA,sC3), simBC=calcSim(sB,sC3);
+    var typeAB=TYPES.find(function(t){return simAB>=t.min;})||TYPES[TYPES.length-1];
+    var typeAC=TYPES.find(function(t){return simAC>=t.min;})||TYPES[TYPES.length-1];
+    var typeBC=TYPES.find(function(t){return simBC>=t.min;})||TYPES[TYPES.length-1];
+    var ai3 = "";
+    ai3 += "[ " + state.A.name + " × " + state.B.name + " 뇌궁합 분석 ]\n\n";
+    ai3 += buildAnalysis(sA, sB, simAB, typeAB, state.A.name, state.B.name);
+    ai3 += "\n\n" + "=".repeat(30) + "\n\n";
+    ai3 += "[ " + state.A.name + " × " + state.C.name + " 뇌궁합 분석 ]\n\n";
+    ai3 += buildAnalysis(sA, sC3, simAC, typeAC, state.A.name, state.C.name);
+    ai3 += "\n\n" + "=".repeat(30) + "\n\n";
+    ai3 += "[ " + state.B.name + " × " + state.C.name + " 뇌궁합 분석 ]\n\n";
+    ai3 += buildAnalysis(sB, sC3, simBC, typeBC, state.B.name, state.C.name);
+    document.getElementById("aiText").textContent=ai3;
+  } else {
+    document.getElementById("aiText").textContent=buildAnalysis(sA,sB,sim,type);
+  }
+  // 쿠폰 사용 처리
+  if(_coupon) {
+    var displayA = useCoupon(state.A.name, "goonghap", null);
+    if(displayA) state.A.displayName = displayA;
+  }
+  go("s7");
+  setTimeout(function(){
+    drawRadar(sA,sB,keys);
+    buildPartnerProfile(sA,sB,keys);
+  },150);
+
+}
+
 function showResult() {
+  // 3인 모드는 별도 함수로 처리
+  if(state.numPeople===3){
+    return showResult3();
+  }
+  
   var sA=calcScore(state.A.sel),sB=calcScore(state.B.sel);
   var keys=["좌뇌","우뇌","전뇌","컨디션","조절력"];
-  // 3인 모드 UI
-  if(state.numPeople===3){
-    // 2인 탭 숨김
-    document.getElementById("pairTab").style.display="none";
-    // 3인 탭 표시
+  // 2인 모드
     document.getElementById("tripleTab").style.display="block";
     document.getElementById("tripleRadarSec").style.display="block";
     document.getElementById("tripleSumSec").style.display="block";
