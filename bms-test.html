@@ -639,9 +639,13 @@ const TYPES = [
 let state = {mode:"together",numPeople:2,A:{name:"",age:"",gender:"",sel:{}},B:{name:"",age:"",gender:"",sel:{}},C:{name:"",age:"",gender:"",sel:{}},relation:"연인"};
 
 function go(id) {
+  console.log("go() 호출됨: id="+id);
+  var elem=document.getElementById(id);
+  console.log("요소 찾음:", elem);
   document.querySelectorAll(".screen").forEach(function(s){s.classList.remove("active");});
-  document.getElementById(id).classList.add("active");
+  if(elem) elem.classList.add("active");
   window.scrollTo(0,0);
+  console.log("페이지 전환 완료");
 }
 function showToast(msg) {
   var t=document.getElementById("toast");
@@ -892,7 +896,7 @@ function startSequential(p, cards, idx, area) {
     doneBtn.className="btn-primary";
     doneBtn.textContent="다음 단계로 →";
     var _p=p;
-    doneBtn.addEventListener("click", function(){ doneCards(_p); });
+    doneBtn.onclick=(function(person){return function(){doneCards(person);};})(p);
     area.appendChild(doneBtn);
     return;
   }
@@ -992,6 +996,7 @@ function selCard(btn) {
   document.getElementById("pbar"+p).style.width=(done/CARDS.length*100)+"%";
 }
 function doneCards(p) {
+  console.log("doneCards() 호출됨! p="+p);
   var done=Object.keys(state[p].sel).length;
   if(done<CARDS.length){showToast("아직 "+(CARDS.length-done)+"장 선택하지 않았습니다");return;}
   if(p==="A") {
