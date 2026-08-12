@@ -1059,6 +1059,9 @@ function showResult() {
   var keys=["좌뇌","우뇌","전뇌","컨디션","조절력"];
   // 3인 모드 UI
   if(state.numPeople===3){
+    // 2인 탭 숨김
+    document.getElementById("pairTab").style.display="none";
+    // 3인 탭 표시
     document.getElementById("tripleTab").style.display="block";
     document.getElementById("tripleRadarSec").style.display="block";
     document.getElementById("tripleSumSec").style.display="block";
@@ -1178,7 +1181,7 @@ function drawRadar(sA,sB,keys) {
     ctx.fillStyle=color.replace("rgb","rgba").replace(")",",0.18)");ctx.fill();
     ctx.strokeStyle=color;ctx.lineWidth=2;ctx.stroke();
   }
-  plot(sA,"rgb(79,195,247)"); plot(sB,"rgb(244,143,177)");
+  plot(sA,"rgb(79,195,247)"); plot(sB,"rgb(201,163,255)");
 }
 function buildAnalysis(sA,sB,sim,type,nameA,nameB) {
   var A=state.A,B=state.B,rel=state.relation;
