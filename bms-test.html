@@ -1148,6 +1148,22 @@ function showResult() {
     var displayA = useCoupon(state.A.name, "goonghap", null);
     if(displayA) state.A.displayName = displayA;
   }
+  
+  // 🔧 3인 모드: 결과 순서 재배치 (레이더 먼저)
+  if(state.numPeople===3) {
+    var s7 = document.getElementById('s7');
+    var children = Array.from(s7.children);
+    
+    var tripleRadar = s7.querySelector('[class*="radar"]');
+    var barChart = s7.querySelector('[class*="bar"]');
+    
+    if(tripleRadar && barChart) {
+      // 레이더를 맨 앞으로 이동
+      s7.insertBefore(tripleRadar, s7.firstChild);
+      console.log("✅ 3인 결과 순서 재배치 완료");
+    }
+  }
+
   go("s7");
   setTimeout(function(){
     drawRadar(sA,sB,keys);
