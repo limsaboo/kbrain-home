@@ -895,22 +895,14 @@ function startSequential(p, cards, idx, area) {
     var doneBtn=document.createElement("button");
     doneBtn.className="btn-primary";
     doneBtn.textContent="다음 단계로 →";
-    // 모바일/데스크톱 모두 호환 - addEventListener 사용
-    doneBtn.setAttribute("data-person", p);
-    (function(person) {
-      var clickHandler = function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        console.log("🎯 버튼 클릭됨! person=" + person);
-        doneCards(person);
-        return false;
-      };
-      // 클릭 + 터치 이벤트 모두 처리
-      doneBtn.addEventListener("click", clickHandler, false);
-      doneBtn.addEventListener("touchend", clickHandler, false);
-      // 응급: onclick도 추가
-      doneBtn.onclick = clickHandler;
-    })(p);
+    // 🔴 가장 간단하고 확실한 방식
+    // doneCards()를 거치지 말고 직접 showResult() 호출
+    doneBtn.onclick = function() {
+      console.log("버튼 클릭됨!");
+      showResult();  // 직접 결과 화면 렌더링
+      go("s7");      // 직접 페이지 전환
+      return false;
+    };
     area.appendChild(doneBtn);
     console.log("✅ 버튼 추가됨! onclick:", doneBtn.onclick, "person:", p);
     return;
