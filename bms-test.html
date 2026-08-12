@@ -436,8 +436,8 @@ padding:12px 14px;margin-bottom:8px;cursor:pointer;transition:all .2s;}
       <div class="ntag ntag-b"><span class="nlbl lb">B</span><span class="nval" id="rNB">—</span></div>
     </div>
   </div>
-  <div style="display:none !important;"><div class="rsec">
-    <div class="rsec-t">영역별 뇌성향 비교</div></div>
+  <div class="rsec">
+    <div class="rsec-t">영역별 뇌성향 비교</div>
     <div class="radar-wrap"><canvas id="radar" width="250" height="250"></canvas></div>
     <div class="leg-row">
       <div class="leg-i"><div class="leg-dot" style="background:var(--na);"></div><span id="legA">A</span></div>
@@ -527,7 +527,7 @@ padding:12px 14px;margin-bottom:8px;cursor:pointer;transition:all .2s;}
     <div class="radar-wrap"><canvas id="radarPartner" width="250" height="250"></canvas></div>
 
     <!-- 영역별 이상적 수치 바 차트 -->
-    <div style="display:none !important;"><div class="rsec-t" style="margin-top:14px;">영역별 비교 — 나 vs 이상적 파트너</div></div>
+    <div class="rsec-t" style="margin-top:14px;">영역별 비교 — 나 vs 이상적 파트너</div>
     <div id="partnerBars"></div>
 
     <!-- 이상적 파트너 특성 카드 -->
@@ -1060,6 +1060,10 @@ function showResult() {
   // 3인 모드 UI
   if(state.numPeople===3){
     document.getElementById("tripleTab").style.display="block";
+    // 2인 탭 완전 숨김
+    document.getElementById("pairTab").style.display="none";
+    var pairElements=document.querySelectorAll('[id*="pair"]');
+    pairElements.forEach(function(el){el.style.display="none";});
     document.getElementById("tripleRadarSec").style.display="block";
     document.getElementById("tripleSumSec").style.display="block";
     // step-badge 업데이트
@@ -1071,7 +1075,15 @@ function showResult() {
       {id:"AC",n1:state.A.name,n2:state.C.name,s1:sA,s2:sC,icon:"💫"},
       {id:"BC",n1:state.B.name,n2:state.C.name,s1:sB,s2:sC,icon:"🔗"}
     ];
+    // 3인 레이더를 맨 앞에 배치
+    var radarDiv=document.getElementById("tripleRadarSec");
+    var barDiv=document.getElementById("tripleBarSec");
     var sumDiv=document.getElementById("tripleSummary");
+    if(radarDiv && sumDiv && radarDiv.parentNode===sumDiv.parentNode){
+      radarDiv.parentNode.insertBefore(radarDiv, sumDiv);
+      if(barDiv) radarDiv.parentNode.insertBefore(barDiv, sumDiv);
+    }
+    sumDiv=document.getElementById("tripleSummary");
     sumDiv.innerHTML="";
     pairs.forEach(function(p){
       var sim=calcSim(p.s1,p.s2);
@@ -1178,7 +1190,7 @@ function drawRadar(sA,sB,keys) {
     ctx.fillStyle=color.replace("rgb","rgba").replace(")",",0.18)");ctx.fill();
     ctx.strokeStyle=color;ctx.lineWidth=2;ctx.stroke();
   }
-  plot(sA,"rgb(79,195,247)"); plot(sB,"rgb(244,143,177)");
+  plot(sA,"rgb(79,195,247)"); plot(sB,"rgb(201,163,255)");
 }
 function buildAnalysis(sA,sB,sim,type,nameA,nameB) {
   var A=state.A,B=state.B,rel=state.relation;
