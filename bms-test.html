@@ -743,7 +743,8 @@ document.addEventListener("DOMContentLoaded", function() {
   document.getElementById("btnShare").addEventListener("click", function(){document.getElementById("shareModal").classList.add("open");});
   document.getElementById("btnRestart").addEventListener("click", restart);
   document.getElementById("btnIssueCoupon").addEventListener("click", issueCoupon);
-  document.getElementById("btnAdminLogin").addEventListener("click", adminLogin);
+  // ✅ 제거됨: addEventListener는 onclick과 중복되므로 삭제
+  // 버튼의 onclick="adminLogin()"으로 직접 처리
   // 관리자 도구: 저작권 텍스트 5번 연속 클릭
   var _adminTap = 0, _adminTimer;
   document.querySelectorAll(".cp5").forEach(function(el){
