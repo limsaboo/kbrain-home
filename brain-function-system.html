@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>BFS — 뇌기능시스템 | 한국뇌심리연구소</title>
+<style>
+:root{
+  --bg:#0a0c1f; --navy:#12153a; --card:#151935;
+  --gold:#c9a84c; --gold-bright:#f0d080; --gold-dim:rgba(201,168,76,.35);
+  --text:#eef0f8; --text-dim:#9aa0b4;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Pretendard","Apple SD Gothic Neo","Malgun Gothic",sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+.wrap{max-width:480px;margin:0 auto;min-height:100vh;padding:0 0 40px;}
+.hide{display:none !important;}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid rgba(255,255,255,.06);}
+.brand{font-size:11px;letter-spacing:2px;color:var(--text-dim);}
+.brand b{color:var(--gold);}
+.progress-wrap{padding:0 20px;margin-top:10px;}
+.progress-track{height:5px;border-radius:3px;background:rgba(255,255,255,.08);overflow:hidden;}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-bright));border-radius:3px;transition:width .3s;}
+.progress-label{font-size:11px;color:var(--text-dim);margin-top:6px;text-align:right;}
+.landing{padding:56px 24px 40px;text-align:center;}
+.landing .icon{font-size:52px;margin-bottom:18px;filter:drop-shadow(0 0 20px rgba(201,168,76,.5));}
+.landing h1{font-size:26px;font-weight:900;letter-spacing:-.5px;line-height:1.35;margin-bottom:10px;}
+.landing h1 .en{display:block;font-size:13px;letter-spacing:3px;color:var(--gold);font-weight:700;margin-bottom:8px;}
+.landing p.sub{font-size:14.5px;color:var(--text-dim);line-height:1.7;margin-bottom:32px;}
+.info-cards{display:flex;flex-direction:column;gap:10px;margin-bottom:28px;text-align:left;}
+.info-card{background:var(--card);border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:16px 18px;display:flex;align-items:center;gap:14px;}
+.info-card .ic{font-size:24px;flex-shrink:0;}
+.info-card .tx b{display:block;font-size:14px;margin-bottom:2px;}
+.info-card .tx span{font-size:12.5px;color:var(--text-dim);line-height:1.5;}
+.type-preview{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:28px;}
+.chip{font-size:11px;padding:6px 11px;border-radius:999px;border:1px solid var(--gold-dim);color:var(--gold-bright);background:rgba(201,168,76,.06);}
+.btn-primary{display:block;width:100%;padding:17px;border-radius:14px;border:none;background:linear-gradient(135deg,var(--gold-bright),var(--gold));color:#161a3d;font-size:16px;font-weight:900;cursor:pointer;box-shadow:0 8px 24px rgba(201,168,76,.3);}
+.disclaimer{font-size:11px;color:var(--text-dim);margin-top:16px;line-height:1.6;}
+.formscreen{padding:36px 24px;}
+.formscreen h2{font-size:20px;font-weight:900;margin-bottom:6px;}
+.formscreen p.d{font-size:13px;color:var(--text-dim);margin-bottom:28px;}
+.field{margin-bottom:20px;}
+.field label{display:block;font-size:13px;font-weight:700;color:var(--gold-bright);margin-bottom:8px;}
+.field input[type=text]{width:100%;padding:14px 16px;border-radius:12px;border:1px solid rgba(255,255,255,.12);background:var(--card);color:var(--text);font-size:15px;}
+.pillgroup{display:flex;flex-wrap:wrap;gap:8px;}
+.pill{padding:10px 16px;border-radius:999px;border:1px solid rgba(255,255,255,.14);background:var(--card);color:var(--text-dim);font-size:13.5px;cursor:pointer;}
+.pill.active{border-color:var(--gold);background:rgba(201,168,76,.15);color:var(--gold-bright);font-weight:800;}
+.qscreen{padding:32px 24px 20px;min-height:60vh;display:flex;flex-direction:column;}
+.q-domain{font-size:11.5px;font-weight:800;letter-spacing:1px;color:var(--gold);margin-bottom:10px;}
+.q-text{font-size:20px;font-weight:800;line-height:1.5;margin-bottom:36px;}
+.cardgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;flex:1;align-content:start;}
+.optcard{padding:20px 12px;border-radius:16px;border:1.5px solid rgba(255,255,255,.1);background:var(--card);color:var(--text);cursor:pointer;display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;min-height:130px;justify-content:center;transition:.15s;}
+.optcard-icon{font-size:34px;line-height:1;}
+.optcard-label{font-size:12.5px;font-weight:600;line-height:1.45;}
+.optcard.selected{border-color:var(--gold);background:rgba(201,168,76,.14);box-shadow:0 0 0 2px var(--gold-dim);}
+.optcard:active{transform:scale(.96);}
+.qnav{display:flex;gap:10px;margin-top:24px;}
+.qnav button{flex:1;padding:14px;border-radius:12px;border:1px solid rgba(255,255,255,.12);background:transparent;color:var(--text-dim);font-size:14px;font-weight:700;cursor:pointer;}
+.qnav button.next{background:var(--gold);color:#161a3d;border:none;}
+.qnav button:disabled{opacity:.35;pointer-events:none;}
+.results{padding:24px 20px 10px;}
+.res-header{text-align:center;margin-bottom:20px;}
+.res-header h2{font-size:21px;font-weight:900;}
+.res-header .sub{font-size:12.5px;color:var(--text-dim);margin-top:4px;}
+.type-hero{text-align:center;margin:18px 0;padding:28px 20px;border-radius:20px;background:radial-gradient(circle at 50% 20%,rgba(201,168,76,.18),transparent 70%);border:1.5px solid var(--gold-dim);}
+.type-hero .animal-icon{font-size:64px;margin-bottom:10px;}
+.type-hero .type-name{font-size:28px;font-weight:900;color:var(--gold-bright);}
+.type-hero .type-academic{font-size:13px;color:var(--gold);margin-top:2px;}
+.type-hero .type-desc{font-size:13.5px;color:#c7cadb;line-height:1.7;margin-top:14px;}
+.sec-title{font-size:15.5px;font-weight:900;margin:22px 0 12px;}
+.legend-note{font-size:10.5px;color:var(--text-dim);margin:-6px 0 10px;}
+.barrow{margin-bottom:14px;}
+.barrow .lbl{font-size:13px;font-weight:700;display:flex;justify-content:space-between;margin-bottom:5px;}
+.bartrack{height:10px;border-radius:6px;background:rgba(255,255,255,.08);position:relative;}
+.barfill{height:100%;border-radius:6px;}
+.chartwrap{display:flex;justify-content:center;margin:16px 0;}
+.desc-card{background:var(--card);border-radius:14px;padding:16px;margin-bottom:14px;border:1px solid rgba(255,255,255,.06);}
+.desc-card .title{font-size:14px;font-weight:900;margin-bottom:6px;}
+.desc-card .body{font-size:13px;color:#c7cadb;line-height:1.65;}
+.final-note{margin-top:18px;padding:16px;border-radius:14px;border:1px solid var(--gold-dim);background:rgba(201,168,76,.06);font-size:13px;line-height:1.7;}
+.final-note b{color:var(--gold-bright);}
+.btn-row{display:flex;flex-direction:column;gap:10px;margin-top:24px;}
+.btn-secondary{padding:15px;border-radius:12px;border:1px solid rgba(255,255,255,.14);background:transparent;color:var(--text);font-size:14px;font-weight:700;cursor:pointer;}
+.footer-note{text-align:center;font-size:10.5px;color:var(--text-dim);margin-top:28px;line-height:1.7;}
+</style>
+</head>
+<body>
+<div class="wrap" id="app">
+
+  <div id="screen-landing">
+    <div class="topbar"><div class="brand">한국뇌심리연구소 · <b>KBPI</b></div></div>
+    <div class="landing">
+      <div class="icon">🧩</div>
+      <h1><span class="en">BRAIN FUNCTION SYSTEM</span>BFS<br>뇌기능시스템</h1>
+      <p class="sub">좌뇌·우뇌·전뇌·조절력, 21개 세부기능으로<br>당신의 고유한 뇌 지도를 확인하고<br>여덟 가지 뇌유형 중 나의 유형을 찾습니다.</p>
+
+      <div class="info-cards">
+        <div class="info-card"><div class="ic">⏱️</div><div class="tx"><b>소요시간 약 3분</b><span>21개 상황 카드, 직관적으로 선택</span></div></div>
+        <div class="info-card"><div class="ic">🗺️</div><div class="tx"><b>21개 세부기능 레이더 지도</b><span>좌뇌6·우뇌6·전뇌4·조절력5 완전 분석</span></div></div>
+        <div class="info-card"><div class="ic">🐦</div><div class="tx"><b>8뇌유형 결과 공개</b><span>『독뇌술』에 등장하는 여덟 유형 중 나의 유형은?</span></div></div>
+      </div>
+
+      <div class="type-preview">
+        <span class="chip">🦢 학형</span><span class="chip">🐯 호형</span><span class="chip">🐱 묘형</span><span class="chip">🦊 여우형</span>
+        <span class="chip">🐻 곰형</span><span class="chip">🦁 사자형</span><span class="chip">🦌 사슴형</span><span class="chip">🦋 나비형</span>
+      </div>
+
+      <button type="button" class="btn-primary" onclick="goToInfo()">검사 시작하기 →</button>
+      <div class="disclaimer">※ 본 검사는 의료법상 질병의 진단이나 치료를 목적으로 하는 의료행위가 아니며, 자기이해와 성장을 돕기 위한 교육·상담용 참고 자료입니다.</div>
+    </div>
+  </div>
+
+  <div id="screen-info" class="hide">
+    <div class="topbar"><div class="brand"><b>BFS</b></div></div>
+    <div class="formscreen">
+      <h2>시작하기 전에</h2>
+      <p class="d">결과 리포트에 표시될 기본 정보만 간단히 알려주세요.</p>
+      <div class="field"><label>이름 (또는 별명)</label><input type="text" id="inputName" placeholder="예: 홍길동" maxlength="12"></div>
+      <div class="field"><label>연령대</label>
+        <div class="pillgroup" id="bracketPills">
+          <div class="pill" data-v="10s">10대</div><div class="pill" data-v="20s">20대</div><div class="pill" data-v="30s">30대</div>
+          <div class="pill" data-v="40s">40대</div><div class="pill" data-v="50s">50대</div><div class="pill" data-v="60+">60대 이상</div>
+        </div>
+      </div>
+      <button type="button" class="btn-primary" onclick="startQuestions()" style="margin-top:24px;">문항 시작하기 →</button>
+    </div>
+  </div>
+
+  <div id="screen-quiz" class="hide">
+    <div class="topbar"><div class="brand"><b>BFS</b></div></div>
+    <div class="progress-wrap">
+      <div class="progress-track"><div class="progress-fill" id="progFill" style="width:0%;"></div></div>
+      <div class="progress-label" id="progLabel">0 / 21</div>
+    </div>
+    <div class="qscreen">
+      <div class="q-domain" id="qDomain"></div>
+      <div class="q-text" id="qText"></div>
+      <div class="likert" id="likertOptions"></div>
+      <div class="qnav">
+        <button type="button" id="btnPrev" onclick="prevQuestion()">이전</button>
+        <button type="button" id="btnNext" class="next" onclick="nextQuestion()" disabled>다음</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="screen-results" class="hide">
+    <div class="topbar"><div class="brand"><b>BFS</b> 결과 리포트</div></div>
+    <div class="results" id="resultsBody"></div>
+  </div>
+
+</div>
+
+<script>
+/* ===================== 데이터 정의 (21개 기능, 좌뇌6·우뇌6·전뇌4·조절력5) ===================== */
+const GROUPS=[
+  {id:"left",name:"좌뇌",icon:"🔵"},
+  {id:"right",name:"우뇌",icon:"🟣"},
+  {id:"whole",name:"전뇌",icon:"🟢"},
+  {id:"control",name:"조절력",icon:"🟠"},
+];
+const FUNCS=[
+  {id:"lang",name:"언어력",group:"left",scenario:"친구에게 오늘 있었던 일을 설명한다면?",
+    opts:[{icon:"🗣️",label:"핵심만 딱 짚어서 설명한다",score:100},{icon:"💬",label:"이것저것 얘기하다 보면 잘 전달된다",score:75},{icon:"🤔",label:"어디서부터 말해야 할지 헷갈린다",score:50},{icon:"😶",label:"말보다 표정이나 몸짓이 먼저 나간다",score:25}]},
+  {id:"comp",name:"이해력",group:"left",scenario:"누군가 길게 설명할 때 나는?",
+    opts:[{icon:"⚡",label:"몇 마디만 들어도 핵심을 알아챈다",score:100},{icon:"👂",label:"끝까지 들으면 이해가 된다",score:75},{icon:"🔁",label:"다시 물어봐야 이해되는 경우가 많다",score:50},{icon:"📄",label:"글로 다시 읽어야 이해가 된다",score:25}]},
+  {id:"logic",name:"논리력",group:"left",scenario:"내 의견을 말할 때 나는?",
+    opts:[{icon:"🧩",label:"순서대로 이유를 조목조목 댄다",score:100},{icon:"🗂️",label:"대략적인 이유는 댈 수 있다",score:75},{icon:"🌀",label:"이유보다 느낌으로 먼저 말한다",score:50},{icon:"❓",label:"왜 그런지 설명하기 어려울 때가 많다",score:25}]},
+  {id:"infer",name:"추리력",group:"left",scenario:"적은 단서로 상황을 파악해야 할 때 나는?",
+    opts:[{icon:"🔍",label:"몇 가지만 보고도 전체 그림이 그려진다",score:100},{icon:"🧭",label:"어느 정도는 짐작이 간다",score:75},{icon:"📋",label:"정보가 더 있어야 판단이 선다",score:50},{icon:"🙅",label:"확실한 것 아니면 판단을 미룬다",score:25}]},
+  {id:"judge",name:"판별력",group:"left",scenario:"여러 선택지 앞에 놓이면 나는?",
+    opts:[{icon:"🎯",label:"뭐가 중요한지 바로 가려낸다",score:100},{icon:"⚖️",label:"비교해보면 우선순위가 보인다",score:75},{icon:"🤷",label:"다 비슷해 보여서 고민이 길어진다",score:50},{icon:"🎲",label:"아무거나 골라도 상관없다고 느낀다",score:25}]},
+  {id:"plan",name:"계획력",group:"left",scenario:"새로운 일을 시작할 때 나는?",
+    opts:[{icon:"🗓️",label:"순서와 일정을 먼저 짜둔다",score:100},{icon:"📝",label:"대략적인 그림은 그려둔다",score:75},{icon:"🏃",label:"일단 시작하고 본다",score:50},{icon:"🌪️",label:"계획 자체가 잘 안 잡힌다",score:25}]},
+  {id:"construct",name:"구성력",group:"right",scenario:"조각난 정보들을 볼 때 나는?",
+    opts:[{icon:"🧱",label:"전체 그림이 금방 그려진다",score:100},{icon:"🖼️",label:"시간을 들이면 그림이 보인다",score:75},{icon:"🧩",label:"조각들이 따로따로 느껴진다",score:50},{icon:"😵",label:"뭐가 뭔지 잘 안 맞춰진다",score:25}]},
+  {id:"focus",name:"집중력",group:"right",scenario:"뭔가에 몰입할 때 나는?",
+    opts:[{icon:"🎧",label:"주변 소리도 안 들릴 정도로 빠져든다",score:100},{icon:"📖",label:"어느 정도는 집중이 유지된다",score:75},{icon:"👀",label:"자꾸 딴생각이 끼어든다",score:50},{icon:"📱",label:"5분도 집중이 오래간다고 느낀 적이 드물다",score:25}]},
+  {id:"attn",name:"주의력",group:"right",scenario:"작은 변화가 있을 때 나는?",
+    opts:[{icon:"🔎",label:"바로 알아챈다",score:100},{icon:"👁️",label:"시간이 지나면 알아챈다",score:75},{icon:"🙈",label:"누가 말해줘야 안다",score:50},{icon:"🤔",label:"나중에도 잘 모를 때가 많다",score:25}]},
+  {id:"orient",name:"지남력",group:"right",scenario:"대화가 흘러갈 때 나는?",
+    opts:[{icon:"🧭",label:"흐름을 잘 따라간다",score:100},{icon:"🗺️",label:"대체로 놓치지 않는다",score:75},{icon:"🌫️",label:"가끔 흐름을 놓친다",score:50},{icon:"❔",label:"지금 무슨 얘기인지 자주 헷갈린다",score:25}]},
+  {id:"creative",name:"창의력",group:"right",scenario:"아이디어가 필요할 때 나는?",
+    opts:[{icon:"💡",label:"남들과 다른 생각이 잘 떠오른다",score:100},{icon:"✨",label:"가끔 새로운 생각이 떠오른다",score:75},{icon:"📚",label:"기존 방식을 참고하는 편이다",score:50},{icon:"🔁",label:"정해진 틀을 벗어나기 어렵다",score:25}]},
+  {id:"context",name:"상황력",group:"right",scenario:"분위기가 애매할 때 나는?",
+    opts:[{icon:"🎭",label:"분위기를 읽고 바로 맞춘다",score:100},{icon:"🙂",label:"어느 정도는 눈치껏 행동한다",score:75},{icon:"😅",label:"나중에서야 분위기를 깨달을 때가 있다",score:50},{icon:"🙄",label:"분위기 파악이 잘 안 된다는 말을 듣는다",score:25}]},
+  {id:"learn",name:"학습력",group:"whole",scenario:"새로운 것을 배울 때 나는?",
+    opts:[{icon:"🚀",label:"빠르게 습득하는 편이다",score:100},{icon:"📗",label:"조금 시간이 걸려도 익힌다",score:75},{icon:"🐢",label:"반복해야 겨우 익혀진다",score:50},{icon:"😓",label:"여러 번 해도 헷갈릴 때가 많다",score:25}]},
+  {id:"exec",name:"실행력",group:"whole",scenario:"결정을 내리면 나는?",
+    opts:[{icon:"⚡",label:"바로 행동으로 옮긴다",score:100},{icon:"🚶",label:"곧 움직이기 시작한다",score:75},{icon:"⏳",label:"시작까지 시간이 좀 걸린다",score:50},{icon:"🛋️",label:"머리로만 알고 몸이 안 움직인다",score:25}]},
+  {id:"persist",name:"지속력",group:"whole",scenario:"시작한 일에 대해 나는?",
+    opts:[{icon:"🏁",label:"끝까지 밀고 나간다",score:100},{icon:"🔄",label:"대부분 끝을 본다",score:75},{icon:"🍂",label:"중간에 흥미를 잃을 때가 많다",score:50},{icon:"🎈",label:"작심삼일로 끝나는 경우가 잦다",score:25}]},
+  {id:"recover",name:"회복력",group:"whole",scenario:"안 좋은 일이 있으면 나는?",
+    opts:[{icon:"🌱",label:"금방 털고 일어난다",score:100},{icon:"☀️",label:"며칠이면 괜찮아진다",score:75},{icon:"🌧️",label:"꽤 오래 마음에 남는다",score:50},{icon:"⛈️",label:"한번 힘들면 오래 못 벗어난다",score:25}]},
+  {id:"anger",name:"분노조절력",group:"control",scenario:"화가 날 때 나는?",
+    opts:[{icon:"🧊",label:"겉으로는 침착함을 유지한다",score:100},{icon:"🌤️",label:"감정이 살짝 드러나긴 한다",score:75},{icon:"🔥",label:"순간적으로 욱할 때가 있다",score:50},{icon:"💥",label:"감정이 바로 튀어나오는 편이다",score:25}]},
+  {id:"decision",name:"결정승인력",group:"control",scenario:"결정을 내려야 할 때 나는?",
+    opts:[{icon:"✅",label:"망설이지 않고 확실히 정한다",score:100},{icon:"👍",label:"대체로 빨리 정하는 편이다",score:75},{icon:"🤔",label:"고민이 좀 길어진다",score:50},{icon:"🔁",label:"정했다가도 자꾸 바꾼다",score:25}]},
+  {id:"speech",name:"언어표현력",group:"control",scenario:"하고 싶은 말이 있을 때 나는?",
+    opts:[{icon:"🎯",label:"적절한 타이밍에 조절해서 말한다",score:100},{icon:"💬",label:"대체로 잘 조절해서 말하는 편이다",score:75},{icon:"🤐",label:"속으로 삭이거나 참는 경우가 많다",score:50},{icon:"💣",label:"생각 없이 바로 뱉을 때가 많다",score:25}]},
+  {id:"speed",name:"실행완급력",group:"control",scenario:"급할 때와 여유로울 때 나는?",
+    opts:[{icon:"🎚️",label:"속도를 상황에 맞게 조절한다",score:100},{icon:"🚦",label:"어느 정도는 조절이 된다",score:75},{icon:"🐇",label:"늘 비슷한 속도로 움직인다",score:50},{icon:"🌪️",label:"급할 때 여유부리거나 여유로울 때 조급해진다",score:25}]},
+  {id:"pleasure",name:"쾌락절제력",group:"control",scenario:"눈앞에 유혹(간식·쇼핑 등)이 있을 때 나는?",
+    opts:[{icon:"🛡️",label:"나중을 생각해서 참는 편이다",score:100},{icon:"⏸️",label:"어느 정도는 자제가 된다",score:75},{icon:"🍬",label:"알면서도 손이 먼저 나간다",score:50},{icon:"🎢",label:"그 순간엔 못 참는 경우가 많다",score:25}]},
+];
+
+const TYPES={
+  LEC:{icon:"🦢",name:"학형",academic:"정진형(精進型)",desc:"흐트러짐 없이 목표를 향해 나아가는 사람입니다. 정확함과 꾸준함이 강점이지만, 완벽주의로 스스로를 몰아붙이지 않도록 주의가 필요합니다."},
+  LED:{icon:"🐯",name:"호형",academic:"결단형(決斷型)",desc:"확신을 갖고 밀어붙이는 사람입니다. 결단력과 추진력이 강점이지만, 주변과의 속도 차이로 마찰이 생기지 않도록 주의가 필요합니다."},
+  LFC:{icon:"🐱",name:"묘형",academic:"관조형(觀照型)",desc:"조용히 관찰하다 정확히 판단하는 사람입니다. 통찰력과 침착함이 강점이지만, 곁을 잘 안 주다 오해받지 않도록 주의가 필요합니다."},
+  LFD:{icon:"🦊",name:"여우형",academic:"기지형(機智型)",desc:"재치 있게 상황을 뒤집는 사람입니다. 순발력과 협상력이 강점이지만, 진지함이 필요한 순간을 놓치지 않도록 주의가 필요합니다."},
+  REC:{icon:"🐻",name:"곰형",academic:"인화형(忍和型)",desc:"묵묵히 곁을 지키는 사람입니다. 신뢰와 인내가 강점이지만, 힘들어도 티 내지 않다 소진되지 않도록 주의가 필요합니다."},
+  RED:{icon:"🦁",name:"사자형",academic:"통솔형(統率型)",desc:"사람들 사이에서 분위기를 이끄는 사람입니다. 리더십과 친화력이 강점이지만, 주목받지 못할 때의 위축감을 스스로 다스리는 연습이 필요합니다."},
+  RFC:{icon:"🦌",name:"사슴형",academic:"유화형(柔和型)",desc:"유연하지만 속은 잔잔한 사람입니다. 섬세함과 적응력이 강점이지만, 자기 의견을 내는 연습이 필요합니다."},
+  RFD:{icon:"🦋",name:"나비형",academic:"감흥형(感興型)",desc:"감정 그대로 자유롭게 사는 사람입니다. 감성과 창의성이 강점이지만, 산만함과 지속력 부족에 주의가 필요합니다."},
+};
+
+let state={name:"",bracket:"",answers:{},curQ:0};
+
+function goToInfo(){
+  document.getElementById("screen-landing").classList.add("hide");
+  document.getElementById("screen-info").classList.remove("hide");
+  window.scrollTo(0,0);
+}
+document.querySelectorAll("#bracketPills .pill").forEach(p=>{
+  p.addEventListener("click",()=>{
+    document.querySelectorAll("#bracketPills .pill").forEach(x=>x.classList.remove("active"));
+    p.classList.add("active");
+    state.bracket=p.dataset.v;
+  });
+});
+function startQuestions(){
+  const nameVal=document.getElementById("inputName").value.trim();
+  if(!nameVal){ alert("이름(또는 별명)을 입력해주세요."); return; }
+  if(!state.bracket){ alert("연령대를 선택해주세요."); return; }
+  state.name=nameVal;
+  document.getElementById("screen-info").classList.add("hide");
+  document.getElementById("screen-quiz").classList.remove("hide");
+  window.scrollTo(0,0);
+  renderQuestion();
+}
+function renderQuestion(){
+  const fn=FUNCS[state.curQ];
+  const grp=GROUPS.find(g=>g.id===fn.group);
+  document.getElementById("qDomain").textContent=grp.icon+" "+grp.name+" · "+fn.name;
+  document.getElementById("qText").textContent=fn.scenario;
+  document.getElementById("progFill").style.width=Math.round((state.curQ/FUNCS.length)*100)+"%";
+  document.getElementById("progLabel").textContent=(state.curQ+1)+" / "+FUNCS.length;
+  const box=document.getElementById("likertOptions");
+  box.innerHTML="";
+  box.className="cardgrid";
+  const savedScore=state.answers[state.curQ];
+  fn.opts.forEach(opt=>{
+    const card=document.createElement("button");
+    card.type="button";
+    card.className="optcard";
+    if(savedScore===opt.score) card.classList.add("selected");
+    card.innerHTML="<div class='optcard-icon'>"+opt.icon+"</div><div class='optcard-label'>"+opt.label+"</div>";
+    card.onclick=(e)=>{ e.preventDefault(); e.stopPropagation(); selectAnswer(opt.score); };
+    box.appendChild(card);
+  });
+  document.getElementById("btnPrev").disabled=(state.curQ===0);
+  document.getElementById("btnNext").disabled=(savedScore===undefined);
+  document.getElementById("btnNext").textContent=(state.curQ===FUNCS.length-1)?"결과 보기 →":"다음";
+}
+function selectAnswer(score){ state.answers[state.curQ]=score; renderQuestion(); }
+function nextQuestion(){
+  if(state.answers[state.curQ]===undefined) return;
+  if(state.curQ<FUNCS.length-1){ state.curQ++; renderQuestion(); window.scrollTo(0,0); }
+  else { showResults(); }
+}
+function prevQuestion(){ if(state.curQ>0){ state.curQ--; renderQuestion(); window.scrollTo(0,0); } }
+
+function tierColor(v){
+  if(v>=70) return "#4caf50"; if(v>=55) return "#4fc3f7"; if(v>=45) return "#ffd54f";
+  if(v>=30) return "#ff9800"; return "#f44336";
+}
+function tierLabel(v){
+  if(v>=70) return "우수"; if(v>=55) return "양호"; if(v>=45) return "보통";
+  if(v>=30) return "주의"; return "낮음";
+}
+
+function computeScores(){
+  const funcScores={};
+  FUNCS.forEach((fn,i)=>{ funcScores[fn.id]=state.answers[i]!==undefined?state.answers[i]:50; });
+  const groupScores={};
+  GROUPS.forEach(g=>{
+    const items=FUNCS.filter(f=>f.group===g.id);
+    groupScores[g.id]=Math.round(items.reduce((s,f)=>s+funcScores[f.id],0)/items.length);
+  });
+  return {funcScores,groupScores};
+}
+function classifyType(groupScores){
+  const axis1 = groupScores.left>=groupScores.right ? "L":"R";
+  const axis2 = groupScores.whole>=50 ? "E":"F";
+  const axis3 = groupScores.control>=50 ? "C":"D";
+  return axis1+axis2+axis3;
+}
+
+function showResults(){
+  document.getElementById("screen-quiz").classList.add("hide");
+  document.getElementById("screen-results").classList.remove("hide");
+  window.scrollTo(0,0);
+
+  const {funcScores,groupScores}=computeScores();
+  const typeCode=classifyType(groupScores);
+  const type=TYPES[typeCode];
+
+  let html="";
+  html+="<div class='res-header'><h2>"+esc(state.name)+"님의 BFS 결과</h2><div class='sub'>"+state.bracket+" · 21문항 자가진단 · "+todayStr()+"</div></div>";
+
+  html+="<div class='type-hero'><div class='animal-icon'>"+type.icon+"</div>"+
+    "<div class='type-name'>"+type.name+"</div><div class='type-academic'>"+type.academic+"</div>"+
+    "<div class='type-desc'>"+type.desc+"</div></div>";
+
+  html+="<div class='sec-title'>📊 4대 영역 점수</div>";
+  html+="<div class='legend-note'>🟢우수 🔵양호 🟡보통 🟠주의 🔴낮음</div>";
+  GROUPS.forEach(g=>{
+    const v=groupScores[g.id];
+    html+="<div class='barrow'><div class='lbl'><span>"+g.icon+" "+g.name+"</span><span style='color:"+tierColor(v)+";'>"+v+"점 · "+tierLabel(v)+"</span></div>"+
+      "<div class='bartrack'><div class='barfill' style='width:"+v+"%;background:"+tierColor(v)+";'></div></div></div>";
+  });
+
+  html+="<div class='sec-title'>🗺️ 21개 세부기능 레이더</div>";
+  html+="<div class='chartwrap'><canvas id='radarCanvas' width='320' height='300'></canvas></div>";
+
+  html+="<div class='sec-title'>🧩 세부 항목 점수</div>";
+  GROUPS.forEach(g=>{
+    html+="<div style='font-size:13px;font-weight:800;color:#f0d080;margin:12px 0 6px;'>"+g.icon+" "+g.name+"</div>";
+    FUNCS.filter(f=>f.group===g.id).forEach(fn=>{
+      const v=funcScores[fn.id];
+      html+="<div class='barrow'><div class='lbl'><span>"+fn.name+"</span><span style='color:"+tierColor(v)+";'>"+v+"점</span></div>"+
+        "<div class='bartrack'><div class='barfill' style='width:"+v+"%;background:"+tierColor(v)+";'></div></div></div>";
+    });
+  });
+
+  html+="<div class='final-note'>💡 <b>결과를 보는 방법</b><br>이 결과는 '위험도'가 아니라 <b>나를 이해하는 지도</b>입니다. "+type.name+"의 특징을 참고해서, 나만의 강점을 살리고 약한 영역은 훈련으로 보완해보세요. 『독뇌술』 PART 3에서 "+type.name+"에 대해 더 자세히 확인하실 수 있습니다.</div>";
+
+  html+="<div class='btn-row'><button type='button' class='btn-primary' onclick='window.print()'>📄 결과 인쇄 / PDF 저장</button>"+
+    "<button type='button' class='btn-secondary' onclick='restartTest()'>🔄 다시 검사하기</button></div>";
+
+  html+="<div class='footer-note'>한국뇌심리연구소 · Korea Brain Psychology Research Institute<br>본 검사는 의료적 진단이 아닌 자기이해·교육 목적의 참고 자료입니다.</div>";
+
+  document.getElementById("resultsBody").innerHTML=html;
+  drawRadar(document.getElementById("radarCanvas"), FUNCS.map(f=>f.name), FUNCS.map(f=>funcScores[f.id]));
+}
+
+function drawRadar(canvas,labels,values){
+  const ctx=canvas.getContext("2d");
+  const W=canvas.width,H=canvas.height;
+  ctx.clearRect(0,0,W,H);
+  const cx=W/2,cy=H/2,R=Math.min(W,H)/2-56;
+  const n=labels.length;
+  const angle=(i)=>-Math.PI/2+i*(2*Math.PI/n);
+  ctx.strokeStyle="rgba(255,255,255,.1)";
+  for(let ring=1;ring<=4;ring++){
+    ctx.beginPath();
+    for(let i=0;i<=n;i++){
+      const r=R*ring/4,a=angle(i%n);
+      const x=cx+r*Math.cos(a),y=cy+r*Math.sin(a);
+      if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+    }
+    ctx.stroke();
+  }
+  for(let i=0;i<n;i++){
+    const a=angle(i);
+    const x=cx+R*Math.cos(a),y=cy+R*Math.sin(a);
+    ctx.strokeStyle="rgba(255,255,255,.15)"; ctx.beginPath(); ctx.moveTo(cx,cy); ctx.lineTo(x,y); ctx.stroke();
+    const lx=cx+(R+16)*Math.cos(a),ly=cy+(R+16)*Math.sin(a);
+    ctx.fillStyle="#f0d080"; ctx.font="bold 8.5px sans-serif"; ctx.textAlign="center";
+    ctx.fillText(labels[i],lx,ly+3);
+  }
+  ctx.beginPath();
+  for(let i=0;i<=n;i++){
+    const idx=i%n,a=angle(idx);
+    const r=R*(Math.max(0,Math.min(100,values[idx]))/100);
+    const x=cx+r*Math.cos(a),y=cy+r*Math.sin(a);
+    if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+  }
+  ctx.closePath();
+  ctx.fillStyle="#3a6fb055"; ctx.fill();
+  ctx.strokeStyle="#3a6fb0"; ctx.lineWidth=2.5; ctx.lineJoin="round"; ctx.stroke();
+}
+
+function restartTest(){
+  if(!confirm("처음부터 다시 검사하시겠습니까?")) return;
+  state={name:"",bracket:"",answers:{},curQ:0};
+  document.getElementById("inputName").value="";
+  document.querySelectorAll("#bracketPills .pill").forEach(x=>x.classList.remove("active"));
+  document.getElementById("screen-results").classList.add("hide");
+  document.getElementById("screen-landing").classList.remove("hide");
+  window.scrollTo(0,0);
+}
+function esc(s){ return String(s).replace(/[<>&"]/g,c=>({"<":"&lt;",">":"&gt;","&":"&amp;",'"':"&quot;"}[c])); }
+function todayStr(){
+  const d=new Date();
+  return d.getFullYear()+"."+String(d.getMonth()+1).padStart(2,"0")+"."+String(d.getDate()).padStart(2,"0");
+}
+</script>
+</body>
+</html>
