@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>시니어 인지기능 현황 체크 시스템 | 한국뇌심리연구소</title>
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0"></script>
 <style>
 :root{
   --gold:#C9A227;
@@ -47,6 +48,25 @@ body{
 .screen{position:relative;z-index:1;display:none;}
 .screen.active{display:block;animation:fadein .5s ease;}
 @keyframes fadein{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+
+/* ---------- Admin Modal ---------- */
+.admin-modal{position:fixed;inset:0;background:rgba(0,0,0,0.6);display:none;z-index:9999;align-items:center;justify-content:center;}
+.admin-modal.active{display:flex;animation:fadein .3s ease;}
+.admin-modal-content{background:#fff;border-radius:20px;padding:30px;max-width:400px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,0.3);}
+.admin-modal h2{margin:0 0 20px;color:#1B2A4A;font-size:24px;}
+.admin-input{width:100%;padding:12px 16px;margin-bottom:15px;border:2px solid #ddd;border-radius:12px;font-size:16px;font-family:inherit;}
+.admin-input:focus{outline:none;border-color:#E8846B;}
+.admin-btn{width:100%;padding:14px;margin-bottom:8px;border:none;border-radius:12px;font-weight:700;cursor:pointer;font-size:16px;}
+.admin-btn-confirm{background:#E8846B;color:#fff;}
+.admin-btn-cancel{background:#ddd;color:#333;}
+
+/* ---------- Coupon Section ---------- */
+.coupon-section{background:linear-gradient(135deg,#f0f4f8,#e8f2f7);border-radius:20px;padding:24px;margin-bottom:24px;border:2px solid #B5D4E3;}
+.coupon-label{font-weight:700;color:#1B2A4A;margin-bottom:8px;font-size:16px;}
+.coupon-input{width:100%;padding:12px 14px;border:2px solid #d0e3f0;border-radius:12px;font-size:15px;font-family:monospace;margin-bottom:10px;text-transform:uppercase;}
+.coupon-input:focus{outline:none;border-color:#7FA087;}
+.coupon-btn{width:100%;padding:12px;background:#7FA087;color:#fff;border:none;border-radius:12px;font-weight:700;cursor:pointer;font-size:16px;}
+.coupon-btn:active{transform:scale(0.98);}
 
 /* ---------- 홈 ---------- */
 .home-card{
@@ -288,6 +308,17 @@ footer{text-align:center;font-size:13px;color:#a3987e;margin-top:50px;}
 </head>
 <body>
 <div class="bloom-bg"></div>
+
+<!-- Admin Modal -->
+<div class="admin-modal" id="adminModal">
+  <div class="admin-modal-content">
+    <h2>🔐 관리자 로그인</h2>
+    <input type="password" class="admin-input" id="adminPassword" placeholder="비밀번호 입력" onkeypress="if(event.key==='Enter')confirmAdmin()">
+    <button class="admin-btn admin-btn-confirm" onclick="confirmAdmin()">로그인</button>
+    <button class="admin-btn admin-btn-cancel" onclick="closeAdminTool()">취소</button>
+  </div>
+</div>
+
 <div class="wrap">
 
   <!-- ===================== 홈 화면 ===================== -->
@@ -321,6 +352,20 @@ footer{text-align:center;font-size:13px;color:#a3987e;margin-top:50px;}
           </div>
         </div>
       </div>
+    </div>
+
+    <!-- 관리자 입장 -->
+    <div class="home-card" style="margin-top:20px;background:linear-gradient(155deg,#fff8f0,#fff3e6);border-color:rgba(232,132,107,0.25);">
+      <div class="eyebrow" style="color:#D66B4F;">🔐 관리자 입장</div>
+      <button class="big-btn btn-secondary" onclick="openAdminTool()" style="font-size:18px;padding:20px;">관리자 로그인</button>
+    </div>
+
+    <!-- 쿠폰 입력 -->
+    <div class="coupon-section" id="coupon-section">
+      <div class="coupon-label">🎟️ 쿠폰 코드 입력</div>
+      <input type="text" class="coupon-input" id="coupon-input" placeholder="쿠폰 코드를 입력하세요" maxlength="20">
+      <button class="coupon-btn" onclick="validateCoupon()">쿠폰 확인</button>
+      <div id="coupon-message" style="margin-top:8px;font-size:14px;text-align:center;"></div>
     </div>
   </div>
 
@@ -725,9 +770,28 @@ function submitRecall(answerSet){
   qIndex++; renderQuestion();
 }
 
-function finishTest(){
+async function finishTest(){
   showScreen('screen-result');
   renderResult();
+  
+  // Supabase에 결과 저장
+  try{
+    const domainScores = computeDomainScores();
+    const overallScore = Math.round(Object.values(domainScores).reduce((a,b)=>a+b,0) / 5);
+    
+    await supabase.from('scs_keep').insert({
+      coupon_code: document.getElementById('coupon-input').value || 'unknown',
+      total_score: overallScore,
+      memory_score: domainScores['기억'] || 0,
+      concentration_score: domainScores['집중'] || 0,
+      emotion_score: domainScores['감정'] || 0,
+      judgment_score: domainScores['판단'] || 0,
+      execution_score: domainScores['실행'] || 0,
+      created_at: new Date().toISOString()
+    });
+  } catch(err){
+    console.log('Supabase 저장 오류 (진행 계속):', err);
+  }
 }
 
 /* ================= 결과 산출 ================= */
@@ -856,10 +920,95 @@ function renderResult(){
   document.getElementById('result-content').innerHTML = html;
 }
 
+/* ================= Supabase 초기화 ================= */
+const SUPABASE_URL = 'https://grxqfaeznqqohnlltged.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdyeHFmYWV6bnFxb2hubmx0Z2VkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTI3NDk5MDksImV4cCI6MjAyODMyNTkwOX0.N1r7lZk0BwVvNKWl5hv0-OLnLwvqXgQO8LfRKrVRKhQ';
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+/* ================= Admin 기능 ================= */
+let adminTapCount = 0;
+let adminTapTimeout;
+
+function openAdminTool(){
+  adminTapCount = 0;
+  document.getElementById('adminModal').classList.add('active');
+  document.getElementById('adminPassword').value = '';
+  document.getElementById('adminPassword').focus();
+}
+
+function closeAdminTool(){
+  document.getElementById('adminModal').classList.remove('active');
+  document.getElementById('adminPassword').value = '';
+}
+
+function confirmAdmin(){
+  const password = document.getElementById('adminPassword').value;
+  if(password === 'brain2025!'){
+    alert('✅ 관리자 로그인 성공!');
+    closeAdminTool();
+    window.location.href = 'https://k-brain.co.kr/admin-analytics.html';
+  } else {
+    alert('❌ 비밀번호가 틀렸습니다');
+    document.getElementById('adminPassword').value = '';
+  }
+}
+
+/* ================= 쿠폰 검증 ================= */
+async function validateCoupon(){
+  const couponCode = document.getElementById('coupon-input').value.trim().toUpperCase();
+  const messageEl = document.getElementById('coupon-message');
+  
+  if(!couponCode){
+    messageEl.innerHTML = '<span style="color:#d32f2f;">❌ 쿠폰 코드를 입력해주세요</span>';
+    return;
+  }
+  
+  try{
+    const { data, error } = await supabase
+      .from('scs_coupons')
+      .select('*')
+      .eq('code', couponCode)
+      .single();
+    
+    if(error || !data){
+      messageEl.innerHTML = '<span style="color:#d32f2f;">❌ 유효하지 않은 쿠폰 코드입니다</span>';
+      return;
+    }
+    
+    if(data.used){
+      messageEl.innerHTML = '<span style="color:#f57c00;">⚠️ 이미 사용된 쿠폰입니다</span>';
+      return;
+    }
+    
+    messageEl.innerHTML = '<span style="color:#388e3c;">✅ 쿠폰이 확인되었습니다! 검사를 시작하세요</span>';
+    document.getElementById('coupon-input').disabled = true;
+    
+    setTimeout(() => {
+      showScreen('screen-practice');
+    }, 1500);
+  } catch(err){
+    messageEl.innerHTML = '<span style="color:#d32f2f;">❌ 오류가 발생했습니다</span>';
+  }
+}
+
 /* ================= 화면 전환 ================= */
 function showScreen(id){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
+  
+  // 홈 화면으로 돌아올 때 쿠폰 초기화
+  if(id === 'screen-home'){
+    const couponInput = document.getElementById('coupon-input');
+    const couponMsg = document.getElementById('coupon-message');
+    if(couponInput){
+      couponInput.value = '';
+      couponInput.disabled = false;
+    }
+    if(couponMsg){
+      couponMsg.innerHTML = '';
+    }
+  }
+  
   window.scrollTo({top:0, behavior:'smooth'});
 }
 </script>
