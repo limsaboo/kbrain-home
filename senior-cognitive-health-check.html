@@ -5,7 +5,37 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>시니어 인지기능 현황 체크 시스템 | 한국뇌심리연구소</title>
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.css">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0">
+/* ================= 이벤트 리스너 ================= */
+document.addEventListener("DOMContentLoaded", function() {
+  // 쿠폰 검증 버튼
+  var btnCheck = document.getElementById("btnCheckCoupon");
+  if(btnCheck) {
+    btnCheck.addEventListener("click", checkCoupon);
+  }
+  
+  // 쿠폰 입력 (Enter 키)
+  var couponInput = document.getElementById("couponInput");
+  if(couponInput) {
+    couponInput.addEventListener("keypress", function(e) {
+      if(e.key === "Enter") checkCoupon();
+    });
+  }
+
+  // 쿠폰으로 검사 시작 버튼
+  var btnConfirm = document.getElementById("btnCouponConfirm");
+  if(btnConfirm) {
+    btnConfirm.addEventListener("click", startWithCoupon);
+  }
+
+  // 관리자 로그인 버튼
+  var btnAdmin = document.getElementById("btnAdminLogin");
+  if(btnAdmin) {
+    btnAdmin.addEventListener("click", adminLogin);
+  }
+});
+
+</script>
 <style>
 :root{
   --gold:#C9A227;
@@ -333,18 +363,90 @@ footer{text-align:center;font-size:13px;color:#a3987e;margin-top:50px;}
       </div>
     </div>
 
-    <!-- 관리자 입장 -->
-    <div class="home-card" style="margin-top:20px;background:linear-gradient(155deg,#fff8f0,#fff3e6);border-color:rgba(232,132,107,0.25);">
-      <div class="eyebrow" style="color:#D66B4F;">🔐 관리자 입장</div>
-      <button class="big-btn btn-secondary" onclick="adminLogin()" style="font-size:18px;padding:20px;">관리자 로그인</button>
+      <div class="coupon-screen">
+    <div style="text-align:center;margin-bottom:4px;">
+      <div class="rose-badge">🧠</div>
+      <div class="rose-title">뇌궁합 검사 시스템</div>
+      <div class="rose-org">한국뇌심리연구소 | 임찬우 소장</div>
     </div>
 
-    <!-- 쿠폰 입력 -->
-    <div class="coupon-section" id="coupon-section">
-      <div class="coupon-label">🎟️ 쿠폰 코드 입력</div>
-      <input type="text" class="coupon-input" id="coupon-input" placeholder="쿠폰 코드를 입력하세요" maxlength="20">
-      <button class="coupon-btn" onclick="checkCoupon()">쿠폰 확인</button>
-      <div id="coupon-message" style="margin-top:8px;font-size:14px;text-align:center;"></div>
+    <div class="coupon-box">
+      <div class="coupon-title">🎟 쿠폰 번호 입력</div>
+      <div class="coupon-sub">검사를 시작하려면 쿠폰 번호가 필요합니다.<br>쿠폰 구매 문의: brain.saboo@gmail.com</div>
+      <!-- 소장님 전용 바로 입장 -->
+      <div id="adminLoginRow" style="margin-bottom:10px;">
+        <button id="btnAdminLogin" style="width:100%;padding:10px;background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.3);border-radius:10px;color:var(--gold);font-size:13px;font-weight:600;cursor:pointer;">🔐 관리자 입장</button>
+      </div>
+      <div class="coupon-input-row">
+        <input type="text" class="fi" id="couponInput" placeholder="쿠폰번호 입력" maxlength="20">
+        <button class="coupon-btn" id="btnCheckCoupon">확인</button>
+      </div>
+      <div class="coupon-info" id="couponInfo">
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;">
+          <span style="font-size:13px;font-weight:700;color:var(--tx);" id="couponBuyerName"></span>
+          <span class="coupon-type-badge" id="couponTypeBadge"></span>
+        </div>
+        <div style="font-size:12px;color:var(--tx2);margin-bottom:4px;">잔여 횟수</div>
+        <div class="coupon-remain" id="couponRemain"></div>
+        <div style="font-size:11px;color:var(--tx2);margin-top:4px;" id="couponExpire"></div>
+        <button class="btn-coupon-confirm" id="btnCouponConfirm">이 쿠폰으로 검사 시작하기 →</button>
+      </div>
+    </div>
+
+    <div style="padding:8px 0;">
+      <div style="font-size:12px;color:var(--tx2);text-align:center;margin-bottom:10px;">쿠폰 문의 및 구매 채널</div>
+      <!-- SNS 아이콘 그리드 -->
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:8px;">
+
+        <!-- 유튜브 -->
+        <a href="https://www.youtube.com/channel/UC8QlCKNj5qgBKBbkE7Qz4_Q" target="_blank"
+           style="display:flex;flex-direction:column;align-items:center;gap:4px;text-decoration:none;">
+          <div style="width:48px;height:48px;background:#FF0000;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;box-shadow:0 2px 8px rgba(0,0,0,.3);">▶️</div>
+          <span style="font-size:9px;color:var(--tx2);">유튜브</span>
+        </a>
+
+        <!-- 인스타그램 -->
+        <a href="https://www.instagram.com/brainsaboo" target="_blank"
+           style="display:flex;flex-direction:column;align-items:center;gap:4px;text-decoration:none;">
+          <div style="width:48px;height:48px;background:linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;box-shadow:0 2px 8px rgba(0,0,0,.3);">📸</div>
+          <span style="font-size:9px;color:var(--tx2);">인스타그램</span>
+        </a>
+
+        <!-- 틱톡 -->
+        <a href="https://lite.tiktok.com/t/ZS9rLGswtfSAx-eo6CY/" target="_blank"
+           style="display:flex;flex-direction:column;align-items:center;gap:4px;text-decoration:none;">
+          <div style="width:48px;height:48px;background:#000;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;box-shadow:0 2px 8px rgba(0,0,0,.3);">🎵</div>
+          <span style="font-size:9px;color:var(--tx2);">틱톡</span>
+        </a>
+
+        <!-- 이메일 -->
+        <a href="mailto:brain.saboo@gmail.com"
+           style="display:flex;flex-direction:column;align-items:center;gap:4px;text-decoration:none;">
+          <div style="width:48px;height:48px;background:#1565c0;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;box-shadow:0 2px 8px rgba(0,0,0,.3);">✉️</div>
+          <span style="font-size:9px;color:var(--tx2);">이메일</span>
+        </a>
+
+        <!-- 문자 -->
+        <a href="sms:+821041190031"
+           style="display:flex;flex-direction:column;align-items:center;gap:4px;text-decoration:none;">
+          <div style="width:48px;height:48px;background:#2e7d32;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;box-shadow:0 2px 8px rgba(0,0,0,.3);">📱</div>
+          <span style="font-size:9px;color:var(--tx2);">문자</span>
+        </a>
+
+        <!-- 블로그 -->
+        <a href="https://blog.naver.com/brain_saboo" target="_blank"
+           style="display:flex;flex-direction:column;align-items:center;gap:4px;text-decoration:none;">
+          <div style="width:48px;height:48px;background:#03C75A;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;box-shadow:0 2px 8px rgba(0,0,0,.3);">📝</div>
+          <span style="font-size:9px;color:var(--tx2);">네이버블로그</span>
+        </a>
+
+      </div>
+
+      <!-- 비공개 문의 안내 -->
+      <div style="background:rgba(254,229,0,.08);border:1px solid rgba(254,229,0,.2);border-radius:10px;padding:8px 12px;text-align:center;">
+        <div style="font-size:10px;color:#FEE500;font-weight:600;margin-bottom:2px;">🔒 1:1 비공개 문의</div>
+        <div style="font-size:9.5px;color:var(--tx2);">이메일 또는 문자로 문의하시면 비공개로 안전하게 상담받으실 수 있습니다</div>
+      </div>
     </div>
   </div>
 
@@ -909,75 +1011,157 @@ let _coupon = null; // 현재 사용 중인 쿠폰
 let _adminUnlocked = false; // 관리자 해제 여부
 const _adminPass = 'brain2025!'; // 관리자 비밀번호
 
-/* ================= 쿠폰 검증 ================= */
-function checkCoupon(){
-  const code = document.getElementById('coupon-input').value.trim().toUpperCase();
-  const messageEl = document.getElementById('coupon-message');
-  
-  if(!code){
-    messageEl.innerHTML = '<span style="color:#d32f2f;font-weight:700;">❌ 쿠폰 번호를 입력해주세요</span>';
-    return;
-  }
-  
-  messageEl.innerHTML = '<span style="color:#666;">쿠폰 확인 중...</span>';
-  
-  supabase
-    .from('scs_coupons')
-    .select('*')
-    .eq('code', code)
-    .eq('is_active', true)
-    .then(function({ data: rows, error }){
-      if(error || !rows || rows.length === 0){
-        messageEl.innerHTML = '<span style="color:#d32f2f;font-weight:700;">❌ 유효하지 않은 쿠폰입니다</span>';
+/* ================= Supabase 초기화 ================= */
+const SUPABASE_URL = 'https://grxqfaeznqqohnlltged.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdyeHFmYWV6bnFxb2hubmx0Z2VkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTI3NDk5MDksImV4cCI6MjAyODMyNTkwOX0.N1r7lZk0BwVvNKWl5hv0-OLnLwvqXgQO8LfRKrVRKhQ';
+
+// Supabase 초기화 (window.supabase가 로드되었다고 가정)
+let supabase = null;
+if(typeof window.supabase !== 'undefined') {
+  supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+}
+
+// 수동 Supabase API 호출 함수 (응급용)
+function supaFetch(endpoint, method = "GET", body = null) {
+  const url = SUPABASE_URL + endpoint;
+  const headers = {
+    'Authorization': 'Bearer ' + SUPABASE_KEY,
+    'apikey': SUPABASE_KEY,
+    'Content-Type': 'application/json'
+  };
+  const options = { method, headers };
+  if(body) options.body = JSON.stringify(body);
+  return fetch(url, options).then(r => r.json());
+}
+
+/* ================= 글로벌 변수 ================= */
+var _coupon = null;
+var _adminUnlocked = false;
+const _adminPass = 'brain2025!';
+
+/* ================= Toast 메시지 ================= */
+function showToast(msg) {
+  alert(msg);  // SCS는 alert 사용
+}
+
+/* ================= 쿠폰 검증 (BMS 패턴) ================= */
+function checkCoupon() {
+  var code = document.getElementById("couponInput").value.trim().toUpperCase();
+  if(!code) { showToast("쿠폰 번호를 입력해주세요"); return; }
+
+  showToast("쿠폰 확인 중...");
+
+  supaFetch("/rest/v1/coupons?coupon_code=eq." + encodeURIComponent(code)
+    + "&is_active=eq.true&select=*")
+    .then(function(rows) {
+      if(!rows || rows.length === 0) {
+        showToast("❌ 유효하지 않은 쿠폰입니다");
         return;
       }
-      
-      const c = rows[0];
-      
+      var c = rows[0];
+
       // 만료일 확인
-      if(c.expire_date && new Date(c.expire_date) < new Date()){
-        messageEl.innerHTML = '<span style="color:#d32f2f;font-weight:700;">❌ 만료된 쿠폰입니다</span>';
+      if(c.expire_date && new Date(c.expire_date) < new Date()) {
+        showToast("❌ 만료된 쿠폰입니다");
         return;
       }
-      
       // 잔여 횟수 확인
-      if(c.remain_count <= 0){
-        messageEl.innerHTML = '<span style="color:#d32f2f;font-weight:700;">❌ 사용 횟수가 모두 소진된 쿠폰입니다</span>';
+      if(c.remain_count <= 0) {
+        showToast("❌ 사용 횟수가 모두 소진된 쿠폰입니다");
         return;
       }
-      
+
       _coupon = c;
-      messageEl.innerHTML = '<span style="color:#388e3c;font-weight:700;">✅ 유효한 쿠폰입니다!</span>';
-      document.getElementById('coupon-input').disabled = true;
-      
-      setTimeout(() => {
-        showScreen('screen-practice');
-      }, 1500);
-    })
-    .catch(function(e){
-      messageEl.innerHTML = '<span style="color:#d32f2f;">오류: ' + e.message + '</span>';
+
+      // 쿠폰 정보 표시
+      var isFree = c.coupon_type === "free";
+      var nameEl = document.getElementById("couponBuyerName");
+      nameEl.textContent = c.buyer_name || "미확인";
+
+      var badge = document.getElementById("couponTypeBadge");
+      badge.textContent = isFree ? "무료 증정" : "유료 구매";
+      badge.className = "coupon-type-badge " + (isFree ? "badge-free" : "badge-paid");
+
+      document.getElementById("couponRemain").textContent = c.remain_count + "회 남음";
+
+      var expEl = document.getElementById("couponExpire");
+      if(c.expire_date) {
+        expEl.textContent = "만료일: " + new Date(c.expire_date).toLocaleDateString("ko-KR");
+      } else {
+        expEl.textContent = "만료일: 무제한";
+      }
+
+      document.getElementById("couponInfo").classList.add("show");
+      showToast("✅ 유효한 쿠폰입니다!");
+    }).catch(function(e) {
+      showToast("오류: " + e.message);
     });
 }
 
-/* ================= 관리자 로그인 ================= */
-function adminLogin(){
-  const pw = prompt('관리자 비밀번호:');
-  if(!pw) return;
+/* ================= 쿠폰으로 검사 시작 ================= */
+function startWithCoupon() {
+  if(!_coupon) { showToast("쿠폰을 먼저 확인해주세요"); return; }
+  if(_coupon.remain_count <= 0) { showToast("잔여 횟수가 없습니다"); return; }
   
-  if(pw === _adminPass){
+  // SCS 구조에 맞게 화면 전환
+  showScreen('screen-practice');
+}
+
+/* ================= 쿠폰 사용 (횟수 차감) ================= */
+function useCoupon(examineeName, systemType, diagnosisId) {
+  if(!_coupon) return;
+  // 관리자 모드는 차감 없음
+  if(_coupon.coupon_type === "admin") return examineeName;
+
+  var isFree = _coupon.coupon_type === "free";
+  // 무료 쿠폰이면 이름 뒤에 (무료 N회*) 표시
+  var displayName = isFree
+    ? examineeName + " (무료 " + _coupon.remain_count + "회*)"
+    : examineeName;
+
+  // 쿠폰 사용 횟수 차감
+  var newRemain = _coupon.remain_count - 1;
+  var newUsed   = _coupon.used_count + 1;
+
+  // coupons 테이블 업데이트
+  supaFetch("/rest/v1/coupons?coupon_code=eq." + encodeURIComponent(_coupon.coupon_code),
+    "PATCH",
+    { remain_count: newRemain, used_count: newUsed }
+  ).then(function() {
+    _coupon.remain_count = newRemain;
+    _coupon.used_count   = newUsed;
+  }).catch(function(e) {
+    console.log("쿠폰 차감 오류:", e);
+  });
+
+  return displayName;
+}
+
+/* ================= 관리자 로그인 ================= */
+function adminLogin() {
+  var pw = prompt("관리자 비밀번호:");
+  if(!pw) return;
+  if(pw === _adminPass) {
     _adminUnlocked = true;
+    // 쿠폰 없이 바로 검사 시작
     _coupon = {
-      code: 'ADMIN-FREE',
-      buyer_name: '임찬우소장',
+      coupon_code: "ADMIN-FREE",
+      coupon_type: "admin",
+      buyer_name: "임찬우소장",
+      buyer_type: "admin",
+      total_uses: 9999,
+      used_count: 0,
       remain_count: 9999,
+      system_type: "all",
       is_active: true
     };
-    alert('✅ 소장님 입장! 검사 무제한 사용');
+    showToast("✅ 소장님 입장! 쿠폰 무제한 사용");
     showScreen('screen-practice');
   } else {
-    alert('❌ 비밀번호가 틀렸습니다');
+    showToast("❌ 비밀번호가 틀렸습니다");
   }
 }
+
 
 /* ================= 화면 전환 ================= */
 function showScreen(id){
@@ -999,6 +1183,36 @@ function showScreen(id){
   
   window.scrollTo({top:0, behavior:'smooth'});
 }
+
+/* ================= 이벤트 리스너 ================= */
+document.addEventListener("DOMContentLoaded", function() {
+  // 쿠폰 검증 버튼
+  var btnCheck = document.getElementById("btnCheckCoupon");
+  if(btnCheck) {
+    btnCheck.addEventListener("click", checkCoupon);
+  }
+  
+  // 쿠폰 입력 (Enter 키)
+  var couponInput = document.getElementById("couponInput");
+  if(couponInput) {
+    couponInput.addEventListener("keypress", function(e) {
+      if(e.key === "Enter") checkCoupon();
+    });
+  }
+
+  // 쿠폰으로 검사 시작 버튼
+  var btnConfirm = document.getElementById("btnCouponConfirm");
+  if(btnConfirm) {
+    btnConfirm.addEventListener("click", startWithCoupon);
+  }
+
+  // 관리자 로그인 버튼
+  var btnAdmin = document.getElementById("btnAdminLogin");
+  if(btnAdmin) {
+    btnAdmin.addEventListener("click", adminLogin);
+  }
+});
+
 </script>
 </body>
 </html>
