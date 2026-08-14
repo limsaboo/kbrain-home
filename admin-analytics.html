@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>관리자 대시보드 — 한국뇌심리연구소</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body {
+  background: #f8f9fa;
+  color: #2c3e50;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Pretendard", sans-serif;
+  line-height: 1.6;
+}
+
+.container { max-width: 1400px; margin: 0 auto; padding: 20px; }
+.topbar {
+  background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+  color: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,.1);
+}
+.topbar h1 { font-size: 24px; font-weight: 900; }
+.topbar .user-info { font-size: 13px; opacity: .9; }
+.logout-btn {
+  background: #e74c3c;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 12px;
+}
+.logout-btn:hover { background: #c0392b; }
+
+/* 로그인 화면 */
+.login-screen {
+  max-width: 400px;
+  margin: 80px auto;
+  background: #fff;
+  padding: 40px;
+  border-radius: 14px;
+  box-shadow: 0 8px 24px rgba(0,0,0,.12);
+  text-align: center;
+}
+.login-screen h1 { font-size: 24px; margin-bottom: 8px; color: #2c3e50; }
+.login-screen .subtitle { color: #7f8c8d; margin-bottom: 30px; font-size: 14px; }
+.login-screen .field {
+  margin-bottom: 16px;
+  text-align: left;
+}
+.login-screen label {
+  display: block;
+  font-weight: 700;
+  margin-bottom: 6px;
+  color: #34495e;
+  font-size: 13px;
+}
+.login-screen input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #bdc3c7;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
+}
+.login-screen input:focus {
+  outline: none;
+  border-color: #3498db;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, .1);
+}
+.login-btn {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  margin-top: 20px;
+}
+.login-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(52, 152, 219, .3); }
+.login-error {
+  color: #e74c3c;
+  font-size: 13px;
+  margin-top: 10px;
+}
+
+/* 대시보드 */
+.dashboard { display: none; }
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  margin-bottom: 30px;
+}
+.stat-card {
+  background: #fff;
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,.08);
+  border-left: 5px solid #3498db;
+}
+.stat-card.orange { border-left-color: #e67e22; }
+.stat-card.green { border-left-color: #27ae60; }
+.stat-card.purple { border-left-color: #9b59b6; }
+
+.stat-label {
+  font-size: 13px;
+  color: #7f8c8d;
+  font-weight: 600;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+}
+.stat-number {
+  font-size: 36px;
+  font-weight: 900;
+  color: #2c3e50;
+}
+.stat-change {
+  font-size: 12px;
+  color: #27ae60;
+  margin-top: 8px;
+}
+
+/* 테이블 */
+.section {
+  background: #fff;
+  padding: 24px;
+  border-radius: 12px;
+  margin-bottom: 30px;
+  box-shadow: 0 2px 8px rgba(0,0,0,.08);
+}
+.section h2 {
+  font-size: 18px;
+  font-weight: 900;
+  margin-bottom: 20px;
+  color: #2c3e50;
+  border-bottom: 2px solid #ecf0f1;
+  padding-bottom: 12px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+th {
+  background: #f8f9fa;
+  padding: 14px;
+  text-align: left;
+  font-weight: 700;
+  color: #34495e;
+  border-bottom: 2px solid #ecf0f1;
+}
+td {
+  padding: 14px;
+  border-bottom: 1px solid #ecf0f1;
+}
+tr:hover { background: #f8f9fa; }
+
+.badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+}
+.badge.active { background: #d5f4e6; color: #27ae60; }
+.badge.inactive { background: #fadbd8; color: #e74c3c; }
+
+.search-box {
+  margin-bottom: 20px;
+}
+.search-box input {
+  width: 100%;
+  max-width: 300px;
+  padding: 10px 14px;
+  border: 1px solid #bdc3c7;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+/* 차트 영역 */
+.chart-container {
+  background: #fff;
+  padding: 24px;
+  border-radius: 12px;
+  margin-bottom: 30px;
+  box-shadow: 0 2px 8px rgba(0,0,0,.08);
+  min-height: 300px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #95a5a6;
+}
+
+/* 반응형 */
+@media(max-width: 768px) {
+  .topbar { flex-direction: column; gap: 15px; text-align: center; }
+  .stats-grid { grid-template-columns: 1fr; }
+  table { font-size: 12px; }
+  th, td { padding: 10px; }
+}
+</style>
+</head>
+<body>
+
+<div id="loginScreen" class="login-screen">
+  <h1>🔒 관리자 대시보드</h1>
+  <p class="subtitle">한국뇌심리연구소 관리자 로그인</p>
+  <div class="field">
+    <label for="password">관리자 비밀번호</label>
+    <input type="password" id="password" placeholder="비밀번호 입력" onkeypress="if(event.key==='Enter') login()">
+  </div>
+  <button class="login-btn" onclick="login()">로그인</button>
+  <div id="loginError" class="login-error"></div>
+</div>
+
+<div id="dashboardScreen" class="dashboard">
+  <div class="container">
+    <!-- 상단 바 -->
+    <div class="topbar">
+      <h1>📊 관리자 대시보드</h1>
+      <div>
+        <div class="user-info">로그인됨 | <span id="currentTime"></span></div>
+        <button class="logout-btn" onclick="logout()">로그아웃</button>
+      </div>
+    </div>
+
+    <!-- 통계 카드 -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-label">총 회원수</div>
+        <div class="stat-number" id="totalMembers">0</div>
+        <div class="stat-change">↑ 이번달 +12명</div>
+      </div>
+      <div class="stat-card orange">
+        <div class="stat-label">총 방문자수</div>
+        <div class="stat-number" id="totalVisitors">0</div>
+        <div class="stat-change">↑ 어제대비 +28%</div>
+      </div>
+      <div class="stat-card green">
+        <div class="stat-label">평균 체류시간</div>
+        <div class="stat-number" id="avgTime">0</div>
+        <div class="stat-change">분</div>
+      </div>
+      <div class="stat-card purple">
+        <div class="stat-label">가장 많은 시스템</div>
+        <div class="stat-number" id="topSystem">BMS</div>
+        <div class="stat-change">뇌궁합시스템</div>
+      </div>
+    </div>
+
+    <!-- 회원 정보 -->
+    <div class="section">
+      <h2>📋 회원 정보</h2>
+      <div class="search-box">
+        <input type="text" id="memberSearch" placeholder="회원명 또는 이메일로 검색..." onkeyup="filterMembers()">
+      </div>
+      <table id="memberTable">
+        <thead>
+          <tr>
+            <th>이름</th>
+            <th>이메일</th>
+            <th>가입일</th>
+            <th>접속 횟수</th>
+            <th>마지막 접속</th>
+            <th>상태</th>
+          </tr>
+        </thead>
+        <tbody id="memberBody">
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 시스템별 접속 현황 -->
+    <div class="section">
+      <h2>📈 시스템별 접속 현황</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>시스템명</th>
+            <th>접속 횟수</th>
+            <th>평균 체류 시간</th>
+            <th>완료율</th>
+            <th>평가</th>
+          </tr>
+        </thead>
+        <tbody id="systemBody">
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 방문객 통계 -->
+    <div class="section">
+      <h2>📅 일일 방문자 통계 (최근 7일)</h2>
+      <div class="chart-container">
+        <p>📊 방문자 수: <strong id="dailyStats"></strong></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const ADMIN_PASSWORD = 'brain2025!';
+
+// 목업 데이터
+const mockMembers = [
+  { name: '김철수', email: 'kim@example.com', joined: '2026-08-01', visits: 12, lastAccess: '2026-08-15 14:30', status: 'active' },
+  { name: '이영희', email: 'lee@example.com', joined: '2026-08-02', visits: 8, lastAccess: '2026-08-14 11:15', status: 'active' },
+  { name: '박민준', email: 'park@example.com', joined: '2026-08-05', visits: 5, lastAccess: '2026-08-10 09:45', status: 'inactive' },
+  { name: '정소영', email: 'jung@example.com', joined: '2026-08-08', visits: 15, lastAccess: '2026-08-15 16:20', status: 'active' },
+  { name: '최승훈', email: 'choi@example.com', joined: '2026-08-10', visits: 3, lastAccess: '2026-08-12 13:30', status: 'active' },
+  { name: '윤지은', email: 'yoon@example.com', joined: '2026-08-12', visits: 9, lastAccess: '2026-08-15 10:15', status: 'active' },
+];
+
+const mockSystems = [
+  { name: '뇌궁합시스템 (BMS)', visits: 245, time: '4분 32초', completion: '87%' },
+  { name: '뇌성향시스템 (BTS)', visits: 189, time: '3분 15초', completion: '92%' },
+  { name: '뇌능력시스템 (BAS)', visits: 156, time: '5분 48초', completion: '78%' },
+  { name: '뇌기능시스템 (BFS)', visits: 142, time: '2분 30초', completion: '95%' },
+  { name: '시니어인지시스템 (SCS)', visits: 98, time: '6분 15초', completion: '71%' },
+  { name: '뇌적성시스템 (BAT)', visits: 127, time: '4분 20초', completion: '85%' },
+  { name: '뇌컨디션시스템 (BCS)', visits: 113, time: '3분 45초', completion: '88%' },
+  { name: 'BIPS 체험판', visits: 52, time: '2분 10초', completion: '65%' },
+];
+
+function login() {
+  const pwd = document.getElementById('password').value;
+  if (pwd === ADMIN_PASSWORD) {
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('dashboardScreen').style.display = 'block';
+    loadDashboard();
+  } else {
+    document.getElementById('loginError').textContent = '❌ 비밀번호가 올바르지 않습니다';
+  }
+}
+
+function logout() {
+  document.getElementById('dashboardScreen').style.display = 'none';
+  document.getElementById('loginScreen').style.display = 'block';
+  document.getElementById('password').value = '';
+  document.getElementById('loginError').textContent = '';
+}
+
+function loadDashboard() {
+  // 통계 업데이트
+  document.getElementById('totalMembers').textContent = mockMembers.length;
+  document.getElementById('totalVisitors').textContent = mockMembers.reduce((a, b) => a + b.visits, 0).toLocaleString();
+  document.getElementById('avgTime').textContent = '4분';
+  
+  // 회원 테이블
+  const tbody = document.getElementById('memberBody');
+  tbody.innerHTML = '';
+  mockMembers.forEach(member => {
+    const row = `
+      <tr>
+        <td><strong>${member.name}</strong></td>
+        <td>${member.email}</td>
+        <td>${member.joined}</td>
+        <td>${member.visits}</td>
+        <td>${member.lastAccess}</td>
+        <td><span class="badge ${member.status === 'active' ? 'active' : 'inactive'}">${member.status === 'active' ? '활성' : '비활성'}</span></td>
+      </tr>
+    `;
+    tbody.innerHTML += row;
+  });
+
+  // 시스템 테이블
+  const sysBody = document.getElementById('systemBody');
+  sysBody.innerHTML = '';
+  mockSystems.forEach(sys => {
+    const row = `
+      <tr>
+        <td><strong>${sys.name}</strong></td>
+        <td>${sys.visits.toLocaleString()}</td>
+        <td>${sys.time}</td>
+        <td>${sys.completion}</td>
+        <td>⭐ 만족도 높음</td>
+      </tr>
+    `;
+    sysBody.innerHTML += row;
+  });
+
+  // 일일 통계
+  document.getElementById('dailyStats').textContent = '월요일 245명, 화요일 312명, 수요일 298명, 목요일 356명, 금요일 421명, 토요일 389명, 일요일 267명 (합계 2,288명)';
+
+  // 현재 시간 표시
+  updateTime();
+  setInterval(updateTime, 1000);
+}
+
+function updateTime() {
+  const now = new Date();
+  const time = now.toLocaleTimeString('ko-KR');
+  document.getElementById('currentTime').textContent = time;
+}
+
+function filterMembers() {
+  const search = document.getElementById('memberSearch').value.toLowerCase();
+  const rows = document.getElementById('memberBody').getElementsByTagName('tr');
+  
+  for (let row of rows) {
+    const name = row.cells[0].textContent.toLowerCase();
+    const email = row.cells[1].textContent.toLowerCase();
+    
+    if (name.includes(search) || email.includes(search)) {
+      row.style.display = '';
+    } else {
+      row.style.display = 'none';
+    }
+  }
+}
+
+// 페이지 로드시 포커스
+window.onload = function() {
+  document.getElementById('password').focus();
+};
+</script>
+
+</body>
+</html>
