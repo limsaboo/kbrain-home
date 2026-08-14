@@ -1,8 +1,8 @@
 {
-  "name": "한국뇌심리연구소",
-  "short_name": "뇌심리연구소",
-  "description": "뇌과학 기반 자기이해와 교육 플랫폼. 뇌궁합·뇌성향·뇌능력·뇌기능·뇌적성·뇌컨디션·BIPS 검사 시스템.",
-  "start_url": "/",
+  "name": "한국뇌심리연구소 - 뇌건강체크",
+  "short_name": "뇌건강체크",
+  "description": "간단한 1분 검사로 당신의 뇌 건강을 알아보세요! 기억력, 집중력, 감정조절, 판단력, 실행력 5가지 영역 분석.",
+  "start_url": "/bhc-app.html",
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait-primary",
@@ -30,14 +30,35 @@
     }
   ],
   
-  "categories": ["education", "productivity"],
+  "categories": ["health", "education"],
+  
+  "screenshots": [
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "form_factor": "narrow",
+      "type": "image/png"
+    }
+  ],
   
   "shortcuts": [
     {
-      "name": "뇌궁합 검사",
-      "short_name": "뇌궁합",
-      "description": "뇌궁합시스템으로 관계 이해하기",
-      "url": "/brain-compatibility-test.html",
+      "name": "뇌건강체크 시작",
+      "short_name": "검사",
+      "description": "1분 안에 뇌 건강 진단",
+      "url": "/bhc-app.html",
+      "icons": [
+        {
+          "src": "/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "홈페이지",
+      "short_name": "홈",
+      "description": "한국뇌심리연구소 홈페이지",
+      "url": "/",
       "icons": [
         {
           "src": "/icon-192.png",
@@ -48,20 +69,8 @@
     {
       "name": "커뮤니티",
       "short_name": "커뮤니티",
-      "description": "회원 커뮤니티 참여하기",
+      "description": "회원 커뮤니티 참여",
       "url": "/community.html",
-      "icons": [
-        {
-          "src": "/icon-192.png",
-          "sizes": "192x192"
-        }
-      ]
-    },
-    {
-      "name": "관리자 대시보드",
-      "short_name": "대시보드",
-      "description": "관리자 전용 대시보드",
-      "url": "/admin-analytics.html",
       "icons": [
         {
           "src": "/icon-192.png",
