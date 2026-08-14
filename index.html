@@ -17,7 +17,7 @@
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png">
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 <link rel="manifest" href="/manifest.json">
-<meta name="theme-color" content="#161a3d">
+<meta name="theme-color" content="#2c3e50">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -40,7 +40,7 @@
 <meta name="twitter:description" content="17년 임상 노하우와 뇌과학의 만남. 이미지 기반 뇌인지 체험으로 나와 가족의 뇌 특성을 이해합니다.">
 <meta name="twitter:image" content="https://www.k-brain.co.kr/og-image.png">
 
-<meta name="theme-color" content="#161a3d">
+<meta name="theme-color" content="#2c3e50">
 
 <!-- Structured Data (통합: Organization + LocalBusiness + WebSite + Person + FAQPage) -->
 <script type="application/ld+json">
@@ -1396,6 +1396,48 @@ if('serviceWorker' in navigator){
     document.getElementById('visitor-count').textContent = '0';
   }
 })();
+
+// ===== PWA Service Worker 등록 =====
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('/sw.js').then(
+      function(registration) {
+        console.log('✅ Service Worker 등록 성공:', registration.scope);
+      },
+      function(error) {
+        console.log('❌ Service Worker 등록 실패:', error);
+      }
+    );
+  });
+}
+
+// PWA 설치 프롬프트
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  
+  // 설치 버튼 표시 (선택사항)
+  const installBtn = document.getElementById('pwa-install-btn');
+  if (installBtn) {
+    installBtn.style.display = 'block';
+    installBtn.addEventListener('click', async () => {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        console.log(`사용자가 설치를 ${outcome === 'accepted' ? '수락' : '거절'}했습니다`);
+        deferredPrompt = null;
+      }
+    });
+  }
+});
+
+window.addEventListener('appinstalled', () => {
+  console.log('🎉 앱이 설치되었습니다!');
+  if (deferredPrompt) {
+    deferredPrompt = null;
+  }
+});
 </script>
 </body>
 </html>
