@@ -2,7 +2,7 @@
   "name": "한국뇌심리연구소",
   "short_name": "뇌심리연구소",
   "description": "뇌과학 기반 자기이해와 교육 플랫폼. 뇌궁합·뇌성향·뇌능력·뇌기능·뇌적성·뇌컨디션·BIPS 검사 시스템.",
-  "start_url": "https://k-brain.co.kr/",
+  "start_url": "/",
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait-primary",
@@ -11,44 +11,37 @@
   
   "icons": [
     {
-      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect width='192' height='192' fill='%232c3e50'/><circle cx='96' cy='60' r='35' fill='%23ffd700'/><path d='M96 110 L70 140 L122 140 Z' fill='%233498db'/><circle cx='55' cy='140' r='12' fill='%2327ae60'/><circle cx='137' cy='140' r='12' fill='%23e74c3c'/></svg>",
+      "src": "/icon-192.png",
       "sizes": "192x192",
-      "type": "image/svg+xml",
+      "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' fill='%232c3e50'/><circle cx='256' cy='150' r='90' fill='%23ffd700'/><path d='M256 280 L180 360 L332 360 Z' fill='%233498db'/><circle cx='140' cy='360' r='30' fill='%2327ae60'/><circle cx='372' cy='360' r='30' fill='%23e74c3c'/></svg>",
+      "src": "/icon-512.png",
       "sizes": "512x512",
-      "type": "image/svg+xml",
+      "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect width='192' height='192' fill='%232c3e50' rx='45'/><circle cx='96' cy='60' r='35' fill='%23ffd700'/><path d='M96 110 L70 140 L122 140 Z' fill='%233498db'/><circle cx='55' cy='140' r='12' fill='%2327ae60'/><circle cx='137' cy='140' r='12' fill='%23e74c3c'/></svg>",
+      "src": "/icon-192.png",
       "sizes": "192x192",
-      "type": "image/svg+xml",
+      "type": "image/png",
       "purpose": "maskable"
     }
   ],
   
   "categories": ["education", "productivity"],
-  "screenshots": [
-    {
-      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 540 720'><rect width='540' height='720' fill='%23f8f9fa'/><rect width='540' height='80' fill='%232c3e50'/><text x='270' y='50' font-size='24' font-weight='bold' text-anchor='middle' fill='%23fff'>한국뇌심리연구소</text><rect x='20' y='120' width='500' height='100' fill='%23fff' rx='10'/><text x='30' y='155' font-size='16' font-weight='bold'>뇌궁합시스템 (BMS)</text><text x='30' y='180' font-size='12' fill='%237f8c8d'>서로 다닌 성향 이해하기</text><rect x='20' y='240' width='500' height='100' fill='%23fff' rx='10'/><text x='30' y='275' font-size='16' font-weight='bold'>뇌성향시스템 (BTS)</text><text x='30' y='300' font-size='12' fill='%237f8c8d'>나의 뇌 활용 특성 알아보기</text></svg>",
-      "sizes": "540x720",
-      "form_factor": "narrow"
-    }
-  ],
   
   "shortcuts": [
     {
       "name": "뇌궁합 검사",
       "short_name": "뇌궁합",
       "description": "뇌궁합시스템으로 관계 이해하기",
-      "url": "https://k-brain.co.kr/brain-compatibility-test.html",
+      "url": "/brain-compatibility-test.html",
       "icons": [
         {
-          "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'><rect width='96' height='96' fill='%23e8708a'/><text x='48' y='55' font-size='48' text-anchor='middle' dominant-baseline='middle'>💑</text></svg>",
-          "sizes": "96x96"
+          "src": "/icon-192.png",
+          "sizes": "192x192"
         }
       ]
     },
@@ -56,11 +49,11 @@
       "name": "커뮤니티",
       "short_name": "커뮤니티",
       "description": "회원 커뮤니티 참여하기",
-      "url": "https://k-brain.co.kr/community.html",
+      "url": "/community.html",
       "icons": [
         {
-          "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'><rect width='96' height='96' fill='%23667eea'/><text x='48' y='55' font-size='48' text-anchor='middle' dominant-baseline='middle'>🌟</text></svg>",
-          "sizes": "96x96"
+          "src": "/icon-192.png",
+          "sizes": "192x192"
         }
       ]
     },
@@ -68,11 +61,11 @@
       "name": "관리자 대시보드",
       "short_name": "대시보드",
       "description": "관리자 전용 대시보드",
-      "url": "https://k-brain.co.kr/admin-analytics.html",
+      "url": "/admin-analytics.html",
       "icons": [
         {
-          "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'><rect width='96' height='96' fill='%233498db'/><text x='48' y='55' font-size='48' text-anchor='middle' dominant-baseline='middle'>📊</text></svg>",
-          "sizes": "96x96"
+          "src": "/icon-192.png",
+          "sizes": "192x192"
         }
       ]
     }
