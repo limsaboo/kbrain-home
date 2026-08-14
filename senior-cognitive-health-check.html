@@ -333,14 +333,7 @@ function showToast(msg) {
 }
 
 // 이벤트 바인딩 (onclick 속성 없이 addEventListener)
-document.addEventListener("DOMContentLoaded", function() {
-  // ── 복제·저장 방지 ──
-  // 우클릭 메뉴 차단
-  document.addEventListener("contextmenu", function(e){
-    e.preventDefault();
-    showToast("⚠️ 이 시스템은 한국뇌심리연구소의 저작물입니다");
-    return false;
-  });
+
   // Ctrl+S / Cmd+S 저장 차단
   document.addEventListener("keydown", function(e){
     var isCtrl = e.ctrlKey || e.metaKey;
@@ -1373,6 +1366,36 @@ function drawRadarTriple(sA, sB, sC, keys) {
 // ── 쿠폰 시스템 ──
 var _coupon = null; // 현재 사용 중인 쿠폰 정보
 
+function adminLogin() {
+  var pw = prompt("관리자 비밀번호:");
+  if(!pw) return;
+  if(pw === _adminPass) {
+    _adminUnlocked = true;
+    _coupon = {
+      coupon_code: "ADMIN-FREE",
+      coupon_type: "admin",
+      buyer_name: "임찬우소장",
+      buyer_type: "admin",
+      total_uses: 9999,
+      used_count: 0,
+      remain_count: 9999,
+      system_type: "all",
+      is_active: true
+    };
+    
+    // SCS 화면 표시
+    document.getElementById("couponBuyerName").textContent = "임찬우소장";
+    document.getElementById("couponTypeBadge").textContent = "관리자";
+    document.getElementById("couponRemain").textContent = "무제한";
+    document.getElementById("couponExpire").textContent = "만료일: 없음";
+    document.getElementById("couponInfo").classList.add("show");
+    
+    showToast("✅ 소장님 입장! 무제한 사용 권한 활성화");
+  } else {
+    showToast("❌ 비밀번호가 틀렸습니다");
+  }
+}
+
 function checkCoupon() {
   var code = document.getElementById("couponInput").value.trim().toUpperCase();
   if(!code) { showToast("쿠폰 번호를 입력해주세요"); return; }
@@ -1655,29 +1678,7 @@ function loadAndShowResult(r) {
 var _adminPass = "brain2025!"; // 관리자 비밀번호
 var _adminUnlocked = false;
 
-function adminLogin() {
-  var pw = prompt("관리자 비밀번호:");
-  if(!pw) return;
-  if(pw === _adminPass) {
-    _adminUnlocked = true;
-    // 쿠폰 없이 바로 검사 시작
-    _coupon = {
-      coupon_code: "ADMIN-FREE",
-      coupon_type: "admin",
-      buyer_name: "임찬우소장",
-      buyer_type: "admin",
-      total_uses: 9999,
-      used_count: 0,
-      remain_count: 9999,
-      system_type: "all",
-      is_active: true
-    };
-    showToast("✅ 소장님 입장! 쿠폰 무제한 사용");
-    go("s1");
-  } else {
-    showToast("❌ 비밀번호가 틀렸습니다");
-  }
-}
+
 
 function openAdminTool() {
   if(!_adminUnlocked) {
@@ -2752,6 +2753,21 @@ function doPrint(){
 }
 
 
+document.addEventListener("DOMContentLoaded", function() {
+  // 관리자 로그인 버튼
+  document.getElementById("btnAdminLogin").addEventListener("click", adminLogin);
+  
+  // 쿠폰 검증 버튼
+  document.getElementById("btnCheckCoupon").addEventListener("click", checkCoupon);
+  
+  // 쿠폰으로 검사 시작 버튼
+  document.getElementById("btnCouponConfirm").addEventListener("click", startWithCoupon);
+  
+  // 쿠폰 입력칸 Enter 키
+  document.getElementById("couponInput").addEventListener("keypress", function(e) {
+    if(e.key === "Enter") checkCoupon();
+  });
+});
 </script>
 </body>
 </html>
