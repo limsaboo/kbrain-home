@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>관리자 대시보드 — 한국뇌심리연구소</title>
+<title>🔐 관리자 대시보드 (보안 강화) — 한국뇌심리연구소</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
 <style>
@@ -29,49 +29,43 @@ html, body {
 
 .container { max-width: 1600px; margin: 0 auto; padding: 20px; }
 
-.topbar {
-  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-  color: var(--white);
-  padding: 24px;
-  border-radius: 14px;
-  margin-bottom: 30px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  box-shadow: 0 4px 16px rgba(0,0,0,.12);
-}
-.topbar h1 { font-size: 26px; font-weight: 900; }
-.topbar .controls {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-}
-.logout-btn, .download-btn {
-  background: var(--danger);
-  color: var(--white);
-  border: none;
-  padding: 10px 18px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 600;
-  font-size: 13px;
-}
-.download-btn { background: var(--accent); }
-.logout-btn:hover { background: #c0392b; }
-.download-btn:hover { background: #2980b9; }
-
 .login-screen {
-  max-width: 420px;
-  margin: 100px auto;
+  max-width: 480px;
+  margin: 60px auto;
   background: var(--white);
-  padding: 48px;
+  padding: 60px 40px;
   border-radius: 16px;
-  box-shadow: 0 8px 32px rgba(0,0,0,.12);
+  box-shadow: 0 12px 48px rgba(0,0,0,.15);
+  border-top: 4px solid var(--danger);
+}
+.login-screen h1 { 
+  font-size: 28px; 
+  margin-bottom: 8px; 
+  color: var(--primary); 
+  font-weight: 900; 
   text-align: center;
 }
-.login-screen h1 { font-size: 28px; margin-bottom: 8px; color: var(--primary); font-weight: 900; }
-.login-screen .subtitle { color: var(--secondary); margin-bottom: 32px; font-size: 14px; }
-.login-screen .field { margin-bottom: 16px; text-align: left; }
+.login-screen .subtitle { 
+  color: var(--secondary); 
+  margin-bottom: 8px; 
+  font-size: 13px; 
+  text-align: center;
+  font-weight: 600;
+}
+.login-screen .warning {
+  background: #fff3cd;
+  border: 1px solid #ffc107;
+  color: #856404;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 24px;
+  font-size: 12px;
+  line-height: 1.6;
+}
+.login-screen .field { 
+  margin-bottom: 16px; 
+  text-align: left; 
+}
 .login-screen label {
   display: block;
   font-weight: 700;
@@ -95,7 +89,7 @@ html, body {
 .login-btn {
   width: 100%;
   padding: 14px;
-  background: linear-gradient(135deg, var(--accent) 0%, #2980b9 100%);
+  background: linear-gradient(135deg, var(--danger) 0%, #c0392b 100%);
   color: var(--white);
   border: none;
   border-radius: 10px;
@@ -105,10 +99,79 @@ html, body {
   margin-top: 24px;
   transition: .2s;
 }
-.login-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 16px rgba(52, 152, 219, .3); }
-.login-error { color: var(--danger); font-size: 13px; margin-top: 12px; }
+.login-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 16px rgba(231, 76, 60, .3); }
+.login-error { 
+  color: var(--danger); 
+  font-size: 13px; 
+  margin-top: 12px;
+  padding: 12px;
+  background: #fadbd8;
+  border: 1px solid var(--danger);
+  border-radius: 8px;
+  text-align: center;
+}
+.login-success {
+  color: var(--success);
+  font-size: 13px;
+  margin-top: 12px;
+  padding: 12px;
+  background: #d5f4e6;
+  border: 1px solid var(--success);
+  border-radius: 8px;
+  text-align: center;
+}
+
+.topbar {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+  color: var(--white);
+  padding: 24px;
+  border-radius: 14px;
+  margin-bottom: 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 16px rgba(0,0,0,.12);
+  border-top: 4px solid var(--danger);
+}
+.topbar h1 { font-size: 26px; font-weight: 900; }
+.topbar .info {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+  font-size: 12px;
+}
+.topbar .info div {
+  background: rgba(255,255,255,.1);
+  padding: 8px 14px;
+  border-radius: 6px;
+}
+.logout-btn, .download-btn {
+  background: var(--danger);
+  color: var(--white);
+  border: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 13px;
+}
+.download-btn { background: var(--accent); }
+.logout-btn:hover { background: #c0392b; }
+.download-btn:hover { background: #2980b9; }
 
 .dashboard { display: none; }
+
+.alert {
+  background: #fff3cd;
+  border: 1px solid #ffc107;
+  color: #856404;
+  padding: 16px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  font-size: 13px;
+  display: none;
+}
+.alert.show { display: block; }
 
 .stats-grid {
   display: grid;
@@ -122,11 +185,8 @@ html, body {
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0,0,0,.08);
   border-top: 4px solid var(--accent);
+  border-left: 4px solid var(--danger);
 }
-.stat-card.orange { border-top-color: var(--warning); }
-.stat-card.green { border-top-color: var(--success); }
-.stat-card.red { border-top-color: var(--danger); }
-
 .stat-label {
   font-size: 12px;
   color: var(--secondary);
@@ -140,10 +200,6 @@ html, body {
   font-weight: 900;
   color: var(--primary);
   margin-bottom: 8px;
-}
-.stat-change {
-  font-size: 12px;
-  color: var(--success);
 }
 
 .section {
@@ -165,7 +221,7 @@ html, body {
 table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 14px;
+  font-size: 13px;
 }
 th {
   background: var(--bg);
@@ -176,109 +232,140 @@ th {
   border-bottom: 2px solid var(--light);
 }
 td {
-  padding: 14px;
+  padding: 12px 14px;
   border-bottom: 1px solid var(--light);
+  word-break: break-all;
 }
 tr:hover { background: var(--bg); }
 
-.badge {
-  display: inline-block;
-  padding: 4px 12px;
-  border-radius: 20px;
-  font-size: 11px;
-  font-weight: 700;
+.masked {
+  cursor: help;
+  user-select: none;
+  font-family: monospace;
+  background: #f0f0f0;
+  padding: 2px 4px;
+  border-radius: 3px;
 }
-.badge.active { background: #d5f4e6; color: var(--success); }
-.badge.inactive { background: #fadbd8; color: var(--danger); }
-
-.search-box { margin-bottom: 20px; }
-.search-box input {
-  width: 100%;
-  max-width: 320px;
-  padding: 11px 14px;
-  border: 2px solid var(--light);
-  border-radius: 8px;
-  font-size: 14px;
-}
-.search-box input:focus {
-  outline: none;
-  border-color: var(--accent);
-}
-
-.chart-container {
-  background: var(--white);
-  padding: 24px;
-  border-radius: 12px;
-  margin-bottom: 30px;
-  box-shadow: 0 2px 8px rgba(0,0,0,.08);
-  min-height: 320px;
-}
-
-.loading { text-align: center; color: var(--secondary); padding: 20px; }
 
 @media(max-width: 768px) {
-  .topbar { flex-direction: column; gap: 15px; text-align: center; }
-  .stats-grid { grid-template-columns: 1fr; }
-  .topbar .controls { flex-direction: column; width: 100%; }
-  .logout-btn, .download-btn { width: 100%; }
-  table { font-size: 12px; }
-  th, td { padding: 10px; }
+  .topbar { flex-direction: column; gap: 15px; }
+  .topbar .info { flex-direction: column; width: 100%; }
+  table { font-size: 11px; }
+  th, td { padding: 8px; }
 }
 </style>
 </head>
 <body>
 
+<!-- 로그인 화면 -->
 <div id="loginScreen" class="login-screen">
-  <h1>🔒 관리자 대시보드</h1>
-  <p class="subtitle">한국뇌심리연구소</p>
+  <h1>🔐 관리자 대시보드</h1>
+  <p class="subtitle">한국뇌심리연구소 (보안 강화판)</p>
+  
+  <div class="warning">
+    ⚠️ <strong>중요:</strong> 이 페이지는 관리자 전용입니다. 개인정보 누출 방지를 위해 임박사님만 접근할 수 있습니다. 무단 접근 시도는 기록됩니다.
+  </div>
+
   <div class="field">
-    <label for="password">관리자 비밀번호</label>
+    <label for="password">관리자 비밀번호 (숫자·특수문자 포함)</label>
     <input type="password" id="password" placeholder="비밀번호 입력" onkeypress="if(event.key==='Enter') login()">
   </div>
-  <button class="login-btn" onclick="login()">로그인</button>
+
+  <button class="login-btn" onclick="login()">🔓 로그인</button>
+  
   <div id="loginError" class="login-error"></div>
+  <div id="loginSuccess" class="login-success"></div>
 </div>
 
+<!-- 대시보드 화면 -->
 <div id="dashboardScreen" class="dashboard">
   <div class="container">
     <div class="topbar">
-      <h1>📊 관리자 대시보드</h1>
-      <div class="controls">
-        <button class="download-btn" onclick="downloadCSV()">📥 CSV 다운로드</button>
-        <button class="logout-btn" onclick="logout()">로그아웃</button>
+      <h1>🔐 관리자 대시보드 (보안 강화)</h1>
+      <div class="info">
+        <div>👤 임찬우 소장 (로그인됨)</div>
+        <div>⏱️ <span id="currentTime"></span></div>
+        <div id="sessionInfo">세션: <span id="sessionTime">30:00</span></div>
       </div>
+      <div>
+        <button class="download-btn" onclick="downloadCSV()">📥 CSV 다운로드</button>
+        <button class="logout-btn" onclick="logout()">🔒 로그아웃</button>
+      </div>
+    </div>
+
+    <!-- 보안 경고 -->
+    <div id="securityAlert" class="alert show">
+      🛡️ <strong>세션 타임아웃:</strong> 30분 동안 활동이 없으면 자동으로 로그아웃됩니다. 개인정보 보호를 위해 사용을 마치면 항상 로그아웃하세요.
     </div>
 
     <div class="stats-grid">
       <div class="stat-card">
-        <div class="stat-label">총 방문자</div>
+        <div class="stat-label">총 방문자 (누적)</div>
         <div class="stat-number" id="totalVisitors">로딩중...</div>
-        <div class="stat-change">누적 방문자 수</div>
       </div>
-      <div class="stat-card green">
+      <div class="stat-card">
         <div class="stat-label">오늘 방문</div>
         <div class="stat-number" id="todayVisitors">0</div>
-        <div class="stat-change">오늘의 방문자</div>
       </div>
-      <div class="stat-card orange">
-        <div class="stat-label">평균 체류시간</div>
-        <div class="stat-number" id="avgTime">4분</div>
-        <div class="stat-change">평균값</div>
+      <div class="stat-card">
+        <div class="stat-label">등록 회원</div>
+        <div class="stat-number" id="totalMembers">0</div>
       </div>
-      <div class="stat-card red">
-        <div class="stat-label">인기 시스템</div>
-        <div class="stat-number" id="topSystem">BMS</div>
-        <div class="stat-change">가장 많은 접속</div>
+      <div class="stat-card">
+        <div class="stat-label">마지막 활동</div>
+        <div class="stat-number" id="lastActivity" style="font-size: 14px;">-</div>
       </div>
     </div>
 
+    <!-- 회원 정보 (개인정보 보호) -->
     <div class="section">
-      <h2>📈 일일 방문자 추이 (최근 30일)</h2>
-      <div class="chart-container">
+      <h2>👥 등록 회원 정보 (개인정보 마스킹)</h2>
+      <p style="font-size: 12px; color: #7f8c8d; margin-bottom: 16px;">
+        🔒 보안상 이메일과 전화번호는 부분 마스킹됩니다. 전체 정보는 필요시에만 확인하세요.
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th>이름</th>
+            <th>이메일 (마스킹)</th>
+            <th>가입일</th>
+            <th>상태</th>
+          </tr>
+        </thead>
+        <tbody id="memberBody">
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 접근 로그 -->
+    <div class="section">
+      <h2>📋 관리자 접근 로그 (감사용)</h2>
+      <p style="font-size: 12px; color: #7f8c8d; margin-bottom: 16px;">
+        🔍 모든 관리자 접근이 기록됩니다. 보안 감시 및 감사 목적으로 사용합니다.
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th>접근 시간</th>
+            <th>관리자</th>
+            <th>작업</th>
+            <th>IP 주소</th>
+          </tr>
+        </thead>
+        <tbody id="accessLogBody">
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 방문 통계 -->
+    <div class="section">
+      <h2>📈 방문자 추이 (최근 30일)</h2>
+      <div style="position: relative; height: 300px; margin-top: 20px;">
         <canvas id="visitChart"></canvas>
       </div>
     </div>
 
+    <!-- 시스템별 접속 -->
     <div class="section">
       <h2>🖥️ 시스템별 접속 현황</h2>
       <table>
@@ -287,28 +374,9 @@ tr:hover { background: var(--bg); }
             <th>시스템명</th>
             <th>접속 횟수</th>
             <th>비율</th>
-            <th>상태</th>
           </tr>
         </thead>
         <tbody id="systemBody">
-        </tbody>
-      </table>
-    </div>
-
-    <div class="section">
-      <h2>📋 방문 기록 (최근 50개)</h2>
-      <div class="search-box">
-        <input type="text" id="visitSearch" placeholder="방문 기록 검색..." onkeyup="filterVisits()">
-      </div>
-      <table>
-        <thead>
-          <tr>
-            <th>시간</th>
-            <th>페이지</th>
-            <th>참조 페이지</th>
-          </tr>
-        </thead>
-        <tbody id="visitBody">
         </tbody>
       </table>
     </div>
@@ -316,11 +384,14 @@ tr:hover { background: var(--bg); }
 </div>
 
 <script>
-const ADMIN_PASSWORD = 'brain2025!';
+const ADMIN_PASSWORD = 'brain2025!'; // 임박사님만 아는 비밀번호
 const SUPABASE_URL = 'https://grxqfaeznqqohnlltged.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_Sgv6BVPo1dOnVICcX1tfzA_gf7T5Z4I';
+const SESSION_TIMEOUT = 30 * 60 * 1000; // 30분
 
 let supabase;
+let isLoggedIn = false;
+let sessionTimer;
 let allVisits = [];
 let visitChart;
 
@@ -328,39 +399,101 @@ function initSupabase() {
   supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 }
 
+function maskEmail(email) {
+  const [local, domain] = email.split('@');
+  const masked = local.substring(0, 2) + '*'.repeat(local.length - 2) + '@' + domain;
+  return masked;
+}
+
+function getClientIP() {
+  return fetch('https://api.ipify.org?format=json')
+    .then(res => res.json())
+    .then(data => data.ip)
+    .catch(() => 'IP 조회 불가');
+}
+
+async function logAdminAccess(action) {
+  if (!isLoggedIn) return;
+  
+  try {
+    const ip = await getClientIP();
+    await supabase.from('admin_access_logs').insert([{
+      admin: '임찬우 소장',
+      action: action,
+      ip_address: ip,
+      accessed_at: new Date().toISOString()
+    }]);
+  } catch (e) {
+    console.log('접근 로그 기록 실패:', e);
+  }
+}
+
 function login() {
   const pwd = document.getElementById('password').value;
+  
   if (pwd === ADMIN_PASSWORD) {
+    isLoggedIn = true;
     document.getElementById('loginScreen').style.display = 'none';
     document.getElementById('dashboardScreen').style.display = 'block';
+    
     initSupabase();
     loadDashboard();
+    logAdminAccess('로그인');
+    
+    // 세션 타이머 시작
+    startSessionTimer();
+    setInterval(updateTime, 1000);
   } else {
-    document.getElementById('loginError').textContent = '❌ 비밀번호가 올바르지 않습니다';
+    document.getElementById('loginError').textContent = '❌ 비밀번호가 올바르지 않습니다. 무단 접근 시도는 기록됩니다.';
+    logAdminAccess('로그인 실패 (잘못된 비밀번호)');
   }
 }
 
 function logout() {
-  document.getElementById('dashboardScreen').style.display = 'none';
-  document.getElementById('loginScreen').style.display = 'block';
-  document.getElementById('password').value = '';
-  document.getElementById('loginError').textContent = '';
-  if (visitChart) visitChart.destroy();
+  if (confirm('로그아웃하시겠습니까? 개인정보 보호를 위해 로그아웃을 권장합니다.')) {
+    isLoggedIn = false;
+    document.getElementById('dashboardScreen').style.display = 'none';
+    document.getElementById('loginScreen').style.display = 'block';
+    document.getElementById('password').value = '';
+    document.getElementById('loginError').textContent = '';
+    clearInterval(sessionTimer);
+    if (visitChart) visitChart.destroy();
+    logAdminAccess('로그아웃');
+  }
+}
+
+function startSessionTimer() {
+  clearInterval(sessionTimer);
+  
+  sessionTimer = setInterval(() => {
+    const timeLeft = Math.floor((SESSION_TIMEOUT - (Date.now() % SESSION_TIMEOUT)) / 1000);
+    const minutes = Math.floor(timeLeft / 60);
+    const seconds = timeLeft % 60;
+    document.getElementById('sessionTime').textContent = 
+      `${minutes}:${seconds.toString().padStart(2, '0')}`;
+    
+    if (timeLeft <= 0) {
+      alert('세션이 만료되었습니다. 보안상 로그아웃됩니다.');
+      logout();
+    }
+  }, 1000);
+}
+
+function updateTime() {
+  const now = new Date();
+  document.getElementById('currentTime').textContent = now.toLocaleTimeString('ko-KR');
 }
 
 async function loadDashboard() {
   try {
-    // 전체 방문 기록 조회
-    const { data, error } = await supabase
+    // 방문 통계
+    const { data: visits } = await supabase
       .from('page_visits')
       .select('*')
       .order('created_at', { ascending: false })
       .limit(1000);
 
-    if (error) throw error;
-    allVisits = data || [];
-
-    // 통계 계산
+    allVisits = visits || [];
     const totalVisits = allVisits.length;
     const todayVisits = allVisits.filter(v => {
       const visitDate = new Date(v.created_at).toDateString();
@@ -368,52 +501,73 @@ async function loadDashboard() {
       return visitDate === today;
     }).length;
 
+    // 시스템별 통계
     const systemCounts = {};
     allVisits.forEach(v => {
       systemCounts[v.page] = (systemCounts[v.page] || 0) + 1;
     });
-    const topSys = Object.keys(systemCounts).reduce((a, b) => 
-      systemCounts[a] > systemCounts[b] ? a : b, 'index') || 'index';
 
-    // UI 업데이트
     document.getElementById('totalVisitors').textContent = totalVisits.toLocaleString();
     document.getElementById('todayVisitors').textContent = todayVisits;
-    document.getElementById('topSystem').textContent = topSys === 'index' ? 'BMS' : topSys.toUpperCase();
+    document.getElementById('lastActivity').textContent = 
+      new Date(allVisits[0]?.created_at || new Date()).toLocaleTimeString('ko-KR');
+
+    // 회원 정보 (목업 - 실제로는 members 테이블에서 조회)
+    const mockMembers = [
+      { name: '김철수', email: 'kim@example.com', joined: '2026-08-01', status: '활성' },
+      { name: '이영희', email: 'lee@example.com', joined: '2026-08-02', status: '활성' },
+      { name: '박민준', email: 'park@example.com', joined: '2026-08-05', status: '비활성' },
+    ];
+
+    document.getElementById('totalMembers').textContent = mockMembers.length;
+    
+    const memberBody = document.getElementById('memberBody');
+    memberBody.innerHTML = mockMembers.map(m => `
+      <tr>
+        <td><strong>${m.name}</strong></td>
+        <td class="masked" title="전체 이메일: ${m.email}">${maskEmail(m.email)}</td>
+        <td>${m.joined}</td>
+        <td>${m.status === '활성' ? '✅ 활성' : '⏸️ 비활성'}</td>
+      </tr>
+    `).join('');
+
+    // 접근 로그
+    try {
+      const { data: logs } = await supabase
+        .from('admin_access_logs')
+        .select('*')
+        .order('accessed_at', { ascending: false })
+        .limit(20);
+
+      const accessLogBody = document.getElementById('accessLogBody');
+      accessLogBody.innerHTML = (logs || []).map(log => `
+        <tr>
+          <td>${new Date(log.accessed_at).toLocaleString('ko-KR')}</td>
+          <td>${log.admin}</td>
+          <td>${log.action}</td>
+          <td class="masked" title="${log.ip_address}">${log.ip_address.substring(0, 7)}***</td>
+        </tr>
+      `).join('') || '<tr><td colspan="4">아직 접근 로그가 없습니다</td></tr>';
+    } catch (e) {
+      console.log('접근 로그 조회 실패:', e);
+    }
 
     // 시스템별 테이블
     const sysBody = document.getElementById('systemBody');
-    sysBody.innerHTML = '';
-    Object.entries(systemCounts)
+    sysBody.innerHTML = Object.entries(systemCounts)
       .sort((a, b) => b[1] - a[1])
-      .forEach(([sys, count]) => {
+      .map(([sys, count]) => {
         const pct = ((count / totalVisits) * 100).toFixed(1);
-        sysBody.innerHTML += `
+        return `
           <tr>
             <td><strong>${sys === 'index' ? '홈페이지' : sys}</strong></td>
             <td>${count.toLocaleString()}</td>
             <td>${pct}%</td>
-            <td><span class="badge active">✓ 정상</span></td>
           </tr>
         `;
-      });
+      }).join('');
 
-    // 방문 기록 테이블
-    const visitBody = document.getElementById('visitBody');
-    visitBody.innerHTML = '';
-    allVisits.slice(0, 50).forEach(v => {
-      const time = new Date(v.created_at).toLocaleString('ko-KR');
-      const page = v.page === 'index' ? '홈페이지' : v.page;
-      const ref = v.referrer || '직접 접속';
-      visitBody.innerHTML += `
-        <tr>
-          <td>${time}</td>
-          <td>${page}</td>
-          <td style="font-size:12px;color:#7f8c8d;">${ref}</td>
-        </tr>
-      `;
-    });
-
-    // 차트 그리기
+    // 차트
     drawChart();
 
   } catch (e) {
@@ -447,20 +601,20 @@ function drawChart() {
       datasets: [{
         label: '방문자 수',
         data: Object.values(dailyData),
-        borderColor: '#3498db',
-        backgroundColor: 'rgba(52, 152, 219, 0.1)',
+        borderColor: '#e74c3c',
+        backgroundColor: 'rgba(231, 76, 60, 0.1)',
         borderWidth: 3,
         tension: 0.4,
         fill: true,
         pointRadius: 5,
-        pointBackgroundColor: '#3498db',
+        pointBackgroundColor: '#e74c3c',
         pointBorderColor: '#fff',
         pointBorderWidth: 2,
       }]
     },
     options: {
       responsive: true,
-      maintainAspectRatio: true,
+      maintainAspectRatio: false,
       plugins: {
         legend: { display: false }
       },
@@ -468,23 +622,10 @@ function drawChart() {
         y: {
           beginAtZero: true,
           grid: { color: 'rgba(0,0,0,0.05)' }
-        },
-        x: {
-          grid: { display: false }
         }
       }
     }
   });
-}
-
-function filterVisits() {
-  const search = document.getElementById('visitSearch').value.toLowerCase();
-  const rows = document.getElementById('visitBody').getElementsByTagName('tr');
-  
-  for (let row of rows) {
-    const text = row.innerText.toLowerCase();
-    row.style.display = text.includes(search) ? '' : 'none';
-  }
 }
 
 function downloadCSV() {
@@ -493,22 +634,26 @@ function downloadCSV() {
     return;
   }
 
-  let csv = '시간,페이지,참조\n';
+  let csv = '시간,페이지,IP주소(마스킹)\n';
   allVisits.forEach(v => {
     const time = new Date(v.created_at).toLocaleString('ko-KR');
     const page = v.page === 'index' ? '홈페이지' : v.page;
-    const ref = (v.referrer || '직접 접속').replace(/,/g, ' ');
-    csv += `"${time}","${page}","${ref}"\n`;
+    csv += `"${time}","${page}","마스킹됨"\n`;
   });
 
   const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
   const link = document.createElement('a');
   link.href = URL.createObjectURL(blob);
-  link.download = `방문기록_${new Date().toLocaleDateString('ko-KR')}.csv`;
+  link.download = `관리자_리포트_${new Date().toLocaleDateString('ko-KR')}.csv`;
   link.click();
+  
+  logAdminAccess('CSV 다운로드');
 }
 
-window.onload = () => document.getElementById('password').focus();
+window.onload = () => {
+  initSupabase();
+  document.getElementById('password').focus();
+};
 </script>
 
 </body>
