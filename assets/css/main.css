@@ -558,3 +558,25 @@
 @media(max-width:480px){
   .creed-values-grid{grid-template-columns:1fr;}
 }
+
+  /* ---------- Senior Programs ---------- */
+  .senior-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px;margin-top:32px;grid-auto-rows:1fr;}
+  @media(max-width:800px){.senior-grid{grid-template-columns:1fr;}}
+  .senior-card{display:flex;flex-direction:column;background:#fff;border:2px solid #D4A520;border-radius:16px;padding:28px;transition:.2s;box-shadow:0 8px 20px -8px rgba(212,165,32,.25);}
+  .senior-card:hover{box-shadow:0 12px 28px -8px rgba(212,165,32,.4);transform:translateY(-3px);}
+  .senior-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px;}
+  .senior-icon{font-size:42px;}
+  .senior-badge{font-size:11px;font-weight:700;padding:6px 14px;border-radius:20px;white-space:nowrap;}
+  .senior-badge.live{background:#E8F5E9;color:#2E7D32;}
+  .senior-badge.soon{background:#FFF3E0;color:#E65100;}
+  .senior-name{font-size:18px;font-weight:900;line-height:1.4;word-break:keep-all;color:#1a1a1a;margin-bottom:6px;}
+  .senior-brand{font-size:12px;color:#666;margin-bottom:14px;font-weight:600;}
+  .senior-desc{font-size:13.5px;color:#555;margin-bottom:16px;font-weight:500;line-height:1.6;word-break:keep-all;flex-grow:1;}
+  .senior-target{display:flex;flex-direction:column;gap:4px;padding:12px;background:#FFF9E6;border-radius:9px;margin-bottom:16px;}
+  .senior-label{font-size:10.5px;font-weight:800;color:#D4A520;letter-spacing:.04em;}
+  .senior-val{font-size:12.5px;color:#333;font-weight:600;}
+  .senior-meta{display:flex;justify-content:flex-end;align-items:center;margin-top:auto;padding-top:12px;border-top:1px solid #f0f0f0;}
+  .senior-cta{display:block;margin-top:12px;text-align:center;padding:12px;border-radius:9px;background:#D4A520;color:#fff;font-size:13px;font-weight:700;text-decoration:none;transition:.2s;}
+  .senior-cta:hover{background:#C19812;transform:translateY(-2px);}
+  .senior-cta.disabled{background:#CCC;color:#999;pointer-events:none;cursor:default;}
+  @media(max-width:800px){.senior-card{padding:22px;}.senior-name{font-size:16px;}.senior-cta{padding:10px;font-size:12px;}}
