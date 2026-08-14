@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>커뮤니티 — 한국뇌심리연구소</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --primary: #2c3e50;
+  --secondary: #34495e;
+  --accent: #3498db;
+  --success: #27ae60;
+  --warning: #e67e22;
+  --danger: #e74c3c;
+  --light: #ecf0f1;
+  --bg: #f8f9fa;
+  --white: #ffffff;
+}
+
+html, body {
+  background: var(--bg);
+  color: var(--primary);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Pretendard", sans-serif;
+  line-height: 1.6;
+}
+
+.container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+
+.topbar {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+  color: var(--white);
+  padding: 24px;
+  border-radius: 14px;
+  margin-bottom: 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 16px rgba(0,0,0,.12);
+}
+.topbar h1 { font-size: 26px; font-weight: 900; }
+.topbar .nav-links {
+  display: flex;
+  gap: 16px;
+}
+.nav-links button {
+  background: rgba(255,255,255,.2);
+  color: var(--white);
+  border: 1px solid rgba(255,255,255,.3);
+  padding: 10px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 13px;
+  transition: .2s;
+}
+.nav-links button:hover { background: rgba(255,255,255,.3); }
+.nav-links button.active { background: var(--accent); border-color: var(--accent); }
+
+.section {
+  background: var(--white);
+  padding: 28px;
+  border-radius: 12px;
+  margin-bottom: 30px;
+  box-shadow: 0 2px 8px rgba(0,0,0,.08);
+  display: none;
+}
+.section.active { display: block; }
+
+.section h2 {
+  font-size: 20px;
+  font-weight: 900;
+  margin-bottom: 24px;
+  color: var(--primary);
+}
+
+.post-card {
+  background: var(--bg);
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 16px;
+  border-left: 4px solid var(--accent);
+  cursor: pointer;
+  transition: .2s;
+}
+.post-card:hover { background: var(--light); }
+.post-card.event { border-left-color: var(--warning); }
+.post-card.coupon { border-left-color: var(--success); }
+.post-card.book { border-left-color: var(--danger); }
+
+.post-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  margin-bottom: 12px;
+}
+.post-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--primary);
+}
+.post-date {
+  font-size: 12px;
+  color: var(--secondary);
+}
+.post-body {
+  font-size: 14px;
+  color: var(--secondary);
+  line-height: 1.6;
+  margin-bottom: 12px;
+}
+
+.badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  background: rgba(52, 152, 219, .15);
+  color: var(--accent);
+  margin-top: 8px;
+}
+
+.write-btn {
+  background: var(--accent);
+  color: var(--white);
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+.write-btn:hover { background: #2980b9; }
+
+.form-group {
+  margin-bottom: 16px;
+}
+.form-group label {
+  display: block;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: var(--secondary);
+  font-size: 13px;
+}
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid var(--light);
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 14px;
+}
+.form-group textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px rgba(52, 152, 219, .1);
+}
+
+.submit-btn {
+  background: var(--accent);
+  color: var(--white);
+  border: none;
+  padding: 12px 32px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 14px;
+}
+.submit-btn:hover { background: #2980b9; }
+
+.coupon-code {
+  background: var(--bg);
+  padding: 16px;
+  border-radius: 8px;
+  margin-top: 12px;
+  border: 2px dashed var(--accent);
+  text-align: center;
+}
+.coupon-label {
+  font-size: 12px;
+  color: var(--secondary);
+  margin-bottom: 6px;
+}
+.coupon-value {
+  font-size: 20px;
+  font-weight: 900;
+  color: var(--accent);
+  font-family: monospace;
+}
+.coupon-copy {
+  background: var(--accent);
+  color: var(--white);
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 700;
+  margin-top: 8px;
+}
+
+.loading { text-align: center; color: var(--secondary); padding: 20px; }
+
+@media(max-width: 768px) {
+  .topbar { flex-direction: column; gap: 16px; }
+  .nav-links { flex-direction: column; width: 100%; }
+  .nav-links button { width: 100%; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="topbar">
+    <h1>🌟 한국뇌심리연구소 커뮤니티</h1>
+    <div class="nav-links">
+      <button class="active" onclick="switchTab('news')">📢 소식</button>
+      <button onclick="switchTab('events')">🎉 이벤트</button>
+      <button onclick="switchTab('coupons')">🎁 무료이용권</button>
+      <button onclick="switchTab('books')">📚 책홍보</button>
+      <button onclick="switchTab('posts')">💬 게시판</button>
+    </div>
+  </div>
+
+  <!-- 연구소 소식 -->
+  <div id="news" class="section active">
+    <h2>📢 연구소 소식</h2>
+    <button class="write-btn" onclick="showNewsForm()">새 소식 작성</button>
+    <div id="newsForm" style="display:none;margin-bottom:24px;padding:20px;background:#f8f9fa;border-radius:10px;">
+      <div class="form-group">
+        <label>제목</label>
+        <input type="text" id="newsTitle" placeholder="소식 제목">
+      </div>
+      <div class="form-group">
+        <label>내용</label>
+        <textarea id="newsBody" placeholder="소식 내용"></textarea>
+      </div>
+      <button class="submit-btn" onclick="submitNews()">게시</button>
+    </div>
+    <div id="newsList" class="loading">로딩중...</div>
+  </div>
+
+  <!-- 이벤트 -->
+  <div id="events" class="section">
+    <h2>🎉 연구소 이벤트</h2>
+    <button class="write-btn" onclick="showEventForm()">이벤트 등록</button>
+    <div id="eventForm" style="display:none;margin-bottom:24px;padding:20px;background:#f8f9fa;border-radius:10px;">
+      <div class="form-group">
+        <label>이벤트명</label>
+        <input type="text" id="eventTitle" placeholder="이벤트 제목">
+      </div>
+      <div class="form-group">
+        <label>일시</label>
+        <input type="datetime-local" id="eventDate">
+      </div>
+      <div class="form-group">
+        <label>장소</label>
+        <input type="text" id="eventLocation" placeholder="장소">
+      </div>
+      <div class="form-group">
+        <label>설명</label>
+        <textarea id="eventBody" placeholder="이벤트 설명"></textarea>
+      </div>
+      <button class="submit-btn" onclick="submitEvent()">등록</button>
+    </div>
+    <div id="eventsList" class="loading">로딩중...</div>
+  </div>
+
+  <!-- 무료 이용권 -->
+  <div id="coupons" class="section">
+    <h2>🎁 BHC 무료 이용권</h2>
+    <button class="write-btn" onclick="showCouponForm()">쿠폰 발급</button>
+    <div id="couponForm" style="display:none;margin-bottom:24px;padding:20px;background:#f8f9fa;border-radius:10px;">
+      <div class="form-group">
+        <label>쿠폰코드</label>
+        <input type="text" id="couponCode" placeholder="BHCFREE2026-001">
+      </div>
+      <div class="form-group">
+        <label>설명</label>
+        <textarea id="couponDesc" placeholder="쿠폰 설명 (사용 조건 등)"></textarea>
+      </div>
+      <button class="submit-btn" onclick="submitCoupon()">발급</button>
+    </div>
+    <div id="couponsList" class="loading">로딩중...</div>
+  </div>
+
+  <!-- 책 홍보 & 펀매 -->
+  <div id="books" class="section">
+    <h2>📚 책 홍보 & 펀매</h2>
+    <button class="write-btn" onclick="showBookForm()">책 등록</button>
+    <div id="bookForm" style="display:none;margin-bottom:24px;padding:20px;background:#f8f9fa;border-radius:10px;">
+      <div class="form-group">
+        <label>책 제목</label>
+        <input type="text" id="bookTitle" placeholder="책 제목">
+      </div>
+      <div class="form-group">
+        <label>저자</label>
+        <input type="text" id="bookAuthor" placeholder="저자명">
+      </div>
+      <div class="form-group">
+        <label>소개</label>
+        <textarea id="bookDesc" placeholder="책 소개 및 펀매 정보"></textarea>
+      </div>
+      <div class="form-group">
+        <label>펀매 링크</label>
+        <input type="url" id="bookLink" placeholder="https://...">
+      </div>
+      <button class="submit-btn" onclick="submitBook()">등록</button>
+    </div>
+    <div id="booksList" class="loading">로딩중...</div>
+  </div>
+
+  <!-- 회원 게시판 -->
+  <div id="posts" class="section">
+    <h2>💬 회원 게시판</h2>
+    <button class="write-btn" onclick="showPostForm()">글 작성</button>
+    <div id="postForm" style="display:none;margin-bottom:24px;padding:20px;background:#f8f9fa;border-radius:10px;">
+      <div class="form-group">
+        <label>제목</label>
+        <input type="text" id="postTitle" placeholder="제목">
+      </div>
+      <div class="form-group">
+        <label>내용</label>
+        <textarea id="postBody" placeholder="내용"></textarea>
+      </div>
+      <button class="submit-btn" onclick="submitPost()">게시</button>
+    </div>
+    <div id="postsList" class="loading">로딩중...</div>
+  </div>
+</div>
+
+<script>
+const SUPABASE_URL = 'https://grxqfaeznqqohnlltged.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_Sgv6BVPo1dOnVICcX1tfzA_gf7T5Z4I';
+let supabase;
+let currentTab = 'news';
+
+function initSupabase() {
+  supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  loadAllContent();
+}
+
+function switchTab(tab) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-links button').forEach(b => b.classList.remove('active'));
+  
+  document.getElementById(tab).classList.add('active');
+  event.target.classList.add('active');
+  currentTab = tab;
+  
+  loadAllContent();
+}
+
+function showNewsForm() {
+  document.getElementById('newsForm').style.display = 
+    document.getElementById('newsForm').style.display === 'none' ? 'block' : 'none';
+}
+
+function showEventForm() {
+  document.getElementById('eventForm').style.display = 
+    document.getElementById('eventForm').style.display === 'none' ? 'block' : 'none';
+}
+
+function showCouponForm() {
+  document.getElementById('couponForm').style.display = 
+    document.getElementById('couponForm').style.display === 'none' ? 'block' : 'none';
+}
+
+function showBookForm() {
+  document.getElementById('bookForm').style.display = 
+    document.getElementById('bookForm').style.display === 'none' ? 'block' : 'none';
+}
+
+function showPostForm() {
+  document.getElementById('postForm').style.display = 
+    document.getElementById('postForm').style.display === 'none' ? 'block' : 'none';
+}
+
+async function submitNews() {
+  const title = document.getElementById('newsTitle').value.trim();
+  const body = document.getElementById('newsBody').value.trim();
+  
+  if (!title || !body) {
+    alert('제목과 내용을 입력해주세요');
+    return;
+  }
+
+  try {
+    const { error } = await supabase.from('community_posts').insert([{
+      type: 'news',
+      title: title,
+      body: body,
+      author: 'Admin'
+    }]);
+    
+    if (error) throw error;
+    
+    document.getElementById('newsTitle').value = '';
+    document.getElementById('newsBody').value = '';
+    document.getElementById('newsForm').style.display = 'none';
+    loadNews();
+  } catch (e) {
+    alert('게시 실패: ' + e.message);
+  }
+}
+
+async function submitEvent() {
+  const title = document.getElementById('eventTitle').value.trim();
+  const date = document.getElementById('eventDate').value;
+  const location = document.getElementById('eventLocation').value.trim();
+  const body = document.getElementById('eventBody').value.trim();
+  
+  if (!title || !date || !location || !body) {
+    alert('모든 필드를 입력해주세요');
+    return;
+  }
+
+  try {
+    const { error } = await supabase.from('community_posts').insert([{
+      type: 'event',
+      title: title,
+      body: body,
+      extra: JSON.stringify({ date, location }),
+      author: 'Admin'
+    }]);
+    
+    if (error) throw error;
+    
+    document.getElementById('eventForm').reset();
+    document.getElementById('eventForm').style.display = 'none';
+    loadEvents();
+  } catch (e) {
+    alert('등록 실패: ' + e.message);
+  }
+}
+
+async function submitCoupon() {
+  const code = document.getElementById('couponCode').value.trim();
+  const desc = document.getElementById('couponDesc').value.trim();
+  
+  if (!code || !desc) {
+    alert('모든 필드를 입력해주세요');
+    return;
+  }
+
+  try {
+    const { error } = await supabase.from('community_posts').insert([{
+      type: 'coupon',
+      title: code,
+      body: desc,
+      author: 'Admin'
+    }]);
+    
+    if (error) throw error;
+    
+    document.getElementById('couponCode').value = '';
+    document.getElementById('couponDesc').value = '';
+    document.getElementById('couponForm').style.display = 'none';
+    loadCoupons();
+  } catch (e) {
+    alert('발급 실패: ' + e.message);
+  }
+}
+
+async function submitBook() {
+  const title = document.getElementById('bookTitle').value.trim();
+  const author = document.getElementById('bookAuthor').value.trim();
+  const desc = document.getElementById('bookDesc').value.trim();
+  const link = document.getElementById('bookLink').value.trim();
+  
+  if (!title || !author || !desc) {
+    alert('필수 정보를 입력해주세요');
+    return;
+  }
+
+  try {
+    const { error } = await supabase.from('community_posts').insert([{
+      type: 'book',
+      title: title,
+      body: desc,
+      extra: JSON.stringify({ author, link }),
+      author: 'Admin'
+    }]);
+    
+    if (error) throw error;
+    
+    document.getElementById('bookForm').reset();
+    document.getElementById('bookForm').style.display = 'none';
+    loadBooks();
+  } catch (e) {
+    alert('등록 실패: ' + e.message);
+  }
+}
+
+async function submitPost() {
+  const title = document.getElementById('postTitle').value.trim();
+  const body = document.getElementById('postBody').value.trim();
+  
+  if (!title || !body) {
+    alert('제목과 내용을 입력해주세요');
+    return;
+  }
+
+  try {
+    const { error } = await supabase.from('community_posts').insert([{
+      type: 'post',
+      title: title,
+      body: body,
+      author: '익명회원'
+    }]);
+    
+    if (error) throw error;
+    
+    document.getElementById('postTitle').value = '';
+    document.getElementById('postBody').value = '';
+    document.getElementById('postForm').style.display = 'none';
+    loadPosts();
+  } catch (e) {
+    alert('게시 실패: ' + e.message);
+  }
+}
+
+async function loadNews() {
+  try {
+    const { data } = await supabase
+      .from('community_posts')
+      .select('*')
+      .eq('type', 'news')
+      .order('created_at', { ascending: false });
+    
+    const html = (data || []).map(item => `
+      <div class="post-card">
+        <div class="post-header">
+          <div class="post-title">${item.title}</div>
+          <div class="post-date">${new Date(item.created_at).toLocaleDateString('ko-KR')}</div>
+        </div>
+        <div class="post-body">${item.body}</div>
+      </div>
+    `).join('');
+    
+    document.getElementById('newsList').innerHTML = html || '<p style="color:#999;">소식이 없습니다</p>';
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+async function loadEvents() {
+  try {
+    const { data } = await supabase
+      .from('community_posts')
+      .select('*')
+      .eq('type', 'event')
+      .order('created_at', { ascending: false });
+    
+    const html = (data || []).map(item => {
+      const extra = item.extra ? JSON.parse(item.extra) : {};
+      return `
+        <div class="post-card event">
+          <div class="post-header">
+            <div class="post-title">${item.title}</div>
+            <div class="post-date">${extra.date || ''}</div>
+          </div>
+          <div class="post-body"><strong>📍 ${extra.location || '장소 미정'}</strong></div>
+          <div class="post-body">${item.body}</div>
+        </div>
+      `;
+    }).join('');
+    
+    document.getElementById('eventsList').innerHTML = html || '<p style="color:#999;">예정된 이벤트가 없습니다</p>';
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+async function loadCoupons() {
+  try {
+    const { data } = await supabase
+      .from('community_posts')
+      .select('*')
+      .eq('type', 'coupon')
+      .order('created_at', { ascending: false });
+    
+    const html = (data || []).map(item => `
+      <div class="post-card coupon">
+        <div class="post-body">${item.body}</div>
+        <div class="coupon-code">
+          <div class="coupon-label">쿠폰 코드</div>
+          <div class="coupon-value">${item.title}</div>
+          <button class="coupon-copy" onclick="navigator.clipboard.writeText('${item.title}')">복사</button>
+        </div>
+      </div>
+    `).join('');
+    
+    document.getElementById('couponsList').innerHTML = html || '<p style="color:#999;">발급된 쿠폰이 없습니다</p>';
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+async function loadBooks() {
+  try {
+    const { data } = await supabase
+      .from('community_posts')
+      .select('*')
+      .eq('type', 'book')
+      .order('created_at', { ascending: false });
+    
+    const html = (data || []).map(item => {
+      const extra = item.extra ? JSON.parse(item.extra) : {};
+      return `
+        <div class="post-card book">
+          <div class="post-header">
+            <div class="post-title">${item.title}</div>
+          </div>
+          <div class="post-body"><strong>저자: ${extra.author || '미정'}</strong></div>
+          <div class="post-body">${item.body}</div>
+          ${extra.link ? `<div class="badge"><a href="${extra.link}" target="_blank" style="color:inherit;text-decoration:none;">펀매 참여하기 →</a></div>` : ''}
+        </div>
+      `;
+    }).join('');
+    
+    document.getElementById('booksList').innerHTML = html || '<p style="color:#999;">등록된 책이 없습니다</p>';
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+async function loadPosts() {
+  try {
+    const { data } = await supabase
+      .from('community_posts')
+      .select('*')
+      .eq('type', 'post')
+      .order('created_at', { ascending: false });
+    
+    const html = (data || []).map(item => `
+      <div class="post-card">
+        <div class="post-header">
+          <div class="post-title">${item.title}</div>
+          <div class="post-date">${new Date(item.created_at).toLocaleDateString('ko-KR')}</div>
+        </div>
+        <div class="post-body">${item.body}</div>
+      </div>
+    `).join('');
+    
+    document.getElementById('postsList').innerHTML = html || '<p style="color:#999;">아직 글이 없습니다</p>';
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+async function loadAllContent() {
+  if (currentTab === 'news') loadNews();
+  else if (currentTab === 'events') loadEvents();
+  else if (currentTab === 'coupons') loadCoupons();
+  else if (currentTab === 'books') loadBooks();
+  else if (currentTab === 'posts') loadPosts();
+}
+
+window.onload = initSupabase;
+</script>
+
+</body>
+</html>
