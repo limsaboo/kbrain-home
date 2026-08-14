@@ -343,7 +343,7 @@ html, body {
       💾 결과 저장 및 공유
     </div>
 
-    <button class="start-btn" onclick="startTest()">🚀 검사 시작하기</button>
+    <button id="startBtn" class="start-btn" onclick="startTest()">🚀 검사 시작하기</button>
     
     <p class="note">
       ℹ️ 이 검사 결과는 의료 진단이 아닙니다. 개인의 뇌 건강을 이해하기 위한 교육용 도구입니다.
@@ -472,12 +472,47 @@ function initSupabase() {
 }
 
 function startTest() {
-  document.getElementById('startScreen').style.display = 'none';
-  document.getElementById('testScreen').style.display = 'block';
-  currentCategory = 0;
-  currentQuestion = 0;
-  answers = {};
-  loadQuestion();
+  try {
+    console.log('🚀 startTest() 호출됨');
+    
+    // DOM 요소 검증
+    const startScreen = document.getElementById('startScreen');
+    const testScreen = document.getElementById('testScreen');
+    
+    if (!startScreen) {
+      console.error('❌ startScreen 요소를 찾을 수 없습니다');
+      alert('화면 로딩 오류가 발생했습니다. 페이지를 새로고침해주세요.');
+      return;
+    }
+    
+    if (!testScreen) {
+      console.error('❌ testScreen 요소를 찾을 수 없습니다');
+      alert('화면 로딩 오류가 발생했습니다. 페이지를 새로고침해주세요.');
+      return;
+    }
+    
+    console.log('✅ DOM 요소 검증 완료');
+    
+    // 화면 전환
+    startScreen.style.display = 'none';
+    testScreen.style.display = 'block';
+    
+    // 검사 초기화
+    currentCategory = 0;
+    currentQuestion = 0;
+    answers = {};
+    
+    console.log('✅ 검사 상태 초기화 완료');
+    console.log(`📊 전체 카테고리 수: ${categories.length}`);
+    
+    // 첫 번째 질문 로드
+    loadQuestion();
+    
+    console.log('✅ startTest() 완료');
+  } catch (error) {
+    console.error('❌ startTest() 오류:', error);
+    alert('검사를 시작하는 중 오류가 발생했습니다.\n오류: ' + error.message);
+  }
 }
 
 function loadQuestion() {
@@ -671,7 +706,48 @@ function shareResult() {
   }
 }
 
-window.onload = initSupabase;
+let startBtnClickable = true;
+
+window.addEventListener('load', function() {
+  try {
+    console.log('📄 페이지 로드 완료 - 초기화 시작');
+    initSupabase();
+    console.log('✅ Supabase 초기화 완료');
+  } catch (error) {
+    console.error('⚠️ Supabase 초기화 오류 (비치명적):', error);
+    console.log('ℹ️ 검사는 계속 진행 가능합니다. 결과 저장만 영향을 받을 수 있습니다.');
+  }
+  
+  // 시작 버튼 이벤트 리스너 추가
+  const startBtn = document.getElementById('startBtn');
+  if (startBtn) {
+    startBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      console.log('🖱️ 시작 버튼 클릭됨');
+      
+      if (!startBtnClickable) {
+        console.log('⏳ 중복 클릭 방지됨');
+        return;
+      }
+      
+      startBtnClickable = false;
+      startBtn.disabled = true;
+      startBtn.style.opacity = '0.6';
+      
+      setTimeout(() => {
+        startTest();
+        setTimeout(() => {
+          startBtnClickable = true;
+          startBtn.disabled = false;
+          startBtn.style.opacity = '1';
+        }, 500);
+      }, 100);
+    });
+    console.log('✅ 시작 버튼 이벤트 리스너 등록 완료');
+  } else {
+    console.warn('⚠️ 시작 버튼을 찾을 수 없습니다');
+  }
+});
 </script>
 
 </body>
