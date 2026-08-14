@@ -48,6 +48,26 @@ body{
 .screen.active{display:block;animation:fadein .5s ease;}
 @keyframes fadein{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
 
+/* ---------- Admin Modal ---------- */
+.admin-modal-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,0.5);display:none;align-items:center;justify-content:center;z-index:9999;padding:20px;
+}
+.admin-modal-overlay.active{display:flex;}
+.admin-modal{
+  background:#fff;border-radius:20px;padding:30px;max-width:500px;width:100%;max-height:80vh;overflow-y:auto;
+  box-shadow:0 20px 60px rgba(0,0,0,0.3);
+}
+.admin-section{margin-bottom:24px;}
+.admin-section h4{color:var(--navy);font-size:16px;font-weight:700;margin:0 0 12px;border-bottom:2px solid var(--sage);padding-bottom:8px;}
+.admin-btn{
+  width:100%;padding:12px 16px;margin-bottom:8px;background:var(--sage);color:#fff;border:none;border-radius:8px;
+  font-weight:600;cursor:pointer;font-size:14px;transition:all 0.3s;
+}
+.admin-btn:hover{background:var(--sage-deep);transform:translateY(-2px);box-shadow:0 4px 12px rgba(95,131,104,0.3);}
+.admin-btn:active{transform:translateY(0);}
+.admin-info{background:#f5f5f5;padding:12px;border-radius:8px;font-size:13px;line-height:1.8;color:#555;}
+.admin-info p{margin:4px 0;}
+
 /* ---------- 홈 ---------- */
 .home-card{
   background:linear-gradient(155deg, #ffffff 0%, var(--cream-deep) 120%);
@@ -759,6 +779,10 @@ function gradeInfo(overall){
   return {key:'concern', label:'인지활력 집중관리 필요', color:GRADE_COLORS.concern, msg:'전문 기관의 정밀 검진과 함께, 오늘부터 꾸준한 인지훈련을 시작해 보시길 권해드려요.'};
 }
 
+/* 사용자 정보 저장 (Supabase 저장 시 필요) */
+let userAge = null;
+let userGender = null;
+
 const TRAININGS = {
   지남력:{icon:'📅', title:'달력 · 계절 콜라주 만들기', desc:'오늘 날짜와 계절을 그림으로 표현하며 시간 감각을 자연스럽게 익혀요.',
     steps:['오늘의 날씨·계절을 색종이로 표현하기','달력에 날마다 스티커 붙이기','계절 사진을 오려 계절 콜라주 만들기']},
@@ -862,6 +886,185 @@ function renderResult(){
     <button class="big-btn btn-secondary" onclick="showScreen('screen-home')">🏠 처음으로 돌아가기</button>
   `;
   document.getElementById('result-content').innerHTML = html;
+  
+  /* Supabase 결과 저장 */
+  saveToSupabase(overall, domainPct);
+}
+
+/* ================= Supabase 저장 ================= */
+async function saveToSupabase(overallScore, domainScores){
+  const supabaseUrl = 'https://grxqfaeznqqohnlltged.supabase.co';
+  const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdyeHFmYWV6bnFxb2hubGx0Z2VkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjA4NTgxMzMsImV4cCI6MjAzNjQzNDEzM30.7VqU8c2t-7yYgLjxR_KvgKIlbvG9J0hqVHnH7H2V3Nw';
+  
+  try{
+    const response = await fetch(`${supabaseUrl}/rest/v1/scs_keep`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': supabaseKey,
+        'Authorization': `Bearer ${supabaseKey}`
+      },
+      body: JSON.stringify({
+        overall_score: overallScore,
+        memory_score: domainScores['기억'] || 0,
+        focus_score: domainScores['집중'] || 0,
+        emotion_score: domainScores['감정'] || 0,
+        judgment_score: domainScores['판단'] || 0,
+        execution_score: domainScores['실행'] || 0,
+        user_age: window.userAge || null,
+        user_gender: window.userGender || null,
+        created_at: new Date().toISOString()
+      })
+    });
+    if(response.ok) console.log('✅ Supabase 저장 성공');
+    else console.warn('⚠️ Supabase 저장 실패:', response.status);
+  }catch(err){
+    console.error('❌ Supabase 오류:', err);
+  }
+}
+
+/* ================= Admin 로그인 ================= */
+let adminTapCount = 0;
+let adminTapTimer = null;
+
+function initAdminTrigger(){
+  const trigger = document.querySelector('.eyebrow-logo');
+  if(trigger){
+    trigger.addEventListener('click', () => {
+      adminTapCount++;
+      clearTimeout(adminTapTimer);
+      adminTapTimer = setTimeout(() => { adminTapCount = 0; }, 2000);
+      
+      if(adminTapCount === 5){
+        adminTapCount = 0;
+        openAdminTool();
+      }
+    });
+  }
+}
+
+function openAdminTool(){
+  const password = prompt('🔐 관리자 비밀번호를 입력하세요:');
+  if(password === 'brain2025!'){
+    showAdminModal();
+  }else if(password !== null){
+    alert('❌ 비밀번호가 틀렸습니다.');
+  }
+}
+
+function showAdminModal(){
+  let modal = document.getElementById('adminModal');
+  if(!modal){
+    const adminHTML = `
+      <div id="adminModal" class="admin-modal-overlay active">
+        <div class="admin-modal">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;border-bottom:3px solid var(--gold);padding-bottom:12px;">
+            <h3 style="margin:0;color:var(--navy);font-size:22px;font-weight:800;">🛠️ Admin 도구</h3>
+            <button onclick="closeAdminModal()" style="background:none;border:none;font-size:28px;cursor:pointer;color:var(--navy);">✕</button>
+          </div>
+          
+          <div class="admin-section">
+            <h4>📊 Supabase 연동 테스트</h4>
+            <button class="admin-btn" onclick="testSupabaseConnection()">Supabase 연결 확인</button>
+            <button class="admin-btn" onclick="checkScsData()">SCS 결과 데이터 조회</button>
+          </div>
+          
+          <div class="admin-section">
+            <h4>🔄 데이터 초기화</h4>
+            <button class="admin-btn" style="background:#c1543a;" onclick="clearAllData()">전체 데이터 삭제 (주의!)</button>
+          </div>
+          
+          <div class="admin-section">
+            <h4>ℹ️ 시스템 정보</h4>
+            <div class="admin-info">
+              <p><b>📁 테이블명:</b> scs_keep</p>
+              <p><b>💾 저장 항목:</b> 전체점수, 5개영역별점수, 나이, 성별, 타임스탬프</p>
+              <p><b>📄 파일명:</b> senior-cognitive-health-check.html</p>
+              <p><b>🌐 배포:</b> limsaboo/kbrain-home</p>
+              <p><b>🔒 비밀번호:</b> brain2025!</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+    document.body.insertAdjacentHTML('beforeend', adminHTML);
+    modal = document.getElementById('adminModal');
+  }
+  modal.classList.add('active');
+}
+
+function closeAdminModal(){
+  const modal = document.getElementById('adminModal');
+  if(modal) modal.classList.remove('active');
+}
+
+async function testSupabaseConnection(){
+  const supabaseUrl = 'https://grxqfaeznqqohnlltged.supabase.co';
+  const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdyeHFmYWV6bnFxb2hubGx0Z2VkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjA4NTgxMzMsImV4cCI6MjAzNjQzNDEzM30.7VqU8c2t-7yYgLjxR_KvgKIlbvG9J0hqVHnH7H2V3Nw';
+  
+  try{
+    const response = await fetch(`${supabaseUrl}/rest/v1/scs_keep?limit=1`, {
+      method: 'GET',
+      headers: {
+        'apikey': supabaseKey,
+        'Authorization': `Bearer ${supabaseKey}`
+      }
+    });
+    if(response.ok){
+      alert('✅ Supabase 연결 성공!\n테이블: scs_keep 접근 가능');
+    }else{
+      alert('❌ 연결 실패\n상태 코드: ' + response.status);
+    }
+  }catch(err){
+    alert('❌ 오류: ' + err.message);
+  }
+}
+
+async function checkScsData(){
+  const supabaseUrl = 'https://grxqfaeznqqohnlltged.supabase.co';
+  const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdyeHFmYWV6bnFxb2hubGx0Z2VkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjA4NTgxMzMsImV4cCI6MjAzNjQzNDEzM30.7VqU8c2t-7yYgLjxR_KvgKIlbvG9J0hqVHnH7H2V3Nw';
+  
+  try{
+    const response = await fetch(`${supabaseUrl}/rest/v1/scs_keep?order=created_at.desc&limit=10`, {
+      method: 'GET',
+      headers: {
+        'apikey': supabaseKey,
+        'Authorization': `Bearer ${supabaseKey}`
+      }
+    });
+    const data = await response.json();
+    if(data.length === 0){
+      alert('📭 저장된 SCS 결과가 없습니다.');
+    }else{
+      alert(`✅ 최근 저장된 SCS 결과: ${data.length}개\n\n${JSON.stringify(data.slice(0,2), null, 2)}`);
+    }
+  }catch(err){
+    alert('❌ 데이터 조회 오류: ' + err.message);
+  }
+}
+
+async function clearAllData(){
+  if(!confirm('⚠️ SCS 테이블의 모든 데이터를 삭제하시겠습니까?\n이 작업은 되돌릴 수 없습니다.')) return;
+  
+  const supabaseUrl = 'https://grxqfaeznqqohnlltged.supabase.co';
+  const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdyeHFmYWV6bnFxb2hubGx0Z2VkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjA4NTgxMzMsImV4cCI6MjAzNjQzNDEzM30.7VqU8c2t-7yYgLjxR_KvgKIlbvG9J0hqVHnH7H2V3Nw';
+  
+  try{
+    const response = await fetch(`${supabaseUrl}/rest/v1/scs_keep`, {
+      method: 'DELETE',
+      headers: {
+        'apikey': supabaseKey,
+        'Authorization': `Bearer ${supabaseKey}`
+      }
+    });
+    if(response.ok){
+      alert('✅ 모든 데이터가 삭제되었습니다.');
+    }else{
+      alert('❌ 삭제 실패\n상태 코드: ' + response.status);
+    }
+  }catch(err){
+    alert('❌ 오류: ' + err.message);
+  }
 }
 
 /* ================= 화면 전환 ================= */
@@ -870,6 +1073,11 @@ function showScreen(id){
   document.getElementById(id).classList.add('active');
   window.scrollTo({top:0, behavior:'smooth'});
 }
+
+/* ================= 초기화 ================= */
+document.addEventListener('DOMContentLoaded', () => {
+  initAdminTrigger();
+});
 </script>
 </body>
 </html>
