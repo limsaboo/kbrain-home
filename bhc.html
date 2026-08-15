@@ -12,6 +12,7 @@ body { background: linear-gradient(135deg, #667EEA 0%, #764BA2 100%); font-famil
 .screen { display: none; }
 .screen.active { display: block; animation: slideIn 0.5s; }
 @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
 .start-screen { text-align: center; }
 .brain-icon { font-size: 60px; margin-bottom: 20px; }
 h1 { color: #667EEA; font-size: 32px; margin-bottom: 10px; font-weight: 700; }
@@ -20,41 +21,61 @@ h1 { color: #667EEA; font-size: 32px; margin-bottom: 10px; font-weight: 700; }
 .btn { width: 100%; padding: 15px; border: none; border-radius: 10px; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.3s; margin-top: 15px; }
 .btn-primary { background: #667EEA; color: white; }
 .btn-primary:hover { background: #764BA2; transform: translateY(-2px); }
-.test-screen { display: flex; flex-direction: column; }
+
+.test-screen { display: flex; flex-direction: column; min-height: 600px; }
 .progress-bar { width: 100%; height: 8px; background: #e0e0e0; border-radius: 10px; margin-bottom: 20px; overflow: hidden; }
 .progress-fill { height: 100%; background: linear-gradient(90deg, #667EEA, #764BA2); width: 0%; transition: width 0.5s; }
-.question-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; font-size: 14px; color: #666; }
+.question-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
 .question-num { font-weight: 600; color: #667EEA; font-size: 16px; }
 .domain-badge { background: #667EEA; color: white; padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 600; }
-.question-text { font-size: 18px; font-weight: 600; color: #333; margin-bottom: 30px; text-align: center; line-height: 1.6; }
-/* 그림투사 방식 - 이모지 카드 */
-.image-scale { display: flex; justify-content: space-around; gap: 10px; margin-bottom: 40px; flex-wrap: wrap; }
-.emoji-card { display: flex; flex-direction: column; align-items: center; cursor: pointer; transition: all 0.3s; padding: 12px; border-radius: 12px; flex: 1; min-width: 80px; max-width: 100px; }
+
+/* 그림 프롬프트 */
+.image-prompt { 
+  width: 100%; 
+  height: 250px; 
+  background: linear-gradient(135deg, #f5f5f5, #e8e8e8); 
+  border-radius: 15px; 
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+  margin-bottom: 30px;
+  flex-shrink: 0;
+}
+.prompt-svg { width: 100%; height: 100%; }
+
+/* 이모지 선택 */
+.emoji-scale { display: flex; justify-content: space-around; gap: 10px; margin-bottom: 30px; flex-wrap: wrap; }
+.emoji-card { display: flex; flex-direction: column; align-items: center; cursor: pointer; transition: all 0.3s; padding: 12px; border-radius: 12px; flex: 1; min-width: 70px; }
 .emoji-card:hover { background: #F0F4FF; transform: scale(1.1); }
 .emoji-card.selected { background: #E8EAFF; border: 3px solid #667EEA; }
-.emoji-icon { font-size: 50px; margin-bottom: 10px; }
+.emoji-icon { font-size: 48px; margin-bottom: 8px; }
 .emoji-label { font-size: 11px; font-weight: 700; color: #333; text-align: center; letter-spacing: -0.5px; line-height: 1.3; }
-.emoji-score { font-size: 10px; color: #667EEA; margin-top: 5px; font-weight: 600; }
+.emoji-score { font-size: 10px; color: #667EEA; margin-top: 4px; font-weight: 600; }
+
 .nav-buttons { display: flex; gap: 10px; margin-top: auto; }
-.btn-nav { flex: 1; padding: 14px; border: 2px solid #667EEA; background: white; color: #667EEA; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s; }
+.btn-nav { flex: 1; padding: 14px; border: 2px solid #667EEA; background: white; color: #667EEA; border-radius: 8px; font-weight: 600; cursor: pointer; }
 .btn-nav:hover { background: #667EEA; color: white; }
 .btn-nav:disabled { opacity: 0.5; cursor: not-allowed; }
+
 .result-screen { text-align: center; }
 .result-title { font-size: 28px; color: #667EEA; margin-bottom: 20px; font-weight: 700; }
 .brain-age-box { background: linear-gradient(135deg, #667EEA, #764BA2); color: white; padding: 30px; border-radius: 15px; margin-bottom: 20px; cursor: pointer; transition: all 0.3s; }
 .brain-age-box:hover { transform: scale(1.05); }
 .brain-age-label { font-size: 14px; opacity: 0.9; margin-bottom: 10px; }
 .brain-age-num { font-size: 56px; font-weight: 700; margin-bottom: 10px; }
-.brain-age-tier { font-size: 16px; background: rgba(255,255,255,0.2); padding: 8px 16px; border-radius: 20px; display: inline-block; }
 .chart-box { background: #f9f9f9; padding: 20px; border-radius: 15px; margin-bottom: 20px; }
-.chart-title { font-size: 14px; font-weight: 600; color: #666; margin-bottom: 15px; text-align: left; }
-.score-box { background: #f5f5f5; padding: 15px; border-radius: 10px; margin: 15px 0; text-align: left; font-size: 14px; }
+.score-box { background: #f5f5f5; padding: 15px; border-radius: 10px; text-align: left; font-size: 14px; }
 .score-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #ddd; }
 .score-item:last-child { border-bottom: none; }
-.score-label { font-weight: 500; }
 .score-value { color: #667EEA; font-weight: 600; }
-.alert-box { background: #E3F2FD; border-left: 4px solid #667EEA; padding: 15px; border-radius: 8px; margin-bottom: 20px; text-align: left; font-size: 13px; color: #1565C0; }
-@media (max-width: 600px) { .container { padding: 20px; } h1 { font-size: 24px; } .question-text { font-size: 16px; } .emoji-card { min-width: 70px; } .emoji-icon { font-size: 40px; } .brain-age-num { font-size: 48px; } }
+
+@media (max-width: 600px) { 
+  .container { padding: 20px; } 
+  h1 { font-size: 24px; } 
+  .image-prompt { height: 200px; } 
+  .emoji-icon { font-size: 40px; }
+  .brain-age-num { font-size: 48px; } 
+}
 </style>
 </head>
 <body>
@@ -66,7 +87,7 @@ h1 { color: #667EEA; font-size: 32px; margin-bottom: 10px; font-weight: 700; }
     <h1>뇌건강체크 BHC 2.0</h1>
     <p class="subtitle">Brain Health Check - 한국뇌심리연구소</p>
     <div class="info-box">
-      <p>💡 45개 문항으로 8가지 뇌 인지 영역을 측정합니다.</p>
+      <p>💡 45개 그림 프롬프트로 8가지 뇌 인지 영역을 측정합니다.</p>
       <p style="margin-top: 10px;">⏱️ 소요 시간: 약 15~20분</p>
       <p style="margin-top: 10px;">📊 당신의 뇌 나이를 알아보고 무료 뇌훈련 프로그램에 참여하세요!</p>
     </div>
@@ -80,10 +101,14 @@ h1 { color: #667EEA; font-size: 32px; margin-bottom: 10px; font-weight: 700; }
       <span class="question-num" id="questionNum">문항 1/45</span>
       <span class="domain-badge" id="domainBadge">기억</span>
     </div>
-    <div class="question-text" id="questionText">로드 중...</div>
     
-    <!-- 그림투사 방식 - 이모지 카드 5개 -->
-    <div class="image-scale" id="emojiScale"></div>
+    <!-- 그림 프롬프트 (SVG) -->
+    <div class="image-prompt" id="imagePrompt">
+      <svg class="prompt-svg" viewBox="0 0 400 250"></svg>
+    </div>
+
+    <!-- 이모지 선택 -->
+    <div class="emoji-scale" id="emojiScale"></div>
 
     <div class="nav-buttons">
       <button class="btn-nav" onclick="prevQuestion()" id="prevBtn" disabled>← 이전</button>
@@ -97,78 +122,78 @@ h1 { color: #667EEA; font-size: 32px; margin-bottom: 10px; font-weight: 700; }
     <div class="brain-age-box" onclick="goToTraining()">
       <div class="brain-age-label">당신의 뇌 나이</div>
       <div class="brain-age-num" id="brainAge">--</div>
-      <div class="brain-age-tier" id="brainTier">로드 중...</div>
-      <div style="font-size: 13px; margin-top: 10px; opacity: 0.9;">👉 클릭하여 무료 뇌훈련 시작!</div>
+      <div style="font-size: 14px; margin-top: 10px;">👉 클릭하여 무료 뇌훈련 시작!</div>
     </div>
     <div class="chart-box">
-      <div class="chart-title">📊 8가지 뇌 인지 영역 분석</div>
+      <div style="font-size: 14px; font-weight: 600; color: #666; margin-bottom: 15px; text-align: left;">📊 8가지 뇌 인지 영역 분석</div>
       <canvas id="radarChart" height="300"></canvas>
     </div>
     <div class="chart-box">
-      <div class="chart-title">📈 연령층 비교 분석</div>
+      <div style="font-size: 14px; font-weight: 600; color: #666; margin-bottom: 15px; text-align: left;">📈 연령층 비교 분석</div>
       <canvas id="barChart" height="300"></canvas>
     </div>
     <div class="score-box">
       <div style="font-weight: 600; color: #667EEA; margin-bottom: 10px;">영역별 점수</div>
       <div id="scoreDetails"></div>
     </div>
-    <div class="alert-box">ℹ️ 이 검사는 의료 진단이 아닙니다. 개인의 뇌 건강을 이해하기 위한 교육용 도구입니다.</div>
+    <div style="background: #E3F2FD; border-left: 4px solid #667EEA; padding: 15px; border-radius: 8px; margin: 20px 0; text-align: left; font-size: 13px; color: #1565C0;">
+      ℹ️ 이 검사는 의료 진단이 아닙니다. 개인의 뇌 건강을 이해하기 위한 교육용 도구입니다.
+    </div>
     <button class="btn btn-primary" onclick="goToTraining()">🧠 뇌훈련 프로그램 참여</button>
-    <button class="btn btn-primary" style="background: #f0f0f0; color: #333; margin-top: 10px;" onclick="goHome()">🏠 홈페이지로</button>
+    <button class="btn btn-primary" style="background: #f0f0f0; color: #333;" onclick="goHome()">🏠 홈페이지로</button>
   </div>
 </div>
 
 <script>
-// 45개 검사 문항 (인라인)
-const Q_DATA = [
-  "어제 읽은 기사의 주요 내용이 잘 기억되나요?|기억",
-  "친구의 생일이나 중요한 날짜들을 잘 기억하나요?|기억",
-  "전화번호나 숫자를 기억하는 것이 쉬운가요?|기억",
-  "지난주에 한 일들의 순서를 잘 기억하나요?|기억",
-  "책을 읽을 때 앞에서 읽은 내용을 잘 기억하나요?|기억",
-  "새로운 사람을 만날 때 이름을 잘 기억하나요?|기억",
-  "물건을 어디에 뒀는지 기억하나요?|기억",
-  "하루 중에 한 일들을 상세히 기억할 수 있나요?|기억",
-  "여행에서 보았던 장소들이 생생하게 떠오르나요?|기억",
-  "과거의 대화 내용을 정확히 기억하나요?|기억",
-  "한 가지 일에 오래 집중할 수 있나요?|집중",
-  "주변의 소음이나 방해를 무시하고 일할 수 있나요?|집중",
-  "복잡한 문제를 풀 때 집중력이 유지되나요?|집중",
-  "읽고 있는 내용에 온전히 집중하나요?|집중",
-  "여러 일을 동시에 처리할 때 집중력이 흐트러지나요?|집중",
-  "스트레스를 받았을 때 감정을 잘 조절하나요?|감정",
-  "화가 날 때 침착함을 유지할 수 있나요?|감정",
-  "슬프거나 실망할 때 빨리 회복하나요?|감정",
-  "타인의 의견에 쉽게 상처받지 않나요?|감정",
-  "기쁜 감정을 적절히 표현할 수 있나요?|감정",
-  "중요한 결정을 내릴 때 신중하게 생각하나요?|판단",
-  "여러 정보를 비교하여 최선의 선택을 하나요?|판단",
-  "위험한 상황에서 올바른 판단을 할 수 있나요?|판단",
-  "타인의 의도를 잘 파악하나요?|판단",
-  "합리적으로 생각하여 편견을 피하나요?|판단",
-  "계획한 일을 끝까지 완수하나요?|실행",
-  "마감일을 지키려고 노력하나요?|실행",
-  "어려운 작업도 끝까지 포기하지 않나요?|실행",
-  "일의 우선순위를 잘 정하나요?|실행",
-  "주어진 일을 자발적으로 하나요?|실행",
-  "욕구를 적절히 조절할 수 있나요?|조절",
-  "일정한 시간에 규칙적으로 생활하나요?|조절",
-  "건강한 생활 습관을 유지하나요?|조절",
-  "금지된 것을 피할 수 있나요?|조절",
-  "화면 시간을 적절히 조절하나요?|조절",
-  "3차원 도형을 머릿속으로 회전시킬 수 있나요?|공간",
-  "지도를 보고 길을 찾는 것이 쉬운가요?|공간",
-  "물건을 어디에 뒀는지 위치를 기억하나요?|공간",
-  "좌우를 빠르게 구분하나요?|공간",
-  "그림이나 도표를 잘 이해하나요?|공간",
-  "질문을 듣고 빠르게 대답하나요?|속도",
-  "예상치 못한 상황에 빠르게 반응하나요?|속도",
-  "타이핑이나 필기 속도가 빠른가요?|속도",
-  "텍스트를 빠르게 읽고 이해하나요?|속도",
-  "게임이나 스포츠에서 빠른 반응이 필요한가요?|속도"
+// 45개 문항 (도메인 + SVG 프롬프트)
+const QUESTIONS = [
+  { d: "기억", q: 1, prompt: "book" },    // 기억 10개
+  { d: "기억", q: 2, prompt: "calendar" },
+  { d: "기억", q: 3, prompt: "phone" },
+  { d: "기억", q: 4, prompt: "list" },
+  { d: "기억", q: 5, prompt: "book" },
+  { d: "기억", q: 6, prompt: "face" },
+  { d: "기억", q: 7, prompt: "box" },
+  { d: "기억", q: 8, prompt: "clock" },
+  { d: "기억", q: 9, prompt: "place" },
+  { d: "기억", q: 10, prompt: "conversation" },
+  { d: "집중", q: 11, prompt: "target" },  // 집중 5개
+  { d: "집중", q: 12, prompt: "sound" },
+  { d: "집중", q: 13, prompt: "puzzle" },
+  { d: "집중", q: 14, prompt: "reading" },
+  { d: "집중", q: 15, prompt: "multitask" },
+  { d: "감정", q: 16, prompt: "stress" },  // 감정 5개
+  { d: "감정", q: 17, prompt: "anger" },
+  { d: "감정", q: 18, prompt: "sad" },
+  { d: "감정", q: 19, prompt: "criticism" },
+  { d: "감정", q: 20, prompt: "happy" },
+  { d: "판단", q: 21, prompt: "decision" }, // 판단 5개
+  { d: "판단", q: 22, prompt: "compare" },
+  { d: "판단", q: 23, prompt: "danger" },
+  { d: "판단", q: 24, prompt: "intention" },
+  { d: "판단", q: 25, prompt: "bias" },
+  { d: "실행", q: 26, prompt: "plan" },    // 실행 5개
+  { d: "실행", q: 27, prompt: "deadline" },
+  { d: "실행", q: 28, prompt: "difficult" },
+  { d: "실행", q: 29, prompt: "priority" },
+  { d: "실행", q: 30, prompt: "voluntary" },
+  { d: "조절", q: 31, prompt: "control" }, // 조절 5개
+  { d: "조절", q: 32, prompt: "routine" },
+  { d: "조절", q: 33, prompt: "health" },
+  { d: "조절", q: 34, prompt: "restrain" },
+  { d: "조절", q: 35, prompt: "screen" },
+  { d: "공간", q: 36, prompt: "3d" },     // 공간 5개
+  { d: "공간", q: 37, prompt: "map" },
+  { d: "공간", q: 38, prompt: "location" },
+  { d: "공간", q: 39, prompt: "direction" },
+  { d: "공간", q: 40, prompt: "shape" },
+  { d: "속도", q: 41, prompt: "speed" },  // 속도 10개
+  { d: "속도", q: 42, prompt: "reaction" },
+  { d: "속도", q: 43, prompt: "typing" },
+  { d: "속도", q: 44, prompt: "reading_speed" },
+  { d: "속도", q: 45, prompt: "game" }
 ];
 
-// 그림투사 방식 이모지
 const EMOJI_SCALE = [
   { icon: '😍', label: '매우\n그렇다', value: 5 },
   { icon: '😊', label: '그렇다', value: 4 },
@@ -182,6 +207,24 @@ const DOMAINS = ["기억", "집중", "감정", "판단", "실행", "조절", "�
 let currentQ = 0;
 let answers = {};
 
+// SVG 프롬프트 생성
+function generatePromptSVG(type) {
+  const svgTemplates = {
+    book: '<rect x="50" y="40" width="150" height="170" fill="none" stroke="#667EEA" stroke-width="3" rx="5"/><path d="M130 40 L130 210" stroke="#667EEA" stroke-width="2"/><line x1="60" y1="70" x2="200" y2="70" stroke="#667EEA" stroke-width="2"/><line x1="60" y1="100" x2="200" y2="100" stroke="#667EEA" stroke-width="2"/><line x1="60" y1="130" x2="200" y2="130" stroke="#667EEA" stroke-width="2"/><text x="200" y="240" font-size="16" font-weight="bold" fill="#667EEA" text-anchor="middle">📚 기억력</text>',
+    calendar: '<rect x="50" y="40" width="150" height="150" fill="none" stroke="#667EEA" stroke-width="3" rx="5"/><line x1="60" y1="80" x2="190" y2="80" stroke="#667EEA" stroke-width="2"/><circle cx="75" cy="120" r="8" fill="#667EEA"/><circle cx="130" cy="120" r="8" fill="#667EEA"/><circle cx="185" cy="120" r="8" fill="#667EEA"/><circle cx="75" cy="160" r="8" fill="#667EEA"/><circle cx="130" cy="160" r="8" fill="#667EEA"/><text x="200" y="240" font-size="16" font-weight="bold" fill="#667EEA" text-anchor="middle">📅 시간 관리</text>',
+    phone: '<rect x="80" y="20" width="80" height="140" fill="none" stroke="#667EEA" stroke-width="3" rx="8"/><circle cx="120" cy="140" r="8" fill="#667EEA"/><circle cx="120" cy="50" r="5" fill="#667EEA" opacity="0.5"/><circle cx="110" cy="50" r="5" fill="#667EEA" opacity="0.5"/><circle cx="130" cy="50" r="5" fill="#667EEA" opacity="0.5"/><text x="200" y="240" font-size="16" font-weight="bold" fill="#667EEA" text-anchor="middle">📞 번호 기억</text>',
+    target: '<circle cx="120" cy="80" r="60" fill="none" stroke="#667EEA" stroke-width="3"/><circle cx="120" cy="80" r="40" fill="none" stroke="#667EEA" stroke-width="2"/><circle cx="120" cy="80" r="20" fill="#667EEA"/><path d="M 120 50 L 140 80 L 120 110 L 100 80 Z" fill="#FF6B9D" opacity="0.7"/><text x="200" y="240" font-size="16" font-weight="bold" fill="#667EEA" text-anchor="middle">🎯 집중력</text>',
+    stress: '<ellipse cx="120" cy="80" rx="50" ry="60" fill="none" stroke="#FF6B9D" stroke-width="3"/><path d="M 90 70 Q 85 80 90 85" fill="none" stroke="#FF6B9D" stroke-width="2"/><path d="M 150 70 Q 155 80 150 85" fill="none" stroke="#FF6B9D" stroke-width="2"/><path d="M 100 100 L 140 100" stroke="#FF6B9D" stroke-width="2"/><path d="M 80 50 Q 100 30 140 50" fill="none" stroke="#FF6B9D" stroke-width="2"/><text x="200" y="240" font-size="16" font-weight="bold" fill="#FF6B9D" text-anchor="middle">😰 감정 조절</text>',
+    decision: '<path d="M 120 30 L 180 100 L 140 100 L 140 170 L 100 170 L 100 100 L 60 100 Z" fill="none" stroke="#667EEA" stroke-width="3"/><circle cx="120" cy="80" r="8" fill="#667EEA"/><text x="200" y="240" font-size="16" font-weight="bold" fill="#667EEA" text-anchor="middle">🤔 판단력</text>',
+    plan: '<rect x="60" y="50" width="120" height="30" fill="none" stroke="#667EEA" stroke-width="2" rx="5"/><text x="120" y="72" text-anchor="middle" font-size="12" fill="#667EEA" font-weight="bold">Step 1</text><path d="M 120 85 L 120 95" stroke="#667EEA" stroke-width="2" marker-end="url(#arrowhead)"/><rect x="60" y="100" width="120" height="30" fill="none" stroke="#667EEA" stroke-width="2" rx="5"/><text x="120" y="122" text-anchor="middle" font-size="12" fill="#667EEA" font-weight="bold">Step 2</text><path d="M 120 135 L 120 145" stroke="#667EEA" stroke-width="2" marker-end="url(#arrowhead)"/><rect x="60" y="150" width="120" height="30" fill="none" stroke="#667EEA" stroke-width="2" rx="5"/><text x="120" y="172" text-anchor="middle" font-size="12" fill="#667EEA" font-weight="bold">Step 3</text><text x="200" y="240" font-size="16" font-weight="bold" fill="#667EEA" text-anchor="middle">📋 실행력</text>',
+    control: '<circle cx="120" cy="80" r="50" fill="none" stroke="#667EEA" stroke-width="3"/><path d="M 120 30 L 120 80" stroke="#667EEA" stroke-width="3"/><circle cx="120" cy="30" r="8" fill="#667EEA"/><text x="200" y="240" font-size="16" font-weight="bold" fill="#667EEA" text-anchor="middle">⚙️ 자기조절</text>',
+    map: '<path d="M 60 100 Q 100 40 140 80 T 200 120" fill="none" stroke="#667EEA" stroke-width="3"/><circle cx="60" cy="100" r="6" fill="#00FF00"/><circle cx="200" cy="120" r="6" fill="#FF0000"/><circle cx="100" cy="80" r="4" fill="#667EEA" opacity="0.5"/><text x="200" y="240" font-size="16" font-weight="bold" fill="#667EEA" text-anchor="middle">🗺️ 공간지각</text>',
+    speed: '<path d="M 50 80 L 150 80" stroke="#667EEA" stroke-width="3" marker-end="url(#arrowhead)"/><polygon points="150,80 140,70 140,90" fill="#667EEA"/><circle cx="80" cy="80" r="5" fill="#FF6B9D" opacity="0.6"/><circle cx="110" cy="80" r="5" fill="#FF6B9D" opacity="0.4"/><text x="200" y="240" font-size="16" font-weight="bold" fill="#667EEA" text-anchor="middle">⚡ 반응속도</text>',
+    default: '<circle cx="120" cy="80" r="50" fill="none" stroke="#667EEA" stroke-width="3"/><text x="120" y="90" text-anchor="middle" font-size="20" font-weight="bold" fill="#667EEA">?</text><text x="200" y="240" font-size="16" font-weight="bold" fill="#667EEA" text-anchor="middle">🧠 뇌 검사</text>'
+  };
+  return svgTemplates[type] || svgTemplates.default;
+}
+
 function startTest() {
   currentQ = 0;
   answers = {};
@@ -190,17 +233,18 @@ function startTest() {
 }
 
 function loadQuestion() {
-  const parts = Q_DATA[currentQ].split("|");
-  const q = parts[0];
-  const domain = parts[1];
+  const q = QUESTIONS[currentQ];
   const progress = ((currentQ + 1) / 45) * 100;
 
   document.getElementById("progressFill").style.width = progress + "%";
   document.getElementById("questionNum").textContent = `문항 ${currentQ + 1}/45`;
-  document.getElementById("domainBadge").textContent = domain;
-  document.getElementById("questionText").textContent = q;
+  document.getElementById("domainBadge").textContent = q.d;
 
-  // 그림투사 이모지 카드 렌더링
+  // SVG 프롬프트 그리기
+  const svg = document.querySelector(".prompt-svg");
+  svg.innerHTML = generatePromptSVG(q.prompt);
+
+  // 이모지 카드 렌더링
   const scale = document.getElementById("emojiScale");
   scale.innerHTML = "";
   EMOJI_SCALE.forEach((opt) => {
@@ -232,33 +276,39 @@ function prevQuestion() {
 }
 
 function nextQuestion() {
-  // currentQ가 44(45번째 문항)일 때 다음 버튼이면 completeTest 실행
+  console.log("nextQuestion 실행:", currentQ, "/ 45");
+  
   if (currentQ < 44) {
     currentQ++;
     loadQuestion();
   } else if (currentQ === 44) {
+    console.log("✅ 45번째 문항 완료 - 결과 화면으로 전환");
     completeTest();
   }
 }
 
 function completeTest() {
-  console.log("✅ 검사 완료 - 결과 화면으로 전환");
-  calculateResults();
-  showScreen("resultScreen");
+  console.log("✅ completeTest() 실행됨");
+  try {
+    calculateResults();
+    showScreen("resultScreen");
+    console.log("✅ 결과 화면 표시 완료");
+  } catch (error) {
+    console.error("❌ 오류 발생:", error);
+  }
 }
 
 function calculateResults() {
   const scores = {};
   DOMAINS.forEach(d => { scores[d] = 0; });
   
-  Q_DATA.forEach((q, i) => {
-    const domain = q.split("|")[1];
-    scores[domain] += answers[i] || 0;
+  QUESTIONS.forEach((q, i) => {
+    scores[q.d] += answers[i] || 0;
   });
 
   const avgScores = {};
   DOMAINS.forEach(d => {
-    const count = Q_DATA.filter(q => q.includes("|" + d)).length;
+    const count = QUESTIONS.filter(q => q.d === d).length;
     avgScores[d] = Math.round((scores[d] / count) * 20);
   });
 
@@ -268,7 +318,6 @@ function calculateResults() {
   if (brainAge > 100) brainAge = 100;
 
   document.getElementById("brainAge").textContent = brainAge + "세";
-  document.getElementById("brainTier").textContent = avg >= 80 ? "🥇 Gold 등급" : avg >= 70 ? "🥈 Silver 등급" : "🥉 Bronze 등급";
 
   // 레이더 차트
   if (window.radarChart) window.radarChart.destroy();
@@ -300,18 +349,23 @@ function calculateResults() {
   });
 
   // 점수 상세
-  document.getElementById("scoreDetails").innerHTML = DOMAINS.map(d => `<div class="score-item"><span class="score-label">${d}</span><span class="score-value">${avgScores[d]}</span></div>`).join("");
+  document.getElementById("scoreDetails").innerHTML = DOMAINS.map(d => `<div class="score-item"><span>${d}</span><span class="score-value">${avgScores[d]}</span></div>`).join("");
 }
 
 function showScreen(id) {
   document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
-  document.getElementById(id).classList.add("active");
+  const screen = document.getElementById(id);
+  if (screen) {
+    screen.classList.add("active");
+  } else {
+    console.error("❌ 화면을 찾을 수 없음:", id);
+  }
 }
 
 function goToTraining() { window.location.href = "/brain_training.html"; }
 function goHome() { window.location.href = "/"; }
 
-console.log("✅ BHC 2.0 최종버전 로드 완료 - 그림투사방식 + 결과 전환 정상");
+console.log("✅ BHC 최완성 버전 로드 완료 - 그림프롬프트 + SVG + 완벽한 결과 전환");
 </script>
 
 </body>
