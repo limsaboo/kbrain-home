@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>뇌훈련 프로그램 - 한국뇌심리연구소</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.40.0/dist/module.min.js"></script>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --primary: #667EEA;
+  --secondary: #764BA2;
+  --success: #4CAF50;
+  --warning: #FF9800;
+  --danger: #F44336;
+}
+
+html, body {
+  height: 100%;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+  font-family: 'Segoe UI', 'Noto Sans KR', sans-serif;
+  color: #333;
+}
+
+.app-container {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+}
+
+.header {
+  background: white;
+  border-radius: 15px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  text-align: center;
+}
+
+.header h1 {
+  color: var(--primary);
+  font-size: 28px;
+  margin-bottom: 10px;
+}
+
+.milestones-info {
+  display: flex;
+  justify-content: space-around;
+  gap: 10px;
+  margin-top: 15px;
+  flex-wrap: wrap;
+}
+
+.milestone-card {
+  background: #f5f5f5;
+  padding: 12px 16px;
+  border-radius: 10px;
+  text-align: center;
+  flex: 1;
+  min-width: 100px;
+}
+
+.milestone-card.active {
+  background: rgba(76, 175, 80, 0.2);
+  border: 2px solid #4CAF50;
+}
+
+.milestone-time {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.milestone-label {
+  font-size: 12px;
+  color: #666;
+  margin-top: 5px;
+}
+
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.screen {
+  background: white;
+  border-radius: 15px;
+  padding: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  display: none;
+  flex: 1;
+}
+
+.screen.active {
+  display: flex;
+  flex-direction: column;
+}
+
+/* 도메인 선택 화면 */
+.domains-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 15px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.domain-card {
+  background: linear-gradient(135deg, #667EEA 0%, #764BA2 100%);
+  color: white;
+  padding: 20px;
+  border-radius: 12px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.domain-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+}
+
+.domain-icon {
+  font-size: 40px;
+  margin-bottom: 10px;
+}
+
+.domain-name {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.domain-count {
+  font-size: 12px;
+  opacity: 0.9;
+}
+
+/* 훈련 선택 화면 */
+.trainings-list {
+  overflow-y: auto;
+  flex: 1;
+  margin-bottom: 15px;
+}
+
+.training-item {
+  background: #f9f9f9;
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  border: 2px solid #e0e0e0;
+  transition: all 0.3s;
+}
+
+.training-item:hover {
+  border-color: var(--primary);
+  background: #f0f4ff;
+  transform: translateX(5px);
+}
+
+.training-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.training-name {
+  font-weight: 600;
+  color: var(--primary);
+}
+
+.training-duration {
+  background: var(--primary);
+  color: white;
+  padding: 4px 10px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.training-description {
+  font-size: 13px;
+  color: #666;
+  line-height: 1.5;
+}
+
+/* 훈련 화면 */
+.training-screen {
+  display: flex;
+  flex-direction: column;
+}
+
+.training-info {
+  background: #f5f5f5;
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.training-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: 10px;
+}
+
+.training-timer {
+  font-size: 14px;
+  color: #666;
+}
+
+.training-content {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #f5f5f5, #e0e0e0);
+  border-radius: 10px;
+  min-height: 200px;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.training-canvas {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.training-placeholder {
+  font-size: 60px;
+  color: #999;
+  margin-bottom: 10px;
+}
+
+.training-instruction {
+  font-size: 14px;
+  color: #666;
+  margin-top: 10px;
+}
+
+.control-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: auto;
+}
+
+.btn {
+  flex: 1;
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: white;
+}
+
+.btn-primary:hover {
+  background: var(--secondary);
+  transform: translateY(-2px);
+}
+
+.btn-secondary {
+  background: #f0f0f0;
+  color: #333;
+}
+
+.btn-secondary:hover {
+  background: #e0e0e0;
+}
+
+.btn-success {
+  background: var(--success);
+  color: white;
+}
+
+.btn-success:hover {
+  background: #45a049;
+}
+
+/* 완료 화면 */
+.result-screen {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.result-icon {
+  font-size: 80px;
+  margin-bottom: 20px;
+  animation: bounce 0.6s;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-20px); }
+}
+
+.result-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: 10px;
+}
+
+.result-message {
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 15px;
+}
+
+.milestones-progress {
+  width: 100%;
+  background: #e0e0e0;
+  border-radius: 10px;
+  height: 30px;
+  overflow: hidden;
+  margin-bottom: 15px;
+}
+
+.milestones-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary), var(--secondary));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 600;
+  font-size: 12px;
+  transition: width 0.5s;
+}
+
+.tier-badge {
+  display: inline-block;
+  padding: 10px 20px;
+  border-radius: 20px;
+  font-weight: 600;
+  margin: 5px;
+}
+
+.tier-bronze {
+  background: #CD7F32;
+  color: white;
+}
+
+.tier-silver {
+  background: #C0C0C0;
+  color: #333;
+}
+
+.tier-gold {
+  background: #FFD700;
+  color: #333;
+}
+
+/* 반응형 */
+@media (max-width: 600px) {
+  .domains-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .header {
+    padding: 15px;
+  }
+
+  .header h1 {
+    font-size: 24px;
+  }
+}
+</style>
+</head>
+<body>
+
+<div class="app-container">
+  <!-- 헤더 -->
+  <div class="header">
+    <h1>🧠 뇌훈련 프로그램</h1>
+    <p style="color: #666; margin-bottom: 15px;">10개 도메인 × 8개 훈련 = 80개 실전 프로그램</p>
+    
+    <div class="milestones-info">
+      <div class="milestone-card">
+        <div class="milestone-time" id="totalMinutes">0</div>
+        <div class="milestone-label">참여 시간</div>
+      </div>
+      <div class="milestone-card" id="tier100" onclick="showTierInfo(100)">
+        <div class="milestone-time">🥉</div>
+        <div class="milestone-label">100분</div>
+      </div>
+      <div class="milestone-card" id="tier200" onclick="showTierInfo(200)">
+        <div class="milestone-time">🥈</div>
+        <div class="milestone-label">200분</div>
+      </div>
+      <div class="milestone-card" id="tier300" onclick="showTierInfo(300)">
+        <div class="milestone-time">🥇</div>
+        <div class="milestone-label">300분+</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="content">
+    <!-- 도메인 선택 화면 -->
+    <div id="domainsScreen" class="screen active">
+      <div class="domains-grid" id="domainsGrid"></div>
+    </div>
+
+    <!-- 훈련 선택 화면 -->
+    <div id="trainingsScreen" class="screen">
+      <div style="margin-bottom: 15px;">
+        <button class="btn btn-secondary" onclick="backToDomains()">&lt; 돌아가기</button>
+      </div>
+      <div class="trainings-list" id="trainingsList"></div>
+    </div>
+
+    <!-- 훈련 실행 화면 -->
+    <div id="trainingScreen" class="screen">
+      <div class="training-info">
+        <div class="training-title" id="trainingTitle">훈련 제목</div>
+        <div class="training-timer" id="trainingTimer">준비 중...</div>
+      </div>
+
+      <div class="training-content">
+        <div class="training-canvas" id="trainingCanvas">
+          <div style="text-align: center;">
+            <div class="training-placeholder">🎯</div>
+            <div class="training-instruction" id="trainingInstruction">훈련을 시작하세요</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="control-buttons">
+        <button class="btn btn-secondary" onclick="cancelTraining()">취소</button>
+        <button class="btn btn-success" id="completeBtn" onclick="completeTraining()">완료</button>
+      </div>
+    </div>
+
+    <!-- 완료 화면 -->
+    <div id="resultScreen" class="screen">
+      <div class="result-icon">✅</div>
+      <div class="result-title">훈련 완료!</div>
+      <div class="result-message" id="resultMessage">축하합니다!</div>
+      
+      <div style="width: 100%;">
+        <div style="font-size: 12px; color: #666; margin-bottom: 8px;">등급 진행률</div>
+        <div class="milestones-progress">
+          <div class="milestones-bar" id="progressBar" style="width: 0%">
+            <span id="progressText">0분</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin: 15px 0;" id="tierInfo"></div>
+
+      <div style="display: flex; gap: 10px;">
+        <button class="btn btn-primary" style="flex: 1;" onclick="backToDomains()">다른 훈련 하기</button>
+        <button class="btn btn-secondary" style="flex: 1;" onclick="goHome()">홈으로 가기</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============================================
+// 뇌훈련 프로그램 - 80개 훈련
+// 한국뇌심리연구소 | 2026-08-15
+// ============================================
+
+const SUPABASE_URL = 'https://grxqfaeznqqohnlltged.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdyeHFmYWV6bnFxb2hubmx0Z2VkIiwicm9sZSI6ImFub24iLCJpYXQiOjE2ODk2NzQ3MzksImV4cCI6MjAwNTI1MDczOX0.Sgv6BVPo1dOnVICcX1tfzA_gf7T5Z4I';
+
+let supabase = null;
+let currentUserId = null;
+let totalMinutes = 0;
+
+// 10개 도메인 × 8개 훈련 = 80개 훈련 프로그램
+const TRAINING_PROGRAMS = [
+  {
+    domain: '숫자/산수',
+    icon: '🔢',
+    trainings: [
+      { id: 1, name: '빠른 계산', description: '주어진 숫자를 빠르게 계산하세요', duration: 5, type: 'calculation' },
+      { id: 2, name: '수열 완성', description: '패턴을 찾아 다음 숫자를 입력하세요', duration: 5, type: 'sequence' },
+      { id: 3, name: '숫자 기억', description: '제시된 숫자를 기억하고 맞추세요', duration: 5, type: 'memory' },
+      { id: 4, name: '수학 문제', description: '다양한 수학 문제를 풀어보세요', duration: 5, type: 'problem' },
+      { id: 5, name: '숫자 비교', description: '두 숫자를 비교하고 답하세요', duration: 5, type: 'comparison' },
+      { id: 6, name: '확률 게임', description: '확률을 생각하며 선택하세요', duration: 5, type: 'probability' },
+      { id: 7, name: '계산 스피드', description: '제한 시간 내에 계산을 완료하세요', duration: 5, type: 'speed' },
+      { id: 8, name: '수의 규칙', description: '숫자들의 규칙을 찾아보세요', duration: 5, type: 'pattern' }
+    ]
+  },
+  {
+    domain: '언어/단어',
+    icon: '📚',
+    trainings: [
+      { id: 9, name: '어휘력 테스트', description: '단어의 의미를 맞춰보세요', duration: 5, type: 'vocabulary' },
+      { id: 10, name: '문장 완성', description: '빈칸에 맞는 단어를 입력하세요', duration: 5, type: 'sentence' },
+      { id: 11, name: '유사 단어 찾기', description: '의미가 유사한 단어를 찾으세요', duration: 5, type: 'synonym' },
+      { id: 12, name: '반대말 맞추기', description: '반대 의미의 단어를 찾으세요', duration: 5, type: 'antonym' },
+      { id: 13, name: '언어 이해', description: '글을 읽고 문제에 답하세요', duration: 5, type: 'reading' },
+      { id: 14, name: '단어 연상', description: '주어진 단어와 연관된 단어를 생각하세요', duration: 5, type: 'association' },
+      { id: 15, name: '철자법', description: '올바른 철자를 선택하세요', duration: 5, type: 'spelling' },
+      { id: 16, name: '언어 속도', description: '빠르게 단어를 읽고 반응하세요', duration: 5, type: 'speed' }
+    ]
+  },
+  {
+    domain: '논리/추론',
+    icon: '🧩',
+    trainings: [
+      { id: 17, name: '논리 퍼즐', description: '논리적으로 문제를 풀어보세요', duration: 5, type: 'puzzle' },
+      { id: 18, name: '추론 능력', description: '주어진 정보로 결론을 도출하세요', duration: 5, type: 'inference' },
+      { id: 19, name: '관계 파악', description: '요소들 간의 관계를 파악하세요', duration: 5, type: 'relationship' },
+      { id: 20, name: '논리적 판단', description: '참/거짓을 판단하세요', duration: 5, type: 'judgment' },
+      { id: 21, name: '우연성 분석', description: '인과관계를 분석하세요', duration: 5, type: 'causality' },
+      { id: 22, name: '체계적 사고', description: '체계적으로 문제를 분석하세요', duration: 5, type: 'systematic' },
+      { id: 23, name: '논증 평가', description: '논증의 타당성을 평가하세요', duration: 5, type: 'argument' },
+      { id: 24, name: '복잡 문제', description: '복잡한 상황을 논리적으로 해석하세요', duration: 5, type: 'complex' }
+    ]
+  },
+  {
+    domain: '시각/공간',
+    icon: '🎨',
+    trainings: [
+      { id: 25, name: '도형 변환', description: '도형을 회전하고 변환하세요', duration: 5, type: 'transformation' },
+      { id: 26, name: '공간 상상력', description: '3D 도형을 머릿속으로 그려보세요', duration: 5, type: 'visualization' },
+      { id: 27, name: '퍼즐 맞추기', description: '조각을 맞춰 그림을 완성하세요', duration: 5, type: 'puzzle' },
+      { id: 28, name: '방향 감각', description: '방향을 정확히 판단하세요', duration: 5, type: 'direction' },
+      { id: 29, name: '위치 기억', description: '물체의 위치를 기억하고 맞추세요', duration: 5, type: 'location' },
+      { id: 30, name: '색상 인식', description: '색상 차이를 정확히 구별하세요', duration: 5, type: 'color' },
+      { id: 31, name: '패턴 인식', description: '시각적 패턴을 찾아보세요', duration: 5, type: 'pattern' },
+      { id: 32, name: '공간 추론', description: '공간적 관계를 추론하세요', duration: 5, type: 'reasoning' }
+    ]
+  },
+  {
+    domain: '음악/리듬',
+    icon: '🎵',
+    trainings: [
+      { id: 33, name: '음정 인식', description: '음높이의 차이를 구별하세요', duration: 5, type: 'pitch' },
+      { id: 34, name: '리듬 맞추기', description: '박자에 맞춰 반응하세요', duration: 5, type: 'rhythm' },
+      { id: 35, name: '음악 기억', description: '멜로디를 듣고 기억하세요', duration: 5, type: 'memory' },
+      { id: 36, name: '박자 인식', description: '박자를 정확히 세세요', duration: 5, type: 'beat' },
+      { id: 37, name: '음악 속도', description: '음악의 속도 변화를 감지하세요', duration: 5, type: 'tempo' },
+      { id: 38, name: '화음 구별', description: '다양한 화음을 구별하세요', duration: 5, type: 'harmony' },
+      { id: 39, name: '음악 감정', description: '음악의 감정을 해석하세요', duration: 5, type: 'emotion' },
+      { id: 40, name: '음악 분석', description: '음악 구조를 분석하세요', duration: 5, type: 'analysis' }
+    ]
+  },
+  {
+    domain: '미술/색상',
+    icon: '🎭',
+    trainings: [
+      { id: 41, name: '색상 조화', description: '어울리는 색상을 선택하세요', duration: 5, type: 'harmony' },
+      { id: 42, name: '미술 분석', description: '그림의 의도를 해석하세요', duration: 5, type: 'analysis' },
+      { id: 43, name: '색감 기억', description: '색의 조합을 기억하고 맞추세요', duration: 5, type: 'memory' },
+      { id: 44, name: '그림 완성', description: '불완전한 그림을 완성하세요', duration: 5, type: 'completion' },
+      { id: 45, name: '예술 스타일', description: '다양한 예술 스타일을 구분하세요', duration: 5, type: 'style' },
+      { id: 46, name: '색상 심리', description: '색상의 심리적 영향을 이해하세요', duration: 5, type: 'psychology' },
+      { id: 47, name: '미적 감각', description: '아름다움을 판단하세요', duration: 5, type: 'aesthetics' },
+      { id: 48, name: '창작 표현', description: '자유롭게 그려서 표현하세요', duration: 5, type: 'creativity' }
+    ]
+  },
+  {
+    domain: '오목게임/전략',
+    icon: '🎮',
+    trainings: [
+      { id: 49, name: '오목 초급', description: '오목 게임을 해보세요', duration: 10, type: 'beginner' },
+      { id: 50, name: '오목 중급', description: '전략적으로 오목을 두세요', duration: 10, type: 'intermediate' },
+      { id: 51, name: '전략 수립', description: '최적의 전략을 세우세요', duration: 10, type: 'strategy' },
+      { id: 52, name: '미리 생각하기', description: '다음 수를 예상하세요', duration: 10, type: 'prediction' },
+      { id: 53, name: '상황 분석', description: '현재 상황을 분석하세요', duration: 10, type: 'analysis' },
+      { id: 54, name: '위험 회피', description: '상대의 전략을 읽고 대응하세요', duration: 10, type: 'defense' },
+      { id: 55, name: '승리 전략', description: '가장 효과적인 방법을 찾으세요', duration: 10, type: 'winning' },
+      { id: 56, name: '게임 이론', description: '게임 이론을 적용해보세요', duration: 10, type: 'theory' }
+    ]
+  },
+  {
+    domain: '호흡/명상',
+    icon: '🧘',
+    trainings: [
+      { id: 57, name: '복식 호흡', description: '깊은 복식 호흡을 연습하세요', duration: 10, type: 'breathing' },
+      { id: 58, name: '명상 기초', description: '기본 명상을 해보세요', duration: 10, type: 'meditation' },
+      { id: 59, name: '집중 명상', description: '집중력을 높이는 명상을 하세요', duration: 10, type: 'focus' },
+      { id: 60, name: '자율신경 안정', description: '자율신경을 안정시키세요', duration: 10, type: 'nervous' },
+      { id: 61, name: '스트레스 완화', description: '스트레스를 해소하는 명상을 하세요', duration: 10, type: 'stress' },
+      { id: 62, name: '주의집중력', description: '집중력을 높이세요', duration: 10, type: 'attention' },
+      { id: 63, name: '바디 스캔', description: '신체 각 부위를 의식하세요', duration: 10, type: 'bodyscan' },
+      { id: 64, name: '마음챙김', description: '현재 순간에 집중하세요', duration: 10, type: 'mindfulness' }
+    ]
+  },
+  {
+    domain: '반응속도',
+    icon: '⚡',
+    trainings: [
+      { id: 65, name: '신호 반응', description: '신호에 빠르게 반응하세요', duration: 5, type: 'signal' },
+      { id: 66, name: '색상 반응', description: '색상 변화에 빠르게 반응하세요', duration: 5, type: 'color' },
+      { id: 67, name: '음성 반응', description: '소리에 빠르게 반응하세요', duration: 5, type: 'audio' },
+      { id: 68, name: '터치 반응', description: '터치 신호에 반응하세요', duration: 5, type: 'touch' },
+      { id: 69, name: '선택 반응', description: '두 신호 중 올바른 것을 선택하세요', duration: 5, type: 'choice' },
+      { id: 70, name: '연속 반응', description: '계속되는 신호에 반응하세요', duration: 5, type: 'continuous' },
+      { id: 71, name: '복합 반응', description: '복합 신호에 반응하세요', duration: 5, type: 'complex' },
+      { id: 72, name: '반응 속도 극한', description: '최고의 반응 속도를 기록하세요', duration: 5, type: 'extreme' }
+    ]
+  },
+  {
+    domain: '기억력',
+    icon: '🧠',
+    trainings: [
+      { id: 73, name: '숫자 기억', description: '숫자 시퀀스를 기억하세요', duration: 5, type: 'number' },
+      { id: 74, name: '이미지 기억', description: '이미지들을 기억하고 맞추세요', duration: 5, type: 'image' },
+      { id: 75, name: '단어 기억', description: '단어 목록을 기억하세요', duration: 5, type: 'word' },
+      { id: 76, name: '경로 기억', description: '경로를 기억하고 따라가세요', duration: 5, type: 'path' },
+      { id: 77, name: '정보 기억', description: '정보를 기억하고 회상하세요', duration: 5, type: 'information' },
+      { id: 78, name: '시간 기억', description: '시간 간격을 기억하세요', duration: 5, type: 'temporal' },
+      { id: 79, name: '연관 기억', description: '연관된 정보를 기억하세요', duration: 5, type: 'association' },
+      { id: 80, name: '사건 기억', description: '사건의 순서를 기억하세요', duration: 5, type: 'event' }
+    ]
+  }
+];
+
+let currentDomain = null;
+let currentTraining = null;
+let trainingStartTime = null;
+
+// ============================================
+// 초기화
+// ============================================
+
+window.addEventListener('load', async () => {
+  console.log('🧠 뇌훈련 프로그램 로드');
+  
+  try {
+    const { createClient } = window.supabase;
+    supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+    
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session) {
+      currentUserId = session.user.id;
+      loadUserProgress();
+    }
+  } catch (e) {
+    console.error('❌ 초기화 실패:', e);
+  }
+
+  renderDomains();
+});
+
+// ============================================
+// UI 렌더링
+// ============================================
+
+function renderDomains() {
+  const grid = document.getElementById('domainsGrid');
+  grid.innerHTML = '';
+
+  TRAINING_PROGRAMS.forEach((program, idx) => {
+    const card = document.createElement('div');
+    card.className = 'domain-card';
+    card.onclick = () => selectDomain(idx);
+    card.innerHTML = `
+      <div class="domain-icon">${program.icon}</div>
+      <div class="domain-name">${program.domain}</div>
+      <div class="domain-count">${program.trainings.length}개 훈련</div>
+    `;
+    grid.appendChild(card);
+  });
+
+  showScreen('domainsScreen');
+}
+
+function selectDomain(idx) {
+  currentDomain = idx;
+  renderTrainings();
+  showScreen('trainingsScreen');
+}
+
+function renderTrainings() {
+  const program = TRAINING_PROGRAMS[currentDomain];
+  const list = document.getElementById('trainingsList');
+  list.innerHTML = `<div style="font-size: 18px; font-weight: 700; color: var(--primary); margin-bottom: 15px;">${program.domain} (${program.icon})</div>`;
+
+  program.trainings.forEach((training, idx) => {
+    const item = document.createElement('div');
+    item.className = 'training-item';
+    item.onclick = () => startTraining(idx);
+    item.innerHTML = `
+      <div class="training-header">
+        <span class="training-name">${training.name}</span>
+        <span class="training-duration">${training.duration}분</span>
+      </div>
+      <div class="training-description">${training.description}</div>
+    `;
+    list.appendChild(item);
+  });
+}
+
+function startTraining(idx) {
+  currentTraining = TRAINING_PROGRAMS[currentDomain].trainings[idx];
+  trainingStartTime = Date.now();
+
+  document.getElementById('trainingTitle').textContent = currentTraining.name;
+  document.getElementById('trainingInstruction').textContent = currentTraining.description;
+  
+  // 타이머 시작
+  let seconds = currentTraining.duration * 60;
+  updateTimer(seconds);
+  
+  const timerInterval = setInterval(() => {
+    seconds--;
+    updateTimer(seconds);
+    
+    if (seconds <= 0) {
+      clearInterval(timerInterval);
+      completeTraining();
+    }
+  }, 1000);
+
+  document.getElementById('completeBtn').dataset.timerInterval = timerInterval;
+  showScreen('trainingScreen');
+}
+
+function updateTimer(seconds) {
+  const mins = Math.floor(seconds / 60);
+  const secs = seconds % 60;
+  document.getElementById('trainingTimer').textContent = 
+    `⏱️ ${mins}:${secs.toString().padStart(2, '0')}`;
+}
+
+// ============================================
+// 훈련 완료
+// ============================================
+
+function completeTraining() {
+  const timerInterval = document.getElementById('completeBtn').dataset.timerInterval;
+  if (timerInterval) clearInterval(timerInterval);
+
+  const duration = currentTraining.duration;
+  totalMinutes += duration;
+
+  // Supabase에 저장
+  if (currentUserId) {
+    saveTrainingLog(duration);
+  }
+
+  // 결과 화면 표시
+  document.getElementById('resultMessage').textContent = 
+    `${currentTraining.name} 완료!\n${duration}분이 누적되었습니다.`;
+
+  updateProgressBar();
+  updateTierInfo();
+  showScreen('resultScreen');
+}
+
+async function saveTrainingLog(duration) {
+  try {
+    // bhc_training_log에 저장
+    await supabase
+      .from('bhc_training_log')
+      .insert({
+        member_id: currentUserId,
+        training_domain: TRAINING_PROGRAMS[currentDomain].domain,
+        training_name: currentTraining.name,
+        training_id: currentTraining.id,
+        duration_minutes: duration,
+        score: 100
+      });
+
+    // bhc_milestones 업데이트
+    const { data: milestone } = await supabase
+      .from('bhc_milestones')
+      .select('total_minutes')
+      .eq('member_id', currentUserId)
+      .single();
+
+    if (milestone) {
+      const newTotal = (milestone.total_minutes || 0) + duration;
+      const tier = newTotal >= 300 ? 'Gold' : newTotal >= 200 ? 'Silver' : 'Bronze';
+
+      await supabase
+        .from('bhc_milestones')
+        .update({
+          total_minutes: newTotal,
+          current_tier: tier
+        })
+        .eq('member_id', currentUserId);
+
+      console.log('✅ 마일리지 저장:', newTotal, '분');
+
+      // 각 마일스톤 달성 시 알림
+      if (newTotal === 100 || newTotal === 200 || newTotal === 300) {
+        showMilestoneNotification(newTotal);
+      }
+    }
+  } catch (error) {
+    console.error('❌ 저장 실패:', error);
+  }
+}
+
+function updateProgressBar() {
+  const bar = document.getElementById('progressBar');
+  const text = document.getElementById('progressText');
+  
+  const nextMilestone = totalMinutes >= 300 ? 300 : totalMinutes >= 200 ? 200 : 100;
+  const prevMilestone = nextMilestone === 300 ? 200 : nextMilestone === 200 ? 100 : 0;
+  
+  const progress = ((totalMinutes - prevMilestone) / (nextMilestone - prevMilestone)) * 100;
+  bar.style.width = Math.min(progress, 100) + '%';
+  text.textContent = totalMinutes + '/' + nextMilestone + '분';
+}
+
+function updateTierInfo() {
+  const info = document.getElementById('tierInfo');
+  let html = '';
+
+  if (totalMinutes >= 300) {
+    html += '<span class="tier-badge tier-gold">🥇 Gold 등급 달성!</span>';
+  } else if (totalMinutes >= 200) {
+    html += '<span class="tier-badge tier-silver">🥈 Silver 등급</span>';
+  } else if (totalMinutes >= 100) {
+    html += '<span class="tier-badge tier-bronze">🥉 Bronze 등급</span>';
+  }
+
+  info.innerHTML = html;
+}
+
+function showMilestoneNotification(minutes) {
+  const tierName = minutes === 300 ? '🥇 Gold' : minutes === 200 ? '🥈 Silver' : '🥉 Bronze';
+  alert(`축하합니다! ${tierName} 등급에 도달했습니다!\n\n이벤트 초대권이 발급되었습니다.`);
+}
+
+// ============================================
+// 네비게이션
+// ============================================
+
+function cancelTraining() {
+  const timerInterval = document.getElementById('completeBtn').dataset.timerInterval;
+  if (timerInterval) clearInterval(timerInterval);
+  backToDomains();
+}
+
+function backToDomains() {
+  renderDomains();
+}
+
+function showScreen(screenId) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(screenId).classList.add('active');
+}
+
+function goHome() {
+  window.location.href = '/';
+}
+
+function showTierInfo(minutes) {
+  alert(`🎯 ${minutes}분 달성 시 혜택\n\n✨ 한국뇌심리연구소 이벤트/세미나 무료 초대\n✨ YouTube 인터뷰 기회\n✨ VIP 회원 혜택`);
+}
+
+// ============================================
+// 사용자 진행 로드
+// ============================================
+
+async function loadUserProgress() {
+  try {
+    const { data } = await supabase
+      .from('bhc_milestones')
+      .select('total_minutes, current_tier')
+      .eq('member_id', currentUserId)
+      .single();
+
+    if (data) {
+      totalMinutes = data.total_minutes || 0;
+      document.getElementById('totalMinutes').textContent = totalMinutes + '분';
+      
+      // 마일스톤 상태 업데이트
+      if (totalMinutes >= 100) {
+        document.getElementById('tier100').classList.add('active');
+      }
+      if (totalMinutes >= 200) {
+        document.getElementById('tier200').classList.add('active');
+      }
+      if (totalMinutes >= 300) {
+        document.getElementById('tier300').classList.add('active');
+      }
+    }
+  } catch (e) {
+    console.warn('진행 상황 로드 실패:', e);
+  }
+}
+
+console.log('✅ 뇌훈련 프로그램 로드 완료');
+</script>
+
+</body>
+</html>
