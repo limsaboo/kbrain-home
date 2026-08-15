@@ -8,7 +8,7 @@
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body { background: linear-gradient(135deg, #667EEA 0%, #764BA2 100%); font-family: 'Segoe UI', 'Noto Sans KR', sans-serif; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
-.container { width: 100%; max-width: 600px; background: white; border-radius: 20px; padding: 30px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
+.container { width: 100%; max-width: 650px; background: white; border-radius: 20px; padding: 30px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
 .screen { display: none; }
 .screen.active { display: block; animation: slideIn 0.5s; }
 @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
@@ -20,23 +20,23 @@ h1 { color: #667EEA; font-size: 32px; margin-bottom: 10px; font-weight: 700; }
 .btn { width: 100%; padding: 15px; border: none; border-radius: 10px; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.3s; margin-top: 15px; }
 .btn-primary { background: #667EEA; color: white; }
 .btn-primary:hover { background: #764BA2; transform: translateY(-2px); }
-.btn-secondary { background: #f0f0f0; color: #333; }
 .test-screen { display: flex; flex-direction: column; }
 .progress-bar { width: 100%; height: 8px; background: #e0e0e0; border-radius: 10px; margin-bottom: 20px; overflow: hidden; }
 .progress-fill { height: 100%; background: linear-gradient(90deg, #667EEA, #764BA2); width: 0%; transition: width 0.5s; }
-.question-header { display: flex; justify-content: space-between; margin-bottom: 20px; font-size: 14px; color: #666; }
-.question-num { font-weight: 600; color: #667EEA; }
-.domain-badge { background: #667EEA; color: white; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+.question-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; font-size: 14px; color: #666; }
+.question-num { font-weight: 600; color: #667EEA; font-size: 16px; }
+.domain-badge { background: #667EEA; color: white; padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 600; }
 .question-text { font-size: 18px; font-weight: 600; color: #333; margin-bottom: 30px; text-align: center; line-height: 1.6; }
-.likert-options { display: flex; flex-direction: column; gap: 10px; margin-bottom: 30px; }
-.likert-btn { display: flex; align-items: center; padding: 12px; border: 2px solid #ddd; border-radius: 10px; cursor: pointer; transition: all 0.3s; background: white; }
-.likert-btn:hover { border-color: #667EEA; background: #f9f9f9; transform: translateX(5px); }
-.likert-btn.selected { border-color: #667EEA; background: #E8EAFF; font-weight: 600; }
-.likert-radio { width: 20px; height: 20px; border: 2px solid #ddd; border-radius: 50%; margin-right: 12px; flex-shrink: 0; }
-.likert-btn.selected .likert-radio { border-color: #667EEA; background: #667EEA; }
-.likert-text { flex: 1; font-size: 15px; }
+/* 그림투사 방식 - 이모지 카드 */
+.image-scale { display: flex; justify-content: space-around; gap: 10px; margin-bottom: 40px; flex-wrap: wrap; }
+.emoji-card { display: flex; flex-direction: column; align-items: center; cursor: pointer; transition: all 0.3s; padding: 12px; border-radius: 12px; flex: 1; min-width: 80px; max-width: 100px; }
+.emoji-card:hover { background: #F0F4FF; transform: scale(1.1); }
+.emoji-card.selected { background: #E8EAFF; border: 3px solid #667EEA; }
+.emoji-icon { font-size: 50px; margin-bottom: 10px; }
+.emoji-label { font-size: 11px; font-weight: 700; color: #333; text-align: center; letter-spacing: -0.5px; line-height: 1.3; }
+.emoji-score { font-size: 10px; color: #667EEA; margin-top: 5px; font-weight: 600; }
 .nav-buttons { display: flex; gap: 10px; margin-top: auto; }
-.btn-nav { flex: 1; padding: 12px; border: 2px solid #667EEA; background: white; color: #667EEA; border-radius: 8px; font-weight: 600; cursor: pointer; }
+.btn-nav { flex: 1; padding: 14px; border: 2px solid #667EEA; background: white; color: #667EEA; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s; }
 .btn-nav:hover { background: #667EEA; color: white; }
 .btn-nav:disabled { opacity: 0.5; cursor: not-allowed; }
 .result-screen { text-align: center; }
@@ -54,7 +54,7 @@ h1 { color: #667EEA; font-size: 32px; margin-bottom: 10px; font-weight: 700; }
 .score-label { font-weight: 500; }
 .score-value { color: #667EEA; font-weight: 600; }
 .alert-box { background: #E3F2FD; border-left: 4px solid #667EEA; padding: 15px; border-radius: 8px; margin-bottom: 20px; text-align: left; font-size: 13px; color: #1565C0; }
-@media (max-width: 600px) { .container { padding: 20px; } h1 { font-size: 24px; } .question-text { font-size: 16px; } .brain-age-num { font-size: 48px; } }
+@media (max-width: 600px) { .container { padding: 20px; } h1 { font-size: 24px; } .question-text { font-size: 16px; } .emoji-card { min-width: 70px; } .emoji-icon { font-size: 40px; } .brain-age-num { font-size: 48px; } }
 </style>
 </head>
 <body>
@@ -64,7 +64,7 @@ h1 { color: #667EEA; font-size: 32px; margin-bottom: 10px; font-weight: 700; }
   <div id="startScreen" class="screen active">
     <div class="brain-icon">🧠</div>
     <h1>뇌건강체크 BHC 2.0</h1>
-    <p class="subtitle">Brain Health Check</p>
+    <p class="subtitle">Brain Health Check - 한국뇌심리연구소</p>
     <div class="info-box">
       <p>💡 45개 문항으로 8가지 뇌 인지 영역을 측정합니다.</p>
       <p style="margin-top: 10px;">⏱️ 소요 시간: 약 15~20분</p>
@@ -81,10 +81,13 @@ h1 { color: #667EEA; font-size: 32px; margin-bottom: 10px; font-weight: 700; }
       <span class="domain-badge" id="domainBadge">기억</span>
     </div>
     <div class="question-text" id="questionText">로드 중...</div>
-    <div class="likert-options" id="likertOptions"></div>
+    
+    <!-- 그림투사 방식 - 이모지 카드 5개 -->
+    <div class="image-scale" id="emojiScale"></div>
+
     <div class="nav-buttons">
-      <button class="btn-nav" onclick="prevQuestion()" id="prevBtn" disabled>이전</button>
-      <button class="btn-nav" onclick="nextQuestion()" id="nextBtn" disabled>다음</button>
+      <button class="btn-nav" onclick="prevQuestion()" id="prevBtn" disabled>← 이전</button>
+      <button class="btn-nav" onclick="nextQuestion()" id="nextBtn" disabled>다음 →</button>
     </div>
   </div>
 
@@ -95,14 +98,15 @@ h1 { color: #667EEA; font-size: 32px; margin-bottom: 10px; font-weight: 700; }
       <div class="brain-age-label">당신의 뇌 나이</div>
       <div class="brain-age-num" id="brainAge">--</div>
       <div class="brain-age-tier" id="brainTier">로드 중...</div>
+      <div style="font-size: 13px; margin-top: 10px; opacity: 0.9;">👉 클릭하여 무료 뇌훈련 시작!</div>
     </div>
     <div class="chart-box">
       <div class="chart-title">📊 8가지 뇌 인지 영역 분석</div>
-      <canvas id="radarChart"></canvas>
+      <canvas id="radarChart" height="300"></canvas>
     </div>
     <div class="chart-box">
       <div class="chart-title">📈 연령층 비교 분석</div>
-      <canvas id="barChart"></canvas>
+      <canvas id="barChart" height="300"></canvas>
     </div>
     <div class="score-box">
       <div style="font-weight: 600; color: #667EEA; margin-bottom: 10px;">영역별 점수</div>
@@ -110,12 +114,12 @@ h1 { color: #667EEA; font-size: 32px; margin-bottom: 10px; font-weight: 700; }
     </div>
     <div class="alert-box">ℹ️ 이 검사는 의료 진단이 아닙니다. 개인의 뇌 건강을 이해하기 위한 교육용 도구입니다.</div>
     <button class="btn btn-primary" onclick="goToTraining()">🧠 뇌훈련 프로그램 참여</button>
-    <button class="btn btn-secondary" onclick="goHome()">🏠 홈페이지로</button>
+    <button class="btn btn-primary" style="background: #f0f0f0; color: #333; margin-top: 10px;" onclick="goHome()">🏠 홈페이지로</button>
   </div>
 </div>
 
 <script>
-// 데이터 정의 (인라인 - 외부 로드 안함)
+// 45개 검사 문항 (인라인)
 const Q_DATA = [
   "어제 읽은 기사의 주요 내용이 잘 기억되나요?|기억",
   "친구의 생일이나 중요한 날짜들을 잘 기억하나요?|기억",
@@ -164,12 +168,13 @@ const Q_DATA = [
   "게임이나 스포츠에서 빠른 반응이 필요한가요?|속도"
 ];
 
-const LIKERT = [
-  { label: "매우 그렇다", value: 5 },
-  { label: "그렇다", value: 4 },
-  { label: "보통이다", value: 3 },
-  { label: "그렇지 않다", value: 2 },
-  { label: "전혀 그렇지 않다", value: 1 }
+// 그림투사 방식 이모지
+const EMOJI_SCALE = [
+  { icon: '😍', label: '매우\n그렇다', value: 5 },
+  { icon: '😊', label: '그렇다', value: 4 },
+  { icon: '😐', label: '보통', value: 3 },
+  { icon: '😟', label: '아니다', value: 2 },
+  { icon: '😭', label: '전혀\n아니다', value: 1 }
 ];
 
 const DOMAINS = ["기억", "집중", "감정", "판단", "실행", "조절", "공간", "속도"];
@@ -195,14 +200,19 @@ function loadQuestion() {
   document.getElementById("domainBadge").textContent = domain;
   document.getElementById("questionText").textContent = q;
 
-  const opts = document.getElementById("likertOptions");
-  opts.innerHTML = "";
-  LIKERT.forEach((opt) => {
-    const btn = document.createElement("div");
-    btn.className = "likert-btn" + (answers[currentQ] === opt.value ? " selected" : "");
-    btn.onclick = () => selectAnswer(opt.value);
-    btn.innerHTML = `<div class="likert-radio"></div><span class="likert-text">${opt.label}</span><span style="color: #667EEA; font-weight: 600; margin-left: auto;">${opt.value}점</span>`;
-    opts.appendChild(btn);
+  // 그림투사 이모지 카드 렌더링
+  const scale = document.getElementById("emojiScale");
+  scale.innerHTML = "";
+  EMOJI_SCALE.forEach((opt) => {
+    const card = document.createElement("div");
+    card.className = "emoji-card" + (answers[currentQ] === opt.value ? " selected" : "");
+    card.onclick = () => selectAnswer(opt.value);
+    card.innerHTML = `
+      <div class="emoji-icon">${opt.icon}</div>
+      <div class="emoji-label">${opt.label}</div>
+      <div class="emoji-score">${opt.value}점</div>
+    `;
+    scale.appendChild(card);
   });
 
   document.getElementById("prevBtn").disabled = currentQ === 0;
@@ -215,14 +225,24 @@ function selectAnswer(value) {
 }
 
 function prevQuestion() {
-  if (currentQ > 0) { currentQ--; loadQuestion(); }
+  if (currentQ > 0) {
+    currentQ--;
+    loadQuestion();
+  }
 }
 
 function nextQuestion() {
-  if (currentQ < 44) { currentQ++; loadQuestion(); } else { completeTest(); }
+  // currentQ가 44(45번째 문항)일 때 다음 버튼이면 completeTest 실행
+  if (currentQ < 44) {
+    currentQ++;
+    loadQuestion();
+  } else if (currentQ === 44) {
+    completeTest();
+  }
 }
 
 function completeTest() {
+  console.log("✅ 검사 완료 - 결과 화면으로 전환");
   calculateResults();
   showScreen("resultScreen");
 }
@@ -248,8 +268,9 @@ function calculateResults() {
   if (brainAge > 100) brainAge = 100;
 
   document.getElementById("brainAge").textContent = brainAge + "세";
-  document.getElementById("brainTier").textContent = avg >= 80 ? "🥇 Gold" : avg >= 70 ? "🥈 Silver" : "🥉 Bronze";
+  document.getElementById("brainTier").textContent = avg >= 80 ? "🥇 Gold 등급" : avg >= 70 ? "🥈 Silver 등급" : "🥉 Bronze 등급";
 
+  // 레이더 차트
   if (window.radarChart) window.radarChart.destroy();
   const radarCtx = document.getElementById("radarChart").getContext("2d");
   window.radarChart = new Chart(radarCtx, {
@@ -258,9 +279,10 @@ function calculateResults() {
       labels: DOMAINS,
       datasets: [{ label: "점수", data: DOMAINS.map(d => avgScores[d]), borderColor: "#667EEA", backgroundColor: "rgba(102, 126, 234, 0.15)", borderWidth: 3, pointRadius: 5 }]
     },
-    options: { responsive: true, scales: { r: { min: 0, max: 100 } }, plugins: { legend: { display: false } } }
+    options: { responsive: true, scales: { r: { min: 0, max: 100, ticks: { color: "#999" } } }, plugins: { legend: { display: false } } }
   });
 
+  // 막대 차트
   if (window.barChart) window.barChart.destroy();
   const barCtx = document.getElementById("barChart").getContext("2d");
   const ageGroups = ["유치", "10대", "20대", "30대", "40대", "50대", "60대", "70대", "80대", "90대"];
@@ -277,6 +299,7 @@ function calculateResults() {
     options: { responsive: true, scales: { y: { min: 0, max: 100 } }, plugins: { legend: { display: true } } }
   });
 
+  // 점수 상세
   document.getElementById("scoreDetails").innerHTML = DOMAINS.map(d => `<div class="score-item"><span class="score-label">${d}</span><span class="score-value">${avgScores[d]}</span></div>`).join("");
 }
 
@@ -288,7 +311,7 @@ function showScreen(id) {
 function goToTraining() { window.location.href = "/brain_training.html"; }
 function goHome() { window.location.href = "/"; }
 
-console.log("✅ BHC 2.0 정상 로드됨");
+console.log("✅ BHC 2.0 최종버전 로드 완료 - 그림투사방식 + 결과 전환 정상");
 </script>
 
 </body>
