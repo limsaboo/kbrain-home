@@ -1,0 +1,1224 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>뇌건강체크 BHC 2.0 - 한국뇌심리연구소</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.40.0/dist/module.min.js"></script>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --color-memory: #FF6B9D;
+  --color-attention: #4ECDC4;
+  --color-emotion: #FFE66D;
+  --color-judgment: #95E1D3;
+  --color-execution: #F38181;
+  --color-control: #AA96DA;
+  --color-spatial: #FCBAD3;
+  --color-speed: #A8E6CF;
+  --primary: #667EEA;
+  --secondary: #764BA2;
+  --success: #4CAF50;
+  --warning: #FF9800;
+  --danger: #F44336;
+}
+
+html, body {
+  height: 100%;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+  font-family: 'Segoe UI', 'Noto Sans KR', sans-serif;
+  color: #333;
+  line-height: 1.6;
+}
+
+.app-container {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.screen {
+  width: 100%;
+  background: white;
+  border-radius: 20px;
+  padding: 30px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  display: none;
+  animation: slideIn 0.5s ease;
+}
+
+.screen.active {
+  display: block;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===== 시작 화면 ===== */
+.start-screen {
+  text-align: center;
+}
+
+.brain-icon {
+  font-size: 60px;
+  margin-bottom: 20px;
+}
+
+h1 {
+  font-size: 32px;
+  color: var(--primary);
+  margin-bottom: 10px;
+  font-weight: 700;
+}
+
+.subtitle {
+  font-size: 14px;
+  color: #888;
+  margin-bottom: 20px;
+}
+
+.info-box {
+  background: #F5F5F5;
+  border-left: 4px solid var(--primary);
+  padding: 15px;
+  border-radius: 8px;
+  text-align: left;
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 20px;
+  line-height: 1.8;
+}
+
+.highlight {
+  font-weight: 600;
+  color: var(--primary);
+}
+
+.btn {
+  width: 100%;
+  padding: 15px;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  margin-top: 15px;
+  text-align: center;
+  text-decoration: none;
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: white;
+}
+
+.btn-primary:hover {
+  background: var(--secondary);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+}
+
+.btn-secondary {
+  background: #f0f0f0;
+  color: #333;
+}
+
+.btn-secondary:hover {
+  background: #e0e0e0;
+}
+
+/* ===== 검사 화면 ===== */
+.test-screen {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background: #e0e0e0;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary), var(--secondary));
+  transition: width 0.5s;
+}
+
+.question-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  font-size: 14px;
+  color: #666;
+}
+
+.question-number {
+  font-weight: 600;
+  color: var(--primary);
+}
+
+.domain-badge {
+  display: inline-block;
+  background: var(--primary);
+  color: white;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.question-text {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 30px;
+  text-align: center;
+  line-height: 1.6;
+}
+
+.image-container {
+  width: 150px;
+  height: 150px;
+  margin: 0 auto 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f5f5f5;
+  border-radius: 15px;
+  overflow: hidden;
+}
+
+.likert-scale {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 30px;
+}
+
+.likert-option {
+  display: flex;
+  align-items: center;
+  padding: 12px;
+  border: 2px solid #ddd;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s;
+  background: white;
+}
+
+.likert-option:hover {
+  border-color: var(--primary);
+  background: #f9f9f9;
+  transform: translateX(5px);
+}
+
+.likert-option.selected {
+  border-color: var(--primary);
+  background: #E8EAFF;
+  font-weight: 600;
+}
+
+.likert-radio {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #ddd;
+  border-radius: 50%;
+  margin-right: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s;
+}
+
+.likert-option.selected .likert-radio {
+  border-color: var(--primary);
+  background: var(--primary);
+}
+
+.likert-radio::after {
+  content: '✓';
+  color: white;
+  font-weight: bold;
+  display: none;
+}
+
+.likert-option.selected .likert-radio::after {
+  display: block;
+}
+
+.likert-text {
+  flex: 1;
+  font-size: 15px;
+}
+
+.likert-score {
+  font-size: 12px;
+  color: #888;
+  margin-left: auto;
+}
+
+.nav-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: auto;
+}
+
+.btn-nav {
+  flex: 1;
+  padding: 12px;
+  border: 2px solid var(--primary);
+  background: white;
+  color: var(--primary);
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.btn-nav:hover {
+  background: var(--primary);
+  color: white;
+}
+
+.btn-nav:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ===== 결과 화면 ===== */
+.result-screen {
+  text-align: center;
+}
+
+.result-title {
+  font-size: 28px;
+  color: var(--primary);
+  margin-bottom: 20px;
+  font-weight: 700;
+}
+
+.charts-container {
+  margin-bottom: 30px;
+}
+
+.chart-box {
+  background: #f9f9f9;
+  border-radius: 15px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.chart-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #666;
+  margin-bottom: 15px;
+  text-align: left;
+}
+
+canvas {
+  max-height: 300px;
+}
+
+.brain-age-box {
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  color: white;
+  padding: 30px;
+  border-radius: 15px;
+  margin-bottom: 20px;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+}
+
+.brain-age-box:hover {
+  transform: scale(1.05);
+  box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
+}
+
+.brain-age-label {
+  font-size: 14px;
+  font-weight: 600;
+  opacity: 0.9;
+  margin-bottom: 10px;
+}
+
+.brain-age-number {
+  font-size: 56px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.brain-age-tier {
+  font-size: 16px;
+  font-weight: 600;
+  padding: 8px 16px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 20px;
+  display: inline-block;
+  margin-bottom: 10px;
+}
+
+.brain-age-cta {
+  font-size: 13px;
+  opacity: 0.9;
+  margin-top: 10px;
+}
+
+.tier-badge {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  margin: 5px;
+}
+
+.tier-bronze {
+  background: #CD7F32;
+  color: white;
+}
+
+.tier-silver {
+  background: #C0C0C0;
+  color: #333;
+}
+
+.tier-gold {
+  background: #FFD700;
+  color: #333;
+}
+
+.score-box {
+  background: #f5f5f5;
+  padding: 15px;
+  border-radius: 10px;
+  margin: 15px 0;
+  font-size: 14px;
+  text-align: left;
+}
+
+.score-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid #ddd;
+}
+
+.score-item:last-child {
+  border-bottom: none;
+}
+
+.score-label {
+  font-weight: 500;
+}
+
+.score-value {
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.consent-box {
+  background: #FFF3CD;
+  border: 1px solid #FFE69C;
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.consent-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #856404;
+  margin-bottom: 10px;
+}
+
+.consent-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  font-size: 13px;
+  color: #856404;
+}
+
+.consent-item input[type="checkbox"] {
+  margin-right: 10px;
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
+.consent-item:last-child {
+  margin-bottom: 0;
+}
+
+.alert-box {
+  background: #E3F2FD;
+  border-left: 4px solid var(--primary);
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  text-align: left;
+  font-size: 13px;
+  color: #1565C0;
+}
+
+/* ===== 로딩 & 상태 ===== */
+.loading {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.spinner {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid var(--primary);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 20px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* ===== 반응형 ===== */
+@media (max-width: 600px) {
+  .app-container {
+    padding: 15px;
+  }
+
+  .screen {
+    padding: 20px;
+    border-radius: 15px;
+  }
+
+  h1 {
+    font-size: 24px;
+  }
+
+  .question-text {
+    font-size: 16px;
+  }
+
+  .brain-age-number {
+    font-size: 48px;
+  }
+
+  .likert-scale {
+    gap: 8px;
+  }
+
+  .likert-option {
+    padding: 10px;
+    font-size: 14px;
+  }
+}
+
+/* ===== 인쇄 스타일 ===== */
+@media print {
+  .nav-buttons, .btn-primary, .btn-secondary {
+    display: none;
+  }
+  
+  .screen {
+    box-shadow: none;
+    padding: 0;
+    border-radius: 0;
+  }
+}
+</style>
+</head>
+<body>
+
+<div class="app-container">
+  <!-- 1️⃣ 시작 화면 -->
+  <div id="startScreen" class="screen start-screen active">
+    <div class="brain-icon">🧠</div>
+    <h1>뇌건강체크 BHC 2.0</h1>
+    <p class="subtitle">Brain Health Check - 한국뇌심리연구소</p>
+    
+    <div class="info-box">
+      <p>💡 <span class="highlight">45개 문항</span>의 검사로 8가지 뇌 인지 영역을 측정합니다.</p>
+      <p style="margin-top: 10px;">⏱️ 소요 시간: <span class="highlight">약 15~20분</span></p>
+      <p style="margin-top: 10px;">📊 당신의 <span class="highlight">뇌 나이</span>를 알아보고, 무료 뇌훈련 프로그램에 참여하세요!</p>
+    </div>
+    
+    <button class="btn btn-primary" onclick="startTest()">🚀 검사 시작하기</button>
+    <button class="btn btn-secondary" onclick="alert('한국뇌심리연구소 BHC 시스템에 대해 알아보세요.')">ℹ️ 자세히 알아보기</button>
+  </div>
+
+  <!-- 2️⃣ 검사 화면 -->
+  <div id="testScreen" class="screen test-screen">
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+    </div>
+
+    <div class="question-info">
+      <span class="question-number" id="questionNumber">문항 1/45</span>
+      <span class="domain-badge" id="domainBadge">기억</span>
+    </div>
+
+    <div class="question-text" id="questionText">질문이 로드됩니다...</div>
+
+    <div class="image-container" id="imageContainer">
+      <svg width="120" height="120" viewBox="0 0 120 120" style="animation: pulse 2s infinite;">
+        <circle cx="60" cy="60" r="50" fill="#667EEA" opacity="0.2"/>
+        <circle cx="60" cy="60" r="40" fill="none" stroke="#667EEA" stroke-width="2"/>
+        <circle cx="60" cy="60" r="30" fill="none" stroke="#667EEA" stroke-width="2" opacity="0.5"/>
+      </svg>
+    </div>
+
+    <div class="likert-scale" id="likertScale"></div>
+
+    <div class="nav-buttons">
+      <button class="btn-nav" onclick="previousQuestion()" id="prevBtn" disabled>← 이전</button>
+      <button class="btn-nav" onclick="nextQuestion()" id="nextBtn" disabled>다음 →</button>
+    </div>
+  </div>
+
+  <!-- 3️⃣ 결과 화면 -->
+  <div id="resultScreen" class="screen result-screen">
+    <div class="result-title">🎉 검사 완료!</div>
+
+    <div class="brain-age-box" onclick="goToTraining()">
+      <div class="brain-age-label">당신의 뇌 나이</div>
+      <div class="brain-age-number" id="brainAge">--</div>
+      <div class="brain-age-tier" id="brainTier">로드 중...</div>
+      <div class="brain-age-cta">👉 클릭하여 무료 뇌훈련 시작하기!</div>
+    </div>
+
+    <div class="charts-container">
+      <div class="chart-box">
+        <div class="chart-title">📊 8가지 뇌 인지 영역 분석 (레이더 차트)</div>
+        <canvas id="radarChart"></canvas>
+      </div>
+
+      <div class="chart-box">
+        <div class="chart-title">📈 연령층 비교 분석 (막대 그래프)</div>
+        <canvas id="barChart"></canvas>
+      </div>
+    </div>
+
+    <div class="score-box">
+      <div style="font-weight: 600; color: var(--primary); margin-bottom: 10px;">영역별 점수</div>
+      <div id="scoreDetails"></div>
+    </div>
+
+    <div class="alert-box">
+      ℹ️ <strong>이 검사는 의료 진단이 아닙니다.</strong> 개인의 뇌 건강을 이해하기 위한 교육용 도구입니다. 정확한 진단은 전문의 상담을 권장합니다.
+    </div>
+
+    <div class="consent-box">
+      <div class="consent-title">🔔 뇌훈련 마일리지 이벤트 알림 받기</div>
+      <div class="consent-item">
+        <input type="checkbox" id="consentPhone" onchange="validateConsent()">
+        <label for="consentPhone">카톡 및 문자 수신 동의 (100분, 200분, 300분+ 등급별 특전 안내)</label>
+      </div>
+      <div class="consent-item" style="margin-top: 8px;">
+        <input type="checkbox" id="consentKakao" onchange="validateConsent()" style="visibility: hidden; width: 0;">
+        <span style="font-size: 12px; color: #666;">✓ 개인정보 수집 및 이용에 동의합니다.</span>
+      </div>
+    </div>
+
+    <button class="btn btn-primary" onclick="confirmNotification()" id="confirmBtn" disabled>✓ 동의하고 마일리지 연동하기</button>
+    <button class="btn btn-secondary" onclick="goHome()">🏠 홈페이지로 돌아가기</button>
+  </div>
+</div>
+
+<style>
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+</style>
+
+<script>
+// ============================================
+// BHC 2.0 - 뇌건강체크 시스템
+// 한국뇌심리연구소 | 2026-08-15
+// ============================================
+
+// Supabase 설정
+const SUPABASE_URL = 'https://grxqfaeznqqohnlltged.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdyeHFmYWV6bnFxb2hubmx0Z2VkIiwicm9sZSI6ImFub24iLCJpYXQiOjE2ODk2NzQ3MzksImV4cCI6MjAwNTI1MDczOX0.Sgv6BVPo1dOnVICcX1tfzA_gf7T5Z4I';
+let supabase = null;
+
+// ============================================
+// 데이터 정의
+// ============================================
+
+const DOMAINS = [
+  { id: 'memory', name: '기억', color: '#FF6B9D', questions: 10 },
+  { id: 'attention', name: '집중', color: '#4ECDC4', questions: 5 },
+  { id: 'emotion', name: '감정', color: '#FFE66D', questions: 5 },
+  { id: 'judgment', name: '판단', color: '#95E1D3', questions: 5 },
+  { id: 'execution', name: '실행', color: '#F38181', questions: 5 },
+  { id: 'control', name: '조절', color: '#AA96DA', questions: 5 },
+  { id: 'spatial', name: '공간', color: '#FCBAD3', questions: 5 },
+  { id: 'speed', name: '속도', color: '#A8E6CF', questions: 10 }
+];
+
+const LIKERT_SCALE = [
+  { label: '매우 그렇다', value: 5 },
+  { label: '그렇다', value: 4 },
+  { label: '보통이다', value: 3 },
+  { label: '그렇지 않다', value: 2 },
+  { label: '전혀 그렇지 않다', value: 1 }
+];
+
+const AGE_GROUPS = ['유치부', '10대', '20대', '30대', '40대', '50대', '60대', '70대', '80대', '90대이상'];
+const AGE_GROUP_SCORES = {
+  '유치부': { avg: 85, range: [80, 90] },
+  '10대': { avg: 90, range: [85, 95] },
+  '20대': { avg: 88, range: [82, 94] },
+  '30대': { avg: 85, range: [78, 92] },
+  '40대': { avg: 80, range: [72, 88] },
+  '50대': { avg: 75, range: [68, 82] },
+  '60대': { avg: 70, range: [62, 78] },
+  '70대': { avg: 65, range: [55, 75] },
+  '80대': { avg: 60, range: [50, 70] },
+  '90대이상': { avg: 55, range: [45, 65] }
+};
+
+// ============================================
+// 검사 문항 데이터 (45문항)
+// ============================================
+
+const TEST_QUESTIONS = [
+  // 기억력 (10문항)
+  { domain: 'memory', text: '어제 읽은 기사의 주요 내용이 잘 기억되나요?', category: 'Recent Memory' },
+  { domain: 'memory', text: '친구의 생일이나 중요한 날짜들을 잘 기억하나요?', category: 'Long-term Memory' },
+  { domain: 'memory', text: '전화번호나 숫자를 기억하는 것이 쉬운가요?', category: 'Numerical Memory' },
+  { domain: 'memory', text: '지난주에 한 일들의 순서를 잘 기억하나요?', category: 'Sequence Memory' },
+  { domain: 'memory', text: '책을 읽을 때 앞에서 읽은 내용을 잘 기억하나요?', category: 'Reading Memory' },
+  { domain: 'memory', text: '새로운 사람을 만날 때 이름을 잘 기억하나요?', category: 'Name Memory' },
+  { domain: 'memory', text: '물건을 어디에 뒀는지 기억하나요?', category: 'Spatial Memory' },
+  { domain: 'memory', text: '하루 중에 한 일들을 상세히 기억할 수 있나요?', category: 'Daily Memory' },
+  { domain: 'memory', text: '여행에서 보았던 장소들이 생생하게 떠오르나요?', category: 'Visual Memory' },
+  { domain: 'memory', text: '과거의 대화 내용을 정확히 기억하나요?', category: 'Conversation Memory' },
+
+  // 집중력 (5문항)
+  { domain: 'attention', text: '한 가지 일에 오래 집중할 수 있나요?', category: 'Focus Duration' },
+  { domain: 'attention', text: '주변의 소음이나 방해를 무시하고 일할 수 있나요?', category: 'Distraction Resistance' },
+  { domain: 'attention', text: '복잡한 문제를 풀 때 집중력이 유지되나요?', category: 'Problem Solving Focus' },
+  { domain: 'attention', text: '읽고 있는 내용에 온전히 집중하나요?', category: 'Reading Focus' },
+  { domain: 'attention', text: '여러 일을 동시에 처리할 때 집중력이 흐트러지나요?', category: 'Multitasking' },
+
+  // 감정 조절 (5문항)
+  { domain: 'emotion', text: '스트레스를 받았을 때 감정을 잘 조절하나요?', category: 'Emotional Control' },
+  { domain: 'emotion', text: '화가 날 때 침착함을 유지할 수 있나요?', category: 'Anger Management' },
+  { domain: 'emotion', text: '슬프거나 실망할 때 빨리 회복하나요?', category: 'Emotional Recovery' },
+  { domain: 'emotion', text: '타인의 의견에 쉽게 상처받지 않나요?', category: 'Emotional Resilience' },
+  { domain: 'emotion', text: '기쁜 감정을 적절히 표현할 수 있나요?', category: 'Emotional Expression' },
+
+  // 판단력 (5문항)
+  { domain: 'judgment', text: '중요한 결정을 내릴 때 신중하게 생각하나요?', category: 'Decision Making' },
+  { domain: 'judgment', text: '여러 정보를 비교하여 최선의 선택을 하나요?', category: 'Information Analysis' },
+  { domain: 'judgment', text: '위험한 상황에서 올바른 판단을 할 수 있나요?', category: 'Risk Assessment' },
+  { domain: 'judgment', text: '타인의 의도를 잘 파악하나요?', category: 'Social Judgment' },
+  { domain: 'judgment', text: '합리적으로 생각하여 편견을 피하나요?', category: 'Objectivity' },
+
+  // 실행력 (5문항)
+  { domain: 'execution', text: '계획한 일을 끝까지 완수하나요?', category: 'Task Completion' },
+  { domain: 'execution', text: '마감일을 지키려고 노력하나요?', category: 'Deadline Management' },
+  { domain: 'execution', text: '어려운 작업도 끝까지 포기하지 않나요?', category: 'Persistence' },
+  { domain: 'execution', text: '일의 우선순위를 잘 정하나요?', category: 'Prioritization' },
+  { domain: 'execution', text: '주어진 일을 자발적으로 하나요?', category: 'Proactivity' },
+
+  // 자기조절 (5문항)
+  { domain: 'control', text: '욕구를 적절히 조절할 수 있나요?', category: 'Impulse Control' },
+  { domain: 'control', text: '일정한 시간에 규칙적으로 생활하나요?', category: 'Routine Maintenance' },
+  { domain: 'control', text: '건강한 생활 습관을 유지하나요?', category: 'Health Habits' },
+  { domain: 'control', text: '금지된 것을 피할 수 있나요?', category: 'Restraint' },
+  { domain: 'control', text: '화면 시간을 적절히 조절하나요?', category: 'Screen Time Control' },
+
+  // 공간지각 (5문항)
+  { domain: 'spatial', text: '3차원 도형을 머릿속으로 회전시킬 수 있나요?', category: '3D Visualization' },
+  { domain: 'spatial', text: '지도를 보고 길을 찾는 것이 쉬운가요?', category: 'Navigation' },
+  { domain: 'spatial', text: '물건을 어디에 뒀는지 위치를 기억하나요?', category: 'Spatial Memory' },
+  { domain: 'spatial', text: '좌우를 빠르게 구분하나요?', category: 'Directionality' },
+  { domain: 'spatial', text: '그림이나 도표를 잘 이해하나요?', category: 'Visual Interpretation' },
+
+  // 반응속도 (10문항)
+  { domain: 'speed', text: '질문을 듣고 빠르게 대답하나요?', category: 'Verbal Response Speed' },
+  { domain: 'speed', text: '예상치 못한 상황에 빠르게 반응하나요?', category: 'Reaction Speed' },
+  { domain: 'speed', text: '타이핑이나 필기 속도가 빠른가요?', category: 'Motor Speed' },
+  { domain: 'speed', text: '텍스트를 빠르게 읽고 이해하나요?', category: 'Reading Speed' },
+  { domain: 'speed', text: '게임이나 스포츠에서 빠른 반응이 필요한가요?', category: 'Sports Reaction' },
+  { domain: 'speed', text: '여러 정보를 빠르게 처리할 수 있나요?', category: 'Information Processing' },
+  { domain: 'speed', text: '손이나 발의 움직임이 민첩한가요?', category: 'Motor Agility' },
+  { domain: 'speed', text: '운전할 때 위험을 빠르게 감지하나요?', category: 'Visual Detection Speed' },
+  { domain: 'speed', text: '검색이나 스캔 작업이 빠른가요?', category: 'Scanning Speed' },
+  { domain: 'speed', text: '계산을 빠르게 할 수 있나요?', category: 'Mental Calculation Speed' }
+];
+
+// ============================================
+// 상태 관리
+// ============================================
+
+let currentQuestion = 0;
+let testAnswers = {};
+let userData = null;
+let currentUserId = null;
+
+// ============================================
+// 초기화
+// ============================================
+
+window.addEventListener('load', async () => {
+  console.log('🚀 BHC 2.0 로드됨');
+  
+  // Supabase 초기화
+  try {
+    const { createClient } = window.supabase;
+    supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+    console.log('✅ Supabase 연결 완료');
+  } catch (e) {
+    console.error('❌ Supabase 연결 실패:', e);
+  }
+
+  // 사용자 정보 가져오기
+  try {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session) {
+      currentUserId = session.user.id;
+      console.log('✅ 사용자:', currentUserId);
+    } else {
+      console.log('⚠️ 로그인되지 않음 - 게스트 모드');
+    }
+  } catch (e) {
+    console.warn('⚠️ 세션 조회 실패:', e);
+  }
+});
+
+// ============================================
+// 검사 제어
+// ============================================
+
+function startTest() {
+  console.log('🧪 검사 시작');
+  testAnswers = {};
+  currentQuestion = 0;
+  showScreen('testScreen');
+  loadQuestion();
+}
+
+function loadQuestion() {
+  const question = TEST_QUESTIONS[currentQuestion];
+  const domain = DOMAINS.find(d => d.id === question.domain);
+  const progress = ((currentQuestion + 1) / TEST_QUESTIONS.length) * 100;
+
+  // UI 업데이트
+  document.getElementById('progressFill').style.width = progress + '%';
+  document.getElementById('questionNumber').textContent = `문항 ${currentQuestion + 1}/${TEST_QUESTIONS.length}`;
+  document.getElementById('domainBadge').textContent = domain.name;
+  document.getElementById('domainBadge').style.background = domain.color;
+  document.getElementById('questionText').textContent = question.text;
+
+  // 시각화 이미지 (SVG로 동적 생성)
+  const imageContainer = document.getElementById('imageContainer');
+  imageContainer.innerHTML = generateQuestionImage(domain.id, currentQuestion);
+
+  // 리커트 척도 렌더링
+  const likertScale = document.getElementById('likertScale');
+  likertScale.innerHTML = '';
+  LIKERT_SCALE.forEach((option, idx) => {
+    const selected = testAnswers[currentQuestion] === option.value;
+    const div = document.createElement('div');
+    div.className = 'likert-option' + (selected ? ' selected' : '');
+    div.onclick = () => selectAnswer(option.value);
+    div.innerHTML = `
+      <div class="likert-radio"></div>
+      <span class="likert-text">${option.label}</span>
+      <span class="likert-score">${option.value}점</span>
+    `;
+    likertScale.appendChild(div);
+  });
+
+  // 네비게이션 버튼
+  document.getElementById('prevBtn').disabled = currentQuestion === 0;
+  document.getElementById('nextBtn').disabled = !testAnswers[currentQuestion];
+}
+
+function selectAnswer(value) {
+  testAnswers[currentQuestion] = value;
+  loadQuestion();
+}
+
+function previousQuestion() {
+  if (currentQuestion > 0) {
+    currentQuestion--;
+    loadQuestion();
+  }
+}
+
+function nextQuestion() {
+  if (currentQuestion < TEST_QUESTIONS.length - 1) {
+    currentQuestion++;
+    loadQuestion();
+  } else {
+    completeTest();
+  }
+}
+
+function completeTest() {
+  console.log('✅ 검사 완료', testAnswers);
+  calculateResults();
+  showScreen('resultScreen');
+}
+
+// ============================================
+// 결과 계산 및 시각화
+// ============================================
+
+function calculateResults() {
+  const scores = {};
+  const domainScores = {};
+
+  // 도메인별 점수 계산
+  DOMAINS.forEach(domain => {
+    const domainQuestions = TEST_QUESTIONS.filter(q => q.domain === domain.id);
+    const answers = domainQuestions.map((q, idx) => {
+      const qIndex = TEST_QUESTIONS.indexOf(q);
+      return testAnswers[qIndex] || 0;
+    });
+    const avg = answers.reduce((a, b) => a + b, 0) / answers.length;
+    domainScores[domain.id] = Math.round(avg * 20);
+  });
+
+  // 전체 점수 계산
+  const allScores = Object.values(domainScores);
+  const totalScore = Math.round(allScores.reduce((a, b) => a + b) / allScores.length);
+
+  // 뇌 나이 계산 (간단한 공식)
+  let brainAge = Math.round(100 - (totalScore * 0.3));
+  if (brainAge < 5) brainAge = 5;
+  if (brainAge > 100) brainAge = 100;
+
+  // 등급 결정
+  let tier = 'Bronze';
+  if (totalScore >= 80) tier = 'Gold';
+  else if (totalScore >= 70) tier = 'Silver';
+
+  // 표시
+  document.getElementById('brainAge').textContent = brainAge + '세';
+  document.getElementById('brainTier').textContent = '등급: ' + (tier === 'Gold' ? '🥇 Gold' : tier === 'Silver' ? '🥈 Silver' : '🥉 Bronze');
+
+  // 차트 렌더링
+  renderRadarChart(domainScores);
+  renderBarChart(totalScore);
+
+  // 점수 상세 표시
+  const scoreDetails = document.getElementById('scoreDetails');
+  scoreDetails.innerHTML = DOMAINS.map(domain => `
+    <div class="score-item">
+      <span class="score-label">${domain.name}</span>
+      <span class="score-value">${domainScores[domain.id]}</span>
+    </div>
+  `).join('');
+
+  // Supabase에 결과 저장
+  if (currentUserId) {
+    saveResultsToSupabase(domainScores, totalScore, brainAge, tier);
+  }
+}
+
+function renderRadarChart(scores) {
+  const ctx = document.getElementById('radarChart').getContext('2d');
+  
+  // 기존 차트가 있으면 제거
+  if (window.radarChartInstance) {
+    window.radarChartInstance.destroy();
+  }
+
+  const labels = DOMAINS.map(d => d.name);
+  const data = DOMAINS.map(d => scores[d.id]);
+  const colors = DOMAINS.map(d => d.color);
+
+  window.radarChartInstance = new Chart(ctx, {
+    type: 'radar',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: '검사 결과',
+        data: data,
+        borderColor: '#667EEA',
+        backgroundColor: 'rgba(102, 126, 234, 0.15)',
+        borderWidth: 3,
+        pointBackgroundColor: colors,
+        pointBorderColor: '#fff',
+        pointBorderWidth: 2,
+        pointRadius: 6,
+        pointHoverRadius: 8
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      scales: {
+        r: {
+          min: 0,
+          max: 100,
+          ticks: { display: true, color: '#999' },
+          grid: { color: 'rgba(0,0,0,0.1)' }
+        }
+      },
+      plugins: {
+        legend: { display: false },
+        datalabels: { display: false }
+      }
+    }
+  });
+}
+
+function renderBarChart(userScore) {
+  const ctx = document.getElementById('barChart').getContext('2d');
+  
+  if (window.barChartInstance) {
+    window.barChartInstance.destroy();
+  }
+
+  const ageGroupAverages = AGE_GROUPS.map(group => AGE_GROUP_SCORES[group].avg);
+  const ageGroupRanges = AGE_GROUPS.map(group => {
+    const [min, max] = AGE_GROUP_SCORES[group].range;
+    return { min, max };
+  });
+
+  window.barChartInstance = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: AGE_GROUPS,
+      datasets: [{
+        label: '연령층 평균',
+        data: ageGroupAverages,
+        backgroundColor: 'rgba(102, 126, 234, 0.6)',
+        borderColor: '#667EEA',
+        borderWidth: 2
+      }, {
+        label: '당신의 점수',
+        data: AGE_GROUPS.map(() => userScore),
+        backgroundColor: 'rgba(244, 67, 54, 0.7)',
+        borderColor: '#F44336',
+        borderWidth: 2
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      scales: {
+        y: {
+          min: 0,
+          max: 100,
+          ticks: { color: '#999' }
+        },
+        x: {
+          ticks: { color: '#999' }
+        }
+      },
+      plugins: {
+        legend: { display: true, position: 'top' },
+        datalabels: { display: false }
+      }
+    }
+  });
+}
+
+// ============================================
+// 동의 및 알림
+// ============================================
+
+function validateConsent() {
+  const phoneConsent = document.getElementById('consentPhone').checked;
+  document.getElementById('confirmBtn').disabled = !phoneConsent;
+}
+
+function confirmNotification() {
+  console.log('🔔 알림 동의 완료');
+  alert('✅ 축하합니다!\n\n뇌훈련 마일리지 시스템에 등록되었습니다.\n무료 훈련 프로그램에 참여하여 등급을 올려보세요!');
+  goToTraining();
+}
+
+function goToTraining() {
+  window.location.href = '/brain_training.html';
+}
+
+function goHome() {
+  window.location.href = '/';
+}
+
+// ============================================
+// Supabase 저장
+// ============================================
+
+async function saveResultsToSupabase(scores, totalScore, brainAge, tier) {
+  if (!supabase || !currentUserId) return;
+
+  try {
+    // bhc_results에 저장
+    const { error: resultError } = await supabase
+      .from('bhc_results')
+      .insert({
+        member_id: currentUserId,
+        scores: JSON.stringify(scores),
+        total_score: totalScore,
+        brain_age: brainAge,
+        brain_tier: tier,
+        tested_at: new Date().toISOString()
+      });
+
+    if (resultError) throw resultError;
+    console.log('✅ 결과 저장 완료');
+
+    // bhc_milestones 확인/업데이트
+    const { data: milestone } = await supabase
+      .from('bhc_milestones')
+      .select('*')
+      .eq('member_id', currentUserId)
+      .single();
+
+    if (!milestone) {
+      // 새로 생성
+      await supabase
+        .from('bhc_milestones')
+        .insert({
+          member_id: currentUserId,
+          total_minutes: 0,
+          current_tier: 'Bronze',
+          notification_phone_consent: document.getElementById('consentPhone').checked
+        });
+      console.log('✅ 마일리지 프로필 생성');
+    } else {
+      // 동의 업데이트
+      await supabase
+        .from('bhc_milestones')
+        .update({ notification_phone_consent: document.getElementById('consentPhone').checked })
+        .eq('member_id', currentUserId);
+      console.log('✅ 동의 정보 업데이트');
+    }
+  } catch (error) {
+    console.error('❌ Supabase 저장 실패:', error);
+  }
+}
+
+// ============================================
+// 유틸리티
+// ============================================
+
+function showScreen(screenId) {
+  document.querySelectorAll('.screen').forEach(screen => {
+    screen.classList.remove('active');
+  });
+  document.getElementById(screenId).classList.add('active');
+}
+
+function generateQuestionImage(domainId, questionIndex) {
+  // 각 도메인별 고유한 SVG 이미지 생성
+  const images = {
+    memory: `
+      <svg width="120" height="120" viewBox="0 0 120 120">
+        <rect x="10" y="10" width="100" height="100" fill="none" stroke="#FF6B9D" stroke-width="2" rx="10"/>
+        <circle cx="40" cy="40" r="15" fill="#FF6B9D"/>
+        <circle cx="80" cy="40" r="15" fill="#FF6B9D" opacity="0.5"/>
+        <circle cx="40" cy="80" r="15" fill="#FF6B9D" opacity="0.5"/>
+        <circle cx="80" cy="80" r="15" fill="#FF6B9D" opacity="0.3"/>
+        <text x="60" y="115" text-anchor="middle" font-size="12" fill="#FF6B9D" font-weight="bold">기억</text>
+      </svg>
+    `,
+    attention: `
+      <svg width="120" height="120" viewBox="0 0 120 120">
+        <circle cx="60" cy="60" r="40" fill="none" stroke="#4ECDC4" stroke-width="3"/>
+        <circle cx="60" cy="60" r="20" fill="#4ECDC4"/>
+        <path d="M 60 20 L 70 40 L 50 40 Z" fill="#4ECDC4"/>
+        <text x="60" y="115" text-anchor="middle" font-size="12" fill="#4ECDC4" font-weight="bold">집중</text>
+      </svg>
+    `,
+    emotion: `
+      <svg width="120" height="120" viewBox="0 0 120 120">
+        <circle cx="60" cy="60" r="45" fill="none" stroke="#FFE66D" stroke-width="2"/>
+        <circle cx="45" cy="50" r="5" fill="#FFE66D"/>
+        <circle cx="75" cy="50" r="5" fill="#FFE66D"/>
+        <path d="M 45 75 Q 60 85 75 75" stroke="#FFE66D" stroke-width="2" fill="none"/>
+        <text x="60" y="115" text-anchor="middle" font-size="12" fill="#FFE66D" font-weight="bold">감정</text>
+      </svg>
+    `,
+    judgment: `
+      <svg width="120" height="120" viewBox="0 0 120 120">
+        <path d="M 30 40 L 60 10 L 90 40 L 75 60 L 90 90 L 60 105 L 30 90 L 45 60 Z" fill="none" stroke="#95E1D3" stroke-width="2"/>
+        <circle cx="60" cy="60" r="10" fill="#95E1D3"/>
+        <text x="60" y="115" text-anchor="middle" font-size="12" fill="#95E1D3" font-weight="bold">판단</text>
+      </svg>
+    `,
+    execution: `
+      <svg width="120" height="120" viewBox="0 0 120 120">
+        <rect x="20" y="30" width="80" height="60" fill="none" stroke="#F38181" stroke-width="2" rx="5"/>
+        <polyline points="35,55 50,70 85,40" stroke="#F38181" stroke-width="3" fill="none"/>
+        <text x="60" y="115" text-anchor="middle" font-size="12" fill="#F38181" font-weight="bold">실행</text>
+      </svg>
+    `,
+    control: `
+      <svg width="120" height="120" viewBox="0 0 120 120">
+        <circle cx="60" cy="60" r="35" fill="none" stroke="#AA96DA" stroke-width="2"/>
+        <circle cx="60" cy="60" r="25" fill="none" stroke="#AA96DA" stroke-width="2"/>
+        <circle cx="60" cy="35" r="5" fill="#AA96DA"/>
+        <text x="60" y="115" text-anchor="middle" font-size="12" fill="#AA96DA" font-weight="bold">조절</text>
+      </svg>
+    `,
+    spatial: `
+      <svg width="120" height="120" viewBox="0 0 120 120">
+        <path d="M 30 30 L 90 30 L 75 90 L 15 90 Z" fill="none" stroke="#FCBAD3" stroke-width="2"/>
+        <line x1="60" y1="30" x2="45" y2="90" stroke="#FCBAD3" stroke-width="2"/>
+        <line x1="60" y1="30" x2="75" y2="90" stroke="#FCBAD3" stroke-width="2"/>
+        <text x="60" y="115" text-anchor="middle" font-size="12" fill="#FCBAD3" font-weight="bold">공간</text>
+      </svg>
+    `,
+    speed: `
+      <svg width="120" height="120" viewBox="0 0 120 120">
+        <path d="M 20 60 L 100 60" stroke="#A8E6CF" stroke-width="3"/>
+        <polygon points="100,60 85,50 85,70" fill="#A8E6CF"/>
+        <circle cx="40" cy="60" r="8" fill="#A8E6CF" opacity="0.5"/>
+        <circle cx="70" cy="60" r="8" fill="#A8E6CF" opacity="0.3"/>
+        <text x="60" y="115" text-anchor="middle" font-size="12" fill="#A8E6CF" font-weight="bold">속도</text>
+      </svg>
+    `
+  };
+
+  return images[domainId] || images.memory;
+}
+
+console.log('✅ BHC 2.0 스크립트 로드 완료');
+</script>
+
+</body>
+</html>
