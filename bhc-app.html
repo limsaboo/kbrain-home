@@ -1,713 +1,278 @@
 <!DOCTYPE html>
-<!-- BHC v2.0 | Updated: 2026-08-15 14:30 | Cache Buster: 20260815143000 -->
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🧠 뇌건강체크 (BHC) — 한국뇌심리연구소</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+<title>뇌건강체크 - BHC (Brain Health Check)</title>
 <style>
-* { box-sizing: border-box; margin: 0; padding: 0; }
-:root {
-  --primary: #2c3e50;
-  --secondary: #34495e;
-  --accent: #3498db;
-  --success: #27ae60;
-  --warning: #e67e22;
-  --danger: #e74c3c;
-  --light: #ecf0f1;
-  --bg: #f8f9fa;
-  --white: #ffffff;
-}
-
 html, body {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: var(--primary);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Pretendard", sans-serif;
-  line-height: 1.6;
-  min-height: 100vh;
+  margin: 0;
   padding: 0;
+  background: linear-gradient(135deg, #667EEA 0%, #764BA2 100%);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.container { max-width: 600px; margin: 0 auto; padding: 16px; }
+.container {
+  width: 100%;
+  max-width: 500px;
+  padding: 20px;
+  box-sizing: border-box;
+}
 
-/* 시작 화면 */
-.start-screen {
-  background: var(--white);
+.start-screen, .test-screen {
+  background: white;
   border-radius: 20px;
-  padding: 40px 24px;
+  padding: 30px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.2);
   text-align: center;
-  box-shadow: 0 20px 60px rgba(0,0,0,.2);
-  margin-top: 20px;
 }
 
-.logo {
-  font-size: 64px;
-  margin-bottom: 20px;
+.test-screen {
+  display: none;
 }
 
-.start-screen h1 {
+h1 {
+  color: #333;
+  margin: 0 0 10px 0;
   font-size: 28px;
-  font-weight: 900;
-  color: var(--primary);
-  margin-bottom: 8px;
 }
 
-.start-screen .subtitle {
+.subtitle {
+  color: #666;
+  margin-bottom: 20px;
   font-size: 14px;
-  color: var(--secondary);
-  margin-bottom: 16px;
-  line-height: 1.6;
 }
 
-.start-screen .description {
-  background: #f0f8ff;
-  border-left: 4px solid var(--accent);
-  padding: 16px;
-  border-radius: 8px;
-  margin: 24px 0;
-  font-size: 13px;
-  line-height: 1.7;
-  text-align: left;
-}
-
-.start-btn {
-  background: linear-gradient(135deg, var(--accent) 0%, #2980b9 100%);
-  color: var(--white);
+.button {
+  background: #4CAF50;
+  color: white;
+  padding: 15px 30px;
   border: none;
-  padding: 16px 40px;
-  border-radius: 12px;
-  font-weight: 900;
+  border-radius: 10px;
   font-size: 16px;
+  font-weight: bold;
   cursor: pointer;
   width: 100%;
-  margin-top: 24px;
-  transition: .3s;
-}
-.start-btn:hover { transform: translateY(-4px); box-shadow: 0 12px 28px rgba(52, 152, 219, .3); }
-
-.start-screen .note {
-  font-size: 12px;
-  color: var(--secondary);
-  margin-top: 16px;
-  opacity: .8;
-}
-
-/* 검사 화면 */
-.test-screen { display: none; }
-
-.test-header {
-  background: var(--white);
-  padding: 20px;
-  border-radius: 16px 16px 0 0;
   margin-top: 20px;
-  box-shadow: 0 4px 12px rgba(0,0,0,.1);
+  transition: all 0.3s;
 }
 
-.test-header h2 {
-  font-size: 18px;
-  font-weight: 900;
-  color: var(--primary);
-  margin-bottom: 8px;
+.button:hover {
+  background: #45a049;
+  transform: scale(1.02);
 }
 
-.test-header .progress {
-  background: var(--light);
-  height: 8px;
-  border-radius: 4px;
-  overflow: hidden;
-  margin-top: 12px;
-}
-
-.test-header .progress-bar {
-  height: 100%;
-  background: linear-gradient(90deg, var(--accent) 0%, var(--success) 100%);
-  transition: width .3s;
-}
-
-.test-content {
-  background: var(--white);
-  padding: 24px;
-  box-shadow: 0 4px 12px rgba(0,0,0,.1);
+.button:active {
+  transform: scale(0.98);
 }
 
 .question {
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--primary);
+  text-align: left;
   margin-bottom: 20px;
-  line-height: 1.6;
+}
+
+.question-text {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 15px;
+  color: #333;
 }
 
 .options {
-  display: grid;
-  gap: 12px;
-}
-
-.option-btn {
-  background: var(--bg);
-  border: 2px solid var(--light);
-  padding: 16px;
-  border-radius: 12px;
-  cursor: pointer;
-  text-align: left;
-  transition: .2s;
-  font-size: 14px;
-  font-weight: 600;
-}
-
-.option-btn:hover { 
-  background: var(--light);
-  border-color: var(--accent);
-}
-
-.option-btn.selected {
-  background: var(--accent);
-  color: var(--white);
-  border-color: var(--accent);
-}
-
-.test-footer {
-  background: var(--white);
-  padding: 20px;
-  border-radius: 0 0 16px 16px;
-  box-shadow: 0 4px 12px rgba(0,0,0,.1);
   display: flex;
-  gap: 12px;
+  flex-direction: column;
+  gap: 10px;
 }
 
-.prev-btn, .next-btn {
-  flex: 1;
+.option {
   padding: 12px;
-  border: 2px solid var(--light);
-  background: var(--white);
+  background: #f0f0f0;
+  border: 2px solid #ddd;
   border-radius: 8px;
   cursor: pointer;
-  font-weight: 700;
-  transition: .2s;
-}
-
-.prev-btn { color: var(--secondary); }
-.prev-btn:hover { background: var(--light); }
-
-.next-btn { 
-  background: var(--accent);
-  color: var(--white);
-  border-color: var(--accent);
-}
-.next-btn:hover { background: #2980b9; }
-
-.next-btn:disabled {
-  opacity: .5;
-  cursor: not-allowed;
-}
-
-/* 결과 화면 */
-.result-screen {
-  display: none;
-  background: var(--white);
-  border-radius: 20px;
-  padding: 40px 24px;
-  margin-top: 20px;
-  box-shadow: 0 20px 60px rgba(0,0,0,.2);
+  transition: all 0.3s;
   text-align: center;
 }
 
-.result-icon {
-  font-size: 64px;
-  margin-bottom: 20px;
+.option:hover {
+  background: #667EEA;
+  color: white;
+  border-color: #667EEA;
 }
 
-.result-screen h2 {
-  font-size: 26px;
-  font-weight: 900;
-  color: var(--primary);
-  margin-bottom: 12px;
+.result-screen {
+  display: none;
 }
 
 .result-score {
   font-size: 48px;
-  font-weight: 900;
-  background: linear-gradient(135deg, var(--accent) 0%, var(--success) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  font-weight: bold;
+  color: #667EEA;
   margin: 20px 0;
 }
 
-.result-description {
-  background: #f0f8ff;
-  border-left: 4px solid var(--accent);
-  padding: 16px;
-  border-radius: 8px;
-  margin: 24px 0;
-  font-size: 13px;
-  line-height: 1.7;
-  text-align: left;
-  color: var(--secondary);
+.result-message {
+  font-size: 16px;
+  color: #666;
+  line-height: 1.6;
+  margin-bottom: 20px;
 }
 
-.chart-container {
-  position: relative;
-  height: 300px;
-  margin: 24px 0;
-}
-
-.result-buttons {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin-top: 24px;
-}
-
-.btn-primary, .btn-secondary {
-  padding: 14px;
-  border: none;
-  border-radius: 10px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: .2s;
-}
-
-.btn-primary {
-  background: var(--accent);
-  color: var(--white);
-}
-.btn-primary:hover { background: #2980b9; }
-
-.btn-secondary {
-  background: var(--light);
-  color: var(--primary);
-  border: 2px solid var(--light);
-}
-.btn-secondary:hover { background: #ecf0f1; }
-
-.share-section {
+.nav-buttons {
+  display: flex;
+  gap: 10px;
   margin-top: 20px;
-  padding-top: 20px;
-  border-top: 2px solid var(--light);
 }
 
-.share-section h3 {
-  font-size: 14px;
-  font-weight: 700;
-  color: var(--secondary);
-  margin-bottom: 12px;
-  text-align: left;
-}
-
-.share-buttons {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-}
-
-.share-btn {
-  padding: 12px;
-  background: var(--bg);
-  border: 2px solid var(--light);
+.nav-buttons button {
+  flex: 1;
+  padding: 10px;
+  background: #667EEA;
+  color: white;
+  border: none;
   border-radius: 8px;
   cursor: pointer;
-  font-size: 13px;
-  font-weight: 700;
-  transition: .2s;
-}
-.share-btn:hover { background: var(--light); }
-
-@media(max-width: 480px) {
-  .container { padding: 12px; }
-  .start-screen, .result-screen { padding: 24px 16px; }
-  .result-buttons { grid-template-columns: 1fr; }
 }
 </style>
 </head>
 <body>
 
 <div class="container">
-
   <!-- 시작 화면 -->
   <div id="startScreen" class="start-screen">
-    <div class="logo">🧠</div>
-    <h1>뇌건강체크</h1>
+    <h1>🧠 뇌건강체크</h1>
     <p class="subtitle">BHC (Brain Health Check)</p>
     
-    <div class="description">
-      <strong>간단한 20초 검사로 당신의 뇌 건강을 알아보세요!</strong><br>
-      <br>
-      뇌의 5가지 영역 (기억력, 집중력, 감정조절, 판단력, 실행력)을 점검하고<br>
-      당신의 뇌 건강 지수를 확인합니다.
-    </div>
-
-    <div style="font-size: 13px; color: var(--secondary); margin: 16px 0;">
-      📊 검사 소요 시간: 약 1분<br>
-      📈 5개 영역별 분석<br>
-      💾 결과 저장 및 공유
-    </div>
-
-    <button id="startBtn" class="start-btn" onclick="document.getElementById('startScreen').style.display='none'; document.getElementById('testScreen').style.display='block'; startTest(); return false;">🚀 검사 시작하기</button>
+    <p style="color: #666; line-height: 1.6;">
+      간단한 20초 검사로 당신의 뇌 건강을 알아보세요!
+    </p>
     
-    <p class="note">
-      ℹ️ 이 검사 결과는 의료 진단이 아닙니다. 개인의 뇌 건강을 이해하기 위한 교육용 도구입니다.
+    <button class="button" onclick="startTest()">🚀 검사 시작하기</button>
+    
+    <p style="font-size: 12px; color: #999; margin-top: 20px;">
+      ℹ️ 이 검사는 의료 진단이 아닙니다.
     </p>
   </div>
 
   <!-- 검사 화면 -->
   <div id="testScreen" class="test-screen">
-    <div class="test-header">
-      <h2 id="categoryName">기억력 검사</h2>
-      <div class="progress">
-        <div class="progress-bar" id="progressBar" style="width: 0%"></div>
+    <div class="question">
+      <h2 style="color: #667EEA; margin: 0 0 20px 0;" id="questionNum">질문 1/5</h2>
+      <p class="question-text" id="questionText">질문이 로드됩니다...</p>
+      
+      <div class="options" id="options"></div>
+      
+      <div class="nav-buttons">
+        <button onclick="prevQuestion()">← 이전</button>
+        <button onclick="nextQuestion()">다음 →</button>
       </div>
-      <div style="font-size: 12px; color: var(--secondary); margin-top: 8px;">
-        문항 <span id="currentQuestion">1</span> / <span id="totalQuestions">15</span>
-      </div>
-    </div>
-
-    <div class="test-content">
-      <div class="question" id="questionText">질문이 로딩중입니다...</div>
-      <div class="options" id="optionsContainer"></div>
-    </div>
-
-    <div class="test-footer">
-      <button class="prev-btn" onclick="previousQuestion()">← 이전</button>
-      <button class="next-btn" id="nextBtn" onclick="nextQuestion()" disabled>다음 →</button>
     </div>
   </div>
 
   <!-- 결과 화면 -->
   <div id="resultScreen" class="result-screen">
-    <div class="result-icon" id="resultIcon">🎉</div>
-    <h2 id="resultTitle">검사 완료!</h2>
+    <h1>검사 완료!</h1>
     <div class="result-score" id="resultScore">85점</div>
+    <div class="result-message" id="resultMessage">당신의 뇌 건강은 양호합니다!</div>
     
-    <p id="resultMessage" style="font-size: 14px; color: var(--secondary); margin: 12px 0;">
-      당신의 뇌 건강 지수입니다.
-    </p>
-
-    <div class="result-description" id="resultDescription">
-      결과 설명이 여기 표시됩니다.
-    </div>
-
-    <div class="chart-container">
-      <canvas id="resultChart"></canvas>
-    </div>
-
-    <div class="share-section">
-      <h3>📊 5가지 영역 분석</h3>
-      <div id="scoreDetails" style="text-align: left; font-size: 13px; line-height: 1.8;"></div>
-    </div>
-
-    <div class="result-buttons">
-      <button class="btn-primary" onclick="downloadResult()">📥 결과 저장</button>
-      <button class="btn-secondary" onclick="shareResult()">📤 공유하기</button>
-    </div>
-
-    <div class="share-section">
-      <h3>💡 다음 단계</h3>
-      <div class="share-buttons">
-        <button class="share-btn" onclick="window.location.href='/'">🏠 홈페이지</button>
-        <button class="share-btn" onclick="window.location.href='/signup.html'">👤 회원가입</button>
-      </div>
-    </div>
+    <button class="button" onclick="location.href='/'">🏠 홈으로</button>
   </div>
-
 </div>
 
 <script>
-const SUPABASE_URL = 'https://grxqfaeznqqohnlltged.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_Sgv6BVPo1dOnVICcX1tfzA_gf7T5Z4I';
-let supabase;
+// 간단한 테스트 데이터
+const questions = [
+  { text: "최근 1주일 동안 기억력이 좋았나요?", answers: ["매우 좋음", "좋음", "보통", "나쁨", "매우 나쁨"] },
+  { text: "집중력이 필요한 일을 잘 할 수 있나요?", answers: ["매우 잘함", "잘함", "보통", "못함", "매우 못함"] },
+  { text: "최근 스트레스가 많나요?", answers: ["전혀 없음", "적음", "보통", "많음", "매우 많음"] },
+  { text: "충분한 수면을 취하고 있나요?", answers: ["항상", "자주", "가끔", "거의 안함", "전혀 안함"] },
+  { text: "전반적인 뇌 건강 상태는?", answers: ["매우 건강", "건강", "보통", "걱정됨", "매우 걱정됨"] }
+];
 
-// 검사 데이터
-const testData = {
-  memory: {
-    name: '기억력',
-    questions: [
-      { q: '어제 아침에 뭘 먹었나요?', options: ['기억난다', '어렴풋이 기억난다', '기억 안 난다'] },
-      { q: '지난주 월요일에 만난 사람은?', options: ['정확히 기억난다', '대략 기억난다', '전혀 기억 안 난다'] },
-      { q: '최근에 배운 새로운 정보?', options: ['생생하게 기억난다', '어느정도 기억난다', '거의 잊었다'] },
-    ]
-  },
-  concentration: {
-    name: '집중력',
-    questions: [
-      { q: '하나의 일에 집중할 수 있는 시간은?', options: ['1시간 이상', '30분~1시간', '10분 이하'] },
-      { q: '독서나 업무 중 주의산만 정도는?', options: ['거의 없다', '가끔 있다', '자주 있다'] },
-      { q: '멀티태스킹 능력은?', options: ['매우 잘한다', '적당한 수준', '어렵다'] },
-    ]
-  },
-  emotion: {
-    name: '감정조절',
-    questions: [
-      { q: '화가 났을 때 진정하는 데 걸리는 시간?', options: ['1분 이내', '5~10분', '30분 이상'] },
-      { q: '스트레스에 대한 대처 능력은?', options: ['매우 잘 대처한다', '적당히 대처한다', '어렵다'] },
-      { q: '기분 변화의 안정도는?', options: ['매우 안정적', '대체로 안정적', '불안정하다'] },
-    ]
-  },
-  judgment: {
-    name: '판단력',
-    questions: [
-      { q: '어려운 결정 시 신중함 정도?', options: ['매우 신중하다', '적당히 신중하다', '즉흥적이다'] },
-      { q: '상황 판단 능력은?', options: ['뛰어나다', '보통이다', '약하다'] },
-      { q: '논리적 사고 능력은?', options: ['매우 강하다', '중간 정도', '약하다'] },
-    ]
-  },
-  execution: {
-    name: '실행력',
-    questions: [
-      { q: '계획한 일을 실행하는 정도?', options: ['80% 이상 실행', '50~80%', '50% 이하'] },
-      { q: '목표 달성 의지는?', options: ['매우 강하다', '중간 정도', '약하다'] },
-      { q: '일을 끝내는 것까지 얼마나 오래?', options: ['빠르게 마친다', '무난하다', '오래 끈다'] },
-    ]
-  }
-};
-
-const categories = Object.keys(testData);
-let currentCategory = 0;
 let currentQuestion = 0;
-let answers = {};
-let resultChart;
-
-function initSupabase() {
-  supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-}
+let answers = [];
 
 function startTest() {
-  console.log('🚀🚀🚀 startTest() 호출됨! 버튼이 정상 작동합니다!');
+  console.log('🚀🚀🚀 검사 시작!!!');
   
-  // 화면 전환 (즉시 실행)
-  const startScreen = document.getElementById('startScreen');
-  const testScreen = document.getElementById('testScreen');
+  // 화면 전환
+  document.getElementById('startScreen').style.display = 'none';
+  document.getElementById('testScreen').style.display = 'block';
+  document.getElementById('resultScreen').style.display = 'none';
   
-  if (startScreen && testScreen) {
-    console.log('✅ DOM 요소 발견 - 화면 전환 시작');
-    
-    // 강제 화면 전환
-    startScreen.style.display = 'none';
-    testScreen.style.display = 'block';
-    
-    // 검사 상태 초기화
-    currentCategory = 0;
-    currentQuestion = 0;
-    answers = {};
-    
-    console.log('✅ 검사 초기화 완료');
-    
-    // 첫 번째 질문 로드
-    try {
-      loadQuestion();
-      console.log('✅ 첫 질문 로드 완료');
-    } catch (e) {
-      console.error('⚠️ 질문 로드 오류:', e);
-    }
-  } else {
-    console.error('❌ DOM 요소 부족 - startScreen:', !!startScreen, 'testScreen:', !!testScreen);
-    alert('페이지 로딩 오류. 새로고침해주세요.');
-  }
+  // 초기화
+  currentQuestion = 0;
+  answers = [];
+  
+  loadQuestion();
 }
 
 function loadQuestion() {
-  const category = categories[currentCategory];
-  const question = testData[category].questions[currentQuestion];
-  const totalQ = categories.reduce((sum, cat) => sum + testData[cat].questions.length, 0);
-  const currentQ = categories.slice(0, currentCategory).reduce((sum, cat) => sum + testData[cat].questions.length, 0) + currentQuestion + 1;
-
-  document.getElementById('categoryName').textContent = testData[category].name + ' 검사';
-  document.getElementById('questionText').textContent = question.q;
-  document.getElementById('currentQuestion').textContent = currentQ;
-  document.getElementById('totalQuestions').textContent = totalQ;
-  document.getElementById('progressBar').style.width = (currentQ / totalQ * 100) + '%';
-
-  const container = document.getElementById('optionsContainer');
-  container.innerHTML = question.options.map((opt, idx) => `
-    <button class="option-btn" onclick="selectOption(${idx})">
-      <span style="font-size: 18px; margin-right: 8px;">${['🟢', '🟡', '🔴'][idx]}</span> ${opt}
-    </button>
-  `).join('');
-
-  updateButtons();
+  const q = questions[currentQuestion];
+  document.getElementById('questionNum').textContent = `질문 ${currentQuestion + 1}/${questions.length}`;
+  document.getElementById('questionText').textContent = q.text;
+  
+  const optionsDiv = document.getElementById('options');
+  optionsDiv.innerHTML = '';
+  
+  q.answers.forEach((answer, idx) => {
+    const div = document.createElement('div');
+    div.className = 'option';
+    div.textContent = answer;
+    div.onclick = () => selectAnswer(idx);
+    optionsDiv.appendChild(div);
+  });
 }
 
-function selectOption(idx) {
-  const key = `${currentCategory}-${currentQuestion}`;
-  answers[key] = idx;
-  document.querySelectorAll('.option-btn').forEach(btn => btn.classList.remove('selected'));
-  event.target.closest('.option-btn').classList.add('selected');
-  document.getElementById('nextBtn').disabled = false;
+function selectAnswer(idx) {
+  answers[currentQuestion] = idx;
+  nextQuestion();
 }
 
 function nextQuestion() {
-  if (currentQuestion < testData[categories[currentCategory]].questions.length - 1) {
+  if (currentQuestion < questions.length - 1) {
     currentQuestion++;
-  } else if (currentCategory < categories.length - 1) {
-    currentCategory++;
-    currentQuestion = 0;
+    loadQuestion();
   } else {
     showResult();
-    return;
   }
-  loadQuestion();
 }
 
-function previousQuestion() {
+function prevQuestion() {
   if (currentQuestion > 0) {
     currentQuestion--;
-  } else if (currentCategory > 0) {
-    currentCategory--;
-    currentQuestion = testData[categories[currentCategory]].questions.length - 1;
+    loadQuestion();
   }
-  loadQuestion();
-}
-
-function updateButtons() {
-  document.getElementById('nextBtn').disabled = !answers[`${currentCategory}-${currentQuestion}`];
-}
-
-function calculateScore() {
-  let scores = {};
-  categories.forEach((cat, catIdx) => {
-    let score = 0;
-    testData[cat].questions.forEach((q, qIdx) => {
-      const answer = answers[`${catIdx}-${qIdx}`];
-      score += (3 - answer) * 33.33;
-    });
-    scores[cat] = Math.min(100, Math.max(0, score / testData[cat].questions.length));
-  });
-  return scores;
 }
 
 function showResult() {
+  // 점수 계산 (간단한 방식)
+  let score = 0;
+  answers.forEach(answer => {
+    score += (5 - answer) * 20;
+  });
+  score = Math.min(100, Math.max(0, score));
+  
+  document.getElementById('startScreen').style.display = 'none';
   document.getElementById('testScreen').style.display = 'none';
   document.getElementById('resultScreen').style.display = 'block';
-
-  const scores = calculateScore();
-  const avgScore = Math.round(Object.values(scores).reduce((a, b) => a + b) / categories.length);
-
-  // 결과 표시
-  document.getElementById('resultScore').textContent = avgScore + '점';
   
-  if (avgScore >= 80) {
-    document.getElementById('resultIcon').textContent = '🌟';
-    document.getElementById('resultTitle').textContent = '뛰어난 뇌 건강!';
-    document.getElementById('resultMessage').textContent = '당신의 뇌는 매우 건강한 상태입니다!';
-  } else if (avgScore >= 60) {
-    document.getElementById('resultIcon').textContent = '😊';
-    document.getElementById('resultTitle').textContent = '좋은 뇌 건강!';
-    document.getElementById('resultMessage').textContent = '대체로 건강한 뇌 상태를 유지하고 있습니다.';
+  document.getElementById('resultScore').textContent = score + '점';
+  
+  if (score >= 80) {
+    document.getElementById('resultMessage').textContent = '당신의 뇌 건강은 매우 양호합니다! 현재의 생활 습관을 유지하세요.';
+  } else if (score >= 60) {
+    document.getElementById('resultMessage').textContent = '뇌 건강이 양호합니다. 규칙적인 운동과 충분한 수면을 권장합니다.';
   } else {
-    document.getElementById('resultIcon').textContent = '💪';
-    document.getElementById('resultTitle').textContent = '뇌 운동이 필요해요!';
-    document.getElementById('resultMessage').textContent = '뇌 건강을 위한 훈련이 도움이 될 것 같습니다.';
-  }
-
-  // 상세 점수
-  let details = '';
-  categories.forEach(cat => {
-    const score = Math.round(scores[cat]);
-    details += `<div style="margin-bottom: 12px;">
-      <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
-        <span>${testData[cat].name}</span>
-        <strong>${score}점</strong>
-      </div>
-      <div style="background: #ecf0f1; height: 6px; border-radius: 3px; overflow: hidden;">
-        <div style="background: linear-gradient(90deg, #3498db, #27ae60); height: 100%; width: ${score}%;"></div>
-      </div>
-    </div>`;
-  });
-  document.getElementById('scoreDetails').innerHTML = details;
-
-  // 차트
-  drawResultChart(scores);
-
-  // 결과 저장
-  saveResult(avgScore, scores);
-}
-
-function drawResultChart(scores) {
-  const ctx = document.getElementById('resultChart');
-  if (resultChart) resultChart.destroy();
-
-  resultChart = new Chart(ctx, {
-    type: 'radar',
-    data: {
-      labels: categories.map(cat => testData[cat].name),
-      datasets: [{
-        label: '뇌 건강 지수',
-        data: categories.map(cat => Math.round(scores[cat])),
-        borderColor: '#3498db',
-        backgroundColor: 'rgba(52, 152, 219, 0.2)',
-        borderWidth: 2,
-        pointRadius: 5,
-        pointBackgroundColor: '#3498db',
-        pointBorderColor: '#fff',
-        pointBorderWidth: 2,
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: { legend: { display: false } },
-      scales: {
-        r: {
-          beginAtZero: true,
-          max: 100,
-          ticks: { stepSize: 20 }
-        }
-      }
-    }
-  });
-}
-
-async function saveResult(score, scores) {
-  try {
-    await supabase.from('bhc_results').insert([{
-      score: score,
-      memory: scores.memory,
-      concentration: scores.concentration,
-      emotion: scores.emotion,
-      judgment: scores.judgment,
-      execution: scores.execution,
-      completed_at: new Date().toISOString()
-    }]);
-  } catch (e) {
-    console.log('결과 저장 실패:', e);
+    document.getElementById('resultMessage').textContent = '뇌 건강을 위해 생활 습관 개선이 필요합니다. 전문가 상담을 권장합니다.';
   }
 }
 
-function downloadResult() {
-  const score = document.getElementById('resultScore').textContent;
-  const details = document.getElementById('scoreDetails').textContent;
-  const text = `뇌건강체크 (BHC) 결과\n\n총점: ${score}\n\n${details}\n\n한국뇌심리연구소\nwww.k-brain.co.kr`;
-  
-  const blob = new Blob([text], { type: 'text/plain' });
-  const link = document.createElement('a');
-  link.href = URL.createObjectURL(blob);
-  link.download = `뇌건강체크_${new Date().toLocaleDateString('ko-KR')}.txt`;
-  link.click();
-}
-
-function shareResult() {
-  const score = document.getElementById('resultScore').textContent;
-  const text = `🧠 나의 뇌 건강 점수: ${score}\n\n뇌건강체크 (BHC)로 당신의 뇌 건강을 알아보세요!\n\n${window.location.href}`;
-  
-  if (navigator.share) {
-    navigator.share({ title: '뇌건강체크', text: text });
-  } else {
-    alert('공유 기능이 지원되지 않습니다.\n\n결과:\n' + text);
-  }
-}
-
-// 간단한 페이지 로드 - Supabase 초기화만
-window.addEventListener('load', function() {
-  console.log('📄 페이지 로드 완료');
-  
-  try {
-    initSupabase();
-    console.log('✅ Supabase 초기화 완료');
-  } catch (error) {
-    console.warn('⚠️ Supabase 초기화 실패 (검사는 계속 진행 가능):', error.message);
-  }
-});
+console.log('✅ 페이지 로드 완료!');
 </script>
 
 </body>
