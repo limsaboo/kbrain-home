@@ -27,7 +27,13 @@ html, body {
   line-height: 1.6;
 }
 
-.container { max-width: 1600px; margin: 0 auto; padding: 20px; }
+.container { 
+  max-width: 1600px; 
+  margin: 0 auto; 
+  padding: 24px; 
+  background: linear-gradient(180deg, #f5f7fa 0%, #ffffff 50%);
+  min-height: 100vh;
+}
 
 .login-screen {
   max-width: 480px;
@@ -44,6 +50,7 @@ html, body {
   color: var(--primary); 
   font-weight: 900; 
   text-align: center;
+  word-break: keep-all;
 }
 .login-screen .subtitle { 
   color: var(--secondary); 
@@ -51,6 +58,7 @@ html, body {
   font-size: 13px; 
   text-align: center;
   font-weight: 600;
+  word-break: keep-all;
 }
 .login-screen .warning {
   background: #fff3cd;
@@ -61,6 +69,7 @@ html, body {
   margin-bottom: 24px;
   font-size: 12px;
   line-height: 1.6;
+  word-break: keep-all;
 }
 .login-screen .field { 
   margin-bottom: 16px; 
@@ -72,6 +81,7 @@ html, body {
   margin-bottom: 8px;
   color: var(--secondary);
   font-size: 13px;
+  word-break: keep-all;
 }
 .login-screen input {
   width: 100%;
@@ -80,11 +90,45 @@ html, body {
   border-radius: 10px;
   font-size: 14px;
   font-family: inherit;
+  transition: all 0.3s ease;
 }
 .login-screen input:focus {
   outline: none;
   border-color: var(--accent);
   box-shadow: 0 0 0 4px rgba(52, 152, 219, .1);
+}
+.login-screen input.valid {
+  border-color: var(--success);
+  background: #f0fdf4;
+  box-shadow: 0 0 0 4px rgba(39, 174, 96, .1);
+}
+.login-screen input.invalid {
+  border-color: var(--danger);
+  background: #fef2f2;
+  box-shadow: 0 0 0 4px rgba(231, 76, 60, .1);
+}
+.password-status {
+  font-size: 13px;
+  margin-top: 8px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  display: none;
+  font-weight: 600;
+  align-items: center;
+  gap: 8px;
+}
+.password-status.show {
+  display: flex;
+}
+.password-status.valid {
+  color: var(--success);
+  background: #d5f4e6;
+  border: 1px solid var(--success);
+}
+.password-status.invalid {
+  color: var(--danger);
+  background: #fadbd8;
+  border: 1px solid var(--danger);
 }
 .login-btn {
   width: 100%;
@@ -97,9 +141,17 @@ html, body {
   font-size: 15px;
   cursor: pointer;
   margin-top: 24px;
-  transition: .2s;
+  transition: all .3s ease;
 }
-.login-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 16px rgba(231, 76, 60, .3); }
+.login-btn:hover:not(:disabled) { 
+  transform: translateY(-2px); 
+  box-shadow: 0 8px 16px rgba(231, 76, 60, .3); 
+}
+.login-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
 .login-error { 
   color: var(--danger); 
   font-size: 13px; 
@@ -122,121 +174,187 @@ html, body {
 }
 
 .topbar {
-  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+  background: linear-gradient(135deg, #1a252f 0%, #2c3e50 100%);
   color: var(--white);
   padding: 24px;
   border-radius: 14px;
   margin-bottom: 30px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  box-shadow: 0 4px 16px rgba(0,0,0,.12);
-  border-top: 4px solid var(--danger);
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+  box-shadow: 0 8px 24px rgba(0,0,0,.2);
+  border-left: 5px solid var(--accent);
+  border-top: 5px solid var(--danger);
 }
-.topbar h1 { font-size: 26px; font-weight: 900; }
+.topbar h1 { 
+  font-size: 28px; 
+  font-weight: 900;
+  letter-spacing: 1px;
+  margin: 0;
+  text-align: left;
+  word-break: keep-all;
+}
 .topbar .info {
-  display: flex;
-  gap: 24px;
-  align-items: center;
-  font-size: 12px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  width: 100%;
 }
 .topbar .info div {
-  background: rgba(255,255,255,.1);
-  padding: 8px 14px;
-  border-radius: 6px;
+  background: rgba(255,255,255,.15);
+  padding: 14px 16px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 13px;
+  border: 1px solid rgba(255,255,255,.2);
+  white-space: nowrap;
+  text-align: center;
+  word-break: keep-all;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.topbar > div:last-child {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  width: 100%;
 }
 .logout-btn, .download-btn {
   background: var(--danger);
   color: var(--white);
   border: none;
-  padding: 10px 18px;
+  padding: 14px 24px;
   border-radius: 8px;
   cursor: pointer;
-  font-weight: 600;
-  font-size: 13px;
+  font-weight: 700;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0,0,0,.2);
+  white-space: nowrap;
+  text-align: center;
+  word-break: keep-all;
 }
-.download-btn { background: var(--accent); }
-.logout-btn:hover { background: #c0392b; }
-.download-btn:hover { background: #2980b9; }
+.download-btn { 
+  background: var(--accent);
+}
+.logout-btn:hover { 
+  background: #c0392b;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(192, 57, 43, .3);
+}
+.download-btn:hover { 
+  background: #2980b9;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(41, 128, 185, .3);
+}
 
 .dashboard { display: none; }
 
 .alert {
-  background: #fff3cd;
-  border: 1px solid #ffc107;
-  color: #856404;
-  padding: 16px;
+  background: linear-gradient(135deg, #fff8e1 0%, #fffde7 100%);
+  border: 2px solid #fbc02d;
+  color: #f57f17;
+  padding: 18px;
   border-radius: 10px;
-  margin-bottom: 20px;
-  font-size: 13px;
+  margin-bottom: 24px;
+  font-size: 14px;
   display: none;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(251, 192, 45, .2);
 }
 .alert.show { display: block; }
 
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
   margin-bottom: 30px;
 }
 .stat-card {
-  background: var(--white);
-  padding: 24px;
+  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+  padding: 28px;
   border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0,0,0,.08);
-  border-top: 4px solid var(--accent);
-  border-left: 4px solid var(--danger);
+  box-shadow: 0 4px 12px rgba(0,0,0,.12);
+  border-left: 5px solid var(--accent);
+  border-top: 5px solid var(--danger);
+  transition: all 0.3s ease;
+}
+.stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0,0,0,.15);
 }
 .stat-label {
-  font-size: 12px;
+  font-size: 11px;
   color: var(--secondary);
-  font-weight: 600;
-  margin-bottom: 10px;
+  font-weight: 800;
+  margin-bottom: 12px;
   text-transform: uppercase;
-  letter-spacing: .5px;
+  letter-spacing: 1px;
+  word-break: keep-all;
+  text-align: center;
 }
 .stat-number {
-  font-size: 32px;
+  font-size: 36px;
   font-weight: 900;
   color: var(--primary);
   margin-bottom: 8px;
+  text-align: center;
+}
+.stat-card small {
+  display: block;
+  text-align: center;
+  font-size: 12px;
+  color: var(--secondary);
+  margin-top: 8px;
+  font-weight: 600;
 }
 
 .section {
   background: var(--white);
-  padding: 28px;
+  padding: 32px;
   border-radius: 12px;
   margin-bottom: 30px;
-  box-shadow: 0 2px 8px rgba(0,0,0,.08);
+  box-shadow: 0 4px 12px rgba(0,0,0,.12);
+  border-left: 6px solid var(--accent);
+  border-top: 3px solid var(--danger);
 }
 .section h2 {
-  font-size: 18px;
+  font-size: 20px;
   font-weight: 900;
-  margin-bottom: 24px;
+  margin-bottom: 28px;
   color: var(--primary);
-  border-bottom: 2px solid var(--light);
-  padding-bottom: 14px;
+  border-bottom: 3px solid var(--accent);
+  padding-bottom: 16px;
+  letter-spacing: 0.5px;
+  word-break: keep-all;
+  text-align: left;
 }
 
 table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 13px;
+  font-size: 14px;
 }
 th {
-  background: var(--bg);
-  padding: 14px;
+  background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+  color: var(--white);
+  padding: 16px 14px;
   text-align: left;
-  font-weight: 700;
-  color: var(--secondary);
-  border-bottom: 2px solid var(--light);
+  font-weight: 800;
+  border-bottom: 3px solid var(--danger);
+  letter-spacing: 0.5px;
 }
 td {
-  padding: 12px 14px;
-  border-bottom: 1px solid var(--light);
+  padding: 14px;
+  border-bottom: 2px solid var(--light);
   word-break: break-all;
+  text-align: left;
+  font-weight: 500;
 }
-tr:hover { background: var(--bg); }
+tr:hover { 
+  background: #f8f9fa;
+  transition: all 0.2s ease;
+}
 
 .masked {
   cursor: help;
@@ -247,11 +365,43 @@ tr:hover { background: var(--bg); }
   border-radius: 3px;
 }
 
+@media(max-width: 1200px) {
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .topbar .info { grid-template-columns: repeat(2, 1fr); }
+}
 @media(max-width: 768px) {
-  .topbar { flex-direction: column; gap: 15px; }
-  .topbar .info { flex-direction: column; width: 100%; }
-  table { font-size: 11px; }
-  th, td { padding: 8px; }
+  .topbar { 
+    grid-template-columns: 1fr;
+    gap: 16px;
+    padding: 18px;
+  }
+  .topbar h1 { 
+    font-size: 20px;
+    text-align: center;
+  }
+  .topbar .info { 
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  .topbar .info div { 
+    font-size: 12px;
+    padding: 12px 14px;
+    white-space: normal;
+  }
+  .topbar > div:last-child {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  .stats-grid { 
+    grid-template-columns: repeat(2, 1fr); 
+    gap: 12px;
+  }
+  .stat-number { font-size: 28px; }
+  .stat-label { font-size: 10px; }
+  table { font-size: 12px; }
+  th, td { padding: 10px; }
+  .section { padding: 20px; }
+  .section h2 { font-size: 16px; }
 }
 </style>
 </head>
@@ -268,10 +418,17 @@ tr:hover { background: var(--bg); }
 
   <div class="field">
     <label for="password">관리자 비밀번호 (숫자·특수문자 포함)</label>
-    <input type="password" id="password" placeholder="비밀번호 입력" onkeypress="if(event.key==='Enter') login()">
+    <input 
+      type="password" 
+      id="password" 
+      placeholder="비밀번호 입력" 
+      onkeypress="if(event.key==='Enter') login()"
+      oninput="validatePassword()"
+    >
+    <div id="passwordStatus" class="password-status"></div>
   </div>
 
-  <button class="login-btn" onclick="login()">🔓 로그인</button>
+  <button class="login-btn" id="loginBtn" onclick="login()" disabled>🔓 로그인</button>
   
   <div id="loginError" class="login-error"></div>
   <div id="loginSuccess" class="login-success"></div>
@@ -389,20 +546,46 @@ const SUPABASE_URL = 'https://grxqfaeznqqohnlltged.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_Sgv6BVPo1dOnVICcX1tfzA_gf7T5Z4I';
 const SESSION_TIMEOUT = 30 * 60 * 1000; // 30분
 
-let supabase;
+let supabaseClient;
 let isLoggedIn = false;
 let sessionTimer;
 let allVisits = [];
 let visitChart;
 
 function initSupabase() {
-  supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 }
 
 function maskEmail(email) {
   const [local, domain] = email.split('@');
   const masked = local.substring(0, 2) + '*'.repeat(local.length - 2) + '@' + domain;
   return masked;
+}
+
+function validatePassword() {
+  const pwd = document.getElementById('password').value;
+  const passwordInput = document.getElementById('password');
+  const statusEl = document.getElementById('passwordStatus');
+  const loginBtn = document.getElementById('loginBtn');
+  
+  if (pwd.length === 0) {
+    passwordInput.classList.remove('valid', 'invalid');
+    statusEl.classList.remove('show');
+    loginBtn.disabled = true;
+  } else if (pwd === ADMIN_PASSWORD) {
+    passwordInput.classList.remove('invalid');
+    passwordInput.classList.add('valid');
+    statusEl.classList.add('show', 'valid');
+    statusEl.innerHTML = '🟢 <strong>비밀번호 확인됨</strong> - 로그인 가능합니다.';
+    loginBtn.disabled = false;
+    document.getElementById('loginError').textContent = '';
+  } else {
+    passwordInput.classList.remove('valid');
+    passwordInput.classList.add('invalid');
+    statusEl.classList.add('show', 'invalid');
+    statusEl.innerHTML = '🔴 <strong>비밀번호 오류</strong> - 다시 확인해주세요.';
+    loginBtn.disabled = true;
+  }
 }
 
 function getClientIP() {
@@ -417,7 +600,7 @@ async function logAdminAccess(action) {
   
   try {
     const ip = await getClientIP();
-    await supabase.from('admin_access_logs').insert([{
+    await supabaseClient.from('admin_access_logs').insert([{
       admin: '임찬우 소장',
       action: action,
       ip_address: ip,
@@ -430,23 +613,26 @@ async function logAdminAccess(action) {
 
 function login() {
   const pwd = document.getElementById('password').value;
+  const errorEl = document.getElementById('loginError');
   
-  if (pwd === ADMIN_PASSWORD) {
-    isLoggedIn = true;
-    document.getElementById('loginScreen').style.display = 'none';
-    document.getElementById('dashboardScreen').style.display = 'block';
-    
-    initSupabase();
-    loadDashboard();
-    logAdminAccess('로그인');
-    
-    // 세션 타이머 시작
-    startSessionTimer();
-    setInterval(updateTime, 1000);
-  } else {
-    document.getElementById('loginError').textContent = '❌ 비밀번호가 올바르지 않습니다. 무단 접근 시도는 기록됩니다.';
+  if (pwd !== ADMIN_PASSWORD) {
+    errorEl.textContent = '❌ 비밀번호가 올바르지 않습니다. 무단 접근 시도는 기록됩니다.';
     logAdminAccess('로그인 실패 (잘못된 비밀번호)');
+    return;
   }
+  
+  // 비밀번호 정확 - 로그인 진행
+  isLoggedIn = true;
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('dashboardScreen').style.display = 'block';
+  
+  initSupabase();
+  loadDashboard();
+  logAdminAccess('로그인 성공');
+  
+  // 세션 타이머 시작
+  startSessionTimer();
+  setInterval(updateTime, 1000);
 }
 
 function logout() {
@@ -487,7 +673,7 @@ function updateTime() {
 async function loadDashboard() {
   try {
     // 방문 통계
-    const { data: visits } = await supabase
+    const { data: visits } = await supabaseClient
       .from('page_visits')
       .select('*')
       .order('created_at', { ascending: false })
@@ -533,7 +719,7 @@ async function loadDashboard() {
 
     // 접근 로그
     try {
-      const { data: logs } = await supabase
+      const { data: logs } = await supabaseClient
         .from('admin_access_logs')
         .select('*')
         .order('accessed_at', { ascending: false })
