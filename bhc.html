@@ -8,7 +8,7 @@
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body { background: linear-gradient(135deg, #667EEA 0%, #764BA2 100%); font-family: 'Segoe UI', 'Noto Sans KR', sans-serif; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
-.container { width: 100%; max-width: 680px; background: white; border-radius: 20px; padding: 30px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
+.container { width: 100%; max-width: 720px; background: white; border-radius: 20px; padding: 30px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
 .screen { display: none; }
 .screen.active { display: block; animation: slideIn 0.5s; }
 @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
@@ -17,7 +17,7 @@ body { background: linear-gradient(135deg, #667EEA 0%, #764BA2 100%); font-famil
 .brain-icon { font-size: 60px; margin-bottom: 20px; }
 h1 { color: #667EEA; font-size: 32px; margin-bottom: 10px; font-weight: 700; }
 .subtitle { color: #888; font-size: 14px; margin-bottom: 20px; }
-.info-box { background: #F5F5F5; border-left: 4px solid #667EEA; padding: 15px; border-radius: 8px; text-align: left; font-size: 14px; color: #555; margin-bottom: 20px; line-height: 1.8; }
+.info-box { background: #F5F5F5; border-left: 4px solid #667EEA; padding: 15px; border-radius: 8px; text-align: left; font-size: 13px; color: #555; margin-bottom: 20px; line-height: 1.8; }
 .btn { width: 100%; padding: 15px; border: none; border-radius: 10px; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.3s; margin-top: 15px; }
 .btn-primary { background: #667EEA; color: white; }
 .btn-primary:hover { background: #764BA2; transform: translateY(-2px); }
@@ -25,15 +25,15 @@ h1 { color: #667EEA; font-size: 32px; margin-bottom: 10px; font-weight: 700; }
 .test-screen { display: flex; flex-direction: column; min-height: 700px; }
 .progress-bar { width: 100%; height: 8px; background: #e0e0e0; border-radius: 10px; margin-bottom: 20px; overflow: hidden; }
 .progress-fill { height: 100%; background: linear-gradient(90deg, #667EEA, #764BA2); width: 0%; transition: width 0.5s; }
-.question-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+.question-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px; }
 .question-num { font-weight: 600; color: #667EEA; font-size: 16px; }
 .domain-badge { background: #667EEA; color: white; padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 600; }
-.timer { font-weight: 600; color: #FF6B6B; }
+.timer { font-weight: 600; color: #FF6B6B; font-size: 16px; }
 
 /* 문제 이미지 */
 .problem-image { 
   width: 100%; 
-  height: 280px; 
+  height: 300px; 
   background: linear-gradient(135deg, #f5f5f5, #e8e8e8); 
   border-radius: 15px; 
   display: flex; 
@@ -44,27 +44,30 @@ h1 { color: #667EEA; font-size: 32px; margin-bottom: 10px; font-weight: 700; }
   position: relative;
   overflow: hidden;
 }
-.problem-image svg { width: 90%; height: 90%; }
+.problem-image img { max-width: 95%; max-height: 95%; object-fit: contain; }
+.problem-image-placeholder { font-size: 14px; color: #999; text-align: center; padding: 20px; }
 
-/* 선택지 이미지 */
+/* 선택지 */
 .choices { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 25px; }
 .choice-card { 
   border: 2px solid #ddd; 
   border-radius: 10px; 
-  padding: 12px; 
+  padding: 15px; 
   cursor: pointer; 
   transition: all 0.3s; 
   text-align: center;
-  min-height: 120px;
+  min-height: 90px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  background: white;
+  font-weight: 600;
+  color: #333;
+  font-size: 13px;
 }
 .choice-card:hover { border-color: #667EEA; background: #F0F4FF; transform: scale(1.05); }
 .choice-card.selected { border-color: #667EEA; background: #E8EAFF; border-width: 3px; }
-.choice-image { font-size: 48px; margin-bottom: 8px; }
-.choice-label { font-size: 12px; font-weight: 600; color: #333; }
 
 .nav-buttons { display: flex; gap: 10px; margin-top: auto; }
 .btn-nav { flex: 1; padding: 12px; border: 2px solid #667EEA; background: white; color: #667EEA; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s; }
@@ -96,7 +99,8 @@ h1 { color: #667EEA; font-size: 32px; margin-bottom: 10px; font-weight: 700; }
     <h1>뇌건강체크 BHC 2.0</h1>
     <p class="subtitle">Brain Health Check - 임상 인지 검사</p>
     <div class="info-box">
-      <p>💡 8가지 인지 영역을 45개 임상 검사로 측정합니다.</p>
+      <p>💡 <strong>8가지 인지 영역</strong>을 45개 임상 검사로 측정합니다.</p>
+      <p style="margin-top: 10px;">✅ 기억 | 집중 | 감정 | 판단 | 실행 | 조절 | 공간 | 속도</p>
       <p style="margin-top: 10px;">⏱️ 소요 시간: 약 15~20분</p>
       <p style="margin-top: 10px;">📊 당신의 뇌 나이와 인지 강점을 알아보세요!</p>
     </div>
@@ -109,15 +113,15 @@ h1 { color: #667EEA; font-size: 32px; margin-bottom: 10px; font-weight: 700; }
     <div class="question-header">
       <span class="question-num" id="questionNum">문항 1/45</span>
       <span class="domain-badge" id="domainBadge">기억</span>
-      <span class="timer" id="timer">⏱ 10초</span>
+      <span class="timer" id="timer">⏱ 12초</span>
     </div>
     
     <!-- 문제 이미지 -->
     <div class="problem-image" id="problemImage">
-      <svg viewBox="0 0 400 280"></svg>
+      <div class="problem-image-placeholder">이미지 로딩 중...</div>
     </div>
 
-    <!-- 선택지 이미지 -->
+    <!-- 선택지 -->
     <div class="choices" id="choices"></div>
 
     <div class="nav-buttons">
@@ -144,84 +148,101 @@ h1 { color: #667EEA; font-size: 32px; margin-bottom: 10px; font-weight: 700; }
 </div>
 
 <script>
-// 45개 검사 문항 - 도메인별 다양한 유형
-const QUESTIONS = [
-  // 기억 (Memory) - 10개
-  { d: "기억", type: "diff", time: 10, choices: ["왼쪽 꽃 사라짐", "나비 위치 변경", "배경색 변경", "사람 표정 변경", "모두 같음"] },
-  { d: "기억", type: "diff", time: 10, choices: ["새 한 마리 추가", "나무 개수 변경", "하늘색 변경", "구름 사라짐", "모두 같음"] },
-  { d: "기억", type: "sequence", time: 12, choices: ["1-2-3-4-5", "1-3-2-5-4", "2-1-3-4-5", "1-2-4-3-5", "5-4-3-2-1"] },
-  { d: "기억", type: "recall", time: 10, choices: ["🍎", "🍊", "🍌", "🍇", "🍓"] },
-  { d: "기억", type: "diff", time: 10, choices: ["집 크기 변경", "문 위치 변경", "창문 개수 변경", "연기 방향 변경", "모두 같음"] },
-  { d: "기억", type: "recall", time: 12, choices: ["4개", "5개", "6개", "7개", "8개"] },
-  { d: "기억", type: "sequence", time: 10, choices: ["월→화→수→목→금", "월→수→금→토→일", "금→목→수→화→월", "월→수→목→토→일", "화→수→목→금→토"] },
-  { d: "기억", type: "diff", time: 10, choices: ["색상 변경", "크기 변경", "위치 변경", "개수 변경", "모두 같음"] },
-  { d: "기억", type: "pattern", time: 12, choices: ["2-4-6-8", "2-4-6-8-10", "2-3-5-8", "1-2-4-8", "3-6-9-12"] },
-  { d: "기억", type: "recall", time: 10, choices: ["15:30", "14:45", "16:15", "13:20", "17:00"] },
-  
-  // 집중 (Attention) - 10개
-  { d: "집중", type: "spot", time: 8, choices: ["좌상단", "우상단", "좌하단", "우하단", "중앙"] },
-  { d: "집중", type: "count", time: 8, choices: ["3개", "4개", "5개", "6개", "7개"] },
-  { d: "집중", type: "spot", time: 8, choices: ["①번", "②번", "③번", "④번", "⑤번"] },
-  { d: "집중", type: "detail", time: 8, choices: ["하나 다름", "둘 다름", "셋 다름", "모두 같음", "찾을 수 없음"] },
-  { d: "집중", type: "count", time: 8, choices: ["10개", "11개", "12개", "13개", "14개"] },
-  { d: "집중", type: "spot", time: 8, choices: ["빨강", "파랑", "초록", "노랑", "보라"] },
-  { d: "집중", type: "detail", time: 8, choices: ["1개 차이", "2개 차이", "3개 차이", "차이 없음", "4개 차이"] },
-  { d: "집중", type: "count", time: 8, choices: ["8개", "9개", "10개", "11개", "12개"] },
-  { d: "집중", type: "spot", time: 8, choices: ["①", "②", "③", "④", "⑤"] },
-  { d: "집중", type: "detail", time: 8, choices: ["다름", "다름", "다름", "다름", "모두 같음"] },
-  
-  // 감정 (Emotion) - 10개
-  { d: "감정", type: "emotion", time: 5, choices: ["매우 행복", "행복", "보통", "슬픔", "매우 슬픔"] },
-  { d: "감정", type: "emotion", time: 5, choices: ["매우 화남", "화남", "보통", "차분함", "매우 차분함"] },
-  { d: "감정", type: "emotion", time: 5, choices: ["놀람", "두려움", "혐오", "중립", "기쁨"] },
-  { d: "감정", type: "emotion", time: 5, choices: ["신뢰", "의심", "중립", "두려움", "분노"] },
-  { d: "감정", type: "emotion", time: 5, choices: ["기대함", "실망", "만족", "불안", "흥미"] },
-  { d: "감정", type: "emotion", time: 5, choices: ["사랑", "질린", "관심없음", "존경", "질투"] },
-  { d: "감정", type: "emotion", time: 5, choices: ["자신감", "자책", "자랑", "부끄러움", "절망"] },
-  { d: "감정", type: "emotion", time: 5, choices: ["공감", "무관심", "동정", "연민", "분노"] },
-  { d: "감정", type: "emotion", time: 5, choices: ["희망", "절망", "불안", "기대", "만족"] },
-  { d: "감정", type: "emotion", time: 5, choices: ["긍정", "부정", "중립", "주의", "기쁨"] },
-  
-  // 판단 (Judgment) - 10개
-  { d: "판단", type: "pattern", time: 10, choices: ["보라", "주황", "노랑", "분홍", "갈색"] },
-  { d: "판단", type: "logic", time: 10, choices: ["4개", "9개", "16개", "25개", "36개"] },
-  { d: "판단", type: "pattern", time: 10, choices: ["삼각형", "원", "정사각형", "육각형", "별"] },
-  { d: "판단", type: "logic", time: 10, choices: ["10초", "20초", "30초", "40초", "50초"] },
-  { d: "판단", type: "pattern", time: 10, choices: ["토", "일", "월", "화", "수"] },
-  { d: "판단", type: "rule", time: 10, choices: ["①", "②", "③", "④", "⑤"] },
-  { d: "판단", type: "logic", time: 10, choices: ["100", "81", "64", "49", "36"] },
-  { d: "판단", type: "pattern", time: 10, choices: ["G", "H", "I", "J", "K"] },
-  { d: "판단", type: "rule", time: 10, choices: ["맞음", "틀림", "불확실", "관련없음", "불가능"] },
-  { d: "판단", type: "logic", time: 10, choices: ["A", "B", "C", "D", "E"] },
-  
-  // 실행 (Execution) - 5개
-  { d: "실행", type: "sequence", time: 8, choices: ["①→②→③", "①→③→②", "②→①→③", "②→③→①", "③→②→①"] },
-  { d: "실행", type: "sequence", time: 8, choices: ["첫번째", "두번째", "세번째", "네번째", "다섯번째"] },
-  { d: "실행", type: "order", time: 8, choices: ["맞음", "틀림", "불확실", "가능", "불가능"] },
-  { d: "실행", type: "sequence", time: 8, choices: ["1번", "2번", "3번", "4번", "5번"] },
-  { d: "실행", type: "priority", time: 8, choices: ["①", "②", "③", "④", "⑤"] },
-  
-  // 조절 (Regulation) - 5개
-  { d: "조절", type: "classify", time: 7, choices: ["①", "②", "③", "④", "⑤"] },
-  { d: "조절", type: "match", time: 7, choices: ["①", "②", "③", "④", "⑤"] },
-  { d: "조절", type: "sort", time: 7, choices: ["작음→중간→큼", "큼→중간→작음", "중간→작음→큼", "작음→큼→중간", "중간→큼→작음"] },
-  { d: "조절", type: "group", time: 7, choices: ["①과②", "②와③", "①과③", "①②③", "없음"] },
-  { d: "조절", type: "select", time: 7, choices: ["①", "②", "③", "④", "⑤"] },
-  
-  // 공간 (Spatial) - 5개
-  { d: "공간", type: "rotation", time: 10, choices: ["①", "②", "③", "④", "⑤"] },
-  { d: "공간", type: "3d", time: 10, choices: ["①", "②", "③", "④", "⑤"] },
-  { d: "공간", type: "direction", time: 10, choices: ["북쪽", "동쪽", "남쪽", "서쪽", "중앙"] },
-  { d: "공간", type: "composition", time: 10, choices: ["①", "②", "③", "④", "⑤"] },
-  { d: "공간", type: "perspective", time: 10, choices: ["①", "②", "③", "④", "⑤"] }
-];
+// 45개 임상 검사 문항
+const QUESTIONS_DATA = {
+  "기억": [
+    { q: "아래 그림을 잘 보고 30초 후 질문에 답하세요. 그림에서 아이의 손에 들려있는 물건은?", img: "1000050359.png", choices: ["연필", "크레용", "지우개", "붓", "칠판지우개"], ans: 0, time: 12 },
+    { q: "프레젠테이션 순서를 맞게 배열하세요. (보기의 순서를 기억하시나요?)", img: "1000050351.png", choices: ["Mia→Ethan→Lily→You", "Ethan→Mia→You→Lily", "Lily→Mia→Ethan→You", "You→Ethan→Mia→Lily", "Mia→Lily→Ethan→You"], ans: 0, time: 12 },
+    { q: "선생님이 들고 있는 그림에 그려진 동물은?", img: "1000050378.png", choices: ["개", "고양이", "새", "토끼", "곰"], ans: 1, time: 12 },
+    { q: "아이가 쓰고 있는 옷 색은?", img: "1000050364.png", choices: ["빨강", "노랑", "초록", "파랑", "보라"], ans: 1, time: 12 },
+    { q: "책상 위에 있는 물건 중 몇 개가 있나요?", img: "1000050379.png", choices: ["2개", "3개", "4개", "5개", "6개"], ans: 2, time: 12 },
+    { q: "노트에 적힌 문장의 의미는?", img: "1000050379.png", choices: ["집 그리기", "나비 그리기", "꽃 그리기", "동물 그리기", "사람 그리기"], ans: 0, time: 12 },
+    { q: "교실에 붙어있는 세계지도는 어디에 있나요?", img: "1000050351.png", choices: ["왼쪽 벽", "오른쪽 벽", "위쪽 벽", "책장 옆", "칠판 옆"], ans: 1, time: 12 },
+    { q: "아이들이 하고 있는 활동은?", img: "1000050378.png", choices: ["공부", "그림 그리기", "책 읽기", "숙제", "이야기"], ans: 4, time: 12 },
+    { q: "여러 활동의 순서를 기억하시나요?", img: "1000050380.png", choices: ["시작→모양분류→완료", "시작→문제풀이→완료", "시작→그림그리기→완료", "시작→숫자세기→완료", "시작→색칠하기→완료"], ans: 0, time: 12 },
+    { q: "앞서 본 이미지에서 선생님이 말한 주제는?", img: "1000050351.png", choices: ["프레젠테이션", "그림 분석", "미술 활동", "숫자 학습", "언어 수업"], ans: 0, time: 12 }
+  ],
+  "집중": [
+    { q: "복잡한 그림에서 빨간색 블록을 찾으세요.", img: "1000050375.png", choices: ["좌상단", "우상단", "좌하단", "우하단", "중앙"], ans: 2, time: 10 },
+    { q: "도형을 올바르게 분류한 것은?", img: "1000050372.png", choices: ["모두 분류됨", "1개 남음", "2개 남음", "3개 남음", "분류 불가"], ans: 0, time: 10 },
+    { q: "동시에 여러 정보를 인식했나요?", img: "1000050373.png", choices: ["매우 잘함", "잘함", "보통", "어려움", "매우 어려움"], ans: 1, time: 10 },
+    { q: "그림의 차이를 찾으세요. 몇 개가 다른가요?", img: "1000050374.png", choices: ["1개", "2개", "3개", "차이 없음", "4개"], ans: 1, time: 10 },
+    { q: "주의를 빠르게 전환할 수 있나요?", img: "1000050381.png", choices: ["매우 빠름", "빠름", "보통", "느림", "매우 느림"], ans: 2, time: 10 }
+  ],
+  "감정": [
+    { q: "그림 속 아이의 표정은 어떤 감정인가요?", img: "1000050375.png", choices: ["매우 행복😍", "행복😊", "보통😐", "슬픔😟", "매우 슬픔😭"], ans: 1, time: 5 },
+    { q: "슬픈 표정을 인식하시나요?", img: "1000050382.png", choices: ["매우 행복", "행복", "보통", "슬픔", "매우 슬픔"], ans: 4, time: 5 },
+    { q: "화난 표정에서 느껴지는 정서는?", img: "1000050141.png", choices: ["행복", "분노", "두려움", "놀람", "혐오"], ans: 1, time: 5 },
+    { q: "스트레스 상황에서 어떻게 대처하실 건가요?", img: "1000050372.png", choices: ["무시하기", "깊게 호흡", "회피", "분노 표출", "포기"], ans: 1, time: 5 },
+    { q: "다른 아이의 감정에 공감할 수 있나요?", img: "1000050212.png", choices: ["매우 그렇다", "그렇다", "보통", "아니다", "전혀 아니다"], ans: 1, time: 5 }
+  ],
+  "판단": [
+    { q: "패턴을 인식하시나요?", img: "1000050372.png", choices: ["동그라미", "사각형", "삼각형", "규칙 있음", "규칙 없음"], ans: 3, time: 10 },
+    { q: "규칙을 적용할 수 있나요?", img: "1000050375.png", choices: ["맞음", "틀림", "불확실", "일부만 맞음", "알 수 없음"], ans: 0, time: 10 },
+    { q: "원인과 결과의 관계를 이해하나요?", img: "1000050381.png", choices: ["명확함", "대부분 명확", "보통", "불명확", "관계 없음"], ans: 0, time: 10 },
+    { q: "상황을 정확히 판단했나요?", img: "1000050378.png", choices: ["정확함", "대부분 정확", "보통", "부정확", "완전 다름"], ans: 1, time: 10 },
+    { q: "위험한 상황을 인식하나요?", img: "1000050373.png", choices: ["매우 위험", "위험", "보통", "안전", "매우 안전"], ans: 0, time: 10 }
+  ],
+  "실행": [
+    { q: "올바른 순서로 수행할 수 있나요?", img: "1000050351.png", choices: ["①→②→③", "①→③→②", "②→①→③", "②→③→①", "③→②→①"], ans: 0, time: 8 },
+    { q: "목표를 달성했나요?", img: "1000050380.png", choices: ["완전히 달성", "대부분 달성", "절반 달성", "거의 못함", "실패"], ans: 0, time: 8 },
+    { q: "과제를 완수했나요?", img: "1000050379.png", choices: ["완전히", "거의", "절반", "거의 못함", "전혀 못함"], ans: 0, time: 8 },
+    { q: "계획대로 실행했나요?", img: "1000050378.png", choices: ["완벽히", "거의", "보통", "거의 못함", "전혀 못함"], ans: 1, time: 8 },
+    { q: "어려운 과제를 극복했나요?", img: "1000050372.png", choices: ["매우 잘함", "잘함", "보통", "어려움", "포기함"], ans: 1, time: 8 }
+  ],
+  "조절": [
+    { q: "충동을 억제할 수 있나요?", img: "1000050141.png", choices: ["매우 잘함", "잘함", "보통", "어려움", "할 수 없음"], ans: 1, time: 7 },
+    { q: "규칙을 잘 따르나요?", img: "1000050375.png", choices: ["항상", "거의", "때때로", "거의 안함", "안함"], ans: 1, time: 7 },
+    { q: "감정을 조절할 수 있나요?", img: "1000050372.png", choices: ["매우 잘함", "잘함", "보통", "어려움", "할 수 없음"], ans: 1, time: 7 },
+    { q: "욕구를 지연할 수 있나요?", img: "1000050380.png", choices: ["항상", "거의", "때때로", "거의 안함", "안함"], ans: 1, time: 7 },
+    { q: "자기 통제력이 있나요?", img: "1000050373.png", choices: ["매우 높음", "높음", "보통", "낮음", "매우 낮음"], ans: 2, time: 7 }
+  ],
+  "공간": [
+    { q: "도형을 회전했을 때 어떻게 보일까요?", img: "1000050372.png", choices: ["①", "②", "③", "④", "⑤"], ans: 1, time: 10 },
+    { q: "공간 배치를 이해했나요?", img: "1000050351.png", choices: ["매우 잘함", "잘함", "보통", "어려움", "이해 못함"], ans: 1, time: 10 },
+    { q: "방향 감각이 있나요?", img: "1000050364.png", choices: ["북쪽", "동쪽", "남쪽", "서쪽", "중앙"], ans: 2, time: 10 },
+    { q: "거리를 정확히 추정했나요?", img: "1000050364.png", choices: ["매우 정확", "정확", "보통", "부정확", "완전 다름"], ans: 2, time: 10 },
+    { q: "3D 사고를 할 수 있나요?", img: "1000050364.png", choices: ["매우 잘함", "잘함", "보통", "어려움", "못함"], ans: 1, time: 10 }
+  ],
+  "속도": [
+    { q: "빨간색을 찾으세요!", img: "1000050372.png", choices: ["①", "②", "③", "④", "⑤"], ans: 0, time: 4 },
+    { q: "가장 큰 숫자는?", img: "1000050375.png", choices: ["1", "5", "3", "9", "7"], ans: 3, time: 4 },
+    { q: "★ 기호를 찾으세요!", img: "1000050381.png", choices: ["①", "②", "③", "④", "⑤"], ans: 2, time: 4 },
+    { q: "첫번째 보았던 그림은?", img: "1000050359.png", choices: ["맞음", "틀림", "불확실", "헷갈림", "모름"], ans: 0, time: 5 },
+    { q: "가장 빠르게 판단했나요?", img: "1000050373.png", choices: ["매우 빠름", "빠름", "보통", "느림", "매우 느림"], ans: 2, time: 5 },
+    { q: "숨겨진 그림을 찾으세요!", img: "1000050374.png", choices: ["①", "②", "③", "④", "⑤"], ans: 1, time: 4 },
+    { q: "연속되는 패턴을 찾으세요!", img: "1000050375.png", choices: ["①", "②", "③", "④", "⑤"], ans: 0, time: 4 },
+    { q: "다른 그림을 찾으세요!", img: "1000050373.png", choices: ["①", "②", "③", "④", "⑤"], ans: 2, time: 4 },
+    { q: "반대로 회전된 도형은?", img: "1000050372.png", choices: ["①", "②", "③", "④", "⑤"], ans: 1, time: 5 },
+    { q: "가장 빨리 응답했나요?", img: "1000050380.png", choices: ["매우 빠름", "빠름", "보통", "느림", "매우 느림"], ans: 1, time: 5 }
+  ]
+};
 
 const DOMAINS = ["기억", "집중", "감정", "판단", "실행", "조절", "공간", "속도"];
+let questionPool = [];
 let currentQ = 0;
 let answers = {};
-let timeoutId = null;
+let domainMap = {};
+
+// 문제 풀 생성
+function createQuestionPool() {
+  questionPool = [];
+  DOMAINS.forEach((domain, idx) => {
+    const questions = QUESTIONS_DATA[domain];
+    questions.forEach((q, qidx) => {
+      questionPool.push({
+        domain: domain,
+        domainIndex: idx,
+        qIndex: qidx,
+        ...q
+      });
+      domainMap[questionPool.length - 1] = domain;
+    });
+  });
+}
 
 function startTest() {
+  createQuestionPool();
   currentQ = 0;
   answers = {};
   showScreen("testScreen");
@@ -229,13 +250,17 @@ function startTest() {
 }
 
 function loadQuestion() {
-  const q = QUESTIONS[currentQ];
+  const q = questionPool[currentQ];
   const progress = ((currentQ + 1) / 45) * 100;
 
   document.getElementById("progressFill").style.width = progress + "%";
   document.getElementById("questionNum").textContent = `문항 ${currentQ + 1}/45`;
-  document.getElementById("domainBadge").textContent = q.d;
+  document.getElementById("domainBadge").textContent = q.domain;
   document.getElementById("timer").textContent = `⏱ ${q.time}초`;
+
+  // 문제 이미지 로드
+  const imgDiv = document.getElementById("problemImage");
+  imgDiv.innerHTML = `<img src="/assets/img/${q.img}" alt="문제이미지" onerror="this.parentElement.innerHTML='<div class=problem-image-placeholder>이미지를 불러올 수 없습니다</div>'">`;
 
   // 선택지 렌더링
   const choices = document.getElementById("choices");
@@ -244,31 +269,7 @@ function loadQuestion() {
     const card = document.createElement("div");
     card.className = "choice-card" + (answers[currentQ] === idx ? " selected" : "");
     card.onclick = () => selectAnswer(idx);
-    
-    // 이모지/아이콘으로 표현
-    const iconMap = {
-      "매우 행복": "😍", "행복": "😊", "보통": "😐", "슬픔": "😟", "매우 슬픔": "😭",
-      "매우 화남": "😠", "화남": "😡", "차분함": "😌", "매우 차분함": "🥰",
-      "놀람": "😲", "두려움": "😨", "혐오": "🤮", "중립": "😑", "기쁨": "😄",
-      "신뢰": "🤝", "의심": "🤔", "분노": "😤",
-      "기대함": "🤩", "실망": "😞", "만족": "😌", "불안": "😰", "흥미": "🤨",
-      "사랑": "😍", "질린": "😒", "존경": "🫡", "부끄러움": "😳", "절망": "😩",
-      "공감": "🫂", "동정": "💔", "분노": "😡", "연민": "🙏",
-      "희망": "🌈", "절망": "⛈️", "기대": "🎉", "만족": "✨",
-      "긍정": "👍", "부정": "👎",
-      "맞음": "✅", "틀림": "❌", "불확실": "❓", "관련없음": "〰️", "불가능": "🚫",
-      "가능": "🎯", "①": "1️⃣", "②": "2️⃣", "③": "3️⃣", "④": "4️⃣", "⑤": "5️⃣",
-      "①→②→③": "1→2→3", "①→③→②": "1→3→2", "②→①→③": "2→1→3", "②→③→①": "2→3→1", "③→②→①": "3→2→1",
-      "첫번째": "🥇", "두번째": "🥈", "세번째": "🥉", "네번째": "4️⃣", "다섯번째": "5️⃣",
-      "①과②": "1+2", "②와③": "2+3", "①과③": "1+3", "①②③": "1+2+3", "없음": "🚫",
-      "작음→중간→큼": "📈", "큼→중간→작음": "📉", "중간→작음→큼": "🔄", "작음→큼→중간": "⚡", "중간→큼→작음": "↩️",
-      "북쪽": "⬆️", "동쪽": "➡️", "남쪽": "⬇️", "서쪽": "⬅️", "중앙": "🎯",
-      "왼쪽 꽃 사라짐": "🌸❌", "나비 위치 변경": "🦋↔️", "배경색 변경": "🎨", "사람 표정 변경": "😊→😂", "모두 같음": "✓",
-      "새 한 마리 추가": "🐦➕", "나무 개수 변경": "🌳", "하늘색 변경": "🌌", "구름 사라짐": "☁️❌"
-    };
-    
-    const icon = iconMap[choice] || choice.charAt(0);
-    card.innerHTML = `<div class="choice-image">${icon}</div><div class="choice-label">${choice}</div>`;
+    card.textContent = choice;
     choices.appendChild(card);
   });
 
@@ -306,15 +307,15 @@ function calculateResults() {
   const scores = {};
   DOMAINS.forEach(d => { scores[d] = 0; });
   
-  QUESTIONS.forEach((q, i) => {
-    if (answers[i] !== undefined) {
-      scores[q.d]++;
+  questionPool.forEach((q, i) => {
+    if (answers[i] === q.ans) {
+      scores[q.domain]++;
     }
   });
 
   const avgScores = {};
   DOMAINS.forEach(d => {
-    const count = QUESTIONS.filter(q => q.d === d).length;
+    const count = questionPool.filter(q => q.domain === d).length;
     avgScores[d] = Math.round((scores[d] / count) * 100);
   });
 
@@ -334,7 +335,7 @@ function calculateResults() {
       labels: DOMAINS,
       datasets: [{ label: "점수", data: DOMAINS.map(d => avgScores[d]), borderColor: "#667EEA", backgroundColor: "rgba(102, 126, 234, 0.15)", borderWidth: 3, pointRadius: 5 }]
     },
-    options: { responsive: true, scales: { r: { min: 0, max: 100, ticks: { color: "#999" } } }, plugins: { legend: { display: false } } }
+    options: { responsive: true, scales: { r: { min: 0, max: 100 } }, plugins: { legend: { display: false } } }
   });
 }
 
@@ -346,7 +347,7 @@ function showScreen(id) {
 function goToTraining() { window.location.href = "/brain_training.html"; }
 function goHome() { window.location.href = "/"; }
 
-console.log("✅ BHC 2.0 임상 검사 시스템 로드 완료");
+console.log("✅ BHC 2.0 임상 검사 완성 로드됨");
 </script>
 
 </body>
