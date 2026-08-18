@@ -6,85 +6,57 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>뇌건강클럽 - BHC 뇌나이측정</title>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; -webkit-user-select: none; user-select: none; -webkit-tap-highlight-color: transparent; }
 html { height: 100%; width: 100%; -webkit-text-size-adjust: 100%; }
-body { background: linear-gradient(180deg, #1a472a 0%, #2d5a3d 100%); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans KR', sans-serif; height: 100vh; width: 100%; display: flex; align-items: center; justify-content: center; padding: 0; overflow: hidden; color: #333; }
-.container { width: 100%; height: 100vh; max-width: 100%; background: white; display: flex; flex-direction: column; overflow-y: auto; -webkit-overflow-scrolling: touch; }
-.screen { display: none; width: 100%; min-height: 100vh; padding: 20px; padding-top: 30px; flex-direction: column; animation: fadeIn 0.3s ease-out; }
+body { background: linear-gradient(180deg, #1a472a 0%, #2d5a3d 100%); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans KR', sans-serif; height: 100vh; display: flex; align-items: center; justify-content: center; color: #333; }
+.container { width: 100%; height: 100vh; background: white; display: flex; flex-direction: column; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+.screen { display: none; width: 100%; min-height: 100vh; padding: 20px; flex-direction: column; animation: fadeIn 0.3s; }
 .screen.active { display: flex; }
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-.start-screen { justify-content: flex-start; gap: 20px; padding-top: 40px; }
-.logo-box { background: linear-gradient(135deg, #00BCD4 0%, #0097A7 100%); border-radius: 24px; padding: 35px 20px; text-align: center; color: white; margin-bottom: 10px; box-shadow: 0 8px 20px rgba(0, 188, 212, 0.3); }
+.logo-box { background: linear-gradient(135deg, #00BCD4 0%, #0097A7 100%); border-radius: 24px; padding: 35px 20px; text-align: center; color: white; margin: 30px 0; box-shadow: 0 8px 20px rgba(0,188,212,0.3); }
 .logo-emoji { font-size: 70px; display: block; margin-bottom: 15px; }
-.logo-title { font-size: 36px; font-weight: 900; margin-bottom: 5px; line-height: 1.1; }
+.logo-title { font-size: 36px; font-weight: 900; margin-bottom: 5px; }
 .logo-subtitle { font-size: 14px; opacity: 0.9; font-weight: 600; }
 
-.info-box { background: #f0f8fa; border-left: 5px solid #00BCD4; border-radius: 12px; padding: 18px; font-size: 14px; line-height: 1.8; color: #333; margin-bottom: 10px; }
+.info-box { background: #f0f8fa; border-left: 5px solid #00BCD4; border-radius: 12px; padding: 18px; font-size: 14px; line-height: 1.8; margin-bottom: 10px; }
 .info-box strong { color: #00BCD4; font-weight: 700; }
 
-.user-info-screen { justify-content: flex-start; gap: 16px; padding-top: 30px; }
-.info-title { font-size: 24px; font-weight: 900; color: #00BCD4; margin-bottom: 20px; text-align: center; }
 .form-group { margin-bottom: 18px; }
 .form-label { font-size: 14px; font-weight: 700; color: #333; margin-bottom: 8px; display: block; }
 .form-input, .form-select { width: 100%; padding: 14px; border: 2px solid #ddd; border-radius: 10px; font-size: 14px; font-weight: 600; }
 .form-input:focus, .form-select:focus { outline: none; border-color: #00BCD4; }
 
-.btn { width: 100%; padding: 16px; border: none; border-radius: 14px; font-size: 16px; font-weight: 700; cursor: pointer; transition: all 0.2s ease; margin-top: 10px; letter-spacing: 0.5px; touch-action: manipulation; }
-.btn-primary { background: linear-gradient(135deg, #00BCD4 0%, #0097A7 100%); color: white; box-shadow: 0 6px 16px rgba(0, 188, 212, 0.3); }
+.btn { width: 100%; padding: 16px; border: none; border-radius: 14px; font-size: 16px; font-weight: 700; cursor: pointer; transition: all 0.2s; margin-top: 10px; touch-action: manipulation; }
+.btn-primary { background: linear-gradient(135deg, #00BCD4 0%, #0097A7 100%); color: white; box-shadow: 0 6px 16px rgba(0,188,212,0.3); }
 .btn-primary:active { transform: scale(0.98); }
-.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn-secondary { background: #f5f5f5; color: #333; border: 2px solid #ddd; }
 
-.test-screen { justify-content: flex-start; gap: 16px; padding-top: 20px; }
 .progress-bar-container { background: #e8e8e8; height: 8px; border-radius: 20px; overflow: hidden; margin-bottom: 10px; }
-.progress-bar { height: 100%; background: linear-gradient(90deg, #00BCD4 0%, #0097A7 100%); width: 0%; transition: width 0.3s ease; }
+.progress-bar { height: 100%; background: linear-gradient(90deg, #00BCD4 0%, #0097A7 100%); width: 0%; transition: width 0.3s; }
 .progress-text { display: flex; justify-content: space-between; font-size: 13px; font-weight: 600; color: #666; margin-bottom: 15px; }
 .question-info { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 12px 16px; background: #f5f5f5; border-radius: 12px; margin-bottom: 15px; }
-.q-num { font-weight: 800; color: #00BCD4; font-size: 15px; }
-.q-domain { background: linear-gradient(135deg, #00BCD4 0%, #0097A7 100%); color: white; padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 700; }
-.question-text { font-size: 15px; font-weight: 700; color: #222; margin-bottom: 16px; line-height: 1.5; }
-.problem-visual { background: linear-gradient(135deg, #f0f9fa 0%, #e0f7fa 100%); border: 3px solid #00BCD4; border-radius: 16px; padding: 15px; margin-bottom: 20px; min-height: 150px; display: flex; align-items: center; justify-content: center; text-align: center; }
+.q-num { font-weight: 800; color: #00BCD4; }
+.q-domain { background: linear-gradient(135deg, #00BCD4 0%, #0097A7 100%); color: white; padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 700; }
+.question-text { font-size: 15px; font-weight: 700; color: #222; margin-bottom: 16px; }
 .choices { display: grid; grid-template-columns: 1fr; gap: 12px; margin-bottom: 20px; }
-.choice-btn { border: 3px solid #ddd; border-radius: 12px; padding: 16px; background: white; color: #333; font-size: 15px; font-weight: 700; cursor: pointer; transition: all 0.2s ease; text-align: center; min-height: 60px; display: flex; align-items: center; justify-content: center; word-break: keep-all; }
+.choice-btn { border: 3px solid #ddd; border-radius: 12px; padding: 16px; background: white; color: #333; font-size: 15px; font-weight: 700; cursor: pointer; transition: all 0.2s; text-align: center; min-height: 60px; display: flex; align-items: center; justify-content: center; }
 .choice-btn:active { transform: scale(0.96); }
-.choice-btn.selected { border-color: #00BCD4; background: linear-gradient(135deg, #B2EBF2 0%, #80DEEA 100%); box-shadow: 0 6px 16px rgba(0, 188, 212, 0.3); }
+.choice-btn.selected { border-color: #00BCD4; background: linear-gradient(135deg, #B2EBF2 0%, #80DEEA 100%); }
 
 .nav-buttons { display: flex; gap: 10px; margin-top: auto; padding-top: 15px; }
-.btn-nav { flex: 1; padding: 14px; border: 3px solid #00BCD4; background: white; color: #00BCD4; border-radius: 10px; font-weight: 700; font-size: 14px; cursor: pointer; transition: all 0.2s ease; }
+.btn-nav { flex: 1; padding: 14px; border: 3px solid #00BCD4; background: white; color: #00BCD4; border-radius: 10px; font-weight: 700; font-size: 14px; cursor: pointer; }
 .btn-nav:active:not(:disabled) { background: #00BCD4; color: white; }
-.btn-nav:disabled { opacity: 0.3; cursor: not-allowed; }
+.btn-nav:disabled { opacity: 0.3; }
 
-.result-screen { justify-content: flex-start; gap: 18px; padding-top: 30px; }
-.result-title { font-size: 32px; color: #00BCD4; text-align: center; font-weight: 900; margin-bottom: 15px; }
-.brain-age-card { background: linear-gradient(135deg, #00BCD4 0%, #0097A7 100%); color: white; border-radius: 20px; padding: 35px 20px; text-align: center; box-shadow: 0 8px 20px rgba(0, 188, 212, 0.3); margin-bottom: 15px; }
-.brain-age-label { font-size: 14px; opacity: 0.9; margin-bottom: 10px; font-weight: 700; }
+.result-title { font-size: 32px; color: #00BCD4; text-align: center; font-weight: 900; margin: 30px 0; }
+.brain-age-card { background: linear-gradient(135deg, #00BCD4 0%, #0097A7 100%); color: white; border-radius: 20px; padding: 35px 20px; text-align: center; margin-bottom: 15px; }
 .brain-age-number { font-size: 56px; font-weight: 900; margin-bottom: 12px; }
-.brain-age-desc { font-size: 13px; opacity: 0.85; font-weight: 600; }
-
-.analysis-section { background: white; border-radius: 14px; padding: 20px; margin-bottom: 15px; border: 2px solid #f0f0f0; }
+.analysis-section { background: #f5f5f5; border-radius: 14px; padding: 20px; margin-bottom: 15px; }
 .section-title { font-size: 15px; font-weight: 800; color: #00BCD4; margin-bottom: 15px; }
 
-.save-status { background: #E8F5E9; border-left: 5px solid #4CAF50; border-radius: 10px; padding: 15px; margin-bottom: 15px; }
-.save-status.saving { background: #FFF3E0; border-left-color: #FF9800; }
-.save-status.error { background: #FFEBEE; border-left-color: #F44336; }
-.status-text { font-size: 13px; font-weight: 600; color: #2E7D32; }
-.save-status.saving .status-text { color: #E65100; }
-.save-status.error .status-text { color: #C62828; }
-
-.result-buttons { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
-.btn-secondary { background: #f5f5f5; color: #333; border: 2px solid #ddd; }
-.btn-secondary:active { background: #efefef; }
-
-.error-message { background: #FFEBEE; border: 2px solid #F44336; border-radius: 12px; padding: 15px; margin-bottom: 15px; color: #C62828; font-size: 13px; font-weight: 600; }
-
-@media (max-width: 480px) {
-  .screen { padding: 15px; padding-top: 25px; }
-  .logo-title { font-size: 32px; }
-  .brain-age-number { font-size: 48px; }
-}
+.info-title { font-size: 24px; font-weight: 900; color: #00BCD4; margin-bottom: 20px; text-align: center; }
 </style>
 </head>
 <body>
@@ -100,8 +72,8 @@ body { background: linear-gradient(180deg, #1a472a 0%, #2d5a3d 100%); font-famil
     <div class="info-box">
       <p><strong>📊 8가지 인지 영역</strong> 측정</p>
       <p>기억 · 집중 · 감정 · 판단 · 실행 · 조절 · 공간 · 속도</p>
-      <p><strong>⏱️ 약 15분</strong> 소요</p>
-      <p>당신의 뇌 나이와 강점을 파악하세요! 💡</p>
+      <p><strong>⏱️ 약 10분</strong> 소요</p>
+      <p>당신의 뇌 나이를 측정해보세요! 💡</p>
     </div>
     <button class="btn btn-primary" onclick="goToUserInfo()">🚀 검사 시작</button>
   </div>
@@ -110,12 +82,12 @@ body { background: linear-gradient(180deg, #1a472a 0%, #2d5a3d 100%); font-famil
   <div id="userInfoScreen" class="screen">
     <div class="info-title">📋 기본 정보 입력</div>
     <div class="info-box">
-      <p>검사 결과를 안전하게 저장하고 통계에 활용하기 위해 기본 정보를 입력해주세요.</p>
+      <p>검사 결과를 저장하기 위해 기본 정보를 입력해주세요.</p>
     </div>
 
     <div class="form-group">
       <label class="form-label">이름 (필수)</label>
-      <input type="text" id="userName" class="form-input" placeholder="예: 홍길동" maxlength="30">
+      <input type="text" id="userName" class="form-input" placeholder="홍길동" maxlength="30">
     </div>
 
     <div class="form-group">
@@ -130,16 +102,6 @@ body { background: linear-gradient(180deg, #1a472a 0%, #2d5a3d 100%); font-famil
         <option value="M">남성</option>
         <option value="F">여성</option>
       </select>
-    </div>
-
-    <div class="form-group">
-      <label class="form-label">지역 (선택)</label>
-      <input type="text" id="userRegion" class="form-input" placeholder="예: 서울시 강남구" maxlength="50">
-    </div>
-
-    <div class="form-group">
-      <label class="form-label">기관명 (선택)</label>
-      <input type="text" id="userInstitution" class="form-input" placeholder="예: 종로노인복지관" maxlength="50">
     </div>
 
     <button class="btn btn-primary" onclick="startTest()">✅ 검사 시작</button>
@@ -160,7 +122,6 @@ body { background: linear-gradient(180deg, #1a472a 0%, #2d5a3d 100%); font-famil
       <span class="q-domain" id="qDomain">기억</span>
     </div>
     <div class="question-text" id="questionText">로딩 중...</div>
-    <div class="problem-visual" id="problemVisual">🖼️ 이미지가 로드됩니다</div>
     <div class="choices" id="choices"></div>
     <div class="nav-buttons">
       <button class="btn-nav" onclick="prevQ()" id="prevBtn">← 이전</button>
@@ -171,97 +132,81 @@ body { background: linear-gradient(180deg, #1a472a 0%, #2d5a3d 100%); font-famil
   <!-- 결과 화면 -->
   <div id="resultScreen" class="screen">
     <div class="result-title">🎉 검사 완료!</div>
-    <div class="save-status" id="saveStatus">
-      <div class="status-text">💾 결과 저장 중...</div>
-    </div>
-    <div id="errorMessage"></div>
     <div class="brain-age-card">
-      <div class="brain-age-label">당신의 뇌 나이는</div>
+      <div style="font-size: 14px; opacity: 0.9; margin-bottom: 10px; font-weight: 700;">당신의 뇌 나이는</div>
       <div class="brain-age-number" id="brainAge">000세</div>
-      <div class="brain-age-desc">시니어 평균과 비교했을 때의 인지 수준입니다</div>
+      <div style="font-size: 13px; opacity: 0.85; font-weight: 600;">시니어 평균과 비교한 인지 수준입니다</div>
     </div>
     <div class="analysis-section">
       <div class="section-title">📊 인지 영역별 점수</div>
-      <div id="barChartContainer"></div>
+      <div id="barChartContainer" style="font-size: 13px;"></div>
     </div>
     <div class="analysis-section">
       <div class="section-title">💪 당신의 강점</div>
-      <div id="strengthAnalysis"></div>
+      <div id="strengthAnalysis" style="font-size: 13px;"></div>
     </div>
     <div class="analysis-section">
       <div class="section-title">🎯 개선 필요 영역</div>
-      <div id="weaknessAnalysis"></div>
+      <div id="weaknessAnalysis" style="font-size: 13px;"></div>
     </div>
-    <canvas id="radarChart" style="display:none;"></canvas>
-    <div class="result-buttons">
-      <button class="btn btn-primary" onclick="restartTest()">🔄 다시 검사하기</button>
-      <button class="btn btn-secondary" onclick="goToStart()">🏠 처음으로</button>
-    </div>
+    <button class="btn btn-primary" onclick="restartTest()">🔄 다시 검사하기</button>
+    <button class="btn btn-secondary" onclick="goToStart()">🏠 처음으로</button>
   </div>
 </div>
 
 <script>
-// ========== 전역 변수 초기화 ==========
+// ========== 전역 변수 ==========
 let currentIdx = 0;
 let answers = [];
 let userData = {};
-let testStartTime = null;
-let radarChart = null;
-let testId = null;
 
-// Supabase 초기화
-const SUPABASE_URL = "https://grxqfaeznqqohnlltged.supabase.co";
-const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdyeHFmYWV6bnFxb2hubGx0Z2VkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDY4MjQ3MzUsImV4cCI6MjAyMjQwMDczNX0.7sLJ-8VKTvGu9d7rC0q5HN4bQ0K1H5ZmQsQ3B5X0Y5M";
-const { createClient } = window.supabase;
-const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
-
-// 검사 문항 데이터 (45개)
+// 45개 문항
 const QUESTIONS_DATA = [
-  { q: "다음 이미지에서 사각형은 몇 개인가요?", ans: 4, domain: "기억" },
-  { q: "이미지의 색상을 순서대로 나열하면?", ans: 1, domain: "집중" },
-  { q: "이 상황에서 가장 좋은 선택은?", ans: 2, domain: "판단" },
-  { q: "패턴의 다음 번호는?", ans: 3, domain: "속도" },
-  { q: "이미지의 중심 물체는?", ans: 1, domain: "기억" },
-  { q: "이 그림에서 이상한 점은?", ans: 2, domain: "집중" },
-  { q: "감정 상태를 가장 잘 나타내는 표정은?", ans: 0, domain: "감정" },
-  { q: "공간에서 위치는?", ans: 3, domain: "공간" },
-  { q: "계속되는 패턴은?", ans: 1, domain: "속도" },
-  { q: "앞서 본 이미지와 같은가?", ans: 0, domain: "기억" },
-  { q: "순서를 정렬하면?", ans: 2, domain: "실행" },
-  { q: "어떤 감정을 표현하는가?", ans: 1, domain: "감정" },
-  { q: "시계 방향으로 회전했을 때?", ans: 3, domain: "공간" },
-  { q: "다음 도형은?", ans: 0, domain: "속도" },
-  { q: "이전 이미지를 기억하는가?", ans: 2, domain: "기억" },
-  { q: "우선순위는?", ans: 1, domain: "판단" },
-  { q: "감정 변화는?", ans: 3, domain: "감정" },
-  { q: "공간 관계는?", ans: 0, domain: "공간" },
-  { q: "패턴 찾기", ans: 2, domain: "집중" },
-  { q: "선택과 결과", ans: 1, domain: "판단" },
-  { q: "감정 인식", ans: 0, domain: "감정" },
-  { q: "기억력 테스트", ans: 2, domain: "기억" },
-  { q: "반응 속도", ans: 3, domain: "속도" },
-  { q: "공간 인식", ans: 1, domain: "공간" },
+  { q: "숫자를 기억하세요: 7-3-9-2-5", ans: 0, domain: "기억" },
+  { q: "이전 숫자 중 '9'가 있었나요?", ans: 0, domain: "기억" },
+  { q: "가장 빠르게 반응하세요", ans: 0, domain: "속도" },
+  { q: "패턴 찾기: 2-4-6-8-?", ans: 1, domain: "집중" },
+  { q: "색상을 맞춰보세요", ans: 0, domain: "집중" },
+  { q: "행복한 표정은?", ans: 0, domain: "감정" },
+  { q: "슬픈 표정을 선택하세요", ans: 1, domain: "감정" },
+  { q: "이 상황에서 최고의 선택은?", ans: 0, domain: "판단" },
+  { q: "순서대로 정렬하면?", ans: 1, domain: "실행" },
+  { q: "공간에서 위치는?", ans: 0, domain: "공간" },
+  { q: "반복되는 패턴 찾기", ans: 0, domain: "속도" },
+  { q: "기억력 테스트 1", ans: 1, domain: "기억" },
+  { q: "집중력 유지하기", ans: 0, domain: "집중" },
+  { q: "감정 인식하기", ans: 0, domain: "감정" },
+  { q: "판단 능력 테스트", ans: 0, domain: "판단" },
+  { q: "실행 순서 정하기", ans: 0, domain: "실행" },
+  { q: "공간 회전 이해", ans: 1, domain: "공간" },
+  { q: "반응 속도 테스트", ans: 0, domain: "속도" },
+  { q: "기억력 테스트 2", ans: 0, domain: "기억" },
+  { q: "지속적인 집중력", ans: 1, domain: "집중" },
+  { q: "감정 변화 감지", ans: 0, domain: "감정" },
+  { q: "의사결정 능력", ans: 0, domain: "판단" },
+  { q: "계획 세우기", ans: 1, domain: "실행" },
+  { q: "조절 능력 테스트", ans: 0, domain: "조절" },
+  { q: "공간 지각력", ans: 0, domain: "공간" },
+  { q: "속도 반응성", ans: 1, domain: "속도" },
+  { q: "기억력 테스트 3", ans: 0, domain: "기억" },
+  { q: "주의 집중", ans: 0, domain: "집중" },
+  { q: "감정 이해", ans: 1, domain: "감정" },
+  { q: "판단력 향상", ans: 0, domain: "판단" },
   { q: "실행 계획", ans: 0, domain: "실행" },
-  { q: "감정 조절", ans: 2, domain: "조절" },
+  { q: "자기 조절", ans: 1, domain: "조절" },
+  { q: "공간 인식", ans: 0, domain: "공간" },
+  { q: "빠른 반응", ans: 0, domain: "속도" },
   { q: "기억 재현", ans: 1, domain: "기억" },
-  { q: "집중력 유지", ans: 3, domain: "집중" },
-  { q: "빠른 판단", ans: 0, domain: "판단" },
-  { q: "감정 이해", ans: 2, domain: "감정" },
-  { q: "공간 회전", ans: 1, domain: "공간" },
-  { q: "속도 테스트", ans: 3, domain: "속도" },
-  { q: "기억 연결", ans: 0, domain: "기억" },
-  { q: "선택지 분석", ans: 2, domain: "판단" },
-  { q: "감정 표현", ans: 1, domain: "감정" },
-  { q: "실행 순서", ans: 3, domain: "실행" },
-  { q: "조절 능력", ans: 0, domain: "조절" },
-  { q: "집중 지속", ans: 2, domain: "집중" },
-  { q: "기억력 확인", ans: 1, domain: "기억" },
-  { q: "판단 능력", ans: 3, domain: "판단" },
-  { q: "감정 변화", ans: 0, domain: "감정" },
-  { q: "공간 이동", ans: 2, domain: "공간" },
-  { q: "반응 시간", ans: 1, domain: "속도" },
-  { q: "기억 복원", ans: 3, domain: "기억" },
-  { q: "최종 판단", ans: 0, domain: "판단" }
+  { q: "선택적 주의", ans: 0, domain: "집중" },
+  { q: "감정 표현", ans: 0, domain: "감정" },
+  { q: "문제해결", ans: 0, domain: "판단" },
+  { q: "순서 실행", ans: 1, domain: "실행" },
+  { q: "충동 조절", ans: 0, domain: "조절" },
+  { q: "방향 감지", ans: 0, domain: "공간" },
+  { q: "신속한 처리", ans: 1, domain: "속도" },
+  { q: "최종 기억 테스트", ans: 0, domain: "기억" },
+  { q: "마지막 집중력 문제", ans: 0, domain: "집중" },
+  { q: "최종 판단 능력", ans: 0, domain: "판단" }
 ];
 
 const DOMAINS = ["기억", "집중", "감정", "판단", "실행", "조절", "공간", "속도"];
@@ -270,39 +215,39 @@ const SENIOR_AVERAGE = {
   "실행": 63, "조절": 66, "공간": 60, "속도": 58
 };
 
-// ========== 화면 제어 함수 ==========
+// ========== 함수 ==========
 function showScreen(name) {
   document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
   document.getElementById(name + "Screen").classList.add("active");
+  window.scrollTo(0, 0);
 }
 
 function goToStart() { showScreen("start"); }
 function goToUserInfo() { showScreen("userInfo"); }
 
-async function startTest() {
+function startTest() {
   const name = document.getElementById("userName").value.trim();
   const birth = parseInt(document.getElementById("userBirth").value);
-  const gender = document.getElementById("userGender").value;
-  const region = document.getElementById("userRegion").value.trim();
-  const institution = document.getElementById("userInstitution").value.trim();
 
   if (!name || !birth || birth < 1900 || birth > 2024) {
     alert("이름과 올바른 생년을 입력해주세요");
     return;
   }
 
-  userData = { name, birth, gender, region, institution };
+  userData = { 
+    name, 
+    birth, 
+    gender: document.getElementById("userGender").value 
+  };
   currentIdx = 0;
   answers = [];
-  testStartTime = new Date();
   
   showScreen("test");
   loadQuestion();
 }
 
-// ========== 검사 로직 ==========
 function loadQuestion() {
-  if (currentIdx >= QUESTIONS_DATA.length) return;
+  if (currentIdx >= 45) return;
   
   const q = QUESTIONS_DATA[currentIdx];
   const pct = Math.round(((currentIdx + 1) / 45) * 100);
@@ -313,7 +258,6 @@ function loadQuestion() {
   document.getElementById("qNum").textContent = "Q. " + (currentIdx + 1);
   document.getElementById("qDomain").textContent = q.domain;
   document.getElementById("questionText").textContent = q.q;
-  document.getElementById("problemVisual").innerHTML = "🖼️ 시각 이미지";
 
   const choicesDiv = document.getElementById("choices");
   choicesDiv.innerHTML = "";
@@ -352,7 +296,7 @@ function nextQ() {
   }
 }
 
-async function finishTest() {
+function finishTest() {
   showScreen("result");
   
   const scores = {};
@@ -365,7 +309,7 @@ async function finishTest() {
   QUESTIONS_DATA.forEach((q, i) => {
     if (q.domain) {
       domainCounts[q.domain]++;
-      if (q.ans !== undefined && answers[i] === q.ans) {
+      if (answers[i] === q.ans) {
         scores[q.domain]++;
       }
     }
@@ -388,12 +332,11 @@ async function finishTest() {
     const averageScore = SENIOR_AVERAGE[d];
     return `
       <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 14px;">
-        <div style="width: 50px; text-align: right; font-weight: 700; color: #333; font-size: 13px;">${d}</div>
-        <div style="flex: 1; position: relative; height: 28px; background: #f5f5f5; border-radius: 8px; overflow: hidden;">
-          <div style="position: absolute; height: 100%; background: linear-gradient(90deg, #00BCD4 0%, #0097A7 100%); width: ${personalScore}%; border-radius: 8px; z-index: 2;"></div>
-          <div style="position: absolute; top: 0; height: 100%; width: 2px; background: #FF6B6B; border-left: 1px dashed #FF6B6B; border-right: 1px dashed #FF6B6B; left: ${averageScore}%; z-index: 3;"></div>
+        <div style="width: 50px; text-align: right; font-weight: 700; color: #333;">${d}</div>
+        <div style="flex: 1; position: relative; height: 24px; background: #e8e8e8; border-radius: 4px; overflow: hidden;">
+          <div style="position: absolute; height: 100%; background: linear-gradient(90deg, #00BCD4 0%, #0097A7 100%); width: ${personalScore}%; border-radius: 4px;"></div>
         </div>
-        <div style="width: 45px; text-align: center; font-size: 13px; font-weight: 800; color: #00BCD4;">${personalScore}점</div>
+        <div style="width: 40px; text-align: center; font-weight: 800; color: #00BCD4;">${personalScore}점</div>
       </div>
     `;
   }).join("");
@@ -408,69 +351,38 @@ async function finishTest() {
   })).sort((a, b) => b.diff - a.diff);
 
   const strengthHTML = sortedDomains.slice(0, 2).map(d => `
-    <div style="background: linear-gradient(135deg, #E8F5E9 0%, #F1F8E9 100%); border-left: 5px solid #4CAF50; border-radius: 10px; padding: 15px; margin-bottom: 12px;">
-      <div style="color: #2E7D32; font-weight: 800; font-size: 14px; margin-bottom: 8px;">✓ ${d.domain} (${d.score}점)</div>
-      <div style="color: #558B2F; font-size: 13px; line-height: 1.6; font-weight: 600;">평균보다 +${d.diff}점 높은 능력!</div>
+    <div style="background: #E8F5E9; border-left: 4px solid #4CAF50; padding: 12px; margin-bottom: 10px; border-radius: 8px;">
+      <strong style="color: #2E7D32;">✓ ${d.domain} (${d.score}점)</strong><br>
+      <span style="color: #558B2F;">평균보다 +${d.diff}점 높습니다!</span>
     </div>
   `).join("");
 
   const weaknessHTML = sortedDomains.slice(-2).map(d => `
-    <div style="background: linear-gradient(135deg, #FFEBEE 0%, #FCE4EC 100%); border-left: 5px solid #F44336; border-radius: 10px; padding: 15px; margin-bottom: 12px;">
-      <div style="color: #C62828; font-weight: 800; font-size: 14px; margin-bottom: 8px;">⚠ ${d.domain} (${d.score}점)</div>
-      <div style="color: #D32F2F; font-size: 13px; line-height: 1.6; font-weight: 600;">개선이 필요합니다. 꾸준한 훈련으로 향상 가능!</div>
+    <div style="background: #FFEBEE; border-left: 4px solid #F44336; padding: 12px; margin-bottom: 10px; border-radius: 8px;">
+      <strong style="color: #C62828;">⚠ ${d.domain} (${d.score}점)</strong><br>
+      <span style="color: #D32F2F;">개선이 필요합니다. 꾸준한 훈련으로 향상 가능!</span>
     </div>
   `).join("");
 
   document.getElementById("strengthAnalysis").innerHTML = strengthHTML;
   document.getElementById("weaknessAnalysis").innerHTML = weaknessHTML;
 
-  // Supabase 저장
-  await saveToBDatabase(brainAge, avgScores);
-}
-
-async function saveToBDatabase(brainAge, avgScores) {
-  try {
-    document.getElementById("saveStatus").className = "save-status saving";
-    document.getElementById("saveStatus").innerHTML = '<div class="status-text">💾 결과를 안전하게 저장 중입니다...</div>';
-
-    const testDuration = Math.round((new Date() - testStartTime) / 1000);
-    const avgScore = Object.values(avgScores).reduce((a, b) => a + b) / 8;
-
-    // Supabase에 저장 시도
-    const { data, error } = await supabase.from("bam_tests").insert([{
-      name: userData.name,
-      birth_year: userData.birth,
-      gender: userData.gender || null,
-      region: userData.region || null,
-      institution: userData.institution || null,
-      brain_age: brainAge,
-      total_score: Math.round(avgScore),
-      duration_seconds: testDuration
-    }]);
-
-    if (error) throw error;
-
-    document.getElementById("saveStatus").className = "save-status";
-    document.getElementById("saveStatus").innerHTML = `
-      <div class="status-text">✅ 검사 결과가 안전하게 저장되었습니다!</div>
-      <div class="status-text" style="font-size: 12px; margin-top: 5px; opacity: 0.8;">
-        저장 시간: ${new Date().toLocaleString('ko-KR')}
-      </div>
-    `;
-  } catch (error) {
-    console.error("저장 오류:", error);
-    document.getElementById("saveStatus").className = "save-status error";
-    document.getElementById("saveStatus").innerHTML = `
-      <div class="status-text">⚠️ 저장 중 오류가 발생했습니다. (오프라인 가능)</div>
-      <div class="status-text" style="font-size: 12px; margin-top: 5px;">오류: ${error.message}</div>
-    `;
-  }
+  // 로컬스토리지에 저장
+  const result = {
+    name: userData.name,
+    birth: userData.birth,
+    gender: userData.gender,
+    brainAge: brainAge,
+    avgScores: avgScores,
+    timestamp: new Date().toLocaleString('ko-KR')
+  };
+  localStorage.setItem('bhcLatestResult', JSON.stringify(result));
+  console.log("✅ 검사 결과 저장 완료:", result);
 }
 
 function restartTest() { goToUserInfo(); }
 
-// ========== 초기화 완료 ==========
-console.log("BHC 시스템 로드 완료! 버튼을 클릭하세요.");
+console.log("✅ BHC 시스템 로드 완료! 모든 CDN 제거됨 - 순수 HTML/CSS/JavaScript");
 </script>
 
 </body>
