@@ -164,6 +164,18 @@ body { background: linear-gradient(180deg, #1a472a 0%, #2d5a3d 100%); font-famil
       <div class="brain-age-desc">시니어 평균과 비교한 인지 건강 수준입니다</div>
     </div>
 
+    <div style="background: linear-gradient(135deg, #E8F5E9 0%, #F1F8E9 100%); border-left: 6px solid #4CAF50; border-radius: 16px; padding: 24px; margin-bottom: 24px; display: flex; justify-content: space-around; align-items: center;">
+      <div style="text-align: center;">
+        <div style="font-size: 14px; font-weight: 800; color: #2E7D32; margin-bottom: 8px;">실제 나이</div>
+        <div style="font-size: 48px; font-weight: 900; color: #2E7D32;" id="realAge">만 00세</div>
+      </div>
+      <div style="width: 2px; height: 60px; background: #4CAF50; opacity: 0.3;"></div>
+      <div style="text-align: center;">
+        <div style="font-size: 14px; font-weight: 800; color: #1a1a1a; margin-bottom: 8px;">생년월일</div>
+        <div style="font-size: 16px; font-weight: 700; color: #333;" id="birthInfo">1962년 12월 31일</div>
+      </div>
+    </div>
+
     <div class="analysis-card">
       <div class="card-title">📊 인지 영역별 점수</div>
       <div id="barChartContainer"></div>
@@ -398,7 +410,18 @@ function finishTest() {
   let brainAge = 100 - Math.round(avg * 0.35);
   brainAge = Math.max(5, Math.min(100, brainAge));
 
+  // 뇌나이 표시
   document.getElementById("brainAge").textContent = brainAge + "세";
+  
+  // 실제 나이 표시
+  document.getElementById("realAge").textContent = "만 " + userData.age + "세";
+  
+  // 생년월일 포맷 변환
+  if (userData.birth) {
+    const [year, month, day] = userData.birth.split('-');
+    const formattedBirth = year + "년 " + month + "월 " + day + "일";
+    document.getElementById("birthInfo").textContent = formattedBirth;
+  }
 
   // 막대 그래프
   const barChartHTML = DOMAINS.map(d => {
