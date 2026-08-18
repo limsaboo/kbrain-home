@@ -1,485 +1,749 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>뇌건강클럽 - BHC 뇌나이측정</title>
-<style>
-* { margin: 0; padding: 0; box-sizing: border-box; -webkit-user-select: none; user-select: none; -webkit-tap-highlight-color: transparent; }
-html { height: 100%; width: 100%; -webkit-text-size-adjust: 100%; }
-body { background: linear-gradient(180deg, #1a472a 0%, #2d5a3d 100%); font-family: 'Segoe UI', 'Noto Sans KR', -apple-system, sans-serif; height: 100vh; display: flex; align-items: center; justify-content: center; color: #1a1a1a; }
-.container { width: 100%; height: 100vh; background: #fafafa; display: flex; flex-direction: column; overflow-y: auto; -webkit-overflow-scrolling: touch; }
-.screen { display: none; width: 100%; min-height: 100vh; padding: 24px; flex-direction: column; animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
-.screen.active { display: flex; }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BHC 2.0 - 뇌 건강 체크 시스템</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-.header-bar { background: linear-gradient(135deg, #00BCD4 0%, #0097A7 100%); border-radius: 20px; padding: 40px 24px; text-align: center; color: white; margin-bottom: 32px; box-shadow: 0 12px 32px rgba(0,188,212,0.2); }
-.header-emoji { font-size: 80px; display: block; margin-bottom: 12px; }
-.header-title { font-size: 40px; font-weight: 900; margin-bottom: 8px; letter-spacing: -0.5px; }
-.header-subtitle { font-size: 16px; opacity: 0.9; font-weight: 600; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(180deg, #1a472a 0%, #2d5a3d 100%);
+      color: #333;
+      min-height: 100vh;
+      padding: 16px;
+    }
 
-.info-card { background: linear-gradient(135deg, #E8F5E9 0%, #F1F8E9 100%); border-left: 6px solid #4CAF50; border-radius: 16px; padding: 24px; font-size: 15px; line-height: 1.8; margin-bottom: 20px; }
-.info-card strong { color: #2E7D32; font-weight: 800; }
-.info-card p { margin-bottom: 10px; color: #333; }
-.info-card p:last-child { margin-bottom: 0; }
+    .container {
+      max-width: 500px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 24px;
+      box-shadow: 0 20px 60px rgba(0, 188, 212, 0.15);
+      overflow: hidden;
+    }
 
-.form-group { margin-bottom: 20px; }
-.form-label { font-size: 15px; font-weight: 800; color: #1a1a1a; margin-bottom: 10px; display: block; }
-.form-input, .form-select { width: 100%; padding: 16px 18px; border: 2px solid #e0e0e0; border-radius: 12px; font-size: 15px; font-weight: 600; background: white; transition: all 0.3s; }
-.form-input:focus, .form-select:focus { outline: none; border-color: #00BCD4; box-shadow: 0 0 0 3px rgba(0,188,212,0.1); background: white; }
+    .screen {
+      display: none;
+      padding: 32px 24px;
+      min-height: 600px;
+      animation: slideIn 0.3s ease-out;
+    }
 
-.btn { width: 100%; padding: 18px; border: none; border-radius: 14px; font-size: 17px; font-weight: 800; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); margin-top: 12px; letter-spacing: 0.5px; touch-action: manipulation; }
-.btn-primary { background: linear-gradient(135deg, #00BCD4 0%, #0097A7 100%); color: white; box-shadow: 0 8px 20px rgba(0,188,212,0.3); }
-.btn-primary:active { transform: scale(0.96); box-shadow: 0 4px 10px rgba(0,188,212,0.2); }
-.btn-secondary { background: white; color: #00BCD4; border: 3px solid #00BCD4; font-weight: 800; }
+    .screen.active {
+      display: block;
+    }
 
-.progress-container { margin-bottom: 28px; }
-.progress-bar-outer { background: #e0e0e0; height: 10px; border-radius: 20px; overflow: hidden; margin-bottom: 14px; }
-.progress-bar-inner { height: 100%; background: linear-gradient(90deg, #00BCD4 0%, #0097A7 100%); width: 0%; transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
-.progress-text { display: flex; justify-content: space-between; font-size: 14px; font-weight: 700; color: #00BCD4; }
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
 
-.q-header { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 16px 20px; background: linear-gradient(135deg, #f0f9fa 0%, #e0f7fa 100%); border-radius: 14px; margin-bottom: 24px; border-left: 5px solid #00BCD4; }
-.q-num { font-weight: 900; color: #00BCD4; font-size: 18px; }
-.q-domain { background: linear-gradient(135deg, #00BCD4 0%, #0097A7 100%); color: white; padding: 8px 16px; border-radius: 20px; font-size: 13px; font-weight: 800; }
+    /* 시작 화면 */
+    .header-title {
+      text-align: center;
+      margin-bottom: 32px;
+    }
 
-.stimulus-box { background: linear-gradient(135deg, #f5f5f5 0%, #efefef 100%); border: 2px solid #e0e0e0; border-radius: 20px; padding: 20px; margin-bottom: 24px; display: flex; align-items: center; justify-content: center; min-height: 200px; box-shadow: inset 0 2px 8px rgba(0,0,0,0.05); }
-.stimulus-image { max-width: 100%; max-height: 180px; width: auto; height: auto; object-fit: contain; }
+    .header-title h1 {
+      font-size: 36px;
+      font-weight: 900;
+      color: #00BCD4;
+      margin-bottom: 8px;
+    }
 
-.question-text { font-size: 17px; font-weight: 800; color: #1a1a1a; margin-bottom: 20px; line-height: 1.6; }
+    .header-title p {
+      font-size: 14px;
+      color: #666;
+      font-weight: 600;
+    }
 
-.choices-grid { display: grid; grid-template-columns: 1fr; gap: 14px; margin-bottom: 24px; }
-.choice-btn { border: 3px solid #e0e0e0; border-radius: 16px; padding: 16px; background: white; color: #333; font-size: 15px; font-weight: 700; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); text-align: center; min-height: 100px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; }
-.choice-image { max-width: 70px; max-height: 70px; width: auto; height: auto; object-fit: contain; }
-.choice-btn:active { transform: scale(0.96); }
-.choice-btn.selected { border-color: #00BCD4; background: linear-gradient(135deg, #E0F7FA 0%, #B2EBF2 100%); box-shadow: 0 8px 20px rgba(0,188,212,0.25); }
+    .input-group {
+      margin-bottom: 20px;
+    }
 
-.nav-buttons { display: flex; gap: 12px; margin-top: auto; padding-top: 20px; }
-.btn-nav { flex: 1; padding: 16px; border: 3px solid #00BCD4; background: white; color: #00BCD4; border-radius: 12px; font-weight: 800; font-size: 15px; cursor: pointer; transition: all 0.3s; }
-.btn-nav:active:not(:disabled) { background: #00BCD4; color: white; box-shadow: 0 6px 16px rgba(0,188,212,0.3); }
-.btn-nav:disabled { opacity: 0.3; cursor: not-allowed; }
+    .input-group label {
+      display: block;
+      font-size: 14px;
+      font-weight: 800;
+      color: #00BCD4;
+      margin-bottom: 8px;
+    }
 
-.result-title { font-size: 36px; color: #00BCD4; text-align: center; font-weight: 900; margin: 32px 0; }
-.brain-age-card { background: linear-gradient(135deg, #00BCD4 0%, #0097A7 100%); color: white; border-radius: 20px; padding: 40px 24px; text-align: center; margin-bottom: 24px; box-shadow: 0 12px 32px rgba(0,188,212,0.2); }
-.brain-age-label { font-size: 16px; opacity: 0.9; margin-bottom: 12px; font-weight: 800; }
-.brain-age-number { font-size: 64px; font-weight: 900; margin-bottom: 12px; }
-.brain-age-desc { font-size: 14px; opacity: 0.85; font-weight: 600; }
+    .input-group input,
+    .input-group select {
+      width: 100%;
+      padding: 14px 16px;
+      border: 2px solid #00BCD4;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 700;
+      color: #333;
+    }
 
-.analysis-card { background: white; border-radius: 16px; padding: 24px; margin-bottom: 20px; border: 2px solid #f0f0f0; }
-.card-title { font-size: 16px; font-weight: 900; color: #00BCD4; margin-bottom: 18px; display: flex; align-items: center; gap: 8px; }
+    .input-group input::placeholder {
+      color: #999;
+    }
 
-.info-title { font-size: 28px; font-weight: 900; color: #00BCD4; margin-bottom: 24px; text-align: center; }
-</style>
+    .info-box {
+      background: linear-gradient(135deg, #E0F7FA 0%, #B2EBF2 100%);
+      border-left: 6px solid #00BCD4;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 24px;
+      font-size: 13px;
+      color: #00695C;
+      font-weight: 600;
+      line-height: 1.6;
+    }
+
+    /* 문제 화면 */
+    .progress-bar {
+      width: 100%;
+      height: 6px;
+      background: #E0E0E0;
+      border-radius: 3px;
+      margin-bottom: 24px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #00BCD4 0%, #00897B 100%);
+      transition: width 0.3s ease;
+    }
+
+    .question-header {
+      background: linear-gradient(135deg, #E0F7FA 0%, #B2EBF2 100%);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 24px;
+      text-align: center;
+    }
+
+    .question-header .question-num {
+      font-size: 12px;
+      font-weight: 800;
+      color: #00695C;
+      margin-bottom: 8px;
+    }
+
+    .question-header .domain-tag {
+      display: inline-block;
+      background: #00BCD4;
+      color: white;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .stimulus-container {
+      width: 100%;
+      height: 280px;
+      border: 3px solid #00BCD4;
+      border-radius: 16px;
+      overflow: hidden;
+      margin-bottom: 24px;
+      background: #f5f5f5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .stimulus-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+    }
+
+    .question-text {
+      font-size: 16px;
+      font-weight: 800;
+      color: #00695C;
+      text-align: center;
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+
+    .choices {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .choice-btn {
+      aspect-ratio: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border: 3px solid #DDD;
+      border-radius: 12px;
+      background: white;
+      cursor: pointer;
+      transition: all 0.2s;
+      padding: 12px;
+    }
+
+    .choice-btn:hover {
+      border-color: #00BCD4;
+      transform: scale(1.05);
+    }
+
+    .choice-btn.selected {
+      border-color: #00BCD4;
+      background: linear-gradient(135deg, #E0F7FA 0%, #B2EBF2 100%);
+      box-shadow: 0 8px 16px rgba(0, 188, 212, 0.2);
+    }
+
+    .choice-img {
+      width: 70%;
+      height: 70%;
+      object-fit: contain;
+      margin-bottom: 4px;
+    }
+
+    .choice-text {
+      font-size: 11px;
+      font-weight: 700;
+      color: #333;
+      text-align: center;
+      word-break: keep-all;
+    }
+
+    /* 결과 화면 */
+    .result-hero {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .result-title {
+      font-size: 32px;
+      font-weight: 900;
+      color: #00BCD4;
+      margin-bottom: 8px;
+    }
+
+    .result-subtitle {
+      font-size: 14px;
+      color: #666;
+      font-weight: 600;
+    }
+
+    .brain-age-card {
+      background: linear-gradient(135deg, #00BCD4 0%, #0097A7 100%);
+      color: white;
+      border-radius: 20px;
+      padding: 40px 24px;
+      text-align: center;
+      margin-bottom: 24px;
+      box-shadow: 0 12px 32px rgba(0, 188, 212, 0.2);
+    }
+
+    .brain-age-label {
+      font-size: 14px;
+      opacity: 0.9;
+      margin-bottom: 8px;
+      font-weight: 800;
+    }
+
+    .brain-age-number {
+      font-size: 64px;
+      font-weight: 900;
+      margin-bottom: 12px;
+    }
+
+    .brain-age-desc {
+      font-size: 13px;
+      opacity: 0.85;
+      font-weight: 600;
+    }
+
+    .real-age-box {
+      background: linear-gradient(135deg, #E8F5E9 0%, #F1F8E9 100%);
+      border-left: 6px solid #4CAF50;
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 24px;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+    }
+
+    .age-item {
+      text-align: center;
+    }
+
+    .age-label {
+      font-size: 12px;
+      font-weight: 800;
+      color: #2E7D32;
+      margin-bottom: 8px;
+    }
+
+    .age-value {
+      font-size: 48px;
+      font-weight: 900;
+      color: #2E7D32;
+    }
+
+    .separator {
+      width: 2px;
+      height: 60px;
+      background: #4CAF50;
+      opacity: 0.3;
+    }
+
+    .birth-value {
+      font-size: 16px;
+      font-weight: 700;
+      color: #333;
+    }
+
+    .analysis-card {
+      background: #f9f9f9;
+      border: 2px solid #E0E0E0;
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .card-title {
+      font-size: 16px;
+      font-weight: 900;
+      color: #00BCD4;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 3px solid #00BCD4;
+    }
+
+    .domain-bar {
+      display: flex;
+      align-items: center;
+      margin-bottom: 12px;
+      gap: 12px;
+    }
+
+    .domain-name {
+      font-size: 13px;
+      font-weight: 800;
+      color: #333;
+      min-width: 80px;
+    }
+
+    .bar-container {
+      flex: 1;
+      height: 24px;
+      background: #E0E0E0;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #00BCD4 0%, #00897B 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 800;
+      color: white;
+    }
+
+    .strength-item,
+    .weakness-item {
+      padding: 12px 0;
+      border-bottom: 1px solid #E0E0E0;
+      font-size: 13px;
+      font-weight: 700;
+      color: #333;
+    }
+
+    .strength-item:before {
+      content: "✓ ";
+      color: #4CAF50;
+      font-weight: 900;
+    }
+
+    .weakness-item:before {
+      content: "⚠ ";
+      color: #FF9800;
+      font-weight: 900;
+    }
+
+    /* 버튼 */
+    .btn {
+      width: 100%;
+      padding: 16px;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-bottom: 12px;
+      text-align: center;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #00BCD4 0%, #00897B 100%);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 24px rgba(0, 188, 212, 0.3);
+    }
+
+    .btn-secondary {
+      background: #f5f5f5;
+      color: #333;
+      border: 2px solid #E0E0E0;
+    }
+
+    .btn-secondary:hover {
+      background: #E0E0E0;
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  </style>
 </head>
 <body>
+  <div class="container">
+    <!-- 시작 화면 -->
+    <div id="startScreen" class="screen active">
+      <div class="header-title">
+        <h1>BHC</h1>
+        <p>뇌 건강 체크 시스템</p>
+      </div>
 
-<div class="container">
-  <!-- 시작 화면 -->
-  <div id="startScreen" class="screen active">
-    <div class="header-bar">
-      <span class="header-emoji">🧠</span>
-      <div class="header-title">뇌건강클럽</div>
-      <div class="header-subtitle">Brain Age Measurement (BAM) 2.0</div>
+      <div class="info-box">
+        이 검사는 당신의 인지 건강 수준을 체계적으로 분석합니다. 8가지 영역에서 45개의 문항을 통해 뇌의 여러 능력을 측정합니다.
+      </div>
+
+      <div class="input-group">
+        <label>이름</label>
+        <input type="text" id="userName" placeholder="이름을 입력하세요">
+      </div>
+
+      <div class="input-group">
+        <label>생년월일</label>
+        <input type="date" id="userBirth" required>
+      </div>
+
+      <div class="input-group">
+        <label>성별</label>
+        <select id="userGender">
+          <option value="">선택하세요</option>
+          <option value="M">남성</option>
+          <option value="F">여성</option>
+        </select>
+      </div>
+
+      <button class="btn btn-primary" onclick="startTest()">검사 시작</button>
     </div>
-    <div class="info-card">
-      <p><strong>📊 8가지 인지 영역 측정</strong></p>
-      <p>기억 · 집중 · 감정 · 판단 · 실행 · 조절 · 공간 · 속도</p>
-      <p><strong>⏱️ 약 10분 소요</strong></p>
-      <p>그림을 보고 직관적으로 반응하세요. 당신의 뇌 나이를 알아보세요! 💡</p>
+
+    <!-- 문제 화면 -->
+    <div id="questionScreen" class="screen">
+      <div class="progress-bar">
+        <div class="progress-fill" id="progressBar"></div>
+      </div>
+
+      <div class="question-header">
+        <div class="question-num" id="questionNum">Q. 1 / 45</div>
+        <div class="domain-tag" id="domainTag">기억</div>
+      </div>
+
+      <div class="stimulus-container">
+        <img id="stimulusImg" class="stimulus-image" alt="자극 이미지">
+      </div>
+
+      <div class="question-text" id="questionText">질문이 여기 표시됩니다</div>
+
+      <div class="choices" id="choicesContainer"></div>
+
+      <button class="btn btn-primary" onclick="nextQuestion()" id="nextBtn" disabled>다음</button>
     </div>
-    <button class="btn btn-primary" onclick="goToUserInfo()">🚀 검사 시작하기</button>
+
+    <!-- 결과 화면 -->
+    <div id="resultScreen" class="screen">
+      <div class="result-hero">
+        <div class="result-title">검사 완료</div>
+        <div class="result-subtitle">당신의 뇌 건강 분석 결과입니다</div>
+      </div>
+
+      <div class="brain-age-card">
+        <div class="brain-age-label">당신의 뇌 나이는</div>
+        <div class="brain-age-number" id="brainAge">00세</div>
+        <div class="brain-age-desc">시니어 평균과 비교한 인지 건강 수준입니다</div>
+      </div>
+
+      <div class="real-age-box">
+        <div class="age-item">
+          <div class="age-label">실제 나이</div>
+          <div class="age-value" id="realAge">만 00세</div>
+        </div>
+        <div class="separator"></div>
+        <div class="age-item">
+          <div class="age-label">생년월일</div>
+          <div class="birth-value" id="birthInfo">YYYY년 MM월 DD일</div>
+        </div>
+      </div>
+
+      <div class="analysis-card">
+        <div class="card-title">인지 영역별 점수</div>
+        <div id="barChartContainer"></div>
+      </div>
+
+      <div class="analysis-card">
+        <div class="card-title">당신의 강점</div>
+        <div id="strengthAnalysis"></div>
+      </div>
+
+      <div class="analysis-card">
+        <div class="card-title">개선 필요 영역</div>
+        <div id="weaknessAnalysis"></div>
+      </div>
+
+      <button class="btn btn-primary" onclick="restartTest()" style="margin-bottom: 12px;">다시 검사하기</button>
+      <button class="btn btn-secondary" onclick="goToStart()">처음으로</button>
+    </div>
   </div>
 
-  <!-- 사용자 정보 입력 -->
-  <div id="userInfoScreen" class="screen">
-    <div class="info-title">📋 기본 정보 입력</div>
-    <div class="info-card">
-      <p>검사 결과를 안전하게 저장하고 분석하기 위해 기본 정보를 입력해주세요.</p>
-    </div>
+  <script>
+    // ========== 전역 변수 ==========
+    let currentIdx = 0;
+    let answers = [];
+    let userData = {};
 
-    <div class="form-group">
-      <label class="form-label">이름 (필수)</label>
-      <input type="text" id="userName" class="form-input" placeholder="홍길동" maxlength="30">
-    </div>
+    // 8개 인지 영역
+    const DOMAINS = ['기억', '속도', '집중', '감정', '판단', '실행', '조절', '공간'];
 
-    <div class="form-group">
-      <label class="form-label">생년월일 (필수)</label>
-      <input type="date" id="userBirth" class="form-input" required>
-    </div>
+    // 이미지 기본 경로
+    const IMG_BASE = 'https://k-brain.co.kr/assets/img/bhc-brain-cards/';
 
-    <div class="form-group">
-      <label class="form-label">성별</label>
-      <select id="userGender" class="form-select">
-        <option value="">선택하세요</option>
-        <option value="M">남성</option>
-        <option value="F">여성</option>
-      </select>
-    </div>
+    // ========== 45개 문항 데이터 ==========
+    const QUESTIONS_DATA = [
+      // 기억 (6문항) - 좌뇌 언어력 L1
+      { stimulus: IMG_BASE + '좌뇌군언어력L1-1카드_copy_707x1060.jpg', q: '이 이미지를 기억하세요', choices: [{img: IMG_BASE + '좌뇌군언어력L1-1카드_copy_707x1060.jpg', text: '정확'}, {img: IMG_BASE + '좌뇌군언어력L1-2카드_copy_707x1060.jpg', text: '다름'}, {img: IMG_BASE + '좌뇌군언어력L1-3카드_copy_707x1060.jpg', text: '비슷'}, {img: IMG_BASE + '좌뇌군언어력L1-4카드_copy_707x1060.jpg', text: '다름'}], ans: 0, domain: '기억' },
+      { stimulus: IMG_BASE + '좌뇌군언어력L1-2카드_copy_707x1060.jpg', q: '이전에 본 이미지와 같은가요?', choices: [{img: IMG_BASE + '좌뇌군언어력L1-1카드_copy_707x1060.jpg', text: '다름'}, {img: IMG_BASE + '좌뇌군언어력L1-2카드_copy_707x1060.jpg', text: '같음'}, {img: IMG_BASE + '좌뇌군언어력L1-3카드_copy_707x1060.jpg', text: '비슷'}, {img: IMG_BASE + '좌뇌군언어력L1-4카드_copy_707x1060.jpg', text: '다름'}], ans: 1, domain: '기억' },
+      { stimulus: IMG_BASE + '좌뇌군언어력L1-3카드_copy_707x1060.jpg', q: '어떤 이미지를 먼저 봤나요?', choices: [{img: IMG_BASE + '좌뇌군언어력L1-1카드_copy_707x1060.jpg', text: '첫번째'}, {img: IMG_BASE + '좌뇌군언어력L1-2카드_copy_707x1060.jpg', text: '두번째'}, {img: IMG_BASE + '좌뇌군언어력L1-3카드_copy_707x1060.jpg', text: '세번째'}, {img: IMG_BASE + '좌뇌군언어력L1-4카드_copy_707x1060.jpg', text: '네번째'}], ans: 2, domain: '기억' },
+      { stimulus: IMG_BASE + '좌뇌군언어력L1-4카드_copy_707x1060.jpg', q: '보인 이미지의 순서는?', choices: [{img: IMG_BASE + '좌뇌군언어력L1-1카드_copy_707x1060.jpg', text: '①'}, {img: IMG_BASE + '좌뇌군언어력L1-2카드_copy_707x1060.jpg', text: '②'}, {img: IMG_BASE + '좌뇌군언어력L1-3카드_copy_707x1060.jpg', text: '③'}, {img: IMG_BASE + '좌뇌군언어력L1-4카드_copy_707x1060.jpg', text: '④'}], ans: 3, domain: '기억' },
+      { stimulus: IMG_BASE + '좌뇌군이해력L2-1_copy_707x1060.jpg', q: '어느 이미지가 맞나요?', choices: [{img: IMG_BASE + '좌뇌군이해력L2-1_copy_707x1060.jpg', text: '정확'}, {img: IMG_BASE + '좌뇌군이해력L2-2_copy_707x1060.jpg', text: '다름'}, {img: IMG_BASE + '좌뇌군이해력L2-3_copy_707x1060.jpg', text: '다름'}, {img: IMG_BASE + '좌뇌군이해력L2-4_copy_707x1060.jpg', text: '다름'}], ans: 0, domain: '기억' },
+      { stimulus: IMG_BASE + '좌뇌군이해력L2-2_copy_707x1060.jpg', q: '기억하신 이미지는?', choices: [{img: IMG_BASE + '좌뇌군이해력L2-1_copy_707x1060.jpg', text: '①'}, {img: IMG_BASE + '좌뇌군이해력L2-2_copy_707x1060.jpg', text: '②'}, {img: IMG_BASE + '좌뇌군이해력L2-3_copy_707x1060.jpg', text: '③'}, {img: IMG_BASE + '좌뇌군이해력L2-4_copy_707x1060.jpg', text: '④'}], ans: 1, domain: '기억' },
 
-    <button class="btn btn-primary" onclick="startTest()">✅ 검사 시작</button>
-    <button class="btn btn-secondary" onclick="goToStart()">← 뒤로</button>
-  </div>
+      // 속도 (6문항) - 좌뇌 추리력 L4
+      { stimulus: IMG_BASE + '좌뇌군추리력L4-1_copy_256x384.png', q: '가장 빨리 선택하세요', choices: [{img: IMG_BASE + '좌뇌군추리력L4-1_copy_256x384.png', text: '①'}, {img: IMG_BASE + '좌뇌군추리력L4-2_copy_256x384.png', text: '②'}, {img: IMG_BASE + '좌뇌군추리력L4-3_copy_256x384.png', text: '③'}, {img: IMG_BASE + '우뇌주의력 R2 상.png', text: '④'}], ans: 0, domain: '속도' },
+      { stimulus: IMG_BASE + '좌뇌군추리력L4-2_copy_256x384.png', q: '빠르게 고르세요', choices: [{img: IMG_BASE + '좌뇌군추리력L4-1_copy_256x384.png', text: '①'}, {img: IMG_BASE + '좌뇌군추리력L4-2_copy_256x384.png', text: '②'}, {img: IMG_BASE + '좌뇌군추리력L4-3_copy_256x384.png', text: '③'}, {img: IMG_BASE + '우뇌주의력 R2 상.png', text: '④'}], ans: 1, domain: '속도' },
+      { stimulus: IMG_BASE + '좌뇌군추리력L4-3_copy_256x384.png', q: '신속하게 선택하세요', choices: [{img: IMG_BASE + '좌뇌군추리력L4-1_copy_256x384.png', text: '①'}, {img: IMG_BASE + '좌뇌군추리력L4-2_copy_256x384.png', text: '②'}, {img: IMG_BASE + '좌뇌군추리력L4-3_copy_256x384.png', text: '③'}, {img: IMG_BASE + '우뇌주의력 R2 상.png', text: '④'}], ans: 2, domain: '속도' },
+      { stimulus: IMG_BASE + '우뇌주의력 R2 상.png', q: '빠르게 판단하세요', choices: [{img: IMG_BASE + '좌뇌군추리력L4-1_copy_256x384.png', text: '①'}, {img: IMG_BASE + '좌뇌군추리력L4-2_copy_256x384.png', text: '②'}, {img: IMG_BASE + '좌뇌군추리력L4-3_copy_256x384.png', text: '③'}, {img: IMG_BASE + '우뇌주의력 R2 상.png', text: '④'}], ans: 3, domain: '속도' },
+      { stimulus: IMG_BASE + '우뇌주의력 R2 중.png', q: '즉각적으로 선택하세요', choices: [{img: IMG_BASE + '좌뇌군추리력L4-1_copy_256x384.png', text: '①'}, {img: IMG_BASE + '좌뇌군추리력L4-2_copy_256x384.png', text: '②'}, {img: IMG_BASE + '좌뇌군추리력L4-3_copy_256x384.png', text: '③'}, {img: IMG_BASE + '우뇌주의력 R2 중.png', text: '④'}], ans: 3, domain: '속도' },
+      { stimulus: IMG_BASE + '우뇌주의력 R2 하.png', q: '순발력으로 고르세요', choices: [{img: IMG_BASE + '좌뇌군추리력L4-1_copy_256x384.png', text: '①'}, {img: IMG_BASE + '좌뇌군추리력L4-2_copy_256x384.png', text: '②'}, {img: IMG_BASE + '좌뇌군추리력L4-3_copy_256x384.png', text: '③'}, {img: IMG_BASE + '우뇌주의력 R2 하.png', text: '④'}], ans: 3, domain: '속도' },
 
-  <!-- 검사 화면 -->
-  <div id="testScreen" class="screen">
-    <div class="progress-container">
-      <div class="progress-bar-outer">
-        <div class="progress-bar-inner" id="progressBar"></div>
-      </div>
-      <div class="progress-text">
-        <span id="progressNum">1/45</span>
-        <span id="progressPct">2%</span>
-      </div>
-    </div>
+      // 집중 (6문항) - 우뇌 집중력 R2
+      { stimulus: IMG_BASE + '우뇌집중력 R2 상.png', q: '세심하게 관찰하세요', choices: [{img: IMG_BASE + '우뇌집중력 R2 상.png', text: '정확'}, {img: IMG_BASE + '우뇌집중력 R2 중.png', text: '다름'}, {img: IMG_BASE + '우뇌집중력 R2 하.png', text: '다름'}, {img: IMG_BASE + '우뇌주의력 R3 상.png', text: '다름'}], ans: 0, domain: '집중' },
+      { stimulus: IMG_BASE + '우뇌집중력 R2 중.png', q: '집중해서 보세요', choices: [{img: IMG_BASE + '우뇌집중력 R2 상.png', text: '①'}, {img: IMG_BASE + '우뇌집중력 R2 중.png', text: '②'}, {img: IMG_BASE + '우뇌집중력 R2 하.png', text: '③'}, {img: IMG_BASE + '우뇌주의력 R3 상.png', text: '④'}], ans: 1, domain: '집중' },
+      { stimulus: IMG_BASE + '우뇌집중력 R2 하.png', q: '주의깊게 관찰하세요', choices: [{img: IMG_BASE + '우뇌집중력 R2 상.png', text: '①'}, {img: IMG_BASE + '우뇌집중력 R2 중.png', text: '②'}, {img: IMG_BASE + '우뇌집중력 R2 하.png', text: '③'}, {img: IMG_BASE + '우뇌주의력 R3 상.png', text: '④'}], ans: 2, domain: '집중' },
+      { stimulus: IMG_BASE + '우뇌주의력 R3 상.png', q: '세밀함을 찾아내세요', choices: [{img: IMG_BASE + '우뇌집중력 R2 상.png', text: '①'}, {img: IMG_BASE + '우뇌집중력 R2 중.png', text: '②'}, {img: IMG_BASE + '우뇌집중력 R2 하.png', text: '③'}, {img: IMG_BASE + '우뇌주의력 R3 상.png', text: '④'}], ans: 3, domain: '집중' },
+      { stimulus: IMG_BASE + '우뇌주의력 R3 중.png', q: '차이점을 찾으세요', choices: [{img: IMG_BASE + '우뇌집중력 R2 상.png', text: '①'}, {img: IMG_BASE + '우뇌집중력 R2 중.png', text: '②'}, {img: IMG_BASE + '우뇌주의력 R3 중.png', text: '③'}, {img: IMG_BASE + '우뇌주의력 R3 하.png', text: '④'}], ans: 2, domain: '집중' },
+      { stimulus: IMG_BASE + '우뇌주의력 R3 하.png', q: '정확히 파악하세요', choices: [{img: IMG_BASE + '우뇌집중력 R2 상.png', text: '①'}, {img: IMG_BASE + '우뇌주의력 R3 중.png', text: '②'}, {img: IMG_BASE + '우뇌주의력 R3 하.png', text: '③'}, {img: IMG_BASE + '우뇌주의력 R3 상.png', text: '④'}], ans: 2, domain: '집중' },
 
-    <div class="q-header">
-      <span class="q-num" id="qNum">Q. 1</span>
-      <span class="q-domain" id="qDomain">기억</span>
-    </div>
+      // 감정 (6문항) - 우뇌 상황력 R6
+      { stimulus: IMG_BASE + '우뇌상황력맥락이해 R6 상.png', q: '상황을 이해하세요', choices: [{img: IMG_BASE + '우뇌상황력맥락이해 R6 상.png', text: '정확'}, {img: IMG_BASE + '우뇌상황력맥락이해 R6 중.png', text: '다름'}, {img: IMG_BASE + '우뇌상황력맥락이해 R6 하.png', text: '다름'}, {img: IMG_BASE + '우뇌구성력 R1 상.png', text: '다름'}], ans: 0, domain: '감정' },
+      { stimulus: IMG_BASE + '우뇌상황력맥락이해 R6 중.png', q: '맥락을 파악하세요', choices: [{img: IMG_BASE + '우뇌상황력맥락이해 R6 상.png', text: '①'}, {img: IMG_BASE + '우뇌상황력맥락이해 R6 중.png', text: '②'}, {img: IMG_BASE + '우뇌상황력맥락이해 R6 하.png', text: '③'}, {img: IMG_BASE + '우뇌구성력 R1 상.png', text: '④'}], ans: 1, domain: '감정' },
+      { stimulus: IMG_BASE + '우뇌상황력맥락이해 R6 하.png', q: '흐름을 감지하세요', choices: [{img: IMG_BASE + '우뇌상황력맥락이해 R6 상.png', text: '①'}, {img: IMG_BASE + '우뇌상황력맥락이해 R6 중.png', text: '②'}, {img: IMG_BASE + '우뇌상황력맥락이해 R6 하.png', text: '③'}, {img: IMG_BASE + '우뇌구성력 R1 상.png', text: '④'}], ans: 2, domain: '감정' },
+      { stimulus: IMG_BASE + '우뇌구성력 R1 상.png', q: '느낌을 인지하세요', choices: [{img: IMG_BASE + '우뇌상황력맥락이해 R6 상.png', text: '①'}, {img: IMG_BASE + '우뇌상황력맥락이해 R6 중.png', text: '②'}, {img: IMG_BASE + '우뇌상황력맥락이해 R6 하.png', text: '③'}, {img: IMG_BASE + '우뇌구성력 R1 상.png', text: '④'}], ans: 3, domain: '감정' },
+      { stimulus: IMG_BASE + '우뇌구성력 R1 중.png', q: '감정 색깔을 고르세요', choices: [{img: IMG_BASE + '우뇌구성력 R1 상.png', text: '①'}, {img: IMG_BASE + '우뇌구성력 R1 중.png', text: '②'}, {img: IMG_BASE + '우뇌구성력 R1 하.png', text: '③'}, {img: IMG_BASE + '우뇌주의력 L3 상.png', text: '④'}], ans: 1, domain: '감정' },
+      { stimulus: IMG_BASE + '우뇌구성력 R1 하.png', q: '감정 흐름을 선택하세요', choices: [{img: IMG_BASE + '우뇌구성력 R1 상.png', text: '①'}, {img: IMG_BASE + '우뇌구성력 R1 중.png', text: '②'}, {img: IMG_BASE + '우뇌구성력 R1 하.png', text: '③'}, {img: IMG_BASE + '우뇌주의력 L3 상.png', text: '④'}], ans: 2, domain: '감정' },
 
-    <!-- 자극 영역 -->
-    <div class="stimulus-box">
-      <img id="stimulusImage" class="stimulus-image" src="" alt="자극 이미지">
-    </div>
+      // 판단 (6문항) - 좌뇌 논리력 L3
+      { stimulus: IMG_BASE + '좌뇌군논리력L3-1_copy_707x1060.png', q: '논리적으로 판단하세요', choices: [{img: IMG_BASE + '좌뇌군논리력L3-1_copy_707x1060.png', text: '정확'}, {img: IMG_BASE + '좌뇌군논리력L3-2_copy_707x1060.png', text: '다름'}, {img: IMG_BASE + '좌뇌군논리력L3-3_copy_707x1060.png', text: '다름'}, {img: IMG_BASE + '좌뇌군논리력L3-4_copy_256x384.png', text: '다름'}], ans: 0, domain: '판단' },
+      { stimulus: IMG_BASE + '좌뇌군논리력L3-2_copy_707x1060.png', q: '합리적으로 선택하세요', choices: [{img: IMG_BASE + '좌뇌군논리력L3-1_copy_707x1060.png', text: '①'}, {img: IMG_BASE + '좌뇌군논리력L3-2_copy_707x1060.png', text: '②'}, {img: IMG_BASE + '좌뇌군논리력L3-3_copy_707x1060.png', text: '③'}, {img: IMG_BASE + '좌뇌군논리력L3-4_copy_256x384.png', text: '④'}], ans: 1, domain: '판단' },
+      { stimulus: IMG_BASE + '좌뇌군논리력L3-3_copy_707x1060.png', q: '원인을 파악하세요', choices: [{img: IMG_BASE + '좌뇌군논리력L3-1_copy_707x1060.png', text: '①'}, {img: IMG_BASE + '좌뇌군논리력L3-2_copy_707x1060.png', text: '②'}, {img: IMG_BASE + '좌뇌군논리력L3-3_copy_707x1060.png', text: '③'}, {img: IMG_BASE + '좌뇌군논리력L3-4_copy_256x384.png', text: '④'}], ans: 2, domain: '판단' },
+      { stimulus: IMG_BASE + '좌뇌군논리력L3-4_copy_256x384.png', q: '결론을 도출하세요', choices: [{img: IMG_BASE + '좌뇌군논리력L3-1_copy_707x1060.png', text: '①'}, {img: IMG_BASE + '좌뇌군논리력L3-2_copy_707x1060.png', text: '②'}, {img: IMG_BASE + '좌뇌군논리력L3-3_copy_707x1060.png', text: '③'}, {img: IMG_BASE + '좌뇌군논리력L3-4_copy_256x384.png', text: '④'}], ans: 3, domain: '판단' },
+      { stimulus: IMG_BASE + '좌뇌군판별력L5-1_copy_256x256.jpg', q: '차이를 분별하세요', choices: [{img: IMG_BASE + '좌뇌군판별력L5-1_copy_256x256.jpg', text: '①'}, {img: IMG_BASE + '좌뇌군판별력L5-2_copy_256x256.jpg', text: '②'}, {img: IMG_BASE + '좌뇌군판별력L5-3_copy_256x256.jpg', text: '③'}, {img: IMG_BASE + '좌뇌군판별력L5-4_copy_352x192.png', text: '④'}], ans: 0, domain: '판단' },
+      { stimulus: IMG_BASE + '좌뇌군판별력L5-2_copy_256x256.jpg', q: '구별하여 선택하세요', choices: [{img: IMG_BASE + '좌뇌군판별력L5-1_copy_256x256.jpg', text: '①'}, {img: IMG_BASE + '좌뇌군판별력L5-2_copy_256x256.jpg', text: '②'}, {img: IMG_BASE + '좌뇌군판별력L5-3_copy_256x256.jpg', text: '③'}, {img: IMG_BASE + '좌뇌군판별력L5-4_copy_352x192.png', text: '④'}], ans: 1, domain: '판단' },
 
-    <!-- 질문 -->
-    <div class="question-text" id="questionText">로딩 중...</div>
+      // 실행 (6문항) - 전뇌 실행력 W2
+      { stimulus: IMG_BASE + '전뇌실행력 W2 상.png', q: '행동 계획을 세우세요', choices: [{img: IMG_BASE + '전뇌실행력 W2 상.png', text: '정확'}, {img: IMG_BASE + '전뇌실행력 W2 중.png', text: '다름'}, {img: IMG_BASE + '전뇌실행력 W2 하.png', text: '다름'}, {img: IMG_BASE + '전뇌지속력 W3 상.png', text: '다름'}], ans: 0, domain: '실행' },
+      { stimulus: IMG_BASE + '전뇌실행력 W2 중.png', q: '단계별로 진행하세요', choices: [{img: IMG_BASE + '전뇌실행력 W2 상.png', text: '①'}, {img: IMG_BASE + '전뇌실행력 W2 중.png', text: '②'}, {img: IMG_BASE + '전뇌실행력 W2 하.png', text: '③'}, {img: IMG_BASE + '전뇌지속력 W3 상.png', text: '④'}], ans: 1, domain: '실행' },
+      { stimulus: IMG_BASE + '전뇌실행력 W2 하.png', q: '결과를 확인하세요', choices: [{img: IMG_BASE + '전뇌실행력 W2 상.png', text: '①'}, {img: IMG_BASE + '전뇌실행력 W2 중.png', text: '②'}, {img: IMG_BASE + '전뇌실행력 W2 하.png', text: '③'}, {img: IMG_BASE + '전뇌지속력 W3 상.png', text: '④'}], ans: 2, domain: '실행' },
+      { stimulus: IMG_BASE + '전뇌지속력 W3 상.png', q: '꾸준히 진행하세요', choices: [{img: IMG_BASE + '전뇌실행력 W2 상.png', text: '①'}, {img: IMG_BASE + '전뇌실행력 W2 중.png', text: '②'}, {img: IMG_BASE + '전뇌지속력 W3 상.png', text: '③'}, {img: IMG_BASE + '전뇌지속력 W3 중.jpeg', text: '④'}], ans: 2, domain: '실행' },
+      { stimulus: IMG_BASE + '전뇌지속력 W3 중.jpeg', q: '목표를 유지하세요', choices: [{img: IMG_BASE + '전뇌지속력 W3 상.png', text: '①'}, {img: IMG_BASE + '전뇌지속력 W3 중.jpeg', text: '②'}, {img: IMG_BASE + '전뇌지속력 W3 하.jpeg', text: '③'}, {img: IMG_BASE + '전뇌학습력 W1 상.png', text: '④'}], ans: 1, domain: '실행' },
+      { stimulus: IMG_BASE + '전뇌지속력 W3 하.jpeg', q: '완성도를 높이세요', choices: [{img: IMG_BASE + '전뇌지속력 W3 상.png', text: '①'}, {img: IMG_BASE + '전뇌지속력 W3 중.jpeg', text: '②'}, {img: IMG_BASE + '전뇌지속력 W3 하.jpeg', text: '③'}, {img: IMG_BASE + '전뇌학습력 W1 상.png', text: '④'}], ans: 2, domain: '실행' },
 
-    <!-- 선택지 -->
-    <div class="choices-grid" id="choices"></div>
+      // 조절 (6문항) - 조절력 F
+      { stimulus: IMG_BASE + '조절력 F 상.jpeg', q: '자기 조절이 가능한가요?', choices: [{img: IMG_BASE + '조절력 F 상.jpeg', text: '가능'}, {img: IMG_BASE + '조절력 F 중.jpeg', text: '불가'}, {img: IMG_BASE + '조절력 F 하.jpeg', text: '어려움'}, {img: IMG_BASE + '전뇌회복력 W4 상.jpeg', text: '미정'}], ans: 0, domain: '조절' },
+      { stimulus: IMG_BASE + '조절력 F 중.jpeg', q: '충동을 조절할 수 있나요?', choices: [{img: IMG_BASE + '조절력 F 상.jpeg', text: '가능'}, {img: IMG_BASE + '조절력 F 중.jpeg', text: '불가'}, {img: IMG_BASE + '조절력 F 하.jpeg', text: '어려움'}, {img: IMG_BASE + '전뇌회복력 W4 상.jpeg', text: '미정'}], ans: 1, domain: '조절' },
+      { stimulus: IMG_BASE + '조절력 F 하.jpeg', q: '감정 조절이 가능한가요?', choices: [{img: IMG_BASE + '조절력 F 상.jpeg', text: '가능'}, {img: IMG_BASE + '조절력 F 중.jpeg', text: '불가'}, {img: IMG_BASE + '조절력 F 하.jpeg', text: '어려움'}, {img: IMG_BASE + '전뇌회복력 W4 상.jpeg', text: '미정'}], ans: 2, domain: '조절' },
+      { stimulus: IMG_BASE + '전뇌회복력 W4 상.jpeg', q: '스트레스를 관리할 수 있나요?', choices: [{img: IMG_BASE + '조절력 F 상.jpeg', text: '가능'}, {img: IMG_BASE + '조절력 F 중.jpeg', text: '불가'}, {img: IMG_BASE + '전뇌회복력 W4 상.jpeg', text: '관리'}, {img: IMG_BASE + '전뇌회복력 W4 중.jpeg', text: '어려움'}], ans: 2, domain: '조절' },
+      { stimulus: IMG_BASE + '전뇌회복력 W4 중.jpeg', q: '마음을 다스릴 수 있나요?', choices: [{img: IMG_BASE + '전뇌회복력 W4 상.jpeg', text: '가능'}, {img: IMG_BASE + '전뇌회복력 W4 중.jpeg', text: '불가'}, {img: IMG_BASE + '전뇌회복력 W4 하.jpeg', text: '어려움'}, {img: IMG_BASE + '전뇌학습력 W1 중.png', text: '미정'}], ans: 1, domain: '조절' },
+      { stimulus: IMG_BASE + '전뇌회복력 W4 하.jpeg', q: '자제력이 있나요?', choices: [{img: IMG_BASE + '전뇌회복력 W4 상.jpeg', text: '①'}, {img: IMG_BASE + '전뇌회복력 W4 중.jpeg', text: '②'}, {img: IMG_BASE + '전뇌회복력 W4 하.jpeg', text: '③'}, {img: IMG_BASE + '전뇌학습력 W1 중.png', text: '④'}], ans: 2, domain: '조절' },
 
-    <div class="nav-buttons">
-      <button class="btn-nav" onclick="prevQ()" id="prevBtn">← 이전</button>
-      <button class="btn-nav" onclick="nextQ()" id="nextBtn">다음 →</button>
-    </div>
-  </div>
+      // 공간 (3문항) - 우뇌 지남력 R4
+      { stimulus: IMG_BASE + '우뇌지남력 R4 상.png', q: '위치를 인식하세요', choices: [{img: IMG_BASE + '우뇌지남력 R4 상.png', text: '정확'}, {img: IMG_BASE + '우뇌지남력 R4 중.png', text: '다름'}, {img: IMG_BASE + '우뇌지남력 R4 하.png', text: '다름'}, {img: IMG_BASE + '우뇌창의응용력 R5 상.png', text: '다름'}], ans: 0, domain: '공간' },
+      { stimulus: IMG_BASE + '우뇌지남력 R4 중.png', q: '방향을 파악하세요', choices: [{img: IMG_BASE + '우뇌지남력 R4 상.png', text: '①'}, {img: IMG_BASE + '우뇌지남력 R4 중.png', text: '②'}, {img: IMG_BASE + '우뇌지남력 R4 하.png', text: '③'}, {img: IMG_BASE + '우뇌창의응용력 R5 상.png', text: '④'}], ans: 1, domain: '공간' },
+      { stimulus: IMG_BASE + '우뇌지남력 R4 하.png', q: '공간 감각을 사용하세요', choices: [{img: IMG_BASE + '우뇌지남력 R4 상.png', text: '①'}, {img: IMG_BASE + '우뇌지남력 R4 중.png', text: '②'}, {img: IMG_BASE + '우뇌지남력 R4 하.png', text: '③'}, {img: IMG_BASE + '우뇌창의응용력 R5 상.png', text: '④'}], ans: 2, domain: '공간' },
+    ];
 
-  <!-- 결과 화면 -->
-  <div id="resultScreen" class="screen">
-    <div style="text-align: center; margin-bottom: 32px;">
-      <div style="font-size: 48px; font-weight: 900; color: #00BCD4; margin-bottom: 8px;">검사 완료</div>
-      <div style="font-size: 14px; font-weight: 600; color: #666;">당신의 뇌 건강 분석 결과입니다</div>
-    </div>
+    // ========== 함수 ==========
+    function showScreen(screenName) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById(screenName + 'Screen').classList.add('active');
+    }
 
-    <div class="brain-age-card">
-      <div class="brain-age-label">당신의 뇌 나이는</div>
-      <div class="brain-age-number" id="brainAge">000세</div>
-      <div class="brain-age-desc">시니어 평균과 비교한 인지 건강 수준입니다</div>
-    </div>
+    function startTest() {
+      const name = document.getElementById('userName').value.trim();
+      const birth = document.getElementById('userBirth').value;
+      const gender = document.getElementById('userGender').value;
 
-    <div style="background: linear-gradient(135deg, #E8F5E9 0%, #F1F8E9 100%); border-left: 6px solid #4CAF50; border-radius: 16px; padding: 24px; margin-bottom: 24px; display: flex; justify-content: space-around; align-items: center;">
-      <div style="text-align: center;">
-        <div style="font-size: 14px; font-weight: 800; color: #2E7D32; margin-bottom: 8px;">실제 나이</div>
-        <div style="font-size: 48px; font-weight: 900; color: #2E7D32;" id="realAge">만 00세</div>
-      </div>
-      <div style="width: 2px; height: 60px; background: #4CAF50; opacity: 0.3;"></div>
-      <div style="text-align: center;">
-        <div style="font-size: 14px; font-weight: 800; color: #1a1a1a; margin-bottom: 8px;">생년월일</div>
-        <div style="font-size: 16px; font-weight: 700; color: #333;" id="birthInfo">1962년 12월 31일</div>
-      </div>
-    </div>
+      if (!name || !birth || !gender) {
+        alert('모든 정보를 입력해주세요');
+        return;
+      }
 
-    <div class="analysis-card">
-      <div style="font-size: 18px; font-weight: 900; color: #00BCD4; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 3px solid #00BCD4;">인지 영역별 점수</div>
-      <div id="barChartContainer"></div>
-    </div>
+      const [year, month, day] = birth.split('-');
+      const birthDate = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+      const today = new Date();
+      let age = today.getFullYear() - birthDate.getFullYear();
+      if (today.getMonth() < birthDate.getMonth() || 
+          (today.getMonth() === birthDate.getMonth() && today.getDate() < birthDate.getDate())) {
+        age--;
+      }
 
-    <div class="analysis-card">
-      <div style="font-size: 18px; font-weight: 900; color: #00BCD4; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 3px solid #00BCD4;">당신의 강점</div>
-      <div id="strengthAnalysis"></div>
-    </div>
+      userData = { name, birth, gender, age };
+      answers = [];
+      currentIdx = 0;
+      showScreen('question');
+      displayQuestion();
+    }
 
-    <div class="analysis-card">
-      <div style="font-size: 18px; font-weight: 900; color: #00BCD4; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 3px solid #00BCD4;">개선 필요 영역</div>
-      <div id="weaknessAnalysis"></div>
-    </div>
+    function displayQuestion() {
+      const q = QUESTIONS_DATA[currentIdx];
+      const progress = ((currentIdx + 1) / QUESTIONS_DATA.length) * 100;
+      
+      document.getElementById('progressBar').style.width = progress + '%';
+      document.getElementById('questionNum').textContent = `Q. ${currentIdx + 1} / ${QUESTIONS_DATA.length}`;
+      document.getElementById('domainTag').textContent = q.domain;
+      document.getElementById('stimulusImg').src = q.stimulus;
+      document.getElementById('questionText').textContent = q.q;
 
-    <button class="btn btn-primary" onclick="restartTest()" style="margin-bottom: 12px;">다시 검사하기</button>
-    <button class="btn btn-secondary" onclick="goToStart()">처음으로</button>
-  </div>
-</div>
+      const choicesHtml = q.choices.map((c, i) => `
+        <button class="choice-btn" onclick="selectChoice(${i})">
+          <img class="choice-img" src="${c.img}" alt="선택지">
+          <div class="choice-text">${c.text}</div>
+        </button>
+      `).join('');
+      
+      document.getElementById('choicesContainer').innerHTML = choicesHtml;
+      document.getElementById('nextBtn').disabled = true;
+    }
 
-<script>
-// ========== 전역 변수 ==========
-let currentIdx = 0;
-let answers = [];
-let userData = {};
+    function selectChoice(idx) {
+      answers[currentIdx] = idx;
+      document.querySelectorAll('.choice-btn').forEach(b => b.classList.remove('selected'));
+      document.querySelectorAll('.choice-btn')[idx].classList.add('selected');
+      document.getElementById('nextBtn').disabled = false;
+    }
 
-// 45개 문항 - 실제 GitHub 이미지 URL 사용
-const QUESTIONS_DATA = [
-  // 기억 영역 (6문항)
-  { stimulus: "https://k-brain.co.kr/assets/img/picture-test-001-72da600f3d.webp", q: "이 이미지가 어떤 장면입니까?", choices: [{img: "https://k-brain.co.kr/assets/img/picture-test-001-72da600f3d.webp", text: "정확"}, {img: "https://k-brain.co.kr/assets/img/picture-test-002-64ef96ffe6.webp", text: "다름"}, {img: "https://k-brain.co.kr/assets/img/picture-test-003-38730d0ded.webp", text: "다름"}, {img: "https://k-brain.co.kr/assets/img/picture-test-004-506f5cc1c4.webp", text: "다름"}], ans: 0, domain: "기억" },
-  { stimulus: "https://k-brain.co.kr/assets/img/picture-test-002-64ef96ffe6.webp", q: "이전에 본 이미지와 같은가요?", choices: [{img: "https://k-brain.co.kr/assets/img/picture-test-001-72da600f3d.webp", text: "다름"}, {img: "https://k-brain.co.kr/assets/img/picture-test-002-64ef96ffe6.webp", text: "같음"}, {img: "https://k-brain.co.kr/assets/img/picture-test-003-38730d0ded.webp", text: "비슷"}, {img: "https://k-brain.co.kr/assets/img/picture-test-005-a05fbd3d9c.webp", text: "다름"}], ans: 1, domain: "기억" },
-  { stimulus: "https://k-brain.co.kr/assets/img/picture-test-003-38730d0ded.webp", q: "어떤 이미지를 먼저 봤나요?", choices: [{img: "https://k-brain.co.kr/assets/img/picture-test-001-72da600f3d.webp", text: "첫번째"}, {img: "https://k-brain.co.kr/assets/img/picture-test-002-64ef96ffe6.webp", text: "두번째"}, {img: "https://k-brain.co.kr/assets/img/picture-test-003-38730d0ded.webp", text: "세번째"}, {img: "https://k-brain.co.kr/assets/img/picture-test-004-506f5cc1c4.webp", text: "네번째"}], ans: 0, domain: "기억" },
-  { stimulus: "https://k-brain.co.kr/assets/img/picture-test-004-506f5cc1c4.webp", q: "보인 이미지의 순서는?", choices: [{img: "https://k-brain.co.kr/assets/img/picture-test-001-72da600f3d.webp", text: "①"}, {img: "https://k-brain.co.kr/assets/img/picture-test-002-64ef96ffe6.webp", text: "②"}, {img: "https://k-brain.co.kr/assets/img/picture-test-003-38730d0ded.webp", text: "③"}, {img: "https://k-brain.co.kr/assets/img/picture-test-004-506f5cc1c4.webp", text: "④"}], ans: 3, domain: "기억" },
-  { stimulus: "https://k-brain.co.kr/assets/img/picture-test-005-a05fbd3d9c.webp", q: "어느 이미지가 맞나요?", choices: [{img: "https://k-brain.co.kr/assets/img/picture-test-005-a05fbd3d9c.webp", text: "정확"}, {img: "https://k-brain.co.kr/assets/img/picture-test-006-d2e8d7ff4f.webp", text: "다름"}, {img: "https://k-brain.co.kr/assets/img/picture-test-007-34fbb2dcb5.webp", text: "다름"}, {img: "https://k-brain.co.kr/assets/img/picture-test-008-2e57f7117a.webp", text: "다름"}], ans: 0, domain: "기억" },
-  { stimulus: "https://k-brain.co.kr/assets/img/picture-test-006-d2e8d7ff4f.webp", q: "기억하신 이미지는?", choices: [{img: "https://k-brain.co.kr/assets/img/picture-test-005-a05fbd3d9c.webp", text: "①"}, {img: "https://k-brain.co.kr/assets/img/picture-test-006-d2e8d7ff4f.webp", text: "②"}, {img: "https://k-brain.co.kr/assets/img/picture-test-007-34fbb2dcb5.webp", text: "③"}, {img: "https://k-brain.co.kr/assets/img/picture-test-008-2e57f7117a.webp", text: "④"}], ans: 1, domain: "기억" },
-
-  // 속도 영역 (6문항) - 빠르게 반응하기
-  { stimulus: "https://k-brain.co.kr/assets/img/picture-test-007-34fbb2dcb5.webp", q: "가장 빨리 선택하세요", choices: [{img: "https://k-brain.co.kr/assets/img/picture-test-007-34fbb2dcb5.webp", text: "이것!"}, {img: "https://k-brain.co.kr/assets/img/picture-test-008-2e57f7117a.webp", text: "또는"}, {img: "https://k-brain.co.kr/assets/img/picture-test-009-bd3c3500ce.webp", text: "또는"}, {img: "https://k-brain.co.kr/assets/img/picture-test-010-14c480bc04.webp", text: "또는"}], ans: 0, domain: "속도" },
-  { stimulus: "https://k-brain.co.kr/assets/img/picture-test-008-2e57f7117a.webp", q: "패턴의 다음은?", choices: [{img: "https://k-brain.co.kr/assets/img/picture-test-007-34fbb2dcb5.webp", text: "①"}, {img: "https://k-brain.co.kr/assets/img/picture-test-008-2e57f7117a.webp", text: "②"}, {img: "https://k-brain.co.kr/assets/img/picture-test-009-bd3c3500ce.webp", text: "③"}, {img: "https://k-brain.co.kr/assets/img/picture-test-010-14c480bc04.webp", text: "④"}], ans: 2, domain: "속도" },
-  { stimulus: "https://k-brain.co.kr/assets/img/picture-test-009-bd3c3500ce.webp", q: "빠르게 판단하세요", choices: [{img: "https://k-brain.co.kr/assets/img/picture-test-008-2e57f7117a.webp", text: "①"}, {img: "https://k-brain.co.kr/assets/img/picture-test-009-bd3c3500ce.webp", text: "②"}, {img: "https://k-brain.co.kr/assets/img/picture-test-010-14c480bc04.webp", text: "③"}, {img: "https://k-brain.co.kr/assets/img/picture-test-011-014920877d.webp", text: "④"}], ans: 1, domain: "속도" },
-  { stimulus: "https://k-brain.co.kr/assets/img/picture-test-010-14c480bc04.webp", q: "신속하게 선택하세요", choices: [{img: "https://k-brain.co.kr/assets/img/picture-test-009-bd3c3500ce.webp", text: "①"}, {img: "https://k-brain.co.kr/assets/img/picture-test-010-14c480bc04.webp", text: "②"}, {img: "https://k-brain.co.kr/assets/img/picture-test-011-014920877d.webp", text: "③"}, {img: "https://k-brain.co.kr/assets/img/picture-test-001-72da600f3d.webp", text: "④"}], ans: 1, domain: "속도" },
-  { stimulus: "https://k-brain.co.kr/assets/img/picture-test-011-014920877d.webp", q: "즉시 반응하세요", choices: [{img: "https://k-brain.co.kr/assets/img/picture-test-010-14c480bc04.webp", text: "①"}, {img: "https://k-brain.co.kr/assets/img/picture-test-011-014920877d.webp", text: "②"}, {img: "https://k-brain.co.kr/assets/img/picture-test-001-72da600f3d.webp", text: "③"}, {img: "https://k-brain.co.kr/assets/img/picture-test-002-64ef96ffe6.webp", text: "④"}], ans: 1, domain: "속도" },
-  { stimulus: "https://k-brain.co.kr/assets/img/picture-test-001-72da600f3d.webp", q: "빠르게 선택하세요", choices: [{img: "https://k-brain.co.kr/assets/img/picture-test-011-014920877d.webp", text: "①"}, {img: "https://k-brain.co.kr/assets/img/picture-test-001-72da600f3d.webp", text: "②"}, {img: "https://k-brain.co.kr/assets/img/picture-test-003-38730d0ded.webp", text: "③"}, {img: "https://k-brain.co.kr/assets/img/picture-test-005-a05fbd3d9c.webp", text: "④"}], ans: 1, domain: "속도" },
-
-  // 집중 영역 (6문항) - 세심하게 관찰
-  { stimulus: "https://k-brain.co.kr/assets/img/picture-test-002-64ef96ffe6.webp", q: "세심하게 관찰하세요", choices: [{img: "https://k-brain.co.kr/assets/img/picture-test-002-64ef96ffe6.webp", text: "정확"}, {img: "https://k-brain.co.kr/assets/img/picture-test-003-38730d0ded.webp", text: "다름"}, {img: "https://k-brain.co.kr/assets/img/picture-test-006-d2e8d7ff4f.webp", text: "다름"}, {img: "https://k-brain.co.kr/assets/img/picture-test-009-bd3c3500ce.webp", text: "다름"}], ans: 0, domain: "집중" },
-  { stimulus: "https://k-brain.co.kr/assets/img/picture-test-003-38730d0ded.webp", q: "집중해서 보세요", choices: [{img: "https://k-brain.co.kr/assets/img/picture-test-002-64ef96ffe6.webp", text: "①"}, {img: "https://k-brain.co.kr/assets/img/picture-test-003-38730d0ded.webp", text: "②"}, {img: "https://k-brain.co.kr/assets/img/picture-test-004-506f5cc1c4.webp", text: "③"}, {img: "https://k-brain.co.kr/assets/img/picture-test-007-34fbb2dcb5.webp", text: "④"}], ans: 1, domain: "집중" },
-  { stimulus: "https://k-brain.co.kr/assets/img/picture-test-004-506f5cc1c4.webp", q: "주의깊게 관찰하세요", choices: [{img: "https://k-brain.co.kr/assets/img/picture-test-003-38730d0ded.webp", text: "①"}, {img: "https://k-brain.co.kr/assets/img/picture-test-004-506f5cc1c4.webp", text: "②"}, {img: "https://k-brain.co.kr/assets/img/picture-test-005-a05fbd3d9c.webp", text: "③"}, {img: "https://k-brain.co.kr/assets/img/picture-test-008-2e57f7117a.webp", text: "④"}], ans: 1, domain: "집중" },
-  { stimulus: "https://k-brain.co.kr/assets/img/picture-test-005-a05fbd3d9c.webp", q: "집중력을 유지하세요", choices: [{img: "https://k-brain.co.kr/assets/img/picture-test-004-506f5cc1c4.webp", text: "①"}, {img: "https://k-brain.co.kr/assets/img/picture-test-005-a05fbd3d9c.webp", text: "②"}, {img: "https://k-brain.co.kr/assets/img/picture-test-006-d2e8d7ff4f.webp", text: "③"}, {img: "https://k-brain.co.kr/assets/img/picture-test-009-bd3c3500ce.webp", text: "④"}], ans: 1, domain: "집중" },
-  { stimulus: "https://k-brain.co.kr/assets/img/picture-test-006-d2e8d7ff4f.webp", q: "정확하게 보세요", choices: [{img: "https://k-brain.co.kr/assets/img/picture-test-005-a05fbd3d9c.webp", text: "①"}, {img: "https://k-brain.co.kr/assets/img/picture-test-006-d2e8d7ff4f.webp", text: "②"}, {img: "https://k-brain.co.kr/assets/img/picture-test-007-34fbb2dcb5.webp", text: "③"}, {img: "https://k-brain.co.kr/assets/img/picture-test-010-14c480bc04.webp", text: "④"}], ans: 1, domain: "집중" },
-  { stimulus: "https://k-brain.co.kr/assets/img/picture-test-007-34fbb2dcb5.webp", q: "집중해서 선택하세요", choices: [{img: "https://k-brain.co.kr/assets/img/picture-test-006-d2e8d7ff4f.webp", text: "①"}, {img: "https://k-brain.co.kr/assets/img/picture-test-007-34fbb2dcb5.webp", text: "②"}, {img: "https://k-brain.co.kr/assets/img/picture-test-008-2e57f7117a.webp", text: "③"}, {img: "https://k-brain.co.kr/assets/img/picture-test-011-014920877d.webp", text: "④"}], ans: 1, domain: "집중" },
-
-  // 감정 영역 (6문항) - 정서 인식
-  { stimulus: "https://k-brain.co.kr/assets/img/picture-test-008-2e57f7117a.webp", q: "어떤 감정이 느껴집니까?", choices: [{img: "https://k-brain.co.kr/assets/img/picture-test-008-2e57f7117a.webp", text: "긍정"}, {img: "https://k-brain.co.kr/assets/img/picture-test-009-bd3c3500ce.webp", text: "중립"}, {img: "https://k-brain.co.kr/assets/img/picture-test-010-14c480bc04.webp", text: "부정"}, {img: "https://k-brain.co.kr/assets/img/picture-test-011-014920877d.webp", text: "혼란"}], ans: 0, domain: "감정" },
-  { stimulus: "https://k-brain.co.kr/assets/img/picture-test-009-bd3c3500ce.webp", q: "느껴지는 감정은?", choices: [{img: "https://k-brain.co.kr/assets/img/picture-test-007-34fbb2dcb5.webp", text: "①"}, {img: "https://k-brain.co.kr/assets/img/picture-test-009-bd3c3500ce.webp", text: "②"}, {img: "https://k-brain.co.kr/assets/img/picture-test-010-14c480bc04.webp", text: "③"}, {img: "https://k-brain.co.kr/assets/img/picture-test-011-014920877d.webp", text: "④"}], ans: 1, domain: "감정" },
-  { stimulus: "https://k-brain.co.kr/assets/img/picture-test-010-14c480bc04.webp", q: "정서 반응은?", choices: [{img: "https://k-brain.co.kr/assets/img/picture-test-008-2e57f7117a.webp", text: "행복"}, {img: "https://k-brain.co.kr/assets/img/picture-test-010-14c480bc04.webp", text: "슬픔"}, {img: "https://k-brain.co.kr/assets/img/picture-test-009-bd3c3500ce.webp", text: "차분"}, {img: "https://k-brain.co.kr/assets/img/picture-test-011-014920877d.webp", text: "혼란"}], ans: 1, domain: "감정" },
-  { stimulus: "https://k-brain.co.kr/assets/img/picture-test-011-014920877d.webp", q: "감정을 인식하세요", choices: [{img: "https://k-brain.co.kr/assets/img/picture-test-009-bd3c3500ce.webp", text: "①"}, {img: "https://k-brain.co.kr/assets/img/picture-test-011-014920877d.webp", text: "②"}, {img: "https://k-brain.co.kr/assets/img/picture-test-010-14c480bc04.webp", text: "③"}, {img: "https://k-brain.co.kr/assets/img/picture-test-008-2e57f7117a.webp", text: "④"}], ans: 1, domain: "감정" },
-  { stimulus: "https://k-brain.co.kr/assets/img/picture-test-001-72da600f3d.webp", q: "느껴지는 감정은?", choices: [{img: "https://k-brain.co.kr/assets/img/picture-test-010-14c480bc04.webp", text: "①"}, {img: "https://k-brain.co.kr/assets/img/picture-test-009-bd3c3500ce.webp", text: "②"}, {img: "https://k-brain.co.kr/assets/img/picture-test-001-72da600f3d.webp", text: "③"}, {img: "https://k-brain.co.kr/assets/img/picture-test-011-014920877d.webp", text: "④"}], ans: 2, domain: "감정" },
-  { stimulus: "https://k-brain.co.kr/assets/img/picture-test-002-64ef96ffe6.webp", q: "정서적 반응은?", choices: [{img: "https://k-brain.co.kr/assets/img/picture-test-002-64ef96ffe6.webp", text: "긍정"}, {img: "https://k-brain.co.kr/assets/img/picture-test-010-14c480bc04.webp", text: "부정"}, {img: "https://k-brain.co.kr/assets/img/picture-test-008-2e57f7117a.webp", text: "혼합"}, {img: "https://k-brain.co.kr/assets/img/picture-test-009-bd3c3500ce.webp", text: "중립"}], ans: 0, domain: "감정" },
-
-  // 판단 영역 (6문항) - 의사결정
-  { stimulus: "https://k-brain.co.kr/assets/img/picture-test-003-38730d0ded.webp", q: "최고의 선택은?", choices: [{img: "https://k-brain.co.kr/assets/img/picture-test-001-72da600f3d.webp", text: "①"}, {img: "https://k-brain.co.kr/assets/img/picture-test-003-38730d0ded.webp", text: "②"}, {img: "https://k-brain.co.kr/assets/img/picture-test-005-a05fbd3d9c.webp", text: "③"}, {img: "https://k-brain.co.kr/assets/img/picture-test-007-34fbb2dcb5.webp", text: "④"}], ans: 1, domain: "판단" },
-  { stimulus: "https://k-brain.co.kr/assets/img/picture-test-004-506f5cc1c4.webp", q: "가장 타당한 선택은?", choices: [{img: "https://k-brain.co.kr/assets/img/picture-test-002-64ef96ffe6.webp", text: "①"}, {img: "https://k-brain.co.kr/assets/img/picture-test-004-506f5cc1c4.webp", text: "②"}, {img: "https://k-brain.co.kr/assets/img/picture-test-006-d2e8d7ff4f.webp", text: "③"}, {img: "https://k-brain.co.kr/assets/img/picture-test-008-2e57f7117a.webp", text: "④"}], ans: 1, domain: "판단" },
-  { stimulus: "https://k-brain.co.kr/assets/img/picture-test-005-a05fbd3d9c.webp", q: "최선의 판단은?", choices: [{img: "https://k-brain.co.kr/assets/img/picture-test-003-38730d0ded.webp", text: "①"}, {img: "https://k-brain.co.kr/assets/img/picture-test-005-a05fbd3d9c.webp", text: "②"}, {img: "https://k-brain.co.kr/assets/img/picture-test-007-34fbb2dcb5.webp", text: "③"}, {img: "https://k-brain.co.kr/assets/img/picture-test-009-bd3c3500ce.webp", text: "④"}], ans: 1, domain: "판단" },
-  { stimulus: "https://k-brain.co.kr/assets/img/picture-test-006-d2e8d7ff4f.webp", q: "올바른 판단은?", choices: [{img: "https://k-brain.co.kr/assets/img/picture-test-004-506f5cc1c4.webp", text: "①"}, {img: "https://k-brain.co.kr/assets/img/picture-test-006-d2e8d7ff4f.webp", text: "②"}, {img: "https://k-brain.co.kr/assets/img/picture-test-008-2e57f7117a.webp", text: "③"}, {img: "https://k-brain.co.kr/assets/img/picture-test-010-14c480bc04.webp", text: "④"}], ans: 1, domain: "판단" },
-  { stimulus: "https://k-brain.co.kr/assets/img/picture-test-007-34fbb2dcb5.webp", q: "최적의 선택은?", choices: [{img: "https://k-brain.co.kr/assets/img/picture-test-005-a05fbd3d9c.webp", text: "①"}, {img: "https://k-brain.co.kr/assets/img/picture-test-007-34fbb2dcb5.webp", text: "②"}, {img: "https://k-brain.co.kr/assets/img/picture-test-009-bd3c3500ce.webp", text: "③"}, {img: "https://k-brain.co.kr/assets/img/picture-test-011-014920877d.webp", text: "④"}], ans: 1, domain: "판단" },
-  { stimulus: "https://k-brain.co.kr/assets/img/picture-test-008-2e57f7117a.webp", q: "현명한 판단은?", choices: [{img: "https://k-brain.co.kr/assets/img/picture-test-006-d2e8d7ff4f.webp", text: "①"}, {img: "https://k-brain.co.kr/assets/img/picture-test-008-2e57f7117a.webp", text: "②"}, {img: "https://k-brain.co.kr/assets/img/picture-test-010-14c480bc04.webp", text: "③"}, {img: "https://k-brain.co.kr/assets/img/picture-test-001-72da600f3d.webp", text: "④"}], ans: 1, domain: "판단" },
-
-  // 실행 영역 (6문항) - 계획 실행
-  { stimulus: "https://k-brain.co.kr/assets/img/picture-test-009-bd3c3500ce.webp", q: "실행 순서는?", choices: [{img: "https://k-brain.co.kr/assets/img/picture-test-007-34fbb2dcb5.webp", text: "①②③"}, {img: "https://k-brain.co.kr/assets/img/picture-test-009-bd3c3500ce.webp", text: "②③④"}, {img: "https://k-brain.co.kr/assets/img/picture-test-005-a05fbd3d9c.webp", text: "③④①"}, {img: "https://k-brain.co.kr/assets/img/picture-test-011-014920877d.webp", text: "④①②"}], ans: 1, domain: "실행" },
-  { stimulus: "https://k-brain.co.kr/assets/img/picture-test-010-14c480bc04.webp", q: "계획 순서는?", choices: [{img: "https://k-brain.co.kr/assets/img/picture-test-008-2e57f7117a.webp", text: "①"}, {img: "https://k-brain.co.kr/assets/img/picture-test-010-14c480bc04.webp", text: "②"}, {img: "https://k-brain.co.kr/assets/img/picture-test-003-38730d0ded.webp", text: "③"}, {img: "https://k-brain.co.kr/assets/img/picture-test-006-d2e8d7ff4f.webp", text: "④"}], ans: 1, domain: "실행" },
-  { stimulus: "https://k-brain.co.kr/assets/img/picture-test-011-014920877d.webp", q: "행동 순서는?", choices: [{img: "https://k-brain.co.kr/assets/img/picture-test-009-bd3c3500ce.webp", text: "①"}, {img: "https://k-brain.co.kr/assets/img/picture-test-011-014920877d.webp", text: "②"}, {img: "https://k-brain.co.kr/assets/img/picture-test-004-506f5cc1c4.webp", text: "③"}, {img: "https://k-brain.co.kr/assets/img/picture-test-007-34fbb2dcb5.webp", text: "④"}], ans: 1, domain: "실행" },
-  { stimulus: "https://k-brain.co.kr/assets/img/picture-test-001-72da600f3d.webp", q: "수행 순서는?", choices: [{img: "https://k-brain.co.kr/assets/img/picture-test-010-14c480bc04.webp", text: "①"}, {img: "https://k-brain.co.kr/assets/img/picture-test-001-72da600f3d.webp", text: "②"}, {img: "https://k-brain.co.kr/assets/img/picture-test-005-a05fbd3d9c.webp", text: "③"}, {img: "https://k-brain.co.kr/assets/img/picture-test-008-2e57f7117a.webp", text: "④"}], ans: 1, domain: "실행" },
-  { stimulus: "https://k-brain.co.kr/assets/img/picture-test-002-64ef96ffe6.webp", q: "진행 순서는?", choices: [{img: "https://k-brain.co.kr/assets/img/picture-test-011-014920877d.webp", text: "①"}, {img: "https://k-brain.co.kr/assets/img/picture-test-002-64ef96ffe6.webp", text: "②"}, {img: "https://k-brain.co.kr/assets/img/picture-test-006-d2e8d7ff4f.webp", text: "③"}, {img: "https://k-brain.co.kr/assets/img/picture-test-009-bd3c3500ce.webp", text: "④"}], ans: 1, domain: "실행" },
-  { stimulus: "https://k-brain.co.kr/assets/img/picture-test-003-38730d0ded.webp", q: "수순은?", choices: [{img: "https://k-brain.co.kr/assets/img/picture-test-010-14c480bc04.webp", text: "①"}, {img: "https://k-brain.co.kr/assets/img/picture-test-003-38730d0ded.webp", text: "②"}, {img: "https://k-brain.co.kr/assets/img/picture-test-007-34fbb2dcb5.webp", text: "③"}, {img: "https://k-brain.co.kr/assets/img/picture-test-011-014920877d.webp", text: "④"}], ans: 1, domain: "실행" },
-
-  // 조절 영역 (6문항) - 감정/행동 조절
-  { stimulus: "https://k-brain.co.kr/assets/img/picture-test-004-506f5cc1c4.webp", q: "조절이 필요한 상황인가요?", choices: [{img: "https://k-brain.co.kr/assets/img/picture-test-004-506f5cc1c4.webp", text: "그렇다"}, {img: "https://k-brain.co.kr/assets/img/picture-test-009-bd3c3500ce.webp", text: "아니다"}, {img: "https://k-brain.co.kr/assets/img/picture-test-002-64ef96ffe6.webp", text: "불명"}, {img: "https://k-brain.co.kr/assets/img/picture-test-008-2e57f7117a.webp", text: "어렵다"}], ans: 0, domain: "조절" },
-  { stimulus: "https://k-brain.co.kr/assets/img/picture-test-005-a05fbd3d9c.webp", q: "자기조절이 가능한가요?", choices: [{img: "https://k-brain.co.kr/assets/img/picture-test-005-a05fbd3d9c.webp", text: "가능"}, {img: "https://k-brain.co.kr/assets/img/picture-test-010-14c480bc04.webp", text: "불가"}, {img: "https://k-brain.co.kr/assets/img/picture-test-003-38730d0ded.webp", text: "어려움"}, {img: "https://k-brain.co.kr/assets/img/picture-test-011-014920877d.webp", text: "미정"}], ans: 0, domain: "조절" },
-  { stimulus: "https://k-brain.co.kr/assets/img/picture-test-006-d2e8d7ff4f.webp", q: "조절 능력은?", choices: [{img: "https://k-brain.co.kr/assets/img/picture-test-001-72da600f3d.webp", text: "①"}, {img: "https://k-brain.co.kr/assets/img/picture-test-006-d2e8d7ff4f.webp", text: "②"}, {img: "https://k-brain.co.kr/assets/img/picture-test-009-bd3c3500ce.webp", text: "③"}, {img: "https://k-brain.co.kr/assets/img/picture-test-010-14c480bc04.webp", text: "④"}], ans: 1, domain: "조절" },
-  { stimulus: "https://k-brain.co.kr/assets/img/picture-test-007-34fbb2dcb5.webp", q: "충동 조절이 가능한가?", choices: [{img: "https://k-brain.co.kr/assets/img/picture-test-007-34fbb2dcb5.webp", text: "가능"}, {img: "https://k-brain.co.kr/assets/img/picture-test-010-14c480bc04.webp", text: "불가"}, {img: "https://k-brain.co.kr/assets/img/picture-test-004-506f5cc1c4.webp", text: "어려움"}, {img: "https://k-brain.co.kr/assets/img/picture-test-009-bd3c3500ce.webp", text: "미정"}], ans: 0, domain: "조절" },
-  { stimulus: "https://k-brain.co.kr/assets/img/picture-test-008-2e57f7117a.webp", q: "자제력이 있나요?", choices: [{img: "https://k-brain.co.kr/assets/img/picture-test-008-2e57f7117a.webp", text: "있다"}, {img: "https://k-brain.co.kr/assets/img/picture-test-011-014920877d.webp", text: "없다"}, {img: "https://k-brain.co.kr/assets/img/picture-test-005-a05fbd3d9c.webp", text: "보통"}, {img: "https://k-brain.co.kr/assets/img/picture-test-002-64ef96ffe6.webp", text: "약하다"}], ans: 0, domain: "조절" },
-  { stimulus: "https://k-brain.co.kr/assets/img/picture-test-009-bd3c3500ce.webp", q: "행동 조절이 가능한가?", choices: [{img: "https://k-brain.co.kr/assets/img/picture-test-009-bd3c3500ce.webp", text: "가능"}, {img: "https://k-brain.co.kr/assets/img/picture-test-010-14c480bc04.webp", text: "불가"}, {img: "https://k-brain.co.kr/assets/img/picture-test-006-d2e8d7ff4f.webp", text: "약함"}, {img: "https://k-brain.co.kr/assets/img/picture-test-003-38730d0ded.webp", text: "미정"}], ans: 0, domain: "조절" },
-
-  // 공간 영역 (3문항)
-  { stimulus: "https://k-brain.co.kr/assets/img/picture-test-010-14c480bc04.webp", q: "공간 위치는?", choices: [{img: "https://k-brain.co.kr/assets/img/picture-test-010-14c480bc04.webp", text: "맞음"}, {img: "https://k-brain.co.kr/assets/img/picture-test-011-014920877d.webp", text: "다름"}, {img: "https://k-brain.co.kr/assets/img/picture-test-001-72da600f3d.webp", text: "뒤"}, {img: "https://k-brain.co.kr/assets/img/picture-test-004-506f5cc1c4.webp", text: "옆"}], ans: 0, domain: "공간" },
-  { stimulus: "https://k-brain.co.kr/assets/img/picture-test-011-014920877d.webp", q: "공간 방향은?", choices: [{img: "https://k-brain.co.kr/assets/img/picture-test-010-14c480bc04.webp", text: "위"}, {img: "https://k-brain.co.kr/assets/img/picture-test-011-014920877d.webp", text: "중심"}, {img: "https://k-brain.co.kr/assets/img/picture-test-002-64ef96ffe6.webp", text: "아래"}, {img: "https://k-brain.co.kr/assets/img/picture-test-007-34fbb2dcb5.webp", text: "옆"}], ans: 1, domain: "공간" },
-  { stimulus: "https://k-brain.co.kr/assets/img/picture-test-001-72da600f3d.webp", q: "공간 인식은?", choices: [{img: "https://k-brain.co.kr/assets/img/picture-test-001-72da600f3d.webp", text: "①"}, {img: "https://k-brain.co.kr/assets/img/picture-test-011-014920877d.webp", text: "②"}, {img: "https://k-brain.co.kr/assets/img/picture-test-004-506f5cc1c4.webp", text: "③"}, {img: "https://k-brain.co.kr/assets/img/picture-test-009-bd3c3500ce.webp", text: "④"}], ans: 0, domain: "공간" }
-];
-
-const DOMAINS = ["기억", "집중", "감정", "판단", "실행", "조절", "공간"];
-const SENIOR_AVERAGE = {
-  "기억": 65, "집중": 62, "감정": 68, "판단": 64,
-  "실행": 63, "조절": 66, "공간": 60
-};
-
-// ========== 함수 ==========
-function showScreen(name) {
-  document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
-  document.getElementById(name + "Screen").classList.add("active");
-  window.scrollTo(0, 0);
-}
-
-function goToStart() { showScreen("start"); }
-function goToUserInfo() { showScreen("userInfo"); }
-
-function startTest() {
-  const nameInput = document.getElementById("userName");
-  const birthInput = document.getElementById("userBirth");
-  const genderInput = document.getElementById("userGender");
-  
-  const name = nameInput ? nameInput.value.trim() : "";
-  const birth = birthInput ? birthInput.value : "";
-  const gender = genderInput ? genderInput.value : "";
-
-  // 디버그 로그
-  console.log("이름:", name);
-  console.log("생년월일 input value:", birth);
-  console.log("성별:", gender);
-
-  if (!name || !birth) {
-    alert("이름과 생년월일을 입력해주세요");
-    return;
-  }
-
-  // 생년월일 파싱 및 만나이 계산
-  const birthDate = new Date(birth + "T00:00:00");
-  const today = new Date();
-  let age = today.getFullYear() - birthDate.getFullYear();
-  const monthDiff = today.getMonth() - birthDate.getMonth();
-  
-  if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-    age--;
-  }
-
-  console.log("계산된 만나이:", age);
-
-  if (age < 0 || age > 120) {
-    alert("올바른 생년월일을 입력해주세요 (계산된 나이: " + age + ")");
-    return;
-  }
-
-  userData = { 
-    name, 
-    birth: birth,
-    age: age,
-    gender: gender
-  };
-  currentIdx = 0;
-  answers = [];
-  
-  console.log("✅ 검사 시작:", userData);
-  showScreen("test");
-  loadQuestion();
-}
-
-function loadQuestion() {
-  if (currentIdx >= QUESTIONS_DATA.length) return;
-  
-  const q = QUESTIONS_DATA[currentIdx];
-  const pct = Math.round(((currentIdx + 1) / QUESTIONS_DATA.length) * 100);
-  
-  document.getElementById("progressBar").style.width = pct + "%";
-  document.getElementById("progressNum").textContent = (currentIdx + 1) + "/" + QUESTIONS_DATA.length;
-  document.getElementById("progressPct").textContent = pct + "%";
-  document.getElementById("qNum").textContent = "Q. " + (currentIdx + 1);
-  document.getElementById("qDomain").textContent = q.domain;
-  document.getElementById("stimulusImage").src = q.stimulus;
-  document.getElementById("questionText").textContent = q.q;
-
-  const choicesDiv = document.getElementById("choices");
-  choicesDiv.innerHTML = "";
-  
-  q.choices.forEach((choice, idx) => {
-    const btn = document.createElement("button");
-    btn.className = "choice-btn" + (answers[currentIdx] === idx ? " selected" : "");
-    btn.innerHTML = `<img class="choice-image" src="${choice.img}" alt="선택지 ${idx + 1}"><div>${choice.text}</div>`;
-    btn.onclick = () => selectChoice(idx);
-    choicesDiv.appendChild(btn);
-  });
-
-  document.getElementById("prevBtn").disabled = (currentIdx === 0);
-  document.getElementById("nextBtn").textContent = (currentIdx === QUESTIONS_DATA.length - 1) ? "✅ 완료" : "다음 →";
-}
-
-function selectChoice(idx) {
-  answers[currentIdx] = idx;
-  loadQuestion();
-}
-
-function prevQ() {
-  if (currentIdx > 0) {
-    currentIdx--;
-    loadQuestion();
-  }
-}
-
-function nextQ() {
-  if (currentIdx < QUESTIONS_DATA.length - 1) {
-    currentIdx++;
-    loadQuestion();
-  } else {
-    finishTest();
-  }
-}
-
-function finishTest() {
-  showScreen("result");
-  
-  const scores = {};
-  const domainCounts = {};
-  DOMAINS.forEach(d => {
-    scores[d] = 0;
-    domainCounts[d] = 0;
-  });
-
-  QUESTIONS_DATA.forEach((q, i) => {
-    if (q.domain) {
-      domainCounts[q.domain]++;
-      if (answers[i] === q.ans) {
-        scores[q.domain]++;
+    function nextQuestion() {
+      if (answers[currentIdx] === undefined) return;
+      
+      if (currentIdx < QUESTIONS_DATA.length - 1) {
+        currentIdx++;
+        displayQuestion();
+      } else {
+        finishTest();
       }
     }
-  });
 
-  const avgScores = {};
-  DOMAINS.forEach(d => {
-    avgScores[d] = Math.round((scores[d] / domainCounts[d]) * 100);
-  });
+    function finishTest() {
+      showScreen('result');
 
-  const avg = Object.values(avgScores).reduce((a, b) => a + b) / 7;
-  let brainAge = 100 - Math.round(avg * 0.35);
-  brainAge = Math.max(5, Math.min(100, brainAge));
+      const scores = {};
+      const domainCounts = {};
+      DOMAINS.forEach(d => {
+        scores[d] = 0;
+        domainCounts[d] = 0;
+      });
 
-  // 뇌나이 표시
-  document.getElementById("brainAge").textContent = brainAge + "세";
-  
-  // 실제 나이 표시
-  document.getElementById("realAge").textContent = "만 " + userData.age + "세";
-  
-  // 생년월일 포맷 변환
-  if (userData.birth) {
-    const [year, month, day] = userData.birth.split('-');
-    const formattedBirth = year + "년 " + month + "월 " + day + "일";
-    document.getElementById("birthInfo").textContent = formattedBirth;
-  }
+      QUESTIONS_DATA.forEach((q, i) => {
+        if (q.domain) {
+          domainCounts[q.domain]++;
+          if (answers[i] === q.ans) {
+            scores[q.domain]++;
+          }
+        }
+      });
 
-  // 막대 그래프
-  const barChartHTML = DOMAINS.map(d => {
-    const personalScore = avgScores[d];
-    return `
-      <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
-        <div style="width: 60px; text-align: right; font-weight: 800; color: #1a1a1a; font-size: 15px;">${d}</div>
-        <div style="flex: 1; position: relative; height: 28px; background: #e8e8e8; border-radius: 6px; overflow: hidden;">
-          <div style="position: absolute; height: 100%; background: linear-gradient(90deg, #00BCD4 0%, #0097A7 100%); width: ${personalScore}%; border-radius: 6px;"></div>
-        </div>
-        <div style="width: 50px; text-align: center; font-weight: 900; color: #00BCD4; font-size: 16px;">${personalScore}점</div>
-      </div>
-    `;
-  }).join("");
+      const avgScores = {};
+      DOMAINS.forEach(d => {
+        avgScores[d] = Math.round((scores[d] / domainCounts[d]) * 100);
+      });
 
-  document.getElementById("barChartContainer").innerHTML = barChartHTML;
+      const avg = Object.values(avgScores).reduce((a, b) => a + b) / DOMAINS.length;
+      let brainAge = 100 - Math.round(avg * 0.35);
+      brainAge = Math.max(5, Math.min(100, brainAge));
 
-  // 강점/약점
-  const sortedDomains = DOMAINS.map(d => ({
-    domain: d,
-    score: avgScores[d],
-    diff: avgScores[d] - SENIOR_AVERAGE[d]
-  })).sort((a, b) => b.diff - a.diff);
+      document.getElementById('brainAge').textContent = brainAge + '세';
+      document.getElementById('realAge').textContent = '만 ' + userData.age + '세';
+      document.getElementById('birthInfo').textContent = userData.birth.replace(/(\d{4})-(\d{2})-(\d{2})/, '$1년 $2월 $3일');
 
-  const strengthHTML = sortedDomains.slice(0, 2).map(d => `
-    <div style="background: linear-gradient(135deg, #E8F5E9 0%, #F1F8E9 100%); border-left: 4px solid #4CAF50; padding: 14px; margin-bottom: 12px; border-radius: 10px;">
-      <strong style="color: #2E7D32; font-weight: 800; font-size: 15px;">✓ ${d.domain} (${d.score}점)</strong><br>
-      <span style="color: #558B2F; font-size: 14px; font-weight: 600;">평균보다 +${d.diff}점 높은 능력입니다!</span>
-    </div>
-  `).join("");
+      // 바차트
+      let barHtml = '';
+      DOMAINS.forEach(d => {
+        barHtml += `
+          <div class="domain-bar">
+            <div class="domain-name">${d}</div>
+            <div class="bar-container">
+              <div class="bar-fill" style="width: ${avgScores[d]}%">
+                <span>${avgScores[d]}%</span>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+      document.getElementById('barChartContainer').innerHTML = barHtml;
 
-  const weaknessHTML = sortedDomains.slice(-2).map(d => `
-    <div style="background: linear-gradient(135deg, #FFEBEE 0%, #FCE4EC 100%); border-left: 4px solid #F44336; padding: 14px; margin-bottom: 12px; border-radius: 10px;">
-      <strong style="color: #C62828; font-weight: 800; font-size: 15px;">⚠ ${d.domain} (${d.score}점)</strong><br>
-      <span style="color: #D32F2F; font-size: 14px; font-weight: 600;">이 영역의 개선이 필요합니다. 꾸준한 훈련으로 향상 가능합니다!</span>
-    </div>
-  `).join("");
+      // 강점/약점
+      const sorted = DOMAINS.map(d => ({domain: d, score: avgScores[d]}))
+        .sort((a, b) => b.score - a.score);
 
-  document.getElementById("strengthAnalysis").innerHTML = strengthHTML;
-  document.getElementById("weaknessAnalysis").innerHTML = weaknessHTML;
+      let strengthHtml = sorted.slice(0, 3).map(s => 
+        `<div class="strength-item">${s.domain} (${s.score}%)</div>`
+      ).join('');
+      document.getElementById('strengthAnalysis').innerHTML = strengthHtml;
 
-  localStorage.setItem('bhcLatestResult', JSON.stringify({
-    name: userData.name,
-    brainAge: brainAge,
-    avgScores: avgScores,
-    timestamp: new Date().toLocaleString('ko-KR')
-  }));
-  console.log("✅ 검사 완료!");
-}
+      let weaknessHtml = sorted.slice(-3).reverse().map(s =>
+        `<div class="weakness-item">${s.domain} (${s.score}%)</div>`
+      ).join('');
+      document.getElementById('weaknessAnalysis').innerHTML = weaknessHtml;
+    }
 
-function restartTest() { goToUserInfo(); }
+    function restartTest() {
+      showScreen('question');
+      answers = [];
+      currentIdx = 0;
+      displayQuestion();
+    }
 
-console.log("✅ BHC 2.0 5성급 버전 로드 완료 - 전문 이미지 기반 그림투사방식!");
-</script>
-
+    function goToStart() {
+      showScreen('start');
+      document.getElementById('userName').value = '';
+      document.getElementById('userBirth').value = '';
+      document.getElementById('userGender').value = '';
+    }
+  </script>
 </body>
 </html>
