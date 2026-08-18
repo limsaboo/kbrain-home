@@ -39,9 +39,15 @@ body { background: linear-gradient(180deg, #1a472a 0%, #2d5a3d 100%); font-famil
 .question-info { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 12px 16px; background: #f5f5f5; border-radius: 12px; margin-bottom: 15px; }
 .q-num { font-weight: 800; color: #00BCD4; }
 .q-domain { background: linear-gradient(135deg, #00BCD4 0%, #0097A7 100%); color: white; padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 700; }
+
+.stimulus-area { background: linear-gradient(135deg, #f0f9fa 0%, #e0f7fa 100%); border: 3px solid #00BCD4; border-radius: 16px; padding: 20px; margin-bottom: 20px; min-height: 120px; display: flex; align-items: center; justify-content: center; text-align: center; }
+.stimulus-image { font-size: 60px; line-height: 1; margin: 0; }
+
 .question-text { font-size: 15px; font-weight: 700; color: #222; margin-bottom: 16px; }
+
 .choices { display: grid; grid-template-columns: 1fr; gap: 12px; margin-bottom: 20px; }
-.choice-btn { border: 3px solid #ddd; border-radius: 12px; padding: 16px; background: white; color: #333; font-size: 15px; font-weight: 700; cursor: pointer; transition: all 0.2s; text-align: center; min-height: 60px; display: flex; align-items: center; justify-content: center; }
+.choice-btn { border: 3px solid #ddd; border-radius: 12px; padding: 16px; background: white; color: #333; font-size: 14px; font-weight: 700; cursor: pointer; transition: all 0.2s; text-align: center; min-height: 80px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; }
+.choice-emoji { font-size: 40px; line-height: 1; }
 .choice-btn:active { transform: scale(0.96); }
 .choice-btn.selected { border-color: #00BCD4; background: linear-gradient(135deg, #B2EBF2 0%, #80DEEA 100%); }
 
@@ -73,7 +79,7 @@ body { background: linear-gradient(180deg, #1a472a 0%, #2d5a3d 100%); font-famil
       <p><strong>📊 8가지 인지 영역</strong> 측정</p>
       <p>기억 · 집중 · 감정 · 판단 · 실행 · 조절 · 공간 · 속도</p>
       <p><strong>⏱️ 약 10분</strong> 소요</p>
-      <p>당신의 뇌 나이를 측정해보세요! 💡</p>
+      <p>그림을 보고 직관적으로 반응하세요! 💡</p>
     </div>
     <button class="btn btn-primary" onclick="goToUserInfo()">🚀 검사 시작</button>
   </div>
@@ -121,8 +127,18 @@ body { background: linear-gradient(180deg, #1a472a 0%, #2d5a3d 100%); font-famil
       <span class="q-num" id="qNum">Q. 1</span>
       <span class="q-domain" id="qDomain">기억</span>
     </div>
+
+    <!-- 자극 영역 (이미지 제시) -->
+    <div class="stimulus-area" id="stimulusArea">
+      <div class="stimulus-image" id="stimulusImage">🖼️</div>
+    </div>
+
+    <!-- 질문 -->
     <div class="question-text" id="questionText">로딩 중...</div>
+
+    <!-- 선택지 (이미지 기반) -->
     <div class="choices" id="choices"></div>
+
     <div class="nav-buttons">
       <button class="btn-nav" onclick="prevQ()" id="prevBtn">← 이전</button>
       <button class="btn-nav" onclick="nextQ()" id="nextBtn">다음 →</button>
@@ -160,53 +176,71 @@ let currentIdx = 0;
 let answers = [];
 let userData = {};
 
-// 45개 문항
+// 45개 문항 - 그림투사방식 (자극 이미지 + 선택지 이미지)
 const QUESTIONS_DATA = [
-  { q: "숫자를 기억하세요: 7-3-9-2-5", ans: 0, domain: "기억" },
-  { q: "이전 숫자 중 '9'가 있었나요?", ans: 0, domain: "기억" },
-  { q: "가장 빠르게 반응하세요", ans: 0, domain: "속도" },
-  { q: "패턴 찾기: 2-4-6-8-?", ans: 1, domain: "집중" },
-  { q: "색상을 맞춰보세요", ans: 0, domain: "집중" },
-  { q: "행복한 표정은?", ans: 0, domain: "감정" },
-  { q: "슬픈 표정을 선택하세요", ans: 1, domain: "감정" },
-  { q: "이 상황에서 최고의 선택은?", ans: 0, domain: "판단" },
-  { q: "순서대로 정렬하면?", ans: 1, domain: "실행" },
-  { q: "공간에서 위치는?", ans: 0, domain: "공간" },
-  { q: "반복되는 패턴 찾기", ans: 0, domain: "속도" },
-  { q: "기억력 테스트 1", ans: 1, domain: "기억" },
-  { q: "집중력 유지하기", ans: 0, domain: "집중" },
-  { q: "감정 인식하기", ans: 0, domain: "감정" },
-  { q: "판단 능력 테스트", ans: 0, domain: "판단" },
-  { q: "실행 순서 정하기", ans: 0, domain: "실행" },
-  { q: "공간 회전 이해", ans: 1, domain: "공간" },
-  { q: "반응 속도 테스트", ans: 0, domain: "속도" },
-  { q: "기억력 테스트 2", ans: 0, domain: "기억" },
-  { q: "지속적인 집중력", ans: 1, domain: "집중" },
-  { q: "감정 변화 감지", ans: 0, domain: "감정" },
-  { q: "의사결정 능력", ans: 0, domain: "판단" },
-  { q: "계획 세우기", ans: 1, domain: "실행" },
-  { q: "조절 능력 테스트", ans: 0, domain: "조절" },
-  { q: "공간 지각력", ans: 0, domain: "공간" },
-  { q: "속도 반응성", ans: 1, domain: "속도" },
-  { q: "기억력 테스트 3", ans: 0, domain: "기억" },
-  { q: "주의 집중", ans: 0, domain: "집중" },
-  { q: "감정 이해", ans: 1, domain: "감정" },
-  { q: "판단력 향상", ans: 0, domain: "판단" },
-  { q: "실행 계획", ans: 0, domain: "실행" },
-  { q: "자기 조절", ans: 1, domain: "조절" },
-  { q: "공간 인식", ans: 0, domain: "공간" },
-  { q: "빠른 반응", ans: 0, domain: "속도" },
-  { q: "기억 재현", ans: 1, domain: "기억" },
-  { q: "선택적 주의", ans: 0, domain: "집중" },
-  { q: "감정 표현", ans: 0, domain: "감정" },
-  { q: "문제해결", ans: 0, domain: "판단" },
-  { q: "순서 실행", ans: 1, domain: "실행" },
-  { q: "충동 조절", ans: 0, domain: "조절" },
-  { q: "방향 감지", ans: 0, domain: "공간" },
-  { q: "신속한 처리", ans: 1, domain: "속도" },
-  { q: "최종 기억 테스트", ans: 0, domain: "기억" },
-  { q: "마지막 집중력 문제", ans: 0, domain: "집중" },
-  { q: "최종 판단 능력", ans: 0, domain: "판단" }
+  // 기억 영역 (6문항)
+  { stimulus: "🔴🟢🟡", q: "색상의 순서를 기억하세요", choices: ["🔴🟢🟡", "🟡🟢🔴", "🟢🔴🟡", "🟢🟡🔴"], ans: 0, domain: "기억" },
+  { stimulus: "😊😢😐", q: "앞에서 본 표정을 선택하세요", choices: ["😊", "😢", "😐", "😡"], ans: 0, domain: "기억" },
+  { stimulus: "🟠🟣🟤", q: "보인 색 중에 🟠이 있었나요?", choices: ["예", "아니오", "불확실", "기억안남"], ans: 0, domain: "기억" },
+  { stimulus: "1️⃣2️⃣3️⃣4️⃣", q: "숫자를 기억하세요: 1-2-3-4", choices: ["1234", "4321", "2413", "3142"], ans: 0, domain: "기억" },
+  { stimulus: "🔆🔅🌕🌑", q: "밝기 순서를 기억했나요?", choices: ["🔆🔅🌕🌑", "🌑🌕🔅🔆", "🔅🔆🌑🌕", "🌕🌑🔆🔅"], ans: 0, domain: "기억" },
+  { stimulus: "⭐✨💫🌟", q: "어떤 별 모양이 있었나요?", choices: ["⭐", "✨", "💫", "🌟"], ans: 0, domain: "기억" },
+
+  // 속도 영역 (6문항)
+  { stimulus: "1→2→3→?", q: "다음 숫자는?", choices: ["4", "2", "1", "3"], ans: 0, domain: "속도" },
+  { stimulus: "🔴🔴🔴🟡🟡?", q: "패턴의 다음은?", choices: ["🔴", "🟡", "🟢", "🟠"], ans: 0, domain: "속도" },
+  { stimulus: "A→B→C→?", q: "다음 글자는?", choices: ["D", "A", "C", "B"], ans: 0, domain: "속도" },
+  { stimulus: "2→4→6→?", q: "다음 짝수는?", choices: ["8", "6", "4", "10"], ans: 0, domain: "속도" },
+  { stimulus: "▲▶▼◀?", q: "다음 방향은?", choices: ["▲", "▶", "▼", "◀"], ans: 0, domain: "속도" },
+  { stimulus: "🐕🐈🐇?", q: "다음 동물은?", choices: ["🐦", "🐠", "🐢", "🦌"], ans: 0, domain: "속도" },
+
+  // 집중 영역 (6문항)
+  { stimulus: "🔴🟢🔵🟡🔴🟢🔵🟡", q: "정확하게 세어보세요: 몇 개?", choices: ["8", "6", "4", "10"], ans: 0, domain: "집중" },
+  { stimulus: "█░█░█░█░█", q: "검은색 칸이 몇 개?", choices: ["5", "4", "3", "6"], ans: 0, domain: "집중" },
+  { stimulus: "🌟💫⭐✨🌟", q: "별의 종류는 몇 가지?", choices: ["4", "3", "2", "5"], ans: 0, domain: "집중" },
+  { stimulus: "🔴🔴🟢🔴🟢🔴", q: "빨간 원이 몇 개?", choices: ["4", "3", "2", "5"], ans: 0, domain: "집중" },
+  { stimulus: "ABCABC ABC", q: "반복되는 패턴은?", choices: ["ABC", "AB", "AC", "BC"], ans: 0, domain: "집중" },
+  { stimulus: "🍎🍊🍎🍊🍎", q: "다음은?", choices: ["🍊", "🍎", "🍌", "🍋"], ans: 0, domain: "집중" },
+
+  // 감정 영역 (6문항)
+  { stimulus: "😊😢😐😡", q: "행복한 표정은?", choices: ["😊", "😢", "😐", "😡"], ans: 0, domain: "감정" },
+  { stimulus: "😭😤😳😌", q: "화난 표정은?", choices: ["😭", "😤", "😳", "😌"], ans: 1, domain: "감정" },
+  { stimulus: "🤔😰😍🤗", q: "사랑하는 표정은?", choices: ["🤔", "😰", "😍", "🤗"], ans: 2, domain: "감정" },
+  { stimulus: "😱😲😯🤐", q: "놀란 표정은?", choices: ["😱", "😲", "😯", "🤐"], ans: 0, domain: "감정" },
+  { stimulus: "😔😞😢💔", q: "슬픈 감정은?", choices: ["😔", "😞", "😢", "💔"], ans: 0, domain: "감정" },
+  { stimulus: "🥳🎉😄🥰", q: "기쁜 표정은?", choices: ["🥳", "🎉", "😄", "🥰"], ans: 0, domain: "감정" },
+
+  // 판단 영역 (6문항)
+  { stimulus: "❄️ 또는 🔥", q: "추울 때는?", choices: ["❄️", "🔥", "💧", "☀️"], ans: 0, domain: "판단" },
+  { stimulus: "📚 또는 ⚽", q: "공부할 때는?", choices: ["📚", "⚽", "🎮", "🍿"], ans: 0, domain: "판단" },
+  { stimulus: "🌙 또는 ☀️", q: "밤에는?", choices: ["🌙", "☀️", "🌤️", "⛅"], ans: 0, domain: "판단" },
+  { stimulus: "🚗 또는 🚶", q: "멀 때는?", choices: ["🚗", "🚶", "🚴", "🛴"], ans: 0, domain: "판단" },
+  { stimulus: "🔒 또는 🔓", q: "안전하려면?", choices: ["🔒", "🔓", "🗝️", "🚪"], ans: 0, domain: "판단" },
+  { stimulus: "✅ 또는 ❌", q: "올바른 것은?", choices: ["✅", "❌", "⚠️", "❓"], ans: 0, domain: "판단" },
+
+  // 실행 영역 (6문항)
+  { stimulus: "1️⃣→2️⃣→3️⃣", q: "순서대로 하면?", choices: ["123", "321", "213", "132"], ans: 0, domain: "실행" },
+  { stimulus: "🏠→🚗→🏢", q: "출근 순서는?", choices: ["🏠🚗🏢", "🏢🚗🏠", "🚗🏠🏢", "🏢🏠🚗"], ans: 0, domain: "실행" },
+  { stimulus: "🥣→🥛→😋", q: "아침먹기 순서는?", choices: ["🥣🥛😋", "🥛🥣😋", "😋🥣🥛", "🥣😋🥛"], ans: 0, domain: "실행" },
+  { stimulus: "📖→✍️→🧠", q: "공부 순서는?", choices: ["📖✍️🧠", "✍️📖🧠", "🧠📖✍️", "🧠✍️📖"], ans: 0, domain: "실행" },
+  { stimulus: "👕→👖→👟", q: "옷 입기 순서는?", choices: ["👕👖👟", "👖👕👟", "👟👕👖", "👕👟👖"], ans: 0, domain: "실행" },
+  { stimulus: "🧼→🚿→🧴", q: "목욕 순서는?", choices: ["🧼🚿🧴", "🚿🧼🧴", "🧴🧼🚿", "🧼🧴🚿"], ans: 0, domain: "실행" },
+
+  // 조절 영역 (6문항)
+  { stimulus: "😡→😠→😊", q: "화난 감정을 조절하면?", choices: ["😊", "😠", "😡", "😢"], ans: 0, domain: "조절" },
+  { stimulus: "🚗⚡→🚗🐌", q: "속도를 줄이면?", choices: ["🚗🐌", "🚗⚡", "🚗💨", "🚗🌪️"], ans: 0, domain: "조절" },
+  { stimulus: "🔊→🔇", q: "음량을 낮추면?", choices: ["🔇", "🔊", "📢", "📻"], ans: 0, domain: "조절" },
+  { stimulus: "🔥→💧", q: "불을 끄려면?", choices: ["💧", "🔥", "⛽", "🪵"], ans: 0, domain: "조절" },
+  { stimulus: "💭❓→🤔✅", q: "생각을 정리하면?", choices: ["🤔", "❓", "💭", "😵"], ans: 0, domain: "조절" },
+  { stimulus: "😋🍔→🛑", q: "먹고 싶은 욕구를 참으면?", choices: ["🛑", "😋", "🍔", "🤤"], ans: 0, domain: "조절" },
+
+  // 공간 영역 (6문항)
+  { stimulus: "▲ | ▼", q: "위아래 방향?", choices: ["▲", "▼", "◀", "▶"], ans: 0, domain: "공간" },
+  { stimulus: "◀ | ▶", q: "왼쪽오른쪽 방향?", choices: ["▶", "◀", "▲", "▼"], ans: 0, domain: "공간" },
+  { stimulus: "🔄", q: "회전 방향은?", choices: ["시계방향", "반시계방향", "위아래", "좌우"], ans: 0, domain: "공간" },
+  { stimulus: "📦 위치 위", q: "박스 위치는?", choices: ["위", "아래", "왼쪽", "오른쪽"], ans: 0, domain: "공간" },
+  { stimulus: "🏠 | 🌳", q: "나무의 위치는?", choices: ["오른쪽", "왼쪽", "위", "아래"], ans: 0, domain: "공간" },
+  { stimulus: "↖️ ↗️ ↙️ ↘️", q: "대각선 방향?", choices: ["↗️", "↖️", "↙️", "↘️"], ans: 0, domain: "공간" }
 ];
 
 const DOMAINS = ["기억", "집중", "감정", "판단", "실행", "조절", "공간", "속도"];
@@ -257,16 +291,16 @@ function loadQuestion() {
   document.getElementById("progressPct").textContent = pct + "%";
   document.getElementById("qNum").textContent = "Q. " + (currentIdx + 1);
   document.getElementById("qDomain").textContent = q.domain;
+  document.getElementById("stimulusImage").textContent = q.stimulus;
   document.getElementById("questionText").textContent = q.q;
 
   const choicesDiv = document.getElementById("choices");
   choicesDiv.innerHTML = "";
   
-  const choices = ["①", "②", "③", "④"];
-  choices.forEach((choice, idx) => {
+  q.choices.forEach((choice, idx) => {
     const btn = document.createElement("button");
     btn.className = "choice-btn" + (answers[currentIdx] === idx ? " selected" : "");
-    btn.textContent = choice;
+    btn.innerHTML = `<div class="choice-emoji">${choice}</div>`;
     btn.onclick = () => selectChoice(idx);
     choicesDiv.appendChild(btn);
   });
@@ -329,7 +363,6 @@ function finishTest() {
   // 막대 그래프
   const barChartHTML = DOMAINS.map(d => {
     const personalScore = avgScores[d];
-    const averageScore = SENIOR_AVERAGE[d];
     return `
       <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 14px;">
         <div style="width: 50px; text-align: right; font-weight: 700; color: #333;">${d}</div>
@@ -360,7 +393,7 @@ function finishTest() {
   const weaknessHTML = sortedDomains.slice(-2).map(d => `
     <div style="background: #FFEBEE; border-left: 4px solid #F44336; padding: 12px; margin-bottom: 10px; border-radius: 8px;">
       <strong style="color: #C62828;">⚠ ${d.domain} (${d.score}점)</strong><br>
-      <span style="color: #D32F2F;">개선이 필요합니다. 꾸준한 훈련으로 향상 가능!</span>
+      <span style="color: #D32F2F;">개선이 필요합니다!</span>
     </div>
   `).join("");
 
@@ -370,19 +403,17 @@ function finishTest() {
   // 로컬스토리지에 저장
   const result = {
     name: userData.name,
-    birth: userData.birth,
-    gender: userData.gender,
     brainAge: brainAge,
     avgScores: avgScores,
     timestamp: new Date().toLocaleString('ko-KR')
   };
   localStorage.setItem('bhcLatestResult', JSON.stringify(result));
-  console.log("✅ 검사 결과 저장 완료:", result);
+  console.log("✅ 검사 결과 저장:", result);
 }
 
 function restartTest() { goToUserInfo(); }
 
-console.log("✅ BHC 시스템 로드 완료! 모든 CDN 제거됨 - 순수 HTML/CSS/JavaScript");
+console.log("✅ BHC 2.0 그림투사방식 시스템 로드 완료!");
 </script>
 
 </body>
