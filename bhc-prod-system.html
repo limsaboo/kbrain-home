@@ -271,16 +271,26 @@ function goToStart() { showScreen("start"); }
 function goToUserInfo() { showScreen("userInfo"); }
 
 function startTest() {
-  const name = document.getElementById("userName").value.trim();
-  const birthInput = document.getElementById("userBirth").value;
+  const nameInput = document.getElementById("userName");
+  const birthInput = document.getElementById("userBirth");
+  const genderInput = document.getElementById("userGender");
+  
+  const name = nameInput ? nameInput.value.trim() : "";
+  const birth = birthInput ? birthInput.value : "";
+  const gender = genderInput ? genderInput.value : "";
 
-  if (!name || !birthInput) {
+  // 디버그 로그
+  console.log("이름:", name);
+  console.log("생년월일 input value:", birth);
+  console.log("성별:", gender);
+
+  if (!name || !birth) {
     alert("이름과 생년월일을 입력해주세요");
     return;
   }
 
   // 생년월일 파싱 및 만나이 계산
-  const birthDate = new Date(birthInput + "T00:00:00");
+  const birthDate = new Date(birth + "T00:00:00");
   const today = new Date();
   let age = today.getFullYear() - birthDate.getFullYear();
   const monthDiff = today.getMonth() - birthDate.getMonth();
@@ -289,20 +299,23 @@ function startTest() {
     age--;
   }
 
+  console.log("계산된 만나이:", age);
+
   if (age < 0 || age > 120) {
-    alert("올바른 생년월일을 입력해주세요");
+    alert("올바른 생년월일을 입력해주세요 (계산된 나이: " + age + ")");
     return;
   }
 
   userData = { 
     name, 
-    birth: birthInput,
+    birth: birth,
     age: age,
-    gender: document.getElementById("userGender").value 
+    gender: gender
   };
   currentIdx = 0;
   answers = [];
   
+  console.log("✅ 검사 시작:", userData);
   showScreen("test");
   loadQuestion();
 }
