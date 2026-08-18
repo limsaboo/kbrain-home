@@ -157,7 +157,11 @@ body { background: linear-gradient(180deg, #1a472a 0%, #2d5a3d 100%); font-famil
 
   <!-- 결과 화면 -->
   <div id="resultScreen" class="screen">
-    <div class="result-title">🎉 검사 완료!</div>
+    <div style="text-align: center; margin-bottom: 32px;">
+      <div style="font-size: 48px; font-weight: 900; color: #00BCD4; margin-bottom: 8px;">검사 완료</div>
+      <div style="font-size: 14px; font-weight: 600; color: #666;">당신의 뇌 건강 분석 결과입니다</div>
+    </div>
+
     <div class="brain-age-card">
       <div class="brain-age-label">당신의 뇌 나이는</div>
       <div class="brain-age-number" id="brainAge">000세</div>
@@ -177,22 +181,22 @@ body { background: linear-gradient(180deg, #1a472a 0%, #2d5a3d 100%); font-famil
     </div>
 
     <div class="analysis-card">
-      <div class="card-title">📊 인지 영역별 점수</div>
+      <div style="font-size: 18px; font-weight: 900; color: #00BCD4; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 3px solid #00BCD4;">인지 영역별 점수</div>
       <div id="barChartContainer"></div>
     </div>
 
     <div class="analysis-card">
-      <div class="card-title">💪 당신의 강점</div>
+      <div style="font-size: 18px; font-weight: 900; color: #00BCD4; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 3px solid #00BCD4;">당신의 강점</div>
       <div id="strengthAnalysis"></div>
     </div>
 
     <div class="analysis-card">
-      <div class="card-title">🎯 개선 필요 영역</div>
+      <div style="font-size: 18px; font-weight: 900; color: #00BCD4; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 3px solid #00BCD4;">개선 필요 영역</div>
       <div id="weaknessAnalysis"></div>
     </div>
 
-    <button class="btn btn-primary" onclick="restartTest()">🔄 다시 검사하기</button>
-    <button class="btn btn-secondary" onclick="goToStart()">🏠 처음으로</button>
+    <button class="btn btn-primary" onclick="restartTest()" style="margin-bottom: 12px;">다시 검사하기</button>
+    <button class="btn btn-secondary" onclick="goToStart()">처음으로</button>
   </div>
 </div>
 
