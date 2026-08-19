@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BHC 3.0 - 뇌 건강 체크 시스템</title>
+  <title>BHC 4.0 - 뇌 건강 체크 시스템</title>
   <style>
     * {
       margin: 0;
@@ -139,28 +139,52 @@
 
     .stimulus-container {
       width: 100%;
-      height: 240px;
+      height: 320px;
       border: 3px solid #00BCD4;
       border-radius: 16px;
       overflow: hidden;
-      margin-bottom: 24px;
+      margin-bottom: 20px;
       background: linear-gradient(135deg, #f5f5f5 0%, #eeeeee 100%);
       display: flex;
       align-items: center;
       justify-content: center;
       padding: 20px;
       text-align: center;
+      user-select: none;
+      -webkit-user-select: none;
+      cursor: grab;
+      position: relative;
+    }
+
+    .stimulus-container:active {
+      cursor: grabbing;
+    }
+
+    .stimulus-container::after {
+      content: '長押しで保存';
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      font-size: 11px;
+      color: #999;
+      font-weight: 600;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .stimulus-container:hover::after {
+      opacity: 0.7;
     }
 
     .stimulus-image {
       width: 100%;
       height: 100%;
-      object-fit: cover;
+      object-fit: contain;
       object-position: center;
     }
 
     .stimulus-text {
-      font-size: 18px;
+      font-size: 48px;
       font-weight: 900;
       color: #00695C;
       word-break: keep-all;
@@ -212,165 +236,6 @@
       box-shadow: 0 8px 16px rgba(0, 188, 212, 0.2);
     }
 
-    .result-hero {
-      text-align: center;
-      margin-bottom: 32px;
-    }
-
-    .result-title {
-      font-size: 32px;
-      font-weight: 900;
-      color: #00BCD4;
-      margin-bottom: 8px;
-    }
-
-    .result-subtitle {
-      font-size: 14px;
-      color: #666;
-      font-weight: 600;
-    }
-
-    .brain-age-card {
-      background: linear-gradient(135deg, #00BCD4 0%, #0097A7 100%);
-      color: white;
-      border-radius: 20px;
-      padding: 40px 24px;
-      text-align: center;
-      margin-bottom: 24px;
-      box-shadow: 0 12px 32px rgba(0, 188, 212, 0.2);
-    }
-
-    .brain-age-label {
-      font-size: 14px;
-      opacity: 0.9;
-      margin-bottom: 8px;
-      font-weight: 800;
-    }
-
-    .brain-age-number {
-      font-size: 64px;
-      font-weight: 900;
-      margin-bottom: 12px;
-    }
-
-    .brain-age-desc {
-      font-size: 13px;
-      opacity: 0.85;
-      font-weight: 600;
-    }
-
-    .real-age-box {
-      background: linear-gradient(135deg, #E8F5E9 0%, #F1F8E9 100%);
-      border-left: 6px solid #4CAF50;
-      border-radius: 16px;
-      padding: 24px;
-      margin-bottom: 24px;
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-    }
-
-    .age-item {
-      text-align: center;
-    }
-
-    .age-label {
-      font-size: 12px;
-      font-weight: 800;
-      color: #2E7D32;
-      margin-bottom: 8px;
-    }
-
-    .age-value {
-      font-size: 48px;
-      font-weight: 900;
-      color: #2E7D32;
-    }
-
-    .separator {
-      width: 2px;
-      height: 60px;
-      background: #4CAF50;
-      opacity: 0.3;
-    }
-
-    .birth-value {
-      font-size: 16px;
-      font-weight: 700;
-      color: #333;
-    }
-
-    .analysis-card {
-      background: #f9f9f9;
-      border: 2px solid #E0E0E0;
-      border-radius: 16px;
-      padding: 20px;
-      margin-bottom: 20px;
-    }
-
-    .card-title {
-      font-size: 16px;
-      font-weight: 900;
-      color: #00BCD4;
-      margin-bottom: 16px;
-      padding-bottom: 12px;
-      border-bottom: 3px solid #00BCD4;
-    }
-
-    .domain-bar {
-      display: flex;
-      align-items: center;
-      margin-bottom: 12px;
-      gap: 12px;
-    }
-
-    .domain-name {
-      font-size: 13px;
-      font-weight: 800;
-      color: #333;
-      min-width: 80px;
-    }
-
-    .bar-container {
-      flex: 1;
-      height: 24px;
-      background: #E0E0E0;
-      border-radius: 6px;
-      overflow: hidden;
-    }
-
-    .bar-fill {
-      height: 100%;
-      background: linear-gradient(90deg, #00BCD4 0%, #00897B 100%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 11px;
-      font-weight: 800;
-      color: white;
-    }
-
-    .strength-item,
-    .weakness-item {
-      padding: 12px 0;
-      border-bottom: 1px solid #E0E0E0;
-      font-size: 13px;
-      font-weight: 700;
-      color: #333;
-    }
-
-    .strength-item:before {
-      content: "✓ ";
-      color: #4CAF50;
-      font-weight: 900;
-    }
-
-    .weakness-item:before {
-      content: "⚠ ";
-      color: #FF9800;
-      font-weight: 900;
-    }
-
     .btn {
       width: 100%;
       padding: 16px;
@@ -400,13 +265,214 @@
       border: 2px solid #E0E0E0;
     }
 
-    .btn-secondary:hover {
-      background: #E0E0E0;
-    }
-
     .btn:disabled {
       opacity: 0.5;
       cursor: not-allowed;
+    }
+
+    /* 결과 화면 */
+    .result-container {
+      padding: 0;
+    }
+
+    .result-header {
+      background: linear-gradient(135deg, #00BCD4 0%, #0097A7 100%);
+      color: white;
+      padding: 40px 24px;
+      text-align: center;
+    }
+
+    .result-title {
+      font-size: 32px;
+      font-weight: 900;
+      margin-bottom: 8px;
+    }
+
+    .result-subtitle {
+      font-size: 14px;
+      opacity: 0.9;
+    }
+
+    .result-content {
+      padding: 32px 24px;
+    }
+
+    .brain-age-box {
+      background: linear-gradient(135deg, #E0F7FA 0%, #B2EBF2 100%);
+      border-radius: 20px;
+      padding: 36px 24px;
+      text-align: center;
+      margin-bottom: 28px;
+      border: 3px solid #00BCD4;
+    }
+
+    .brain-age-label {
+      font-size: 14px;
+      font-weight: 800;
+      color: #00695C;
+      margin-bottom: 12px;
+    }
+
+    .brain-age-number {
+      font-size: 72px;
+      font-weight: 900;
+      color: #00BCD4;
+      margin-bottom: 12px;
+    }
+
+    .brain-age-desc {
+      font-size: 13px;
+      color: #00695C;
+      font-weight: 600;
+    }
+
+    .age-info {
+      background: #f9f9f9;
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 28px;
+      border-left: 6px solid #4CAF50;
+    }
+
+    .age-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid #E0E0E0;
+      font-weight: 700;
+    }
+
+    .age-row:last-child {
+      border-bottom: none;
+    }
+
+    .age-label {
+      color: #666;
+      font-size: 14px;
+    }
+
+    .age-value {
+      color: #00BCD4;
+      font-size: 16px;
+      font-weight: 900;
+    }
+
+    .chart-section {
+      background: #f9f9f9;
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 20px;
+      border: 2px solid #E0E0E0;
+    }
+
+    .section-title {
+      font-size: 16px;
+      font-weight: 900;
+      color: #00BCD4;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 3px solid #00BCD4;
+    }
+
+    .domain-bar {
+      display: flex;
+      align-items: center;
+      margin-bottom: 12px;
+      gap: 12px;
+    }
+
+    .domain-name {
+      font-size: 13px;
+      font-weight: 800;
+      color: #333;
+      min-width: 60px;
+    }
+
+    .bar-container {
+      flex: 1;
+      height: 28px;
+      background: #E0E0E0;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #00BCD4 0%, #00897B 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 800;
+      color: white;
+      min-width: 40px;
+    }
+
+    .insight-item {
+      padding: 12px 0;
+      border-bottom: 1px solid #E0E0E0;
+      font-size: 13px;
+      font-weight: 700;
+      color: #333;
+    }
+
+    .insight-item:last-child {
+      border-bottom: none;
+    }
+
+    .insight-item.strength:before {
+      content: "✓ ";
+      color: #4CAF50;
+      font-weight: 900;
+      margin-right: 4px;
+    }
+
+    .insight-item.weakness:before {
+      content: "⚠ ";
+      color: #FF9800;
+      font-weight: 900;
+      margin-right: 4px;
+    }
+
+    .print-section {
+      display: none;
+    }
+
+    @media print {
+      body {
+        background: white;
+        padding: 0;
+      }
+
+      .container {
+        box-shadow: none;
+        max-width: 100%;
+        border-radius: 0;
+      }
+
+      .screen {
+        display: none !important;
+      }
+
+      .print-section {
+        display: block;
+        padding: 20px;
+      }
+
+      .btn {
+        display: none;
+      }
+    }
+
+    .button-group {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .button-group .btn {
+      flex: 1;
+      margin-bottom: 0;
     }
   </style>
 </head>
@@ -415,12 +481,12 @@
     <!-- 시작 화면 -->
     <div id="startScreen" class="screen active">
       <div class="header-title">
-        <h1>BHC 3.0</h1>
+        <h1>BHC 4.0</h1>
         <p>뇌 건강 체크 시스템</p>
       </div>
 
       <div class="info-box">
-        이 검사는 당신의 인지 건강 수준을 과학적으로 분석합니다. 45개의 문항을 통해 8가지 인지 영역을 측정합니다.
+        이 검사는 당신의 인지 건강 수준을 과학적으로 분석합니다. 45개의 명확한 문항을 통해 8가지 인지 영역을 측정합니다.
       </div>
 
       <div class="input-group">
@@ -456,7 +522,7 @@
         <div class="domain-tag" id="domainTag">기억</div>
       </div>
 
-      <div class="stimulus-container" id="stimulusContainer">
+      <div class="stimulus-container" id="stimulusContainer" onmousedown="startLongPress(event)" onmouseup="endLongPress()" onmouseleave="cancelLongPress()">
         <div class="stimulus-text" id="stimulusText">자극이 표시됩니다</div>
       </div>
 
@@ -468,47 +534,108 @@
     </div>
 
     <!-- 결과 화면 -->
-    <div id="resultScreen" class="screen">
-      <div class="result-hero">
+    <div id="resultScreen" class="screen result-container">
+      <div class="result-header">
         <div class="result-title">검사 완료</div>
         <div class="result-subtitle">당신의 뇌 건강 분석 결과입니다</div>
       </div>
 
-      <div class="brain-age-card">
-        <div class="brain-age-label">당신의 뇌 나이는</div>
-        <div class="brain-age-number" id="brainAge">00세</div>
-        <div class="brain-age-desc">시니어 평균과 비교한 인지 건강 수준입니다</div>
-      </div>
-
-      <div class="real-age-box">
-        <div class="age-item">
-          <div class="age-label">실제 나이</div>
-          <div class="age-value" id="realAge">만 00세</div>
+      <div class="result-content">
+        <div class="brain-age-box">
+          <div class="brain-age-label">당신의 뇌 나이는</div>
+          <div class="brain-age-number" id="brainAge">00</div>
+          <div class="brain-age-desc">세 (시니어 평균과 비교)</div>
         </div>
-        <div class="separator"></div>
-        <div class="age-item">
-          <div class="age-label">생년월일</div>
-          <div class="birth-value" id="birthInfo">YYYY년 MM월 DD일</div>
+
+        <div class="age-info">
+          <div class="age-row">
+            <div class="age-label">실제 나이</div>
+            <div class="age-value" id="realAge">만 00세</div>
+          </div>
+          <div class="age-row">
+            <div class="age-label">생년월일</div>
+            <div class="age-value" id="birthInfo">YYYY년 MM월 DD일</div>
+          </div>
+          <div class="age-row">
+            <div class="age-label">검사자</div>
+            <div class="age-value" id="userName2">이름</div>
+          </div>
+        </div>
+
+        <div class="chart-section">
+          <div class="section-title">인지 영역별 점수</div>
+          <div id="barChartContainer"></div>
+        </div>
+
+        <div class="chart-section">
+          <div class="section-title">당신의 강점 (TOP 3)</div>
+          <div id="strengthAnalysis"></div>
+        </div>
+
+        <div class="chart-section">
+          <div class="section-title">개선 필요 영역 (TOP 3)</div>
+          <div id="weaknessAnalysis"></div>
+        </div>
+
+        <div class="button-group">
+          <button class="btn btn-primary" onclick="printReport()">📄 인쇄/PDF</button>
+          <button class="btn btn-secondary" onclick="restartTest()">🔄 다시 검사</button>
+          <button class="btn btn-secondary" onclick="goToStart()">🏠 처음으로</button>
         </div>
       </div>
+    </div>
+  </div>
 
-      <div class="analysis-card">
-        <div class="card-title">인지 영역별 점수</div>
-        <div id="barChartContainer"></div>
-      </div>
+  <!-- 인쇄용 보고서 -->
+  <div class="print-section" id="printReport">
+    <h1 style="text-align: center; color: #00BCD4; margin-bottom: 32px; font-size: 28px;">BHC 4.0 - 뇌 건강 체크 결과보고서</h1>
+    
+    <div style="background: #E0F7FA; border-left: 6px solid #00BCD4; padding: 16px; border-radius: 8px; margin-bottom: 24px;">
+      <p style="font-weight: 700; font-size: 14px;">당신의 뇌 건강 분석 결과입니다</p>
+      <p style="font-size: 12px; color: #666; margin-top: 4px;">이 보고서는 BHC 4.0 시스템으로 생성되었습니다.</p>
+    </div>
 
-      <div class="analysis-card">
-        <div class="card-title">당신의 강점</div>
-        <div id="strengthAnalysis"></div>
-      </div>
+    <div style="background: linear-gradient(135deg, #E0F7FA 0%, #B2EBF2 100%); border: 3px solid #00BCD4; border-radius: 12px; padding: 24px; margin-bottom: 24px; text-align: center;">
+      <p style="font-size: 14px; font-weight: 800; color: #00695C; margin-bottom: 8px;">당신의 뇌 나이는</p>
+      <p style="font-size: 48px; font-weight: 900; color: #00BCD4; margin-bottom: 8px;" id="printBrainAge">00</p>
+      <p style="font-size: 12px; color: #00695C; font-weight: 600;">세 (시니어 평균과 비교)</p>
+    </div>
 
-      <div class="analysis-card">
-        <div class="card-title">개선 필요 영역</div>
-        <div id="weaknessAnalysis"></div>
-      </div>
+    <table style="width: 100%; margin-bottom: 24px; border-collapse: collapse;">
+      <tr style="background: #f5f5f5;">
+        <td style="padding: 12px; border: 1px solid #E0E0E0; font-weight: 700; color: #666;">항목</td>
+        <td style="padding: 12px; border: 1px solid #E0E0E0; font-weight: 700; color: #00BCD4;">결과</td>
+      </tr>
+      <tr>
+        <td style="padding: 12px; border: 1px solid #E0E0E0; font-weight: 700;">검사자명</td>
+        <td style="padding: 12px; border: 1px solid #E0E0E0;" id="printName">-</td>
+      </tr>
+      <tr style="background: #f9f9f9;">
+        <td style="padding: 12px; border: 1px solid #E0E0E0; font-weight: 700;">생년월일</td>
+        <td style="padding: 12px; border: 1px solid #E0E0E0;" id="printBirth">-</td>
+      </tr>
+      <tr>
+        <td style="padding: 12px; border: 1px solid #E0E0E0; font-weight: 700;">실제 나이</td>
+        <td style="padding: 12px; border: 1px solid #E0E0E0;" id="printRealAge">-</td>
+      </tr>
+      <tr style="background: #f9f9f9;">
+        <td style="padding: 12px; border: 1px solid #E0E0E0; font-weight: 700;">검사 완료일</td>
+        <td style="padding: 12px; border: 1px solid #E0E0E0;" id="printDate">-</td>
+      </tr>
+    </table>
 
-      <button class="btn btn-primary" onclick="restartTest()" style="margin-bottom: 12px;">다시 검사하기</button>
-      <button class="btn btn-secondary" onclick="goToStart()">처음으로</button>
+    <h2 style="font-size: 16px; font-weight: 900; color: #00BCD4; margin-top: 28px; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 2px solid #00BCD4;">인지 영역별 점수</h2>
+    <div id="printChartContainer" style="margin-bottom: 24px;"></div>
+
+    <h2 style="font-size: 16px; font-weight: 900; color: #00BCD4; margin-top: 28px; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 2px solid #00BCD4;">당신의 강점 (TOP 3)</h2>
+    <div id="printStrength" style="margin-bottom: 24px;"></div>
+
+    <h2 style="font-size: 16px; font-weight: 900; color: #00BCD4; margin-top: 28px; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 2px solid #00BCD4;">개선 필요 영역 (TOP 3)</h2>
+    <div id="printWeakness" style="margin-bottom: 24px;"></div>
+
+    <div style="margin-top: 40px; padding-top: 20px; border-top: 2px solid #E0E0E0; font-size: 11px; color: #999; text-align: center;">
+      <p>이 보고서는 한국뇌심리연구소 BHC 4.0 시스템으로 생성되었습니다.</p>
+      <p>인쇄 또는 PDF로 저장하여 보관하실 수 있습니다.</p>
     </div>
   </div>
 
@@ -516,69 +643,70 @@
     let currentIdx = 0;
     let answers = [];
     let userData = {};
+    let longPressTimer = null;
 
     const DOMAINS = ['기억', '속도', '집중', '감정', '판단', '실행', '조절', '공간'];
 
-    // 45개 명확한 문항 데이터 (기존 시스템 기반)
+    // 더 명확한 45개 문항
     const QUESTIONS_DATA = [
-      // 기억 (6)
-      { stimulus: '🌲', q: '이 이미지의 특징은?', choices: ['튼튼해 보임', '약해 보임', '불명확함', '변동이 있음'], ans: 0, domain: '기억' },
-      { stimulus: '🌲', q: '이전 이미지와 같은가?', choices: ['정확히 같음', '유사함', '다름', '구별 불가'], ans: 0, domain: '기억' },
-      { stimulus: '🏠', q: '어떤 느낌인가?', choices: ['안전함', '답답함', '어둠', '불안정'], ans: 0, domain: '기억' },
-      { stimulus: '🏠', q: '이전에 본 이미지는?', choices: ['나무', '오두막', '선인장', '호수'], ans: 0, domain: '기억' },
-      { stimulus: '🏞️', q: '순서대로 본 이미지는?', choices: ['호수→나무→오두막', '나무→오두막→호수', '오두막→호수→나무', '호수→오두막→나무'], ans: 1, domain: '기억' },
-      { stimulus: '🌵', q: '지금까지 본 모든 이미지의 개수는?', choices: ['3개', '4개', '5개', '6개'], ans: 2, domain: '기억' },
+      // 기억 (6) - 시각 기억
+      { stimulus: '🌲', q: '이 나무의 특징은?', choices: ['튼튼해 보임', '약해 보임', '불명확함', '변동이 있음'], ans: 0, domain: '기억' },
+      { stimulus: '🌲', q: '이전 이미지와 정확히 같은가?', choices: ['정확히 같음', '유사함', '다름', '구별 불가'], ans: 0, domain: '기억' },
+      { stimulus: '🏠', q: '이 집의 느낌은?', choices: ['안전함', '답답함', '어두움', '불안정'], ans: 0, domain: '기억' },
+      { stimulus: '🏠', q: '이전 자극 중 가장 최근 것은?', choices: ['나무', '집', '선인장', '호수'], ans: 1, domain: '기억' },
+      { stimulus: '🏞️', q: '방금까지 본 것의 순서는?', choices: ['호수→나무→집', '나무→집→호수', '집→호수→나무', '호수→집→나무'], ans: 1, domain: '기억' },
+      { stimulus: '🌵', q: '지금까지 본 자극의 개수는?', choices: ['3개', '4개', '5개', '6개'], ans: 2, domain: '기억' },
 
-      // 속도 (6)
-      { stimulus: '◇ ■ △', q: '이 패턴의 다음 형태는?', choices: ['사각형', '삼각형', '원형', '별형'], ans: 0, domain: '속도' },
-      { stimulus: '2, 4, 6, ?', q: '빠르게 계산하세요. 다음 숫자는?', choices: ['8', '10', '12', '14'], ans: 0, domain: '속도' },
+      // 속도 (6) - 빠른 판단
+      { stimulus: '◇ ■ △', q: '가장 빠르게: 다음 패턴은?', choices: ['○', '▲', '◆', '★'], ans: 0, domain: '속도' },
+      { stimulus: '2, 4, 6, 8, ?', q: '빠르게 계산: 다음 숫자는?', choices: ['9', '10', '12', '14'], ans: 2, domain: '속도' },
       { stimulus: '★ ♥ ★ ♣', q: '같은 기호는?', choices: ['★', '♥', '♣', '◆'], ans: 0, domain: '속도' },
-      { stimulus: '빨강 파랑 노랑', q: '순발력으로 답하세요. 많은 색은?', choices: ['빨강', '파랑', '노랑', '같음'], ans: 3, domain: '속도' },
-      { stimulus: '고양이 개 새', q: '가장 긴 단어는?', choices: ['고양이', '개', '새', '물고기'], ans: 0, domain: '속도' },
-      { stimulus: '247  352  189', q: '가장 큰 숫자는?', choices: ['247', '352', '189', '426'], ans: 1, domain: '속도' },
+      { stimulus: '빨강 파랑 노랑', q: '가장 많은 색은?', choices: ['빨강', '파랑', '노랑', '모두 같음'], ans: 3, domain: '속도' },
+      { stimulus: '고양이 개 새', q: '가장 긴 단어는?', choices: ['고양이', '개', '새', '같음'], ans: 0, domain: '속도' },
+      { stimulus: '352 189 247', q: '가장 큰 숫자는?', choices: ['352', '189', '247', '같음'], ans: 0, domain: '속도' },
 
-      // 집중 (6)
-      { stimulus: '●●●●●', q: '세심하게 보세요. 정확한 것은?', choices: ['완벽함', '작은 결함', '큰 결함', '전체 결함'], ans: 0, domain: '집중' },
-      { stimulus: '[◯◯●◯]', q: '다른 것은?', choices: ['첫 번째', '두 번째', '세 번째', '네 번째'], ans: 2, domain: '집중' },
-      { stimulus: '● ● ● ● ●', q: '주의 깊게 보세요. 총 개수는?', choices: ['4개', '5개', '6개', '7개'], ans: 1, domain: '집중' },
-      { stimulus: '●●● ●○●', q: '숨겨진 패턴을 찾으세요. 맞는 것은?', choices: ['●●●', '●○●', '○●●', '●●○'], ans: 1, domain: '집중' },
-      { stimulus: '[●  ●  ●]', q: '정확한 위치는?', choices: ['왼쪽 위', '오른쪽 위', '중앙', '오른쪽 아래'], ans: 2, domain: '집중' },
-      { stimulus: '🔵🔴🔵', q: '정확한 색 순서는?', choices: ['파랑-빨강-파랑', '빨강-파랑-빨강', '파랑-파랑-빨강', '빨강-빨강-파랑'], ans: 0, domain: '집중' },
+      // 집중 (6) - 세밀한 관찰
+      { stimulus: '●●●●●', q: '개수를 정확히 세세요', choices: ['4개', '5개', '6개', '불명확'], ans: 1, domain: '집중' },
+      { stimulus: '●◯●◯●', q: '정확한 패턴은?', choices: ['●◯●◯●', '●●◯◯●', '●◯●●◯', '◯●◯●◯'], ans: 0, domain: '집중' },
+      { stimulus: '[●  ●  ●]', q: '중앙의 위치는?', choices: ['●', '공백', '괄호', '선'], ans: 1, domain: '집중' },
+      { stimulus: '🔴🔵🔴', q: '정확한 색 순서는?', choices: ['빨강-파랑-빨강', '파랑-빨강-파랑', '빨강-빨강-파랑', '파랑-파랑-빨강'], ans: 0, domain: '집중' },
+      { stimulus: '◆◇◈◆', q: '다른 것을 찾으세요', choices: ['첫 번째', '두 번째', '세 번째', '네 번째'], ans: 2, domain: '집중' },
+      { stimulus: '[A B C D]', q: '3번째 글자는?', choices: ['A', 'B', 'C', 'D'], ans: 2, domain: '집중' },
 
-      // 감정 (6)
-      { stimulus: '😊', q: '이 표정의 감정은?', choices: ['행복함', '슬픔', '불안', '중립'], ans: 0, domain: '감정' },
+      // 감정 (6) - 상황 해석
+      { stimulus: '😊', q: '이 표정의 감정은?', choices: ['행복', '슬픔', '불안', '중립'], ans: 0, domain: '감정' },
       { stimulus: '😢', q: '인물의 기분은?', choices: ['만족', '불만족', '무관심', '혼란'], ans: 1, domain: '감정' },
       { stimulus: '☀️', q: '전체 분위기는?', choices: ['밝음', '어두움', '혼합', '모호'], ans: 0, domain: '감정' },
-      { stimulus: '👥', q: '두 인물의 관계는?', choices: ['친밀함', '거리감', '갈등', '중립'], ans: 0, domain: '감정' },
+      { stimulus: '👥', q: '두 인물의 관계는?', choices: ['친밀', '거리감', '갈등', '중립'], ans: 0, domain: '감정' },
       { stimulus: '⬆️', q: '흐름의 방향은?', choices: ['상향', '하향', '정체', '혼란'], ans: 0, domain: '감정' },
       { stimulus: '🔥', q: '전체 톤은?', choices: ['따뜻함', '차가움', '중립', '혼합'], ans: 0, domain: '감정' },
 
-      // 판단 (6)
-      { stimulus: '💧', q: '원인은?', choices: ['자연 현상', '인위적 행동', '우연', '불명'], ans: 0, domain: '판단' },
-      { stimulus: '❌ 문제', q: '가장 논리적 해결책은?', choices: ['A 방법', 'B 방법', 'C 방법', '해결 불가'], ans: 0, domain: '판단' },
-      { stimulus: '●  ◯', q: '더 큰 것은?', choices: ['좌측', '우측', '같음', '불명'], ans: 0, domain: '판단' },
-      { stimulus: '🌲🏠🚗', q: '어느 카테고리인가?', choices: ['자연물', '인공물', '추상물', '혼합'], ans: 0, domain: '판단' },
-      { stimulus: '1→2→3', q: '논리적 순서는?', choices: ['1→2→3', '1→3→2', '2→1→3', '3→2→1'], ans: 0, domain: '판단' },
-      { stimulus: '모든 새는 날 수 있다', q: '결론은?', choices: ['참', '거짓', '불명', '상황의존'], ans: 1, domain: '판단' },
+      // 판단 (6) - 논리적 추론
+      { stimulus: '💧→○', q: '결과는?', choices: ['웅덩이', '구름', '얼음', '증발'], ans: 0, domain: '판단' },
+      { stimulus: '❌ 문제', q: '해결책은?', choices: ['A 방법', 'B 방법', 'C 방법', '불가능'], ans: 0, domain: '판단' },
+      { stimulus: '●  ◯', q: '더 큰 것은?', choices: ['●', '◯', '같음', '불명확'], ans: 2, domain: '판단' },
+      { stimulus: '🌲🏠🚗', q: '공통점은?', choices: ['대칭', '이동성', '구조', '색상'], ans: 2, domain: '판단' },
+      { stimulus: '1→2→3', q: '다음은?', choices: ['4→5', '2→3', '1→2', '불명'], ans: 0, domain: '판단' },
+      { stimulus: '모든 새는 날 수 있다', q: '참/거짓?', choices: ['참', '거짓', '불명', '상황의존'], ans: 1, domain: '판단' },
 
-      // 실행 (6)
+      // 실행 (6) - 계획 수립
       { stimulus: '📋', q: '첫 단계는?', choices: ['준비', '시작', '중단', '완료'], ans: 0, domain: '실행' },
       { stimulus: '⏳', q: '다음 단계는?', choices: ['진행', '조정', '보류', '종료'], ans: 0, domain: '실행' },
-      { stimulus: '🎯', q: '예상 결과는?', choices: ['성공', '실패', '지속', '불명'], ans: 0, domain: '실행' },
-      { stimulus: '🚧', q: '장애물은?', choices: ['명확함', '불명확', '없음', '극복 가능'], ans: 0, domain: '실행' },
+      { stimulus: '🎯', q: '예상 결과는?', choices: ['성공', '실패', '진행중', '불명'], ans: 0, domain: '실행' },
+      { stimulus: '🚧', q: '장애물이 있는가?', choices: ['있음', '없음', '불명확', '극복가능'], ans: 0, domain: '실행' },
       { stimulus: '💪', q: '필요 자원은?', choices: ['충분', '부족', '적당', '미정'], ans: 2, domain: '실행' },
       { stimulus: '✅', q: '완성도는?', choices: ['높음', '낮음', '중간', '진행중'], ans: 0, domain: '실행' },
 
-      // 조절 (6)
+      // 조절 (6) - 감정 조절
       { stimulus: '⚡', q: '조절이 가능한가?', choices: ['가능', '어려움', '불가능', '미정'], ans: 0, domain: '조절' },
-      { stimulus: '😤', q: '충동적인 반응은?', choices: ['높음', '낮음', '중간', '변동'], ans: 0, domain: '조절' },
-      { stimulus: '🧘', q: '침착함은?', choices: ['우수', '저하', '중간', '불안정'], ans: 0, domain: '조절' },
+      { stimulus: '😤', q: '충동적 반응은?', choices: ['높음', '낮음', '중간', '변동'], ans: 0, domain: '조절' },
+      { stimulus: '🧘', q: '침착함은?', choices: ['우수', '저하', '중간', '불안'], ans: 0, domain: '조절' },
       { stimulus: '😰', q: '스트레스 관리는?', choices: ['우수', '어려움', '중간', '미정'], ans: 1, domain: '조절' },
       { stimulus: '💭', q: '감정 표현은?', choices: ['적절', '과함', '억제', '혼란'], ans: 0, domain: '조절' },
-      { stimulus: '🤔', q: '의사결정은?', choices: ['신중', '충동적', '우유부단', '미정'], ans: 0, domain: '조절' },
+      { stimulus: '🤔', q: '의사결정은?', choices: ['신중', '충동', '우유부단', '미정'], ans: 0, domain: '조절' },
 
-      // 공간 (3)
-      { stimulus: '●   ●   ●', q: '위치는?', choices: ['중앙', '좌측', '우측', '모서리'], ans: 1, domain: '공간' },
+      // 공간 (3) - 공간 인식
+      { stimulus: '[●  ●  ●]', q: '중앙 위치는?', choices: ['왼쪽', '중앙', '오른쪽', '모서리'], ans: 1, domain: '공간' },
       { stimulus: '⬆️', q: '방향은?', choices: ['상향', '하향', '좌향', '우향'], ans: 0, domain: '공간' },
       { stimulus: '🔭', q: '거리감은?', choices: ['가까움', '중간', '멀음', '불명'], ans: 2, domain: '공간' }
     ];
@@ -586,6 +714,34 @@
     function showScreen(screenName) {
       document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
       document.getElementById(screenName + 'Screen').classList.add('active');
+    }
+
+    function startLongPress(event) {
+      if (event.button !== 0) return;
+      longPressTimer = setTimeout(() => {
+        downloadStimulus();
+      }, 1500);
+    }
+
+    function endLongPress() {
+      clearTimeout(longPressTimer);
+    }
+
+    function cancelLongPress() {
+      clearTimeout(longPressTimer);
+    }
+
+    function downloadStimulus() {
+      const container = document.getElementById('stimulusContainer');
+      const q = QUESTIONS_DATA[currentIdx];
+      const filename = `BHC_Q${currentIdx + 1}_${q.domain}.png`;
+      
+      html2canvas(container, { scale: 2, useCORS: true }).then(canvas => {
+        const link = document.createElement('a');
+        link.href = canvas.toDataURL();
+        link.download = filename;
+        link.click();
+      }).catch(err => alert('이미지 저장 실패: ' + err.message));
     }
 
     function startTest() {
@@ -680,37 +836,68 @@
       let brainAge = 100 - Math.round(avg * 0.35);
       brainAge = Math.max(5, Math.min(100, brainAge));
 
-      document.getElementById('brainAge').textContent = brainAge + '세';
+      document.getElementById('brainAge').textContent = brainAge;
       document.getElementById('realAge').textContent = '만 ' + userData.age + '세';
       document.getElementById('birthInfo').textContent = userData.birth.replace(/(\d{4})-(\d{2})-(\d{2})/, '$1년 $2월 $3일');
+      document.getElementById('userName2').textContent = userData.name;
+
+      // 인쇄용 정보
+      document.getElementById('printBrainAge').textContent = brainAge;
+      document.getElementById('printName').textContent = userData.name;
+      document.getElementById('printBirth').textContent = userData.birth.replace(/(\d{4})-(\d{2})-(\d{2})/, '$1년 $2월 $3일');
+      document.getElementById('printRealAge').textContent = '만 ' + userData.age + '세';
+      document.getElementById('printDate').textContent = new Date().toLocaleDateString('ko-KR');
 
       let barHtml = '';
+      let printBarHtml = '';
       DOMAINS.forEach(d => {
         barHtml += `
           <div class="domain-bar">
             <div class="domain-name">${d}</div>
             <div class="bar-container">
               <div class="bar-fill" style="width: ${avgScores[d]}%">
-                <span>${avgScores[d]}%</span>
+                ${avgScores[d]}%
               </div>
+            </div>
+          </div>
+        `;
+        printBarHtml += `
+          <div style="margin-bottom: 12px;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+              <span style="font-weight: 700; font-size: 12px;">${d}</span>
+              <span style="font-weight: 900; color: #00BCD4;">${avgScores[d]}%</span>
+            </div>
+            <div style="background: #E0E0E0; height: 20px; border-radius: 4px; overflow: hidden;">
+              <div style="background: linear-gradient(90deg, #00BCD4 0%, #00897B 100%); height: 100%; width: ${avgScores[d]}%;"></div>
             </div>
           </div>
         `;
       });
       document.getElementById('barChartContainer').innerHTML = barHtml;
+      document.getElementById('printChartContainer').innerHTML = printBarHtml;
 
       const sorted = DOMAINS.map(d => ({domain: d, score: avgScores[d]}))
         .sort((a, b) => b.score - a.score);
 
       let strengthHtml = sorted.slice(0, 3).map(s => 
-        `<div class="strength-item">${s.domain} (${s.score}%)</div>`
+        `<div class="insight-item strength">${s.domain} (${s.score}%)</div>`
       ).join('');
       document.getElementById('strengthAnalysis').innerHTML = strengthHtml;
+      document.getElementById('printStrength').innerHTML = sorted.slice(0, 3).map(s =>
+        `<p style="padding: 8px 0; border-bottom: 1px solid #E0E0E0; font-size: 13px; font-weight: 700;">✓ ${s.domain} (${s.score}%)</p>`
+      ).join('');
 
       let weaknessHtml = sorted.slice(-3).reverse().map(s =>
-        `<div class="weakness-item">${s.domain} (${s.score}%)</div>`
+        `<div class="insight-item weakness">${s.domain} (${s.score}%)</div>`
       ).join('');
       document.getElementById('weaknessAnalysis').innerHTML = weaknessHtml;
+      document.getElementById('printWeakness').innerHTML = sorted.slice(-3).reverse().map(s =>
+        `<p style="padding: 8px 0; border-bottom: 1px solid #E0E0E0; font-size: 13px; font-weight: 700;">⚠ ${s.domain} (${s.score}%)</p>`
+      ).join('');
+    }
+
+    function printReport() {
+      window.print();
     }
 
     function restartTest() {
@@ -727,5 +914,7 @@
       document.getElementById('userGender').value = '';
     }
   </script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </body>
 </html>
