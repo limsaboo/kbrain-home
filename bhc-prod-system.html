@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BHC 3.0 - 뇌 건강 체크 시스템 (채박사 자문)</title>
+  <title>BHC 3.0 - 뇌 건강 체크 시스템</title>
   <style>
     * {
       margin: 0;
@@ -139,15 +139,17 @@
 
     .stimulus-container {
       width: 100%;
-      height: 280px;
+      height: 240px;
       border: 3px solid #00BCD4;
       border-radius: 16px;
       overflow: hidden;
       margin-bottom: 24px;
-      background: #f5f5f5;
+      background: linear-gradient(135deg, #f5f5f5 0%, #eeeeee 100%);
       display: flex;
       align-items: center;
       justify-content: center;
+      padding: 20px;
+      text-align: center;
     }
 
     .stimulus-image {
@@ -155,6 +157,14 @@
       height: 100%;
       object-fit: cover;
       object-position: center;
+    }
+
+    .stimulus-text {
+      font-size: 18px;
+      font-weight: 900;
+      color: #00695C;
+      word-break: keep-all;
+      line-height: 1.6;
     }
 
     .question-text {
@@ -174,17 +184,21 @@
     }
 
     .choice-btn {
-      aspect-ratio: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      border: 3px solid #DDD;
+      padding: 16px 12px;
+      border: 2px solid #DDD;
       border-radius: 12px;
       background: white;
       cursor: pointer;
       transition: all 0.2s;
-      padding: 12px;
+      font-size: 14px;
+      font-weight: 700;
+      color: #333;
+      text-align: center;
+      word-break: keep-all;
+      min-height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .choice-btn:hover {
@@ -196,21 +210,6 @@
       border-color: #00BCD4;
       background: linear-gradient(135deg, #E0F7FA 0%, #B2EBF2 100%);
       box-shadow: 0 8px 16px rgba(0, 188, 212, 0.2);
-    }
-
-    .choice-img {
-      width: 70%;
-      height: 70%;
-      object-fit: contain;
-      margin-bottom: 4px;
-    }
-
-    .choice-text {
-      font-size: 11px;
-      font-weight: 700;
-      color: #333;
-      text-align: center;
-      word-break: keep-all;
     }
 
     .result-hero {
@@ -417,11 +416,11 @@
     <div id="startScreen" class="screen active">
       <div class="header-title">
         <h1>BHC 3.0</h1>
-        <p>뇌 건강 체크 시스템 (채박사 자문)</p>
+        <p>뇌 건강 체크 시스템</p>
       </div>
 
       <div class="info-box">
-        이 검사는 당신의 인지 건강 수준을 뇌과학 기반으로 분석합니다. 40개의 투사 이미지와 45개의 문항을 통해 8가지 인지 영역을 측정합니다.
+        이 검사는 당신의 인지 건강 수준을 과학적으로 분석합니다. 45개의 문항을 통해 8가지 인지 영역을 측정합니다.
       </div>
 
       <div class="input-group">
@@ -457,8 +456,8 @@
         <div class="domain-tag" id="domainTag">기억</div>
       </div>
 
-      <div class="stimulus-container">
-        <img id="stimulusImg" class="stimulus-image" alt="자극 이미지">
+      <div class="stimulus-container" id="stimulusContainer">
+        <div class="stimulus-text" id="stimulusText">자극이 표시됩니다</div>
       </div>
 
       <div class="question-text" id="questionText">질문이 여기 표시됩니다</div>
@@ -520,119 +519,68 @@
 
     const DOMAINS = ['기억', '속도', '집중', '감정', '판단', '실행', '조절', '공간'];
 
-    // 채박사 자문 기반 40개 투사 이미지 (Unsplash + 텍스트 설명)
-    const PROJECTION_IMAGES = {
-      // 영역 1: 자연물/상징 (자아상, 기본 안정감)
-      'strong-oak': { url: 'https://images.unsplash.com/photo-1511497584788-876760111969?w=500', desc: '튼튼한 고목' },
-      'swaying-tree': { url: 'https://images.unsplash.com/photo-1426604342444-e9535461da97?w=500', desc: '폭풍 속 나무' },
-      'warm-cabin': { url: 'https://images.unsplash.com/photo-1469022563149-aa64dbd37dae?w=500', desc: '온화한 오두막' },
-      'dark-fortress': { url: 'https://images.unsplash.com/photo-1495521821757-a1efb6729352?w=500', desc: '닫힌 요새' },
-      'desert-cactus': { url: 'https://images.unsplash.com/photo-1596603744099-c3b56d0c64a2?w=500', desc: '사막의 선인장' },
-      'peaceful-clearing': { url: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=500', desc: '평화로운 공터' },
-      'cracked-earth': { url: 'https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=500', desc: '메마른 대지' },
-      'granite-cliff': { url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=500', desc: '거대 절벽' },
-      'wilted-flowers': { url: 'https://images.unsplash.com/photo-1520763185298-1b434c919abe?w=500', desc: '시드는 꽃밭' },
-      'calm-lake': { url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=500', desc: '맑은 호수' },
-      
-      // 영역 2: 관계/상황 (대인관계, 애착)
-      'back-turned': { url: 'https://images.unsplash.com/photo-1529066029614-cdc4ba120308?w=500', desc: '등 돌린 두 인물' },
-      'intense-argument': { url: 'https://images.unsplash.com/photo-1531482615713-2afd69097998?w=500', desc: '격렬한 대립' },
-      'knocking-door': { url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500', desc: '문 두드리기' },
-      'window-gazing': { url: 'https://images.unsplash.com/photo-1503235930437-8c6293ba41f5?w=500', desc: '창밖 바라보기' },
-      'crowded-isolation': { url: 'https://images.unsplash.com/photo-1517457373614-b7152f00fc81?w=500', desc: '무리 속 소외' },
-      'holding-hands': { url: 'https://images.unsplash.com/photo-1523438097911-512782516f69?w=500', desc: '손 맞잡기' },
-      'mother-child': { url: 'https://images.unsplash.com/photo-1493228246481-11150540663c?w=500', desc: '아이 보살피기' },
-      'looming-shadow': { url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=500', desc: '거대한 그림자' },
-      'group-unity': { url: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=500', desc: '무리와 유대감' },
-      'masked-conversation': { url: 'https://images.unsplash.com/photo-1497618666937-586cb221d5d7?w=500', desc: '가면 쓴 대화' },
-      
-      // 영역 3: 추상/비구조 (사고 체계, 불안)
-      'symmetry-ink': { url: 'https://images.unsplash.com/photo-1579783902614-e3fb5141b0cb?w=500', desc: '대칭 잉크' },
-      'fragmented': { url: 'https://images.unsplash.com/photo-1578589519167-0ecb848f0f6f?w=500', desc: '파편화' },
-      'chaos-ink': { url: 'https://images.unsplash.com/photo-1552961048-cf051f9def56?w=500', desc: '혼란 잉크' },
-      'clashing-colors': { url: 'https://images.unsplash.com/photo-1561070791-2526d30994b5?w=500', desc: '충돌하는 색' },
-      'spiral-void': { url: 'https://images.unsplash.com/photo-1557672172-298e090d0f80?w=500', desc: '나선형 소용돌이' },
-      'sharp-spikes': { url: 'https://images.unsplash.com/photo-1561070791-2526d30994b5?w=500', desc: '날카로운 가시' },
-      'flowing-curves': { url: 'https://images.unsplash.com/photo-1577720565980-c9ffa7f0b1d0?w=500', desc: '유동적 곡선' },
-      'tangled-lines': { url: 'https://images.unsplash.com/photo-1550355291-bbee04a92027?w=500', desc: '엉킨 선들' },
-      'maze-structure': { url: 'https://images.unsplash.com/photo-1549887534-7ef5dcc1c5c7?w=500', desc: '미로 구조' },
-      'observing-eyes': { url: 'https://images.unsplash.com/photo-1551986782-d244ca7b76a0?w=500', desc: '관찰하는 눈' },
-      
-      // 영역 4: 색채/감정 (자율신경계, 정서)
-      'explosive-red': { url: 'https://images.unsplash.com/photo-1578987328093-aab922e688ce?w=500', desc: '폭발하는 붉은색' },
-      'calm-blue': { url: 'https://images.unsplash.com/photo-1494288207205-a81342ee5160?w=500', desc: '고요한 블루' },
-      'black-grey': { url: 'https://images.unsplash.com/photo-1559027615-cd0628902d4a?w=500', desc: '검은/회색' },
-      'green-warm': { url: 'https://images.unsplash.com/photo-1517622900660-2f98a0a20fd8?w=500', desc: '초록/따뜻함' },
-      'purple-fantasy': { url: 'https://images.unsplash.com/photo-1557821552-17105176677c?w=500', desc: '보라색 판타지' },
-      'stark-contrast': { url: 'https://images.unsplash.com/photo-1581822261290-991b38693d1b?w=500', desc: '명암 대비' },
-      'muted-pastel': { url: 'https://images.unsplash.com/photo-1549887534-7ef5dcc1c5c7?w=500', desc: '낮은 채도' },
-      'soft-pastel': { url: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=500', desc: '부드러운 파스텔' },
-      'golden-light': { url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=500', desc: '골드 빛' },
-      'red-blue-collision': { url: 'https://images.unsplash.com/photo-1578587328093-aab922e688ce?w=500', desc: '붉은/파란 충돌' }
-    };
-
-    // 45개 문항 데이터 (채박사 프롬프트 기반)
+    // 45개 명확한 문항 데이터 (기존 시스템 기반)
     const QUESTIONS_DATA = [
-      // 기억 (6) - 자연물 영역
-      { stimulus: 'strong-oak', q: '이 이미지가 주는 느낌은?', choices: ['안정적', '불안정', '혼란', '막연'], ans: 0, domain: '기억' },
-      { stimulus: 'swaying-tree', q: '현재 당신의 자아 상태는?', choices: ['약함', '강함', '중립', '불명'], ans: 0, domain: '기억' },
-      { stimulus: 'warm-cabin', q: '이것이 상징하는 것은?', choices: ['안전', '고립', '경계', '미정'], ans: 0, domain: '기억' },
-      { stimulus: 'dark-fortress', q: '대인관계 태도는?', choices: ['방어적', '개방적', '중도', '불안'], ans: 0, domain: '기억' },
-      { stimulus: 'desert-cactus', q: '스트레스 대응 방식은?', choices: ['공격적', '회피적', '대처', '무감각'], ans: 0, domain: '기억' },
-      { stimulus: 'calm-lake', q: '정서 조절 능력은?', choices: ['우수', '저하', '불균형', '변동'], ans: 0, domain: '기억' },
+      // 기억 (6)
+      { stimulus: '🌲', q: '이 이미지의 특징은?', choices: ['튼튼해 보임', '약해 보임', '불명확함', '변동이 있음'], ans: 0, domain: '기억' },
+      { stimulus: '🌲', q: '이전 이미지와 같은가?', choices: ['정확히 같음', '유사함', '다름', '구별 불가'], ans: 0, domain: '기억' },
+      { stimulus: '🏠', q: '어떤 느낌인가?', choices: ['안전함', '답답함', '어둠', '불안정'], ans: 0, domain: '기억' },
+      { stimulus: '🏠', q: '이전에 본 이미지는?', choices: ['나무', '오두막', '선인장', '호수'], ans: 0, domain: '기억' },
+      { stimulus: '🏞️', q: '순서대로 본 이미지는?', choices: ['호수→나무→오두막', '나무→오두막→호수', '오두막→호수→나무', '호수→오두막→나무'], ans: 1, domain: '기억' },
+      { stimulus: '🌵', q: '지금까지 본 모든 이미지의 개수는?', choices: ['3개', '4개', '5개', '6개'], ans: 2, domain: '기억' },
 
-      // 속도 (6) - 추상 영역
-      { stimulus: 'symmetry-ink', q: '이것이 의미하는 것은?', choices: ['정상', '비정상', '혼합', '알수없'], ans: 0, domain: '속도' },
-      { stimulus: 'fragmented', q: '현재 사고 방식은?', choices: ['체계적', '분산', '강박', '모호'], ans: 0, domain: '속도' },
-      { stimulus: 'chaos-ink', q: '불안 수준은?', choices: ['높음', '낮음', '중간', '변동'], ans: 0, domain: '속도' },
-      { stimulus: 'clashing-colors', q: '충동 조절은?', choices: ['어려움', '가능', '부분', '미정'], ans: 0, domain: '속도' },
-      { stimulus: 'spiral-void', q: '내적 상태는?', choices: ['침체', '활발', '중립', '불안'], ans: 0, domain: '속도' },
-      { stimulus: 'maze-structure', q: '문제 해결 능력은?', choices: ['우수', '약함', '중간', '상황의존'], ans: 0, domain: '속도' },
+      // 속도 (6)
+      { stimulus: '◇ ■ △', q: '이 패턴의 다음 형태는?', choices: ['사각형', '삼각형', '원형', '별형'], ans: 0, domain: '속도' },
+      { stimulus: '2, 4, 6, ?', q: '빠르게 계산하세요. 다음 숫자는?', choices: ['8', '10', '12', '14'], ans: 0, domain: '속도' },
+      { stimulus: '★ ♥ ★ ♣', q: '같은 기호는?', choices: ['★', '♥', '♣', '◆'], ans: 0, domain: '속도' },
+      { stimulus: '빨강 파랑 노랑', q: '순발력으로 답하세요. 많은 색은?', choices: ['빨강', '파랑', '노랑', '같음'], ans: 3, domain: '속도' },
+      { stimulus: '고양이 개 새', q: '가장 긴 단어는?', choices: ['고양이', '개', '새', '물고기'], ans: 0, domain: '속도' },
+      { stimulus: '247  352  189', q: '가장 큰 숫자는?', choices: ['247', '352', '189', '426'], ans: 1, domain: '속도' },
 
-      // 집중 (6) - 색채 영역
-      { stimulus: 'explosive-red', q: '에너지 수준은?', choices: ['높음', '낮음', '중간', '변동'], ans: 0, domain: '집중' },
-      { stimulus: 'calm-blue', q: '침착함은?', choices: ['우수', '저하', '중간', '미정'], ans: 0, domain: '집중' },
-      { stimulus: 'black-grey', q: '동기 수준은?', choices: ['낮음', '높음', '중간', '불안정'], ans: 0, domain: '집중' },
-      { stimulus: 'green-warm', q: '긍정 정서는?', choices: ['높음', '낮음', '중간', '기복'], ans: 0, domain: '집중' },
-      { stimulus: 'purple-fantasy', q: '현실감각은?', choices: ['약함', '강함', '중간', '선택적'], ans: 0, domain: '집중' },
-      { stimulus: 'stark-contrast', q: '이분법적 사고는?', choices: ['높음', '낮음', '중간', '상황의존'], ans: 0, domain: '집중' },
+      // 집중 (6)
+      { stimulus: '●●●●●', q: '세심하게 보세요. 정확한 것은?', choices: ['완벽함', '작은 결함', '큰 결함', '전체 결함'], ans: 0, domain: '집중' },
+      { stimulus: '[◯◯●◯]', q: '다른 것은?', choices: ['첫 번째', '두 번째', '세 번째', '네 번째'], ans: 2, domain: '집중' },
+      { stimulus: '● ● ● ● ●', q: '주의 깊게 보세요. 총 개수는?', choices: ['4개', '5개', '6개', '7개'], ans: 1, domain: '집중' },
+      { stimulus: '●●● ●○●', q: '숨겨진 패턴을 찾으세요. 맞는 것은?', choices: ['●●●', '●○●', '○●●', '●●○'], ans: 1, domain: '집중' },
+      { stimulus: '[●  ●  ●]', q: '정확한 위치는?', choices: ['왼쪽 위', '오른쪽 위', '중앙', '오른쪽 아래'], ans: 2, domain: '집중' },
+      { stimulus: '🔵🔴🔵', q: '정확한 색 순서는?', choices: ['파랑-빨강-파랑', '빨강-파랑-빨강', '파랑-파랑-빨강', '빨강-빨강-파랑'], ans: 0, domain: '집중' },
 
-      // 감정 (6) - 관계 영역
-      { stimulus: 'back-turned', q: '대인 거리감은?', choices: ['높음', '낮음', '적당', '변동'], ans: 0, domain: '감정' },
-      { stimulus: 'intense-argument', q: '분노 조절은?', choices: ['어려움', '가능', '부분', '미정'], ans: 0, domain: '감정' },
-      { stimulus: 'knocking-door', q: '수용 갈망은?', choices: ['높음', '낮음', '중간', '미정'], ans: 0, domain: '감정' },
-      { stimulus: 'window-gazing', q: '탈출 욕구는?', choices: ['높음', '낮음', '중간', '변동'], ans: 0, domain: '감정' },
-      { stimulus: 'group-unity', q: '소속감은?', choices: ['높음', '낮음', '중간', '불안정'], ans: 0, domain: '감정' },
-      { stimulus: 'mother-child', q: '돌봄 욕구는?', choices: ['높음', '낮음', '중간', '미정'], ans: 0, domain: '감정' },
+      // 감정 (6)
+      { stimulus: '😊', q: '이 표정의 감정은?', choices: ['행복함', '슬픔', '불안', '중립'], ans: 0, domain: '감정' },
+      { stimulus: '😢', q: '인물의 기분은?', choices: ['만족', '불만족', '무관심', '혼란'], ans: 1, domain: '감정' },
+      { stimulus: '☀️', q: '전체 분위기는?', choices: ['밝음', '어두움', '혼합', '모호'], ans: 0, domain: '감정' },
+      { stimulus: '👥', q: '두 인물의 관계는?', choices: ['친밀함', '거리감', '갈등', '중립'], ans: 0, domain: '감정' },
+      { stimulus: '⬆️', q: '흐름의 방향은?', choices: ['상향', '하향', '정체', '혼란'], ans: 0, domain: '감정' },
+      { stimulus: '🔥', q: '전체 톤은?', choices: ['따뜻함', '차가움', '중립', '혼합'], ans: 0, domain: '감정' },
 
-      // 판단 (6) - 관계 영역
-      { stimulus: 'holding-hands', q: '친밀감 능력은?', choices: ['우수', '저하', '중간', '불안정'], ans: 0, domain: '판단' },
-      { stimulus: 'looming-shadow', q: '권위 불안은?', choices: ['높음', '낮음', '중간', '미정'], ans: 0, domain: '판단' },
-      { stimulus: 'crowded-isolation', q: '정서적 지지 필요는?', choices: ['높음', '낮음', '중간', '불명'], ans: 0, domain: '판단' },
-      { stimulus: 'masked-conversation', q: '진정성은?', choices: ['낮음', '높음', '선택적', '미정'], ans: 0, domain: '판단' },
-      { stimulus: 'peaceful-clearing', q: '회복 자원은?', choices: ['풍부', '부족', '중간', '변동'], ans: 0, domain: '판단' },
-      { stimulus: 'wilted-flowers', q: '자존감은?', choices: ['낮음', '높음', '중간', '불안정'], ans: 0, domain: '판단' },
+      // 판단 (6)
+      { stimulus: '💧', q: '원인은?', choices: ['자연 현상', '인위적 행동', '우연', '불명'], ans: 0, domain: '판단' },
+      { stimulus: '❌ 문제', q: '가장 논리적 해결책은?', choices: ['A 방법', 'B 방법', 'C 방법', '해결 불가'], ans: 0, domain: '판단' },
+      { stimulus: '●  ◯', q: '더 큰 것은?', choices: ['좌측', '우측', '같음', '불명'], ans: 0, domain: '판단' },
+      { stimulus: '🌲🏠🚗', q: '어느 카테고리인가?', choices: ['자연물', '인공물', '추상물', '혼합'], ans: 0, domain: '판단' },
+      { stimulus: '1→2→3', q: '논리적 순서는?', choices: ['1→2→3', '1→3→2', '2→1→3', '3→2→1'], ans: 0, domain: '판단' },
+      { stimulus: '모든 새는 날 수 있다', q: '결론은?', choices: ['참', '거짓', '불명', '상황의존'], ans: 1, domain: '판단' },
 
-      // 실행 (6) - 추상 영역
-      { stimulus: 'tangled-lines', q: '인지 블로킹은?', choices: ['높음', '낮음', '중간', '미정'], ans: 0, domain: '실행' },
-      { stimulus: 'flowing-curves', q: '유연성은?', choices: ['높음', '낮음', '중간', '상황의존'], ans: 0, domain: '실행' },
-      { stimulus: 'sharp-spikes', q: '과각성은?', choices: ['높음', '낮음', '중간', '미정'], ans: 0, domain: '실행' },
-      { stimulus: 'observing-eyes', q: '자의식은?', choices: ['높음', '낮음', '중간', '변동'], ans: 0, domain: '실행' },
-      { stimulus: 'golden-light', q: '포부 수준은?', choices: ['높음', '낮음', '중간', '미정'], ans: 0, domain: '실행' },
-      { stimulus: 'red-blue-collision', q: '내적 갈등은?', choices: ['높음', '낮음', '중간', '불명'], ans: 0, domain: '실행' },
+      // 실행 (6)
+      { stimulus: '📋', q: '첫 단계는?', choices: ['준비', '시작', '중단', '완료'], ans: 0, domain: '실행' },
+      { stimulus: '⏳', q: '다음 단계는?', choices: ['진행', '조정', '보류', '종료'], ans: 0, domain: '실행' },
+      { stimulus: '🎯', q: '예상 결과는?', choices: ['성공', '실패', '지속', '불명'], ans: 0, domain: '실행' },
+      { stimulus: '🚧', q: '장애물은?', choices: ['명확함', '불명확', '없음', '극복 가능'], ans: 0, domain: '실행' },
+      { stimulus: '💪', q: '필요 자원은?', choices: ['충분', '부족', '적당', '미정'], ans: 2, domain: '실행' },
+      { stimulus: '✅', q: '완성도는?', choices: ['높음', '낮음', '중간', '진행중'], ans: 0, domain: '실행' },
 
-      // 조절 (6) - 색채 영역
-      { stimulus: 'muted-pastel', q: '감정 표현은?', choices: ['억제', '개방', '선택', '미정'], ans: 0, domain: '조절' },
-      { stimulus: 'soft-pastel', q: '안전감은?', choices: ['높음', '낮음', '중간', '불안정'], ans: 0, domain: '조절' },
-      { stimulus: 'purple-fantasy', q: '현실 회피는?', choices: ['높음', '낮음', '중간', '미정'], ans: 0, domain: '조절' },
-      { stimulus: 'stark-contrast', q: '극단 사고는?', choices: ['높음', '낮음', '중간', '상황의존'], ans: 0, domain: '조절' },
-      { stimulus: 'calm-blue', q: '자율신경 균형은?', choices: ['우수', '저하', '중간', '불균형'], ans: 0, domain: '조절' },
-      { stimulus: 'explosive-red', q: '충동성은?', choices: ['높음', '낮음', '중간', '미정'], ans: 0, domain: '조절' },
+      // 조절 (6)
+      { stimulus: '⚡', q: '조절이 가능한가?', choices: ['가능', '어려움', '불가능', '미정'], ans: 0, domain: '조절' },
+      { stimulus: '😤', q: '충동적인 반응은?', choices: ['높음', '낮음', '중간', '변동'], ans: 0, domain: '조절' },
+      { stimulus: '🧘', q: '침착함은?', choices: ['우수', '저하', '중간', '불안정'], ans: 0, domain: '조절' },
+      { stimulus: '😰', q: '스트레스 관리는?', choices: ['우수', '어려움', '중간', '미정'], ans: 1, domain: '조절' },
+      { stimulus: '💭', q: '감정 표현은?', choices: ['적절', '과함', '억제', '혼란'], ans: 0, domain: '조절' },
+      { stimulus: '🤔', q: '의사결정은?', choices: ['신중', '충동적', '우유부단', '미정'], ans: 0, domain: '조절' },
 
-      // 공간 (3) - 자연물 영역
-      { stimulus: 'strong-oak', q: '공간 인식은?', choices: ['우수', '저하', '중간', '미정'], ans: 0, domain: '공간' },
-      { stimulus: 'peaceful-clearing', q: '방향감각은?', choices: ['좋음', '나쁨', '중간', '상황의존'], ans: 0, domain: '공간' },
-      { stimulus: 'granite-cliff', q: '구조 인식은?', choices: ['우수', '저하', '중간', '불명'], ans: 0, domain: '공간' }
+      // 공간 (3)
+      { stimulus: '●   ●   ●', q: '위치는?', choices: ['중앙', '좌측', '우측', '모서리'], ans: 1, domain: '공간' },
+      { stimulus: '⬆️', q: '방향은?', choices: ['상향', '하향', '좌향', '우향'], ans: 0, domain: '공간' },
+      { stimulus: '🔭', q: '거리감은?', choices: ['가까움', '중간', '멀음', '불명'], ans: 2, domain: '공간' }
     ];
 
     function showScreen(screenName) {
@@ -668,18 +616,17 @@
 
     function displayQuestion() {
       const q = QUESTIONS_DATA[currentIdx];
-      const imgData = PROJECTION_IMAGES[q.stimulus];
       const progress = ((currentIdx + 1) / QUESTIONS_DATA.length) * 100;
       
       document.getElementById('progressBar').style.width = progress + '%';
       document.getElementById('questionNum').textContent = `Q. ${currentIdx + 1} / 45`;
       document.getElementById('domainTag').textContent = q.domain;
-      document.getElementById('stimulusImg').src = imgData.url;
+      document.getElementById('stimulusText').textContent = q.stimulus;
       document.getElementById('questionText').textContent = q.q;
 
       const choicesHtml = q.choices.map((c, i) => `
         <button class="choice-btn" onclick="selectChoice(${i})">
-          <div class="choice-text">${c}</div>
+          ${c}
         </button>
       `).join('');
       
