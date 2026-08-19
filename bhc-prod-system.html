@@ -63,11 +63,12 @@
 
     .timer-section { display: flex; justify-content: center; margin-bottom: 16px; }
     .timer-circle {
-      width: 60px; height: 60px; border-radius: 50%;
+      width: 80px; height: 80px; border-radius: 50%;
       background: linear-gradient(135deg, #E0F7FA 0%, #B2EBF2 100%);
-      border: 3px solid #00BCD4;
+      border: 4px solid #00BCD4;
       display: flex; align-items: center; justify-content: center;
-      font-size: 24px; font-weight: 900; color: #00BCD4;
+      font-size: 36px; font-weight: 900; color: #00BCD4;
+      box-shadow: 0 0 20px rgba(0, 188, 212, 0.3);
     }
     .timer-circle.warning { background: linear-gradient(135deg, #FFF9C4 0%, #FFEE58 100%); border-color: #FBC02D; color: #F57F17; }
     .timer-circle.danger { background: linear-gradient(135deg, #FFCDD2 0%, #EF5350 100%); border-color: #D32F2F; color: #B71C1C; animation: pulse 0.5s infinite; }
@@ -316,7 +317,14 @@
         <h1>BHC 5.0</h1>
         <p>뇌 건강 체크 시스템</p>
       </div>
-      <div class="info-box">51개의 명확한 문항을 제한시간 내에 선택합니다. 빠르고 직관적인 응답을 기반으로 뇌 건강을 분석합니다.</div>
+      <div class="info-box">
+        <strong>🧪 검사 방법</strong><br>
+        • 총 51개 문항 (약 7~8분 소요)<br>
+        • 각 문항당 7~10초 시간 제한<br>
+        • 시간이 끝나면 자동으로 다음 문항으로 진행<br>
+        • 직관적으로 빠르게 응답해주세요<br>
+        • 깊게 생각하지 않고 첫 느낌으로 선택하세요
+      </div>
       <div class="input-group">
         <label>이름</label>
         <input type="text" id="userName" placeholder="이름">
@@ -343,6 +351,7 @@
         <div class="question-num" id="questionNum">Q. 1/51</div>
         <div class="domain-tag" id="domainTag">기억</div>
         <div class="mechanism-label" id="mechanismLabel">DMN</div>
+        <div style="font-size: 11px; color: #00897B; margin-top: 6px; font-weight: 700;">💡 직관적으로 빠르게 선택하세요</div>
       </div>
       <div class="timer-section"><div class="timer-circle" id="timerCircle">3</div></div>
       <div class="stimulus-container"><svg class="stimulus-svg" id="stimulusSvg" viewBox="0 0 240 240"></svg></div>
@@ -617,7 +626,7 @@
 
     function startTimer() {
       clearInterval(timerInterval);
-      const randomTime = Math.random() < 0.5 ? 3 : 5;
+      const randomTime = Math.random() < 0.5 ? 7 : 10; // 7~10초 (충분한 시간)
       let remaining = randomTime;
       
       const update = () => {
@@ -631,8 +640,13 @@
         if (remaining < 0) {
           clearInterval(timerInterval);
           if (answers[currentIdx] === undefined) {
+            // 시간 끝났을 때 첫 번째 선택 자동 선택
             selectChoice(0);
-            setTimeout(() => nextQuestion(), 500);
+            // 500ms 후 다음 문항으로 진행 (사용자가 인식할 수 있도록)
+            setTimeout(() => {
+              console.log('자동으로 다음 문항으로 진행합니다');
+              nextQuestion();
+            }, 500);
           }
         }
       };
