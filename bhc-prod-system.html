@@ -131,15 +131,17 @@
     .radar-svg { width: 100%; max-width: 280px; height: 280px; }
 
     .domain-section {
-      background: #f9f9f9; border-radius: 12px; padding: 12px; margin-bottom: 12px;
-      border-left: 4px solid #00BCD4; font-size: 11px;
+      background: linear-gradient(135deg, #E0F7FA 0%, #f9f9f9 100%); 
+      border-radius: 12px; padding: 14px; margin-bottom: 14px;
+      border-left: 6px solid #00BCD4; border-top: 3px solid #00BCD4;
+      font-size: 12px;
     }
-    .domain-header { display: flex; align-items: center; margin-bottom: 6px; }
-    .domain-icon { font-size: 16px; margin-right: 6px; }
-    .domain-name { font-weight: 800; color: #00695C; flex: 1; }
-    .domain-score { font-weight: 900; color: #00BCD4; }
-    .domain-desc { color: #666; line-height: 1.4; margin-bottom: 4px; }
-    .domain-mechanism { font-size: 10px; color: #00897B; font-weight: 700; }
+    .domain-header { display: flex; align-items: center; margin-bottom: 8px; }
+    .domain-icon { font-size: 20px; margin-right: 8px; }
+    .domain-name { font-weight: 900; color: #00695C; flex: 1; font-size: 15px; }
+    .domain-score { font-weight: 900; color: #00BCD4; font-size: 18px; background: rgba(0, 188, 212, 0.1); padding: 4px 10px; border-radius: 8px; }
+    .domain-desc { color: #333; line-height: 1.5; margin-bottom: 6px; font-weight: 600; }
+    .domain-mechanism { font-size: 11px; color: #00897B; font-weight: 800; background: rgba(0, 137, 123, 0.08); padding: 4px 6px; border-radius: 4px; }
 
     .insight-box { background: #f0f7ff; border-radius: 12px; padding: 12px; margin-bottom: 12px; border-left: 4px solid #4CAF50; }
     .insight-item { padding: 6px 0; font-size: 11px; font-weight: 700; color: #333; }
@@ -164,11 +166,143 @@
     .button-group .btn { margin-bottom: 0; }
 
     @media print {
-      body { background: white; padding: 0; }
-      .container { box-shadow: none; max-width: 100%; border-radius: 0; }
-      .screen { display: none !important; }
-      .print-section { display: block !important; padding: 20px; }
-      .btn { display: none !important; }
+      * { margin: 0; padding: 0; }
+      
+      body { 
+        background: white !important; 
+        padding: 0 !important;
+        color: #333;
+      }
+
+      .container {
+        box-shadow: none !important;
+        max-width: 100% !important;
+        border-radius: 0 !important;
+        padding: 0 !important;
+      }
+
+      #resultScreen {
+        display: block !important;
+        padding: 20px !important;
+        min-height: auto !important;
+      }
+
+      .screen {
+        display: none !important;
+        padding: 0 !important;
+      }
+
+      .result-content {
+        max-height: none !important;
+        overflow: visible !important;
+      }
+
+      .btn {
+        display: none !important;
+      }
+
+      .button-group {
+        display: none !important;
+      }
+
+      .result-header {
+        page-break-after: avoid;
+        margin-bottom: 20px;
+        padding: 20px;
+        background: linear-gradient(135deg, #00BCD4 0%, #0097A7 100%);
+        color: white;
+        border-radius: 0;
+      }
+
+      .section-title {
+        page-break-after: avoid;
+        page-break-inside: avoid;
+        margin-top: 20px;
+        margin-bottom: 10px;
+        font-size: 14px;
+        font-weight: 900;
+        color: #00BCD4;
+        border-bottom: 2px solid #00BCD4;
+        padding-bottom: 6px;
+      }
+
+      .brain-age-box {
+        page-break-inside: avoid;
+        margin-bottom: 20px;
+        padding: 20px;
+        border: 2px solid #00BCD4;
+        border-radius: 8px;
+      }
+
+      .info-row {
+        page-break-inside: avoid;
+        border-bottom: 1px solid #E0E0E0;
+        padding: 8px 0;
+        display: flex;
+        justify-content: space-between;
+        font-size: 12px;
+        font-weight: 700;
+      }
+
+      .domain-section {
+        page-break-inside: avoid;
+        margin-bottom: 12px;
+        padding: 10px;
+        border: 1px solid #DDD;
+        border-radius: 8px;
+        font-size: 11px;
+      }
+
+      .insight-box {
+        page-break-inside: avoid;
+        margin-bottom: 12px;
+        padding: 10px;
+        border: 1px solid #DDD;
+        border-radius: 8px;
+        font-size: 11px;
+      }
+
+      .roadmap-box {
+        page-break-inside: avoid;
+        margin-bottom: 12px;
+        padding: 10px;
+        border: 1px solid #DDD;
+        border-radius: 8px;
+        font-size: 11px;
+      }
+
+      .neuroscience-box {
+        page-break-inside: avoid;
+        margin-bottom: 12px;
+        padding: 10px;
+        border: 1px solid #DDD;
+        border-radius: 8px;
+        font-size: 11px;
+      }
+
+      .recommendation-box {
+        page-break-inside: avoid;
+        margin-bottom: 12px;
+        padding: 10px;
+        border: 1px solid #DDD;
+        border-radius: 8px;
+        font-size: 11px;
+      }
+
+      .radar-container {
+        page-break-inside: avoid;
+        margin-bottom: 20px;
+      }
+
+      .radar-svg {
+        page-break-inside: avoid;
+        width: 100% !important;
+        max-width: 100% !important;
+      }
+
+      svg {
+        page-break-inside: avoid !important;
+      }
     }
 
     .print-section { display: none; }
@@ -529,24 +663,28 @@
 
     function drawRadarChart(scores) {
       const svg = document.getElementById('radarChart');
-      const cx = 150, cy = 150, radius = 100;
+      const cx = 150, cy = 150, radius = 90;
       const angleSlice = (Math.PI * 2) / 8;
+      
+      // 축별 컬러
+      const colors = ['#1976D2', '#D32F2F', '#FBC02D', '#388E3C', '#FF9800', '#7B1FA2', '#E91E63', '#00796B'];
       
       let points = [];
       let pathData = '';
       
+      // 데이터 포인트 계산
       for (let i = 0; i < 8; i++) {
         const angle = angleSlice * i - Math.PI / 2;
         const r = (scores[i] / 100) * radius;
         const x = cx + r * Math.cos(angle);
         const y = cy + r * Math.sin(angle);
-        points.push({ x, y });
+        points.push({ x, y, color: colors[i] });
         if (i === 0) pathData = `M ${x} ${y}`;
         else pathData += ` L ${x} ${y}`;
       }
       pathData += ' Z';
       
-      let html = '<g fill="none" stroke="#00BCD4" stroke-width="2">';
+      let html = '';
       
       // 그리드
       for (let i = 1; i <= 5; i++) {
@@ -560,35 +698,34 @@
           else gridPath += ` L ${x} ${y}`;
         }
         gridPath += ' Z';
-        html += `<path d="${gridPath}" stroke="#E0E0E0" stroke-width="1"/>`;
+        html += `<path d="${gridPath}" stroke="#DDD" stroke-width="1" fill="none"/>`;
       }
       
-      // 축
+      // 축선
       for (let i = 0; i < 8; i++) {
         const angle = angleSlice * i - Math.PI / 2;
         const x = cx + radius * Math.cos(angle);
         const y = cy + radius * Math.sin(angle);
-        html += `<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="#E0E0E0" stroke-width="1"/>`;
+        html += `<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="#EEE" stroke-width="1"/>`;
       }
       
-      // 레이더 영역
-      html += `<path d="${pathData}" fill="#00BCD4" fill-opacity="0.2" stroke="#00BCD4" stroke-width="2"/>`;
+      // 데이터 영역 (파랑 투명)
+      html += `<path d="${pathData}" fill="#1976D2" fill-opacity="0.15" stroke="#1976D2" stroke-width="2.5"/>`;
       
-      // 점
+      // 데이터 포인트 (축별 컬러)
       for (let p of points) {
-        html += `<circle cx="${p.x}" cy="${p.y}" r="3" fill="#00BCD4"/>`;
+        html += `<circle cx="${p.x}" cy="${p.y}" r="4" fill="${p.color}" stroke="white" stroke-width="1.5"/>`;
       }
       
-      // 레이블
+      // 레이블 (큰 텍스트)
       const labels = ['기억', '속도', '집중', '감정', '판단', '실행', '조절', '공간'];
       for (let i = 0; i < 8; i++) {
         const angle = angleSlice * i - Math.PI / 2;
-        const x = cx + (radius + 25) * Math.cos(angle);
-        const y = cy + (radius + 25) * Math.sin(angle);
-        html += `<text x="${x}" y="${y}" text-anchor="middle" font-size="11" font-weight="800" fill="#00695C">${labels[i]}</text>`;
+        const x = cx + (radius + 32) * Math.cos(angle);
+        const y = cy + (radius + 32) * Math.sin(angle);
+        html += `<text x="${x}" y="${y}" text-anchor="middle" font-size="14" font-weight="900" fill="${colors[i]}">${labels[i]}</text>`;
       }
       
-      html += '</g>';
       svg.innerHTML = html;
     }
 
