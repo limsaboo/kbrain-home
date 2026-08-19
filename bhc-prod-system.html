@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BHC 2.0 - 뇌 건강 체크 시스템</title>
+  <title>BHC 3.0 - 뇌 건강 체크 시스템 (채박사 자문)</title>
   <style>
     * {
       margin: 0;
@@ -44,7 +44,6 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* 시작 화면 */
     .header-title {
       text-align: center;
       margin-bottom: 32px;
@@ -86,10 +85,6 @@
       color: #333;
     }
 
-    .input-group input::placeholder {
-      color: #999;
-    }
-
     .info-box {
       background: linear-gradient(135deg, #E0F7FA 0%, #B2EBF2 100%);
       border-left: 6px solid #00BCD4;
@@ -102,7 +97,6 @@
       line-height: 1.6;
     }
 
-    /* 문제 화면 */
     .progress-bar {
       width: 100%;
       height: 6px;
@@ -219,7 +213,6 @@
       word-break: keep-all;
     }
 
-    /* 결과 화면 */
     .result-hero {
       text-align: center;
       margin-bottom: 32px;
@@ -379,7 +372,6 @@
       font-weight: 900;
     }
 
-    /* 버튼 */
     .btn {
       width: 100%;
       padding: 16px;
@@ -424,12 +416,12 @@
     <!-- 시작 화면 -->
     <div id="startScreen" class="screen active">
       <div class="header-title">
-        <h1>BHC</h1>
-        <p>뇌 건강 체크 시스템</p>
+        <h1>BHC 3.0</h1>
+        <p>뇌 건강 체크 시스템 (채박사 자문)</p>
       </div>
 
       <div class="info-box">
-        이 검사는 당신의 인지 건강 수준을 체계적으로 분석합니다. 8가지 영역에서 45개의 문항을 통해 뇌의 여러 능력을 측정합니다.
+        이 검사는 당신의 인지 건강 수준을 뇌과학 기반으로 분석합니다. 40개의 투사 이미지와 45개의 문항을 통해 8가지 인지 영역을 측정합니다.
       </div>
 
       <div class="input-group">
@@ -522,82 +514,127 @@
   </div>
 
   <script>
-    // ========== 전역 변수 ==========
     let currentIdx = 0;
     let answers = [];
     let userData = {};
 
-    // 8개 인지 영역
     const DOMAINS = ['기억', '속도', '집중', '감정', '판단', '실행', '조절', '공간'];
 
-    // 이미지 기본 경로
-    const IMG_BASE = 'https://k-brain.co.kr/assets/img/bhc-brain-cards/';
+    // 채박사 자문 기반 40개 투사 이미지 (Unsplash + 텍스트 설명)
+    const PROJECTION_IMAGES = {
+      // 영역 1: 자연물/상징 (자아상, 기본 안정감)
+      'strong-oak': { url: 'https://images.unsplash.com/photo-1511497584788-876760111969?w=500', desc: '튼튼한 고목' },
+      'swaying-tree': { url: 'https://images.unsplash.com/photo-1426604342444-e9535461da97?w=500', desc: '폭풍 속 나무' },
+      'warm-cabin': { url: 'https://images.unsplash.com/photo-1469022563149-aa64dbd37dae?w=500', desc: '온화한 오두막' },
+      'dark-fortress': { url: 'https://images.unsplash.com/photo-1495521821757-a1efb6729352?w=500', desc: '닫힌 요새' },
+      'desert-cactus': { url: 'https://images.unsplash.com/photo-1596603744099-c3b56d0c64a2?w=500', desc: '사막의 선인장' },
+      'peaceful-clearing': { url: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=500', desc: '평화로운 공터' },
+      'cracked-earth': { url: 'https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=500', desc: '메마른 대지' },
+      'granite-cliff': { url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=500', desc: '거대 절벽' },
+      'wilted-flowers': { url: 'https://images.unsplash.com/photo-1520763185298-1b434c919abe?w=500', desc: '시드는 꽃밭' },
+      'calm-lake': { url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=500', desc: '맑은 호수' },
+      
+      // 영역 2: 관계/상황 (대인관계, 애착)
+      'back-turned': { url: 'https://images.unsplash.com/photo-1529066029614-cdc4ba120308?w=500', desc: '등 돌린 두 인물' },
+      'intense-argument': { url: 'https://images.unsplash.com/photo-1531482615713-2afd69097998?w=500', desc: '격렬한 대립' },
+      'knocking-door': { url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500', desc: '문 두드리기' },
+      'window-gazing': { url: 'https://images.unsplash.com/photo-1503235930437-8c6293ba41f5?w=500', desc: '창밖 바라보기' },
+      'crowded-isolation': { url: 'https://images.unsplash.com/photo-1517457373614-b7152f00fc81?w=500', desc: '무리 속 소외' },
+      'holding-hands': { url: 'https://images.unsplash.com/photo-1523438097911-512782516f69?w=500', desc: '손 맞잡기' },
+      'mother-child': { url: 'https://images.unsplash.com/photo-1493228246481-11150540663c?w=500', desc: '아이 보살피기' },
+      'looming-shadow': { url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=500', desc: '거대한 그림자' },
+      'group-unity': { url: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=500', desc: '무리와 유대감' },
+      'masked-conversation': { url: 'https://images.unsplash.com/photo-1497618666937-586cb221d5d7?w=500', desc: '가면 쓴 대화' },
+      
+      // 영역 3: 추상/비구조 (사고 체계, 불안)
+      'symmetry-ink': { url: 'https://images.unsplash.com/photo-1579783902614-e3fb5141b0cb?w=500', desc: '대칭 잉크' },
+      'fragmented': { url: 'https://images.unsplash.com/photo-1578589519167-0ecb848f0f6f?w=500', desc: '파편화' },
+      'chaos-ink': { url: 'https://images.unsplash.com/photo-1552961048-cf051f9def56?w=500', desc: '혼란 잉크' },
+      'clashing-colors': { url: 'https://images.unsplash.com/photo-1561070791-2526d30994b5?w=500', desc: '충돌하는 색' },
+      'spiral-void': { url: 'https://images.unsplash.com/photo-1557672172-298e090d0f80?w=500', desc: '나선형 소용돌이' },
+      'sharp-spikes': { url: 'https://images.unsplash.com/photo-1561070791-2526d30994b5?w=500', desc: '날카로운 가시' },
+      'flowing-curves': { url: 'https://images.unsplash.com/photo-1577720565980-c9ffa7f0b1d0?w=500', desc: '유동적 곡선' },
+      'tangled-lines': { url: 'https://images.unsplash.com/photo-1550355291-bbee04a92027?w=500', desc: '엉킨 선들' },
+      'maze-structure': { url: 'https://images.unsplash.com/photo-1549887534-7ef5dcc1c5c7?w=500', desc: '미로 구조' },
+      'observing-eyes': { url: 'https://images.unsplash.com/photo-1551986782-d244ca7b76a0?w=500', desc: '관찰하는 눈' },
+      
+      // 영역 4: 색채/감정 (자율신경계, 정서)
+      'explosive-red': { url: 'https://images.unsplash.com/photo-1578987328093-aab922e688ce?w=500', desc: '폭발하는 붉은색' },
+      'calm-blue': { url: 'https://images.unsplash.com/photo-1494288207205-a81342ee5160?w=500', desc: '고요한 블루' },
+      'black-grey': { url: 'https://images.unsplash.com/photo-1559027615-cd0628902d4a?w=500', desc: '검은/회색' },
+      'green-warm': { url: 'https://images.unsplash.com/photo-1517622900660-2f98a0a20fd8?w=500', desc: '초록/따뜻함' },
+      'purple-fantasy': { url: 'https://images.unsplash.com/photo-1557821552-17105176677c?w=500', desc: '보라색 판타지' },
+      'stark-contrast': { url: 'https://images.unsplash.com/photo-1581822261290-991b38693d1b?w=500', desc: '명암 대비' },
+      'muted-pastel': { url: 'https://images.unsplash.com/photo-1549887534-7ef5dcc1c5c7?w=500', desc: '낮은 채도' },
+      'soft-pastel': { url: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=500', desc: '부드러운 파스텔' },
+      'golden-light': { url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=500', desc: '골드 빛' },
+      'red-blue-collision': { url: 'https://images.unsplash.com/photo-1578587328093-aab922e688ce?w=500', desc: '붉은/파란 충돌' }
+    };
 
-    // ========== 45개 문항 데이터 ==========
+    // 45개 문항 데이터 (채박사 프롬프트 기반)
     const QUESTIONS_DATA = [
-      // 기억 (6문항) - 좌뇌 언어력 L1
-      { stimulus: IMG_BASE + '좌뇌군언어력L1-1카드_copy_707x1060.jpg', q: '이 이미지를 기억하세요', choices: [{img: IMG_BASE + '좌뇌군언어력L1-1카드_copy_707x1060.jpg', text: '정확'}, {img: IMG_BASE + '좌뇌군언어력L1-2카드_copy_707x1060.jpg', text: '다름'}, {img: IMG_BASE + '좌뇌군언어력L1-3카드_copy_707x1060.jpg', text: '비슷'}, {img: IMG_BASE + '좌뇌군언어력L1-4카드_copy_707x1060.jpg', text: '다름'}], ans: 0, domain: '기억' },
-      { stimulus: IMG_BASE + '좌뇌군언어력L1-2카드_copy_707x1060.jpg', q: '이전에 본 이미지와 같은가요?', choices: [{img: IMG_BASE + '좌뇌군언어력L1-1카드_copy_707x1060.jpg', text: '다름'}, {img: IMG_BASE + '좌뇌군언어력L1-2카드_copy_707x1060.jpg', text: '같음'}, {img: IMG_BASE + '좌뇌군언어력L1-3카드_copy_707x1060.jpg', text: '비슷'}, {img: IMG_BASE + '좌뇌군언어력L1-4카드_copy_707x1060.jpg', text: '다름'}], ans: 1, domain: '기억' },
-      { stimulus: IMG_BASE + '좌뇌군언어력L1-3카드_copy_707x1060.jpg', q: '어떤 이미지를 먼저 봤나요?', choices: [{img: IMG_BASE + '좌뇌군언어력L1-1카드_copy_707x1060.jpg', text: '첫번째'}, {img: IMG_BASE + '좌뇌군언어력L1-2카드_copy_707x1060.jpg', text: '두번째'}, {img: IMG_BASE + '좌뇌군언어력L1-3카드_copy_707x1060.jpg', text: '세번째'}, {img: IMG_BASE + '좌뇌군언어력L1-4카드_copy_707x1060.jpg', text: '네번째'}], ans: 2, domain: '기억' },
-      { stimulus: IMG_BASE + '좌뇌군언어력L1-4카드_copy_707x1060.jpg', q: '보인 이미지의 순서는?', choices: [{img: IMG_BASE + '좌뇌군언어력L1-1카드_copy_707x1060.jpg', text: '①'}, {img: IMG_BASE + '좌뇌군언어력L1-2카드_copy_707x1060.jpg', text: '②'}, {img: IMG_BASE + '좌뇌군언어력L1-3카드_copy_707x1060.jpg', text: '③'}, {img: IMG_BASE + '좌뇌군언어력L1-4카드_copy_707x1060.jpg', text: '④'}], ans: 3, domain: '기억' },
-      { stimulus: IMG_BASE + '좌뇌군이해력L2-1_copy_707x1060.jpg', q: '어느 이미지가 맞나요?', choices: [{img: IMG_BASE + '좌뇌군이해력L2-1_copy_707x1060.jpg', text: '정확'}, {img: IMG_BASE + '좌뇌군이해력L2-2_copy_707x1060.jpg', text: '다름'}, {img: IMG_BASE + '좌뇌군이해력L2-3_copy_707x1060.jpg', text: '다름'}, {img: IMG_BASE + '좌뇌군이해력L2-4_copy_707x1060.jpg', text: '다름'}], ans: 0, domain: '기억' },
-      { stimulus: IMG_BASE + '좌뇌군이해력L2-2_copy_707x1060.jpg', q: '기억하신 이미지는?', choices: [{img: IMG_BASE + '좌뇌군이해력L2-1_copy_707x1060.jpg', text: '①'}, {img: IMG_BASE + '좌뇌군이해력L2-2_copy_707x1060.jpg', text: '②'}, {img: IMG_BASE + '좌뇌군이해력L2-3_copy_707x1060.jpg', text: '③'}, {img: IMG_BASE + '좌뇌군이해력L2-4_copy_707x1060.jpg', text: '④'}], ans: 1, domain: '기억' },
+      // 기억 (6) - 자연물 영역
+      { stimulus: 'strong-oak', q: '이 이미지가 주는 느낌은?', choices: ['안정적', '불안정', '혼란', '막연'], ans: 0, domain: '기억' },
+      { stimulus: 'swaying-tree', q: '현재 당신의 자아 상태는?', choices: ['약함', '강함', '중립', '불명'], ans: 0, domain: '기억' },
+      { stimulus: 'warm-cabin', q: '이것이 상징하는 것은?', choices: ['안전', '고립', '경계', '미정'], ans: 0, domain: '기억' },
+      { stimulus: 'dark-fortress', q: '대인관계 태도는?', choices: ['방어적', '개방적', '중도', '불안'], ans: 0, domain: '기억' },
+      { stimulus: 'desert-cactus', q: '스트레스 대응 방식은?', choices: ['공격적', '회피적', '대처', '무감각'], ans: 0, domain: '기억' },
+      { stimulus: 'calm-lake', q: '정서 조절 능력은?', choices: ['우수', '저하', '불균형', '변동'], ans: 0, domain: '기억' },
 
-      // 속도 (6문항) - 좌뇌 추리력 L4
-      { stimulus: IMG_BASE + '좌뇌군추리력L4-1_copy_256x384.png', q: '가장 빨리 선택하세요', choices: [{img: IMG_BASE + '좌뇌군추리력L4-1_copy_256x384.png', text: '①'}, {img: IMG_BASE + '좌뇌군추리력L4-2_copy_256x384.png', text: '②'}, {img: IMG_BASE + '좌뇌군추리력L4-3_copy_256x384.png', text: '③'}, {img: IMG_BASE + '우뇌주의력 R2 상.png', text: '④'}], ans: 0, domain: '속도' },
-      { stimulus: IMG_BASE + '좌뇌군추리력L4-2_copy_256x384.png', q: '빠르게 고르세요', choices: [{img: IMG_BASE + '좌뇌군추리력L4-1_copy_256x384.png', text: '①'}, {img: IMG_BASE + '좌뇌군추리력L4-2_copy_256x384.png', text: '②'}, {img: IMG_BASE + '좌뇌군추리력L4-3_copy_256x384.png', text: '③'}, {img: IMG_BASE + '우뇌주의력 R2 상.png', text: '④'}], ans: 1, domain: '속도' },
-      { stimulus: IMG_BASE + '좌뇌군추리력L4-3_copy_256x384.png', q: '신속하게 선택하세요', choices: [{img: IMG_BASE + '좌뇌군추리력L4-1_copy_256x384.png', text: '①'}, {img: IMG_BASE + '좌뇌군추리력L4-2_copy_256x384.png', text: '②'}, {img: IMG_BASE + '좌뇌군추리력L4-3_copy_256x384.png', text: '③'}, {img: IMG_BASE + '우뇌주의력 R2 상.png', text: '④'}], ans: 2, domain: '속도' },
-      { stimulus: IMG_BASE + '우뇌주의력 R2 상.png', q: '빠르게 판단하세요', choices: [{img: IMG_BASE + '좌뇌군추리력L4-1_copy_256x384.png', text: '①'}, {img: IMG_BASE + '좌뇌군추리력L4-2_copy_256x384.png', text: '②'}, {img: IMG_BASE + '좌뇌군추리력L4-3_copy_256x384.png', text: '③'}, {img: IMG_BASE + '우뇌주의력 R2 상.png', text: '④'}], ans: 3, domain: '속도' },
-      { stimulus: IMG_BASE + '우뇌주의력 R2 중.png', q: '즉각적으로 선택하세요', choices: [{img: IMG_BASE + '좌뇌군추리력L4-1_copy_256x384.png', text: '①'}, {img: IMG_BASE + '좌뇌군추리력L4-2_copy_256x384.png', text: '②'}, {img: IMG_BASE + '좌뇌군추리력L4-3_copy_256x384.png', text: '③'}, {img: IMG_BASE + '우뇌주의력 R2 중.png', text: '④'}], ans: 3, domain: '속도' },
-      { stimulus: IMG_BASE + '우뇌주의력 R2 하.png', q: '순발력으로 고르세요', choices: [{img: IMG_BASE + '좌뇌군추리력L4-1_copy_256x384.png', text: '①'}, {img: IMG_BASE + '좌뇌군추리력L4-2_copy_256x384.png', text: '②'}, {img: IMG_BASE + '좌뇌군추리력L4-3_copy_256x384.png', text: '③'}, {img: IMG_BASE + '우뇌주의력 R2 하.png', text: '④'}], ans: 3, domain: '속도' },
+      // 속도 (6) - 추상 영역
+      { stimulus: 'symmetry-ink', q: '이것이 의미하는 것은?', choices: ['정상', '비정상', '혼합', '알수없'], ans: 0, domain: '속도' },
+      { stimulus: 'fragmented', q: '현재 사고 방식은?', choices: ['체계적', '분산', '강박', '모호'], ans: 0, domain: '속도' },
+      { stimulus: 'chaos-ink', q: '불안 수준은?', choices: ['높음', '낮음', '중간', '변동'], ans: 0, domain: '속도' },
+      { stimulus: 'clashing-colors', q: '충동 조절은?', choices: ['어려움', '가능', '부분', '미정'], ans: 0, domain: '속도' },
+      { stimulus: 'spiral-void', q: '내적 상태는?', choices: ['침체', '활발', '중립', '불안'], ans: 0, domain: '속도' },
+      { stimulus: 'maze-structure', q: '문제 해결 능력은?', choices: ['우수', '약함', '중간', '상황의존'], ans: 0, domain: '속도' },
 
-      // 집중 (6문항) - 우뇌 집중력 R2
-      { stimulus: IMG_BASE + '우뇌집중력 R2 상.png', q: '세심하게 관찰하세요', choices: [{img: IMG_BASE + '우뇌집중력 R2 상.png', text: '정확'}, {img: IMG_BASE + '우뇌집중력 R2 중.png', text: '다름'}, {img: IMG_BASE + '우뇌집중력 R2 하.png', text: '다름'}, {img: IMG_BASE + '우뇌주의력 R3 상.png', text: '다름'}], ans: 0, domain: '집중' },
-      { stimulus: IMG_BASE + '우뇌집중력 R2 중.png', q: '집중해서 보세요', choices: [{img: IMG_BASE + '우뇌집중력 R2 상.png', text: '①'}, {img: IMG_BASE + '우뇌집중력 R2 중.png', text: '②'}, {img: IMG_BASE + '우뇌집중력 R2 하.png', text: '③'}, {img: IMG_BASE + '우뇌주의력 R3 상.png', text: '④'}], ans: 1, domain: '집중' },
-      { stimulus: IMG_BASE + '우뇌집중력 R2 하.png', q: '주의깊게 관찰하세요', choices: [{img: IMG_BASE + '우뇌집중력 R2 상.png', text: '①'}, {img: IMG_BASE + '우뇌집중력 R2 중.png', text: '②'}, {img: IMG_BASE + '우뇌집중력 R2 하.png', text: '③'}, {img: IMG_BASE + '우뇌주의력 R3 상.png', text: '④'}], ans: 2, domain: '집중' },
-      { stimulus: IMG_BASE + '우뇌주의력 R3 상.png', q: '세밀함을 찾아내세요', choices: [{img: IMG_BASE + '우뇌집중력 R2 상.png', text: '①'}, {img: IMG_BASE + '우뇌집중력 R2 중.png', text: '②'}, {img: IMG_BASE + '우뇌집중력 R2 하.png', text: '③'}, {img: IMG_BASE + '우뇌주의력 R3 상.png', text: '④'}], ans: 3, domain: '집중' },
-      { stimulus: IMG_BASE + '우뇌주의력 R3 중.png', q: '차이점을 찾으세요', choices: [{img: IMG_BASE + '우뇌집중력 R2 상.png', text: '①'}, {img: IMG_BASE + '우뇌집중력 R2 중.png', text: '②'}, {img: IMG_BASE + '우뇌주의력 R3 중.png', text: '③'}, {img: IMG_BASE + '우뇌주의력 R3 하.png', text: '④'}], ans: 2, domain: '집중' },
-      { stimulus: IMG_BASE + '우뇌주의력 R3 하.png', q: '정확히 파악하세요', choices: [{img: IMG_BASE + '우뇌집중력 R2 상.png', text: '①'}, {img: IMG_BASE + '우뇌주의력 R3 중.png', text: '②'}, {img: IMG_BASE + '우뇌주의력 R3 하.png', text: '③'}, {img: IMG_BASE + '우뇌주의력 R3 상.png', text: '④'}], ans: 2, domain: '집중' },
+      // 집중 (6) - 색채 영역
+      { stimulus: 'explosive-red', q: '에너지 수준은?', choices: ['높음', '낮음', '중간', '변동'], ans: 0, domain: '집중' },
+      { stimulus: 'calm-blue', q: '침착함은?', choices: ['우수', '저하', '중간', '미정'], ans: 0, domain: '집중' },
+      { stimulus: 'black-grey', q: '동기 수준은?', choices: ['낮음', '높음', '중간', '불안정'], ans: 0, domain: '집중' },
+      { stimulus: 'green-warm', q: '긍정 정서는?', choices: ['높음', '낮음', '중간', '기복'], ans: 0, domain: '집중' },
+      { stimulus: 'purple-fantasy', q: '현실감각은?', choices: ['약함', '강함', '중간', '선택적'], ans: 0, domain: '집중' },
+      { stimulus: 'stark-contrast', q: '이분법적 사고는?', choices: ['높음', '낮음', '중간', '상황의존'], ans: 0, domain: '집중' },
 
-      // 감정 (6문항) - 우뇌 상황력 R6
-      { stimulus: IMG_BASE + '우뇌상황력맥락이해 R6 상.png', q: '상황을 이해하세요', choices: [{img: IMG_BASE + '우뇌상황력맥락이해 R6 상.png', text: '정확'}, {img: IMG_BASE + '우뇌상황력맥락이해 R6 중.png', text: '다름'}, {img: IMG_BASE + '우뇌상황력맥락이해 R6 하.png', text: '다름'}, {img: IMG_BASE + '우뇌구성력 R1 상.png', text: '다름'}], ans: 0, domain: '감정' },
-      { stimulus: IMG_BASE + '우뇌상황력맥락이해 R6 중.png', q: '맥락을 파악하세요', choices: [{img: IMG_BASE + '우뇌상황력맥락이해 R6 상.png', text: '①'}, {img: IMG_BASE + '우뇌상황력맥락이해 R6 중.png', text: '②'}, {img: IMG_BASE + '우뇌상황력맥락이해 R6 하.png', text: '③'}, {img: IMG_BASE + '우뇌구성력 R1 상.png', text: '④'}], ans: 1, domain: '감정' },
-      { stimulus: IMG_BASE + '우뇌상황력맥락이해 R6 하.png', q: '흐름을 감지하세요', choices: [{img: IMG_BASE + '우뇌상황력맥락이해 R6 상.png', text: '①'}, {img: IMG_BASE + '우뇌상황력맥락이해 R6 중.png', text: '②'}, {img: IMG_BASE + '우뇌상황력맥락이해 R6 하.png', text: '③'}, {img: IMG_BASE + '우뇌구성력 R1 상.png', text: '④'}], ans: 2, domain: '감정' },
-      { stimulus: IMG_BASE + '우뇌구성력 R1 상.png', q: '느낌을 인지하세요', choices: [{img: IMG_BASE + '우뇌상황력맥락이해 R6 상.png', text: '①'}, {img: IMG_BASE + '우뇌상황력맥락이해 R6 중.png', text: '②'}, {img: IMG_BASE + '우뇌상황력맥락이해 R6 하.png', text: '③'}, {img: IMG_BASE + '우뇌구성력 R1 상.png', text: '④'}], ans: 3, domain: '감정' },
-      { stimulus: IMG_BASE + '우뇌구성력 R1 중.png', q: '감정 색깔을 고르세요', choices: [{img: IMG_BASE + '우뇌구성력 R1 상.png', text: '①'}, {img: IMG_BASE + '우뇌구성력 R1 중.png', text: '②'}, {img: IMG_BASE + '우뇌구성력 R1 하.png', text: '③'}, {img: IMG_BASE + '우뇌주의력 L3 상.png', text: '④'}], ans: 1, domain: '감정' },
-      { stimulus: IMG_BASE + '우뇌구성력 R1 하.png', q: '감정 흐름을 선택하세요', choices: [{img: IMG_BASE + '우뇌구성력 R1 상.png', text: '①'}, {img: IMG_BASE + '우뇌구성력 R1 중.png', text: '②'}, {img: IMG_BASE + '우뇌구성력 R1 하.png', text: '③'}, {img: IMG_BASE + '우뇌주의력 L3 상.png', text: '④'}], ans: 2, domain: '감정' },
+      // 감정 (6) - 관계 영역
+      { stimulus: 'back-turned', q: '대인 거리감은?', choices: ['높음', '낮음', '적당', '변동'], ans: 0, domain: '감정' },
+      { stimulus: 'intense-argument', q: '분노 조절은?', choices: ['어려움', '가능', '부분', '미정'], ans: 0, domain: '감정' },
+      { stimulus: 'knocking-door', q: '수용 갈망은?', choices: ['높음', '낮음', '중간', '미정'], ans: 0, domain: '감정' },
+      { stimulus: 'window-gazing', q: '탈출 욕구는?', choices: ['높음', '낮음', '중간', '변동'], ans: 0, domain: '감정' },
+      { stimulus: 'group-unity', q: '소속감은?', choices: ['높음', '낮음', '중간', '불안정'], ans: 0, domain: '감정' },
+      { stimulus: 'mother-child', q: '돌봄 욕구는?', choices: ['높음', '낮음', '중간', '미정'], ans: 0, domain: '감정' },
 
-      // 판단 (6문항) - 좌뇌 논리력 L3
-      { stimulus: IMG_BASE + '좌뇌군논리력L3-1_copy_707x1060.png', q: '논리적으로 판단하세요', choices: [{img: IMG_BASE + '좌뇌군논리력L3-1_copy_707x1060.png', text: '정확'}, {img: IMG_BASE + '좌뇌군논리력L3-2_copy_707x1060.png', text: '다름'}, {img: IMG_BASE + '좌뇌군논리력L3-3_copy_707x1060.png', text: '다름'}, {img: IMG_BASE + '좌뇌군논리력L3-4_copy_256x384.png', text: '다름'}], ans: 0, domain: '판단' },
-      { stimulus: IMG_BASE + '좌뇌군논리력L3-2_copy_707x1060.png', q: '합리적으로 선택하세요', choices: [{img: IMG_BASE + '좌뇌군논리력L3-1_copy_707x1060.png', text: '①'}, {img: IMG_BASE + '좌뇌군논리력L3-2_copy_707x1060.png', text: '②'}, {img: IMG_BASE + '좌뇌군논리력L3-3_copy_707x1060.png', text: '③'}, {img: IMG_BASE + '좌뇌군논리력L3-4_copy_256x384.png', text: '④'}], ans: 1, domain: '판단' },
-      { stimulus: IMG_BASE + '좌뇌군논리력L3-3_copy_707x1060.png', q: '원인을 파악하세요', choices: [{img: IMG_BASE + '좌뇌군논리력L3-1_copy_707x1060.png', text: '①'}, {img: IMG_BASE + '좌뇌군논리력L3-2_copy_707x1060.png', text: '②'}, {img: IMG_BASE + '좌뇌군논리력L3-3_copy_707x1060.png', text: '③'}, {img: IMG_BASE + '좌뇌군논리력L3-4_copy_256x384.png', text: '④'}], ans: 2, domain: '판단' },
-      { stimulus: IMG_BASE + '좌뇌군논리력L3-4_copy_256x384.png', q: '결론을 도출하세요', choices: [{img: IMG_BASE + '좌뇌군논리력L3-1_copy_707x1060.png', text: '①'}, {img: IMG_BASE + '좌뇌군논리력L3-2_copy_707x1060.png', text: '②'}, {img: IMG_BASE + '좌뇌군논리력L3-3_copy_707x1060.png', text: '③'}, {img: IMG_BASE + '좌뇌군논리력L3-4_copy_256x384.png', text: '④'}], ans: 3, domain: '판단' },
-      { stimulus: IMG_BASE + '좌뇌군판별력L5-1_copy_256x256.jpg', q: '차이를 분별하세요', choices: [{img: IMG_BASE + '좌뇌군판별력L5-1_copy_256x256.jpg', text: '①'}, {img: IMG_BASE + '좌뇌군판별력L5-2_copy_256x256.jpg', text: '②'}, {img: IMG_BASE + '좌뇌군판별력L5-3_copy_256x256.jpg', text: '③'}, {img: IMG_BASE + '좌뇌군판별력L5-4_copy_352x192.png', text: '④'}], ans: 0, domain: '판단' },
-      { stimulus: IMG_BASE + '좌뇌군판별력L5-2_copy_256x256.jpg', q: '구별하여 선택하세요', choices: [{img: IMG_BASE + '좌뇌군판별력L5-1_copy_256x256.jpg', text: '①'}, {img: IMG_BASE + '좌뇌군판별력L5-2_copy_256x256.jpg', text: '②'}, {img: IMG_BASE + '좌뇌군판별력L5-3_copy_256x256.jpg', text: '③'}, {img: IMG_BASE + '좌뇌군판별력L5-4_copy_352x192.png', text: '④'}], ans: 1, domain: '판단' },
+      // 판단 (6) - 관계 영역
+      { stimulus: 'holding-hands', q: '친밀감 능력은?', choices: ['우수', '저하', '중간', '불안정'], ans: 0, domain: '판단' },
+      { stimulus: 'looming-shadow', q: '권위 불안은?', choices: ['높음', '낮음', '중간', '미정'], ans: 0, domain: '판단' },
+      { stimulus: 'crowded-isolation', q: '정서적 지지 필요는?', choices: ['높음', '낮음', '중간', '불명'], ans: 0, domain: '판단' },
+      { stimulus: 'masked-conversation', q: '진정성은?', choices: ['낮음', '높음', '선택적', '미정'], ans: 0, domain: '판단' },
+      { stimulus: 'peaceful-clearing', q: '회복 자원은?', choices: ['풍부', '부족', '중간', '변동'], ans: 0, domain: '판단' },
+      { stimulus: 'wilted-flowers', q: '자존감은?', choices: ['낮음', '높음', '중간', '불안정'], ans: 0, domain: '판단' },
 
-      // 실행 (6문항) - 전뇌 실행력 W2
-      { stimulus: IMG_BASE + '전뇌실행력 W2 상.png', q: '행동 계획을 세우세요', choices: [{img: IMG_BASE + '전뇌실행력 W2 상.png', text: '정확'}, {img: IMG_BASE + '전뇌실행력 W2 중.png', text: '다름'}, {img: IMG_BASE + '전뇌실행력 W2 하.png', text: '다름'}, {img: IMG_BASE + '전뇌지속력 W3 상.png', text: '다름'}], ans: 0, domain: '실행' },
-      { stimulus: IMG_BASE + '전뇌실행력 W2 중.png', q: '단계별로 진행하세요', choices: [{img: IMG_BASE + '전뇌실행력 W2 상.png', text: '①'}, {img: IMG_BASE + '전뇌실행력 W2 중.png', text: '②'}, {img: IMG_BASE + '전뇌실행력 W2 하.png', text: '③'}, {img: IMG_BASE + '전뇌지속력 W3 상.png', text: '④'}], ans: 1, domain: '실행' },
-      { stimulus: IMG_BASE + '전뇌실행력 W2 하.png', q: '결과를 확인하세요', choices: [{img: IMG_BASE + '전뇌실행력 W2 상.png', text: '①'}, {img: IMG_BASE + '전뇌실행력 W2 중.png', text: '②'}, {img: IMG_BASE + '전뇌실행력 W2 하.png', text: '③'}, {img: IMG_BASE + '전뇌지속력 W3 상.png', text: '④'}], ans: 2, domain: '실행' },
-      { stimulus: IMG_BASE + '전뇌지속력 W3 상.png', q: '꾸준히 진행하세요', choices: [{img: IMG_BASE + '전뇌실행력 W2 상.png', text: '①'}, {img: IMG_BASE + '전뇌실행력 W2 중.png', text: '②'}, {img: IMG_BASE + '전뇌지속력 W3 상.png', text: '③'}, {img: IMG_BASE + '전뇌지속력 W3 중.jpeg', text: '④'}], ans: 2, domain: '실행' },
-      { stimulus: IMG_BASE + '전뇌지속력 W3 중.jpeg', q: '목표를 유지하세요', choices: [{img: IMG_BASE + '전뇌지속력 W3 상.png', text: '①'}, {img: IMG_BASE + '전뇌지속력 W3 중.jpeg', text: '②'}, {img: IMG_BASE + '전뇌지속력 W3 하.jpeg', text: '③'}, {img: IMG_BASE + '전뇌학습력 W1 상.png', text: '④'}], ans: 1, domain: '실행' },
-      { stimulus: IMG_BASE + '전뇌지속력 W3 하.jpeg', q: '완성도를 높이세요', choices: [{img: IMG_BASE + '전뇌지속력 W3 상.png', text: '①'}, {img: IMG_BASE + '전뇌지속력 W3 중.jpeg', text: '②'}, {img: IMG_BASE + '전뇌지속력 W3 하.jpeg', text: '③'}, {img: IMG_BASE + '전뇌학습력 W1 상.png', text: '④'}], ans: 2, domain: '실행' },
+      // 실행 (6) - 추상 영역
+      { stimulus: 'tangled-lines', q: '인지 블로킹은?', choices: ['높음', '낮음', '중간', '미정'], ans: 0, domain: '실행' },
+      { stimulus: 'flowing-curves', q: '유연성은?', choices: ['높음', '낮음', '중간', '상황의존'], ans: 0, domain: '실행' },
+      { stimulus: 'sharp-spikes', q: '과각성은?', choices: ['높음', '낮음', '중간', '미정'], ans: 0, domain: '실행' },
+      { stimulus: 'observing-eyes', q: '자의식은?', choices: ['높음', '낮음', '중간', '변동'], ans: 0, domain: '실행' },
+      { stimulus: 'golden-light', q: '포부 수준은?', choices: ['높음', '낮음', '중간', '미정'], ans: 0, domain: '실행' },
+      { stimulus: 'red-blue-collision', q: '내적 갈등은?', choices: ['높음', '낮음', '중간', '불명'], ans: 0, domain: '실행' },
 
-      // 조절 (6문항) - 조절력 F
-      { stimulus: IMG_BASE + '조절력 F 상.jpeg', q: '자기 조절이 가능한가요?', choices: [{img: IMG_BASE + '조절력 F 상.jpeg', text: '가능'}, {img: IMG_BASE + '조절력 F 중.jpeg', text: '불가'}, {img: IMG_BASE + '조절력 F 하.jpeg', text: '어려움'}, {img: IMG_BASE + '전뇌회복력 W4 상.jpeg', text: '미정'}], ans: 0, domain: '조절' },
-      { stimulus: IMG_BASE + '조절력 F 중.jpeg', q: '충동을 조절할 수 있나요?', choices: [{img: IMG_BASE + '조절력 F 상.jpeg', text: '가능'}, {img: IMG_BASE + '조절력 F 중.jpeg', text: '불가'}, {img: IMG_BASE + '조절력 F 하.jpeg', text: '어려움'}, {img: IMG_BASE + '전뇌회복력 W4 상.jpeg', text: '미정'}], ans: 1, domain: '조절' },
-      { stimulus: IMG_BASE + '조절력 F 하.jpeg', q: '감정 조절이 가능한가요?', choices: [{img: IMG_BASE + '조절력 F 상.jpeg', text: '가능'}, {img: IMG_BASE + '조절력 F 중.jpeg', text: '불가'}, {img: IMG_BASE + '조절력 F 하.jpeg', text: '어려움'}, {img: IMG_BASE + '전뇌회복력 W4 상.jpeg', text: '미정'}], ans: 2, domain: '조절' },
-      { stimulus: IMG_BASE + '전뇌회복력 W4 상.jpeg', q: '스트레스를 관리할 수 있나요?', choices: [{img: IMG_BASE + '조절력 F 상.jpeg', text: '가능'}, {img: IMG_BASE + '조절력 F 중.jpeg', text: '불가'}, {img: IMG_BASE + '전뇌회복력 W4 상.jpeg', text: '관리'}, {img: IMG_BASE + '전뇌회복력 W4 중.jpeg', text: '어려움'}], ans: 2, domain: '조절' },
-      { stimulus: IMG_BASE + '전뇌회복력 W4 중.jpeg', q: '마음을 다스릴 수 있나요?', choices: [{img: IMG_BASE + '전뇌회복력 W4 상.jpeg', text: '가능'}, {img: IMG_BASE + '전뇌회복력 W4 중.jpeg', text: '불가'}, {img: IMG_BASE + '전뇌회복력 W4 하.jpeg', text: '어려움'}, {img: IMG_BASE + '전뇌학습력 W1 중.png', text: '미정'}], ans: 1, domain: '조절' },
-      { stimulus: IMG_BASE + '전뇌회복력 W4 하.jpeg', q: '자제력이 있나요?', choices: [{img: IMG_BASE + '전뇌회복력 W4 상.jpeg', text: '①'}, {img: IMG_BASE + '전뇌회복력 W4 중.jpeg', text: '②'}, {img: IMG_BASE + '전뇌회복력 W4 하.jpeg', text: '③'}, {img: IMG_BASE + '전뇌학습력 W1 중.png', text: '④'}], ans: 2, domain: '조절' },
+      // 조절 (6) - 색채 영역
+      { stimulus: 'muted-pastel', q: '감정 표현은?', choices: ['억제', '개방', '선택', '미정'], ans: 0, domain: '조절' },
+      { stimulus: 'soft-pastel', q: '안전감은?', choices: ['높음', '낮음', '중간', '불안정'], ans: 0, domain: '조절' },
+      { stimulus: 'purple-fantasy', q: '현실 회피는?', choices: ['높음', '낮음', '중간', '미정'], ans: 0, domain: '조절' },
+      { stimulus: 'stark-contrast', q: '극단 사고는?', choices: ['높음', '낮음', '중간', '상황의존'], ans: 0, domain: '조절' },
+      { stimulus: 'calm-blue', q: '자율신경 균형은?', choices: ['우수', '저하', '중간', '불균형'], ans: 0, domain: '조절' },
+      { stimulus: 'explosive-red', q: '충동성은?', choices: ['높음', '낮음', '중간', '미정'], ans: 0, domain: '조절' },
 
-      // 공간 (3문항) - 우뇌 지남력 R4
-      { stimulus: IMG_BASE + '우뇌지남력 R4 상.png', q: '위치를 인식하세요', choices: [{img: IMG_BASE + '우뇌지남력 R4 상.png', text: '정확'}, {img: IMG_BASE + '우뇌지남력 R4 중.png', text: '다름'}, {img: IMG_BASE + '우뇌지남력 R4 하.png', text: '다름'}, {img: IMG_BASE + '우뇌창의응용력 R5 상.png', text: '다름'}], ans: 0, domain: '공간' },
-      { stimulus: IMG_BASE + '우뇌지남력 R4 중.png', q: '방향을 파악하세요', choices: [{img: IMG_BASE + '우뇌지남력 R4 상.png', text: '①'}, {img: IMG_BASE + '우뇌지남력 R4 중.png', text: '②'}, {img: IMG_BASE + '우뇌지남력 R4 하.png', text: '③'}, {img: IMG_BASE + '우뇌창의응용력 R5 상.png', text: '④'}], ans: 1, domain: '공간' },
-      { stimulus: IMG_BASE + '우뇌지남력 R4 하.png', q: '공간 감각을 사용하세요', choices: [{img: IMG_BASE + '우뇌지남력 R4 상.png', text: '①'}, {img: IMG_BASE + '우뇌지남력 R4 중.png', text: '②'}, {img: IMG_BASE + '우뇌지남력 R4 하.png', text: '③'}, {img: IMG_BASE + '우뇌창의응용력 R5 상.png', text: '④'}], ans: 2, domain: '공간' },
+      // 공간 (3) - 자연물 영역
+      { stimulus: 'strong-oak', q: '공간 인식은?', choices: ['우수', '저하', '중간', '미정'], ans: 0, domain: '공간' },
+      { stimulus: 'peaceful-clearing', q: '방향감각은?', choices: ['좋음', '나쁨', '중간', '상황의존'], ans: 0, domain: '공간' },
+      { stimulus: 'granite-cliff', q: '구조 인식은?', choices: ['우수', '저하', '중간', '불명'], ans: 0, domain: '공간' }
     ];
 
-    // ========== 함수 ==========
     function showScreen(screenName) {
       document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
       document.getElementById(screenName + 'Screen').classList.add('active');
@@ -631,18 +668,18 @@
 
     function displayQuestion() {
       const q = QUESTIONS_DATA[currentIdx];
+      const imgData = PROJECTION_IMAGES[q.stimulus];
       const progress = ((currentIdx + 1) / QUESTIONS_DATA.length) * 100;
       
       document.getElementById('progressBar').style.width = progress + '%';
-      document.getElementById('questionNum').textContent = `Q. ${currentIdx + 1} / ${QUESTIONS_DATA.length}`;
+      document.getElementById('questionNum').textContent = `Q. ${currentIdx + 1} / 45`;
       document.getElementById('domainTag').textContent = q.domain;
-      document.getElementById('stimulusImg').src = q.stimulus;
+      document.getElementById('stimulusImg').src = imgData.url;
       document.getElementById('questionText').textContent = q.q;
 
       const choicesHtml = q.choices.map((c, i) => `
         <button class="choice-btn" onclick="selectChoice(${i})">
-          <img class="choice-img" src="${c.img}" alt="선택지">
-          <div class="choice-text">${c.text}</div>
+          <div class="choice-text">${c}</div>
         </button>
       `).join('');
       
@@ -700,7 +737,6 @@
       document.getElementById('realAge').textContent = '만 ' + userData.age + '세';
       document.getElementById('birthInfo').textContent = userData.birth.replace(/(\d{4})-(\d{2})-(\d{2})/, '$1년 $2월 $3일');
 
-      // 바차트
       let barHtml = '';
       DOMAINS.forEach(d => {
         barHtml += `
@@ -716,7 +752,6 @@
       });
       document.getElementById('barChartContainer').innerHTML = barHtml;
 
-      // 강점/약점
       const sorted = DOMAINS.map(d => ({domain: d, score: avgScores[d]}))
         .sort((a, b) => b.score - a.score);
 
