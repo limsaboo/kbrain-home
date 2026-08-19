@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BHC 4.2 - 뇌 건강 체크 시스템</title>
+  <title>BHC 4.3 - 뇌 건강 체크 시스템</title>
   <style>
     * {
       margin: 0;
@@ -157,15 +157,15 @@
     }
 
     .timer-circle {
-      width: 80px;
-      height: 80px;
+      width: 70px;
+      height: 70px;
       border-radius: 50%;
       background: linear-gradient(135deg, #E0F7FA 0%, #B2EBF2 100%);
       border: 3px solid #00BCD4;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 32px;
+      font-size: 28px;
       font-weight: 900;
       color: #00BCD4;
       transition: all 0.1s ease;
@@ -191,7 +191,7 @@
 
     .stimulus-container {
       width: 100%;
-      height: 420px;
+      height: 300px;
       border: 3px solid #00BCD4;
       border-radius: 16px;
       overflow: hidden;
@@ -220,11 +220,11 @@
     }
 
     .stimulus-text {
-      font-size: 96px;
+      font-size: 72px;
       font-weight: 900;
       color: #00695C;
       word-break: keep-all;
-      line-height: 1.6;
+      line-height: 1.4;
       text-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
 
@@ -311,11 +311,6 @@
       border: 2px solid #E0E0E0;
     }
 
-    .btn:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-
     /* 결과 화면 */
     .result-container {
       padding: 0;
@@ -346,7 +341,7 @@
     .brain-age-box {
       background: linear-gradient(135deg, #E0F7FA 0%, #B2EBF2 100%);
       border-radius: 20px;
-      padding: 36px 24px;
+      padding: 32px 24px;
       text-align: center;
       margin-bottom: 28px;
       border: 3px solid #00BCD4;
@@ -385,7 +380,7 @@
     }
 
     .brain-age-number {
-      font-size: 72px;
+      font-size: 64px;
       font-weight: 900;
       margin-bottom: 12px;
     }
@@ -540,17 +535,13 @@
 
     .button-group {
       display: flex;
+      flex-direction: column;
       gap: 12px;
       margin-top: 24px;
     }
 
     .button-group .btn {
-      flex: 1;
       margin-bottom: 0;
-    }
-
-    .print-section {
-      display: none;
     }
 
     @media print {
@@ -563,6 +554,7 @@
         box-shadow: none;
         max-width: 100%;
         border-radius: 0;
+        padding: 0;
       }
 
       .screen {
@@ -570,13 +562,26 @@
       }
 
       .print-section {
-        display: block;
-        padding: 20px;
+        display: block !important;
+        padding: 40px;
       }
 
       .btn {
-        display: none;
+        display: none !important;
       }
+
+      .result-header {
+        page-break-inside: avoid;
+      }
+
+      .chart-section {
+        page-break-inside: avoid;
+      }
+    }
+
+    .print-section {
+      display: none;
+      padding: 40px;
     }
   </style>
 </head>
@@ -585,7 +590,7 @@
     <!-- 시작 화면 -->
     <div id="startScreen" class="screen active">
       <div class="header-title">
-        <h1>BHC 4.2</h1>
+        <h1>BHC 4.3</h1>
         <p>뇌 건강 체크 시스템</p>
       </div>
 
@@ -632,10 +637,10 @@
       </div>
 
       <div class="stimulus-container" id="stimulusContainer">
-        <div class="stimulus-text" id="stimulusText">자극이 표시됩니다</div>
+        <div class="stimulus-text" id="stimulusText">자극</div>
       </div>
 
-      <div class="question-text" id="questionText">질문이 여기 표시됩니다</div>
+      <div class="question-text" id="questionText">질문</div>
 
       <div class="choices" id="choicesContainer"></div>
 
@@ -689,7 +694,7 @@
         </div>
 
         <div class="button-group">
-          <button class="btn btn-primary" onclick="printReport()">📄 인쇄/PDF</button>
+          <button class="btn btn-primary" onclick="printReport()">📄 인쇄 / PDF</button>
           <button class="btn btn-secondary" onclick="restartTest()">🔄 다시 검사</button>
           <button class="btn btn-secondary" onclick="goToStart()">🏠 처음으로</button>
         </div>
@@ -706,71 +711,55 @@
 
     const DOMAINS = ['기억', '속도', '집중', '감정', '판단', '실행', '조절', '공간'];
 
-    // 51개 명확한 문항 (잼박사 자문 기반)
     const QUESTIONS_DATA = [
-      // 기억 (6) - DMN 중심
-      { stimulus: '🌲', q: '호숫가의 오래된 나무. 가장 먼저 떠오르는 느낌은?', choices: ['뿌리가 깊고 안정적', '가지가 꺾여 외로워 보임', '관조적이고 평온함', '성장 준비하는 모습'], ans: 0, domain: '기억', mechanism: 'DMN - 자기 참조적 사고' },
-      { stimulus: '🌲', q: '이전 이미지와 정확히 같은가?', choices: ['정확히 같음', '유사함', '다름', '구별 불가'], ans: 0, domain: '기억', mechanism: 'DMN - 기억 회상' },
-      { stimulus: '🏠', q: '온화한 오두막. 어떤 느낌인가?', choices: ['안전하고 포근함', '답답함', '어둡고 슬픔', '불안정'], ans: 0, domain: '기억', mechanism: 'DMN - 자아상 형성' },
-      { stimulus: '🏠', q: '이전에 본 자극 중 가장 최근은?', choices: ['나무', '집', '선인장', '호수'], ans: 1, domain: '기억', mechanism: 'DMN - 시간적 맥락화' },
-      { stimulus: '🏞️', q: '지금까지 본 것의 정확한 순서는?', choices: ['호수→나무→집', '나무→집→호수', '집→호수→나무', '호수→집→나무'], ans: 1, domain: '기억', mechanism: 'DMN - 사건 순서화' },
-      { stimulus: '🌵', q: '지금까지 본 모든 자극의 개수는?', choices: ['3개', '4개', '5개', '6개'], ans: 2, domain: '기억', mechanism: 'DMN - 수량화' },
-
-      // 속도 (6) - DLPFC & 시각피질
-      { stimulus: '◇ ■ △', q: '복잡한 패턴. 가장 빠르게 다음은?', choices: ['○', '▲', '◆', '★'], ans: 0, domain: '속도', mechanism: 'DLPFC - 패턴 인식' },
-      { stimulus: '2, 4, 6, 8, ?', q: '빠르게! 다음 숫자는?', choices: ['9', '10', '12', '14'], ans: 2, domain: '속도', mechanism: 'DLPFC - 신속한 연산' },
-      { stimulus: '★ ♥ ★ ♣', q: '같은 기호를 찾으세요', choices: ['★', '♥', '♣', '◆'], ans: 0, domain: '속도', mechanism: 'DLPFC - 신속한 비교' },
-      { stimulus: '빨강 파랑 노랑', q: '순발력으로: 가장 많은 색은?', choices: ['빨강', '파랑', '노랑', '모두 같음'], ans: 3, domain: '속도', mechanism: 'DLPFC - 빠른 집계' },
-      { stimulus: '고양이 개 새', q: '가장 긴 단어는?', choices: ['고양이', '개', '새', '같음'], ans: 0, domain: '속도', mechanism: 'DLPFC - 신속한 처리' },
-      { stimulus: '352 189 247', q: '가장 큰 숫자는?', choices: ['352', '189', '247', '같음'], ans: 0, domain: '속도', mechanism: 'DLPFC - 신속한 비교' },
-
-      // 집중 (6) - DLPFC & 편도체
-      { stimulus: '●●●●●', q: '세심하게: 정확한 개수는?', choices: ['4개', '5개', '6개', '불명'], ans: 1, domain: '집중', mechanism: 'DLPFC - 세부 주의' },
-      { stimulus: '●◯●◯●', q: '정확한 패턴을 찾으세요', choices: ['●◯●◯●', '●●◯◯●', '●◯●●◯', '◯●◯●◯'], ans: 0, domain: '집중', mechanism: 'DLPFC - 패턴 정확도' },
-      { stimulus: '[●  ●  ●]', q: '중앙 위치의 기호는?', choices: ['●', '공백', '괄호', '선'], ans: 1, domain: '집중', mechanism: 'DLPFC - 공간적 주의' },
-      { stimulus: '🔴🔵🔴', q: '정확한 색 순서는?', choices: ['빨강-파랑-빨강', '파랑-빨강-파랑', '빨강-빨강-파랑', '파랑-파랑-빨강'], ans: 0, domain: '집중', mechanism: 'DLPFC - 색채 주의' },
-      { stimulus: '◆◇◈◆', q: '세밀하게: 다른 것은?', choices: ['첫 번째', '두 번째', '세 번째', '네 번째'], ans: 2, domain: '집중', mechanism: 'DLPFC - 세밀한 차이 감지' },
-      { stimulus: '[A B C D]', q: '정확히: 3번째 글자는?', choices: ['A', 'B', 'C', 'D'], ans: 2, domain: '집중', mechanism: 'DLPFC - 순서 주의' },
-
-      // 감정 (6) - 편도체 & MNS
-      { stimulus: '😊', q: '이 표정의 감정은?', choices: ['행복', '슬픔', '불안', '중립'], ans: 0, domain: '감정', mechanism: 'MNS - 감정 인식' },
-      { stimulus: '😢', q: '인물의 내적 상태는?', choices: ['만족', '불만족', '무관심', '혼란'], ans: 1, domain: '감정', mechanism: 'MNS - 정서 공감' },
-      { stimulus: '☀️', q: '전체 분위기는?', choices: ['밝음', '어두움', '혼합', '모호'], ans: 0, domain: '감정', mechanism: '편도체 - 긍정 신호' },
-      { stimulus: '👥', q: '두 인물의 관계는?', choices: ['친밀', '거리감', '갈등', '중립'], ans: 0, domain: '감정', mechanism: 'MNS - 사회적 거리' },
-      { stimulus: '⬆️', q: '흐름의 방향은?', choices: ['상향', '하향', '정체', '혼란'], ans: 0, domain: '감정', mechanism: 'MNS - 방향 감지' },
-      { stimulus: '🔥', q: '전체 톤은?', choices: ['따뜻함', '차가움', '중립', '혼합'], ans: 0, domain: '감정', mechanism: '편도체 - 열정 신호' },
-
-      // 판단 (6) - TPJ & DLPFC
-      { stimulus: '💧→○', q: '논리적 결과는?', choices: ['웅덩이', '구름', '얼음', '증발'], ans: 0, domain: '판단', mechanism: 'DLPFC - 인과 관계' },
-      { stimulus: '❌ 문제', q: '가장 논리적 해결책은?', choices: ['A 방법', 'B 방법', 'C 방법', '불가능'], ans: 0, domain: '판단', mechanism: 'DLPFC - 문제 해결' },
-      { stimulus: '●  ◯', q: '더 큰 것은?', choices: ['●', '◯', '같음', '불명확'], ans: 2, domain: '판단', mechanism: 'DLPFC - 비교 판단' },
-      { stimulus: '🌲🏠🚗', q: '공통점은?', choices: ['대칭', '이동성', '구조', '색상'], ans: 2, domain: '판단', mechanism: 'DLPFC - 추상화' },
-      { stimulus: '1→2→3', q: '다음 패턴은?', choices: ['4→5', '2→3', '1→2', '불명'], ans: 0, domain: '판단', mechanism: 'DLPFC - 규칙 추론' },
-      { stimulus: '모든 새는 날 수 있다', q: '참인가?', choices: ['참', '거짓', '불명', '상황의존'], ans: 1, domain: '판단', mechanism: 'DLPFC - 논리 검증' },
-
-      // 실행 (6) - DLPFC & 운동영역
-      { stimulus: '📋', q: '계획의 첫 단계는?', choices: ['준비', '시작', '중단', '완료'], ans: 0, domain: '실행', mechanism: 'DLPFC - 행동 계획' },
-      { stimulus: '⏳', q: '다음 단계는?', choices: ['진행', '조정', '보류', '종료'], ans: 0, domain: '실행', mechanism: 'DLPFC - 단계적 진행' },
-      { stimulus: '🎯', q: '예상 결과는?', choices: ['성공', '실패', '진행중', '불명'], ans: 0, domain: '실행', mechanism: 'DLPFC - 결과 예측' },
-      { stimulus: '🚧', q: '장애물 판단은?', choices: ['있음', '없음', '불명확', '극복가능'], ans: 0, domain: '실행', mechanism: 'DLPFC - 장애 인지' },
-      { stimulus: '💪', q: '필요한 자원은?', choices: ['충분', '부족', '적당', '미정'], ans: 2, domain: '실행', mechanism: 'DLPFC - 자원 평가' },
-      { stimulus: '✅', q: '완성도는?', choices: ['높음', '낮음', '중간', '진행중'], ans: 0, domain: '실행', mechanism: 'DLPFC - 실행 완료' },
-
-      // 조절 (6) - 전전두피질/DLPFC & 편도체
-      { stimulus: '⚡', q: '자극 조절이 가능한가?', choices: ['가능', '어려움', '불가능', '미정'], ans: 0, domain: '조절', mechanism: 'DLPFC - 상향식 조절' },
-      { stimulus: '😤', q: '충동적 반응 수준은?', choices: ['높음', '낮음', '중간', '변동'], ans: 0, domain: '조절', mechanism: 'DLPFC - 충동 억제' },
-      { stimulus: '🧘', q: '침착함 수준은?', choices: ['우수', '저하', '중간', '불안'], ans: 0, domain: '조절', mechanism: 'DLPFC - 정서 안정' },
-      { stimulus: '😰', q: '스트레스 관리는?', choices: ['우수', '어려움', '중간', '미정'], ans: 1, domain: '조절', mechanism: '편도체 - 불안 반응' },
-      { stimulus: '💭', q: '감정 표현은?', choices: ['적절', '과함', '억제', '혼란'], ans: 0, domain: '조절', mechanism: 'DLPFC - 감정 표현 조절' },
-      { stimulus: '🤔', q: '의사결정은?', choices: ['신중', '충동', '우유부단', '미정'], ans: 0, domain: '조절', mechanism: 'DLPFC - 신중한 선택' },
-
-      // 공간 (6) - 두정엽 & DMN
-      { stimulus: '[●  ●  ●]', q: '중앙의 위치는?', choices: ['왼쪽', '중앙', '오른쪽', '모서리'], ans: 1, domain: '공간', mechanism: '두정엽 - 중앙화' },
-      { stimulus: '⬆️', q: '방향은?', choices: ['상향', '하향', '좌향', '우향'], ans: 0, domain: '공간', mechanism: '두정엽 - 방향 인식' },
-      { stimulus: '🔭', q: '거리감은?', choices: ['가까움', '중간', '멀음', '불명'], ans: 2, domain: '공간', mechanism: '두정엽 - 깊이 지각' },
-      { stimulus: '🗺️', q: '위치 인식은?', choices: ['명확', '모호', '혼란', '불명'], ans: 0, domain: '공간', mechanism: '두정엽 - 공간 지도화' },
-      { stimulus: '↗️', q: '대각선 방향은?', choices: ['우상향', '우하향', '좌상향', '좌하향'], ans: 0, domain: '공간', mechanism: '두정엽 - 각도 인식' },
-      { stimulus: '📐', q: '공간 구조는?', choices: ['명확', '불명확', '혼합', '모호'], ans: 0, domain: '공간', mechanism: '두정엽 - 구조 이해' }
+      { stimulus: '🌲', q: '호숫가의 오래된 나무. 가장 먼저 떠오르는 느낌은?', choices: ['뿌리 깊고 안정', '가지 꺾여 외로움', '관조적 평온', '성장 준비'], ans: 0, domain: '기억', mechanism: 'DMN - 자기 참조' },
+      { stimulus: '🌲', q: '이전 이미지와 같은가?', choices: ['정확히 같음', '유사함', '다름', '구별 불가'], ans: 0, domain: '기억', mechanism: 'DMN - 기억 회상' },
+      { stimulus: '🏠', q: '온화한 오두막. 어떤 느낌?', choices: ['안전하고 포근', '답답함', '어둠과 슬픔', '불안정'], ans: 0, domain: '기억', mechanism: 'DMN - 자아상' },
+      { stimulus: '🏠', q: '이전에 본 자극은?', choices: ['나무', '집', '선인장', '호수'], ans: 1, domain: '기억', mechanism: 'DMN - 시간 맥락' },
+      { stimulus: '🏞️', q: '지금까지 본 순서는?', choices: ['호수→나무→집', '나무→집→호수', '집→호수→나무', '호수→집→나무'], ans: 1, domain: '기억', mechanism: 'DMN - 사건 순서' },
+      { stimulus: '🌵', q: '지금까지 본 개수는?', choices: ['3개', '4개', '5개', '6개'], ans: 2, domain: '기억', mechanism: 'DMN - 수량화' },
+      { stimulus: '◇ ■ △', q: '빠르게: 다음 패턴은?', choices: ['○', '▲', '◆', '★'], ans: 0, domain: '속도', mechanism: 'DLPFC - 패턴' },
+      { stimulus: '2, 4, 6, 8, ?', q: '빠르게: 다음 숫자는?', choices: ['9', '10', '12', '14'], ans: 2, domain: '속도', mechanism: 'DLPFC - 연산' },
+      { stimulus: '★ ♥ ★ ♣', q: '같은 기호는?', choices: ['★', '♥', '♣', '◆'], ans: 0, domain: '속도', mechanism: 'DLPFC - 비교' },
+      { stimulus: '빨 파 노', q: '가장 많은 색?', choices: ['빨강', '파랑', '노랑', '같음'], ans: 3, domain: '속도', mechanism: 'DLPFC - 집계' },
+      { stimulus: '고양이 개 새', q: '가장 긴 단어?', choices: ['고양이', '개', '새', '같음'], ans: 0, domain: '속도', mechanism: 'DLPFC - 처리' },
+      { stimulus: '352 189 247', q: '가장 큰 숫자?', choices: ['352', '189', '247', '같음'], ans: 0, domain: '속도', mechanism: 'DLPFC - 비교' },
+      { stimulus: '●●●●●', q: '정확한 개수?', choices: ['4개', '5개', '6개', '불명'], ans: 1, domain: '집중', mechanism: 'DLPFC - 세부' },
+      { stimulus: '●◯●◯●', q: '정확한 패턴?', choices: ['●◯●◯●', '●●◯◯●', '●◯●●◯', '◯●◯●◯'], ans: 0, domain: '집중', mechanism: 'DLPFC - 패턴' },
+      { stimulus: '[●  ●  ●]', q: '중앙 위치?', choices: ['●', '공백', '괄호', '선'], ans: 1, domain: '집중', mechanism: 'DLPFC - 공간' },
+      { stimulus: '🔴🔵🔴', q: '정확한 색 순서?', choices: ['빨강-파랑-빨강', '파랑-빨강-파랑', '빨강-빨강-파랑', '파랑-파랑-빨강'], ans: 0, domain: '집중', mechanism: 'DLPFC - 색채' },
+      { stimulus: '◆◇◈◆', q: '다른 것은?', choices: ['첫 번째', '두 번째', '세 번째', '네 번째'], ans: 2, domain: '집중', mechanism: 'DLPFC - 차이' },
+      { stimulus: '[A B C D]', q: '3번째 글자?', choices: ['A', 'B', 'C', 'D'], ans: 2, domain: '집중', mechanism: 'DLPFC - 순서' },
+      { stimulus: '😊', q: '표정의 감정?', choices: ['행복', '슬픔', '불안', '중립'], ans: 0, domain: '감정', mechanism: 'MNS - 감정' },
+      { stimulus: '😢', q: '내적 상태?', choices: ['만족', '불만족', '무관심', '혼란'], ans: 1, domain: '감정', mechanism: 'MNS - 공감' },
+      { stimulus: '☀️', q: '분위기?', choices: ['밝음', '어두움', '혼합', '모호'], ans: 0, domain: '감정', mechanism: '편도체 - 긍정' },
+      { stimulus: '👥', q: '두 인물 관계?', choices: ['친밀', '거리감', '갈등', '중립'], ans: 0, domain: '감정', mechanism: 'MNS - 거리' },
+      { stimulus: '⬆️', q: '흐름 방향?', choices: ['상향', '하향', '정체', '혼란'], ans: 0, domain: '감정', mechanism: 'MNS - 방향' },
+      { stimulus: '🔥', q: '톤은?', choices: ['따뜻함', '차가움', '중립', '혼합'], ans: 0, domain: '감정', mechanism: '편도체 - 열정' },
+      { stimulus: '💧→○', q: '논리적 결과?', choices: ['웅덩이', '구름', '얼음', '증발'], ans: 0, domain: '판단', mechanism: 'DLPFC - 인과' },
+      { stimulus: '❌ 문제', q: '해결책?', choices: ['A', 'B', 'C', '불가능'], ans: 0, domain: '판단', mechanism: 'DLPFC - 해결' },
+      { stimulus: '●  ◯', q: '더 큰 것?', choices: ['●', '◯', '같음', '불명'], ans: 2, domain: '판단', mechanism: 'DLPFC - 비교' },
+      { stimulus: '🌲🏠🚗', q: '공통점?', choices: ['대칭', '이동', '구조', '색상'], ans: 2, domain: '판단', mechanism: 'DLPFC - 추상' },
+      { stimulus: '1→2→3', q: '다음은?', choices: ['4→5', '2→3', '1→2', '불명'], ans: 0, domain: '판단', mechanism: 'DLPFC - 규칙' },
+      { stimulus: '모든 새는 날 수 있다', q: '참인가?', choices: ['참', '거짓', '불명', '상황의존'], ans: 1, domain: '판단', mechanism: 'DLPFC - 논리' },
+      { stimulus: '📋', q: '첫 단계?', choices: ['준비', '시작', '중단', '완료'], ans: 0, domain: '실행', mechanism: 'DLPFC - 계획' },
+      { stimulus: '⏳', q: '다음 단계?', choices: ['진행', '조정', '보류', '종료'], ans: 0, domain: '실행', mechanism: 'DLPFC - 진행' },
+      { stimulus: '🎯', q: '예상 결과?', choices: ['성공', '실패', '진행중', '불명'], ans: 0, domain: '실행', mechanism: 'DLPFC - 예측' },
+      { stimulus: '🚧', q: '장애물?', choices: ['있음', '없음', '불명', '극복'], ans: 0, domain: '실행', mechanism: 'DLPFC - 장애' },
+      { stimulus: '💪', q: '필요 자원?', choices: ['충분', '부족', '적당', '미정'], ans: 2, domain: '실행', mechanism: 'DLPFC - 평가' },
+      { stimulus: '✅', q: '완성도?', choices: ['높음', '낮음', '중간', '진행'], ans: 0, domain: '실행', mechanism: 'DLPFC - 완료' },
+      { stimulus: '⚡', q: '조절 가능?', choices: ['가능', '어려움', '불가능', '미정'], ans: 0, domain: '조절', mechanism: 'DLPFC - 조절' },
+      { stimulus: '😤', q: '충동적 반응?', choices: ['높음', '낮음', '중간', '변동'], ans: 0, domain: '조절', mechanism: 'DLPFC - 억제' },
+      { stimulus: '🧘', q: '침착함?', choices: ['우수', '저하', '중간', '불안'], ans: 0, domain: '조절', mechanism: 'DLPFC - 안정' },
+      { stimulus: '😰', q: '스트레스 관리?', choices: ['우수', '어려움', '중간', '미정'], ans: 1, domain: '조절', mechanism: '편도체 - 불안' },
+      { stimulus: '💭', q: '감정 표현?', choices: ['적절', '과함', '억제', '혼란'], ans: 0, domain: '조절', mechanism: 'DLPFC - 표현' },
+      { stimulus: '🤔', q: '의사결정?', choices: ['신중', '충동', '우유부단', '미정'], ans: 0, domain: '조절', mechanism: 'DLPFC - 결정' },
+      { stimulus: '[●  ●  ●]', q: '중앙 위치?', choices: ['왼쪽', '중앙', '오른쪽', '모서리'], ans: 1, domain: '공간', mechanism: '두정엽 - 중앙' },
+      { stimulus: '⬆️', q: '방향?', choices: ['상향', '하향', '좌향', '우향'], ans: 0, domain: '공간', mechanism: '두정엽 - 방향' },
+      { stimulus: '🔭', q: '거리감?', choices: ['가까움', '중간', '멀음', '불명'], ans: 2, domain: '공간', mechanism: '두정엽 - 깊이' },
+      { stimulus: '🗺️', q: '위치 인식?', choices: ['명확', '모호', '혼란', '불명'], ans: 0, domain: '공간', mechanism: '두정엽 - 지도' },
+      { stimulus: '↗️', q: '대각선 방향?', choices: ['우상향', '우하향', '좌상향', '좌하향'], ans: 0, domain: '공간', mechanism: '두정엽 - 각도' },
+      { stimulus: '📐', q: '공간 구조?', choices: ['명확', '불명', '혼합', '모호'], ans: 0, domain: '공간', mechanism: '두정엽 - 구조' }
     ];
 
     function showScreen(screenName) {
@@ -824,7 +813,6 @@
       document.getElementById('choicesContainer').innerHTML = choicesHtml;
       document.getElementById('nextBtn').disabled = true;
 
-      // 타이머 시작
       startTimer();
     }
 
@@ -841,7 +829,6 @@
         
         if (timeRemaining <= 0) {
           clearInterval(timerInterval);
-          // 자동으로 첫 번째 선택지 선택
           if (answers[currentIdx] === undefined) {
             selectChoice(0);
             setTimeout(() => nextQuestion(), 500);
@@ -912,7 +899,6 @@
       let brainAge = 100 - Math.round(avg * 0.35);
       brainAge = Math.max(5, Math.min(100, brainAge));
 
-      // 상태 판정
       const ageDifference = brainAge - userData.age;
       let statusClass = 'normal';
       let statusText = '✅ 정상';
