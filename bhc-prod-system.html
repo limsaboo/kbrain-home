@@ -304,6 +304,67 @@
       text-align: center;
       margin-bottom: 28px;
       border: 3px solid #00BCD4;
+      transition: all 0.3s ease;
+    }
+
+    .brain-age-box.normal {
+      background: linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 100%);
+      border-color: #4CAF50;
+    }
+
+    .brain-age-box.caution {
+      background: linear-gradient(135deg, #FFF9C4 0%, #FFEE58 100%);
+      border-color: #FBC02D;
+    }
+
+    .brain-age-box.warning {
+      background: linear-gradient(135deg, #FFE0B2 0%, #FFB74D 100%);
+      border-color: #F57C00;
+    }
+
+    .brain-age-box.danger {
+      background: linear-gradient(135deg, #FFCDD2 0%, #EF5350 100%);
+      border-color: #D32F2F;
+    }
+
+    .brain-age-box.severe {
+      background: linear-gradient(135deg, #FFCDD2 0%, #C62828 100%);
+      border-color: #B71C1C;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 800;
+      margin-top: 12px;
+      margin-bottom: 12px;
+    }
+
+    .status-badge.normal {
+      background: #4CAF50;
+      color: white;
+    }
+
+    .status-badge.caution {
+      background: #FBC02D;
+      color: #333;
+    }
+
+    .status-badge.warning {
+      background: #F57C00;
+      color: white;
+    }
+
+    .status-badge.danger {
+      background: #D32F2F;
+      color: white;
+    }
+
+    .status-badge.severe {
+      background: #B71C1C;
+      color: white;
     }
 
     .brain-age-label {
@@ -541,10 +602,12 @@
       </div>
 
       <div class="result-content">
-        <div class="brain-age-box">
+        <div class="brain-age-box" id="brainAgeBox">
           <div class="brain-age-label">당신의 뇌 나이는</div>
           <div class="brain-age-number" id="brainAge">00</div>
           <div class="brain-age-desc">세 (시니어 평균과 비교)</div>
+          <div class="status-badge" id="statusBadge">정상</div>
+          <div id="statusMessage" style="font-size: 12px; font-weight: 700; margin-top: 8px; min-height: 20px;"></div>
         </div>
 
         <div class="age-info">
@@ -595,10 +658,11 @@
       <p style="font-size: 12px; color: #666; margin-top: 4px;">이 보고서는 BHC 4.0 시스템으로 생성되었습니다.</p>
     </div>
 
-    <div style="background: linear-gradient(135deg, #E0F7FA 0%, #B2EBF2 100%); border: 3px solid #00BCD4; border-radius: 12px; padding: 24px; margin-bottom: 24px; text-align: center;">
+    <div style="background: linear-gradient(135deg, #E0F7FA 0%, #B2EBF2 100%); border: 3px solid #00BCD4; border-radius: 12px; padding: 24px; margin-bottom: 24px; text-align: center;" id="printBrainAgeBox">
       <p style="font-size: 14px; font-weight: 800; color: #00695C; margin-bottom: 8px;">당신의 뇌 나이는</p>
       <p style="font-size: 48px; font-weight: 900; color: #00BCD4; margin-bottom: 8px;" id="printBrainAge">00</p>
       <p style="font-size: 12px; color: #00695C; font-weight: 600;">세 (시니어 평균과 비교)</p>
+      <p style="font-size: 13px; font-weight: 800; margin-top: 12px; padding-top: 12px; border-top: 2px solid rgba(0,0,0,0.1);" id="printStatus">상태: 정상</p>
     </div>
 
     <table style="width: 100%; margin-bottom: 24px; border-collapse: collapse;">
@@ -836,13 +900,56 @@
       let brainAge = 100 - Math.round(avg * 0.35);
       brainAge = Math.max(5, Math.min(100, brainAge));
 
+      // 뇌나이와 실제 나이의 차이 계산
+      const ageDifference = brainAge - userData.age;
+      let statusClass = 'normal';
+      let statusText = '✅ 정상';
+      let messageText = '';
+
+      if (ageDifference >= 20) {
+        statusClass = 'severe';
+        statusText = '🔴 매우 위험';
+        messageText = '전문의 진료를 권유합니다';
+      } else if (ageDifference >= 15) {
+        statusClass = 'danger';
+        statusText = '🔴 위험';
+        messageText = '인지 건강 관리가 필요합니다';
+      } else if (ageDifference >= 10) {
+        statusClass = 'warning';
+        statusText = '⚠️ 경고';
+        messageText = '정기적인 검사가 권장됩니다';
+      } else if (ageDifference >= 5) {
+        statusClass = 'caution';
+        statusText = '⚠️ 주의';
+        messageText = '인지 훈련을 시작하세요';
+      }
+
       document.getElementById('brainAge').textContent = brainAge;
+      document.getElementById('brainAgeBox').className = 'brain-age-box ' + statusClass;
+      document.getElementById('statusBadge').className = 'status-badge ' + statusClass;
+      document.getElementById('statusBadge').textContent = statusText;
+      document.getElementById('statusMessage').textContent = messageText;
       document.getElementById('realAge').textContent = '만 ' + userData.age + '세';
       document.getElementById('birthInfo').textContent = userData.birth.replace(/(\d{4})-(\d{2})-(\d{2})/, '$1년 $2월 $3일');
       document.getElementById('userName2').textContent = userData.name;
 
       // 인쇄용 정보
       document.getElementById('printBrainAge').textContent = brainAge;
+      document.getElementById('printStatus').textContent = '상태: ' + statusText + ' - ' + messageText;
+      
+      // 인쇄용 박스 스타일 적용
+      const printBox = document.getElementById('printBrainAgeBox');
+      const colorMap = {
+        'normal': { bg: 'linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 100%)', border: '#4CAF50' },
+        'caution': { bg: 'linear-gradient(135deg, #FFF9C4 0%, #FFEE58 100%)', border: '#FBC02D' },
+        'warning': { bg: 'linear-gradient(135deg, #FFE0B2 0%, #FFB74D 100%)', border: '#F57C00' },
+        'danger': { bg: 'linear-gradient(135deg, #FFCDD2 0%, #EF5350 100%)', border: '#D32F2F' },
+        'severe': { bg: 'linear-gradient(135deg, #FFCDD2 0%, #C62828 100%)', border: '#B71C1C' }
+      };
+      const colors = colorMap[statusClass];
+      printBox.style.background = colors.bg;
+      printBox.style.borderColor = colors.border;
+      
       document.getElementById('printName').textContent = userData.name;
       document.getElementById('printBirth').textContent = userData.birth.replace(/(\d{4})-(\d{2})-(\d{2})/, '$1년 $2월 $3일');
       document.getElementById('printRealAge').textContent = '만 ' + userData.age + '세';
