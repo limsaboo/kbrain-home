@@ -3,158 +3,321 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>BAM TEST</title>
+<title>BAM 뇌나이 진단</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;}
-body{background:#fff;font-family:'Noto Sans KR';color:#333;}
-.container{max-width:480px;margin:0 auto;}
-.screen{display:none;padding:20px;min-height:100vh;}
-.screen.active{display:block;}
-input,select{width:100%;padding:10px;margin:10px 0;border:1px solid #ddd;border-radius:5px;}
-button{width:100%;padding:12px;background:#00BCD4;color:#fff;border:none;border-radius:5px;cursor:pointer;font-weight:bold;margin:10px 0;}
-.image-box{width:100%;max-width:300px;height:300px;background:#f0f0f0;border:2px solid #00BCD4;border-radius:8px;margin:20px auto;display:flex;align-items:center;justify-content:center;}
-.image-box img{max-width:100%;max-height:100%;object-fit:contain;}
-.options{display:flex;flex-direction:column;gap:10px;margin:20px 0;}
-.opt{padding:10px;border:2px solid #ddd;border-radius:5px;cursor:pointer;text-align:center;}
-.opt.selected{border-color:#00BCD4;background:#E0F7FA;}
+* { margin:0; padding:0; box-sizing:border-box; }
+html, body { width:100%; height:100%; background:#fff; font-family:'Noto Sans KR',sans-serif; }
+.container { max-width:480px; margin:0 auto; min-height:100vh; display:flex; flex-direction:column; }
+
+.screen { display:none; }
+.screen.active { display:flex; flex-direction:column; min-height:100vh; padding:20px; }
+
+/* 시작 화면 */
+#intro.active { justify-content:center; align-items:center; }
+.intro-box { text-align:center; width:100%; }
+.intro-emoji { font-size:80px; margin-bottom:20px; }
+.intro-title { font-size:28px; font-weight:900; color:#1a472a; margin-bottom:10px; }
+.intro-sub { color:#666; margin-bottom:30px; line-height:1.6; }
+.form-input { width:100%; padding:12px; border:2px solid #ddd; border-radius:8px; margin:10px 0; font-size:14px; }
+.btn { width:100%; padding:14px; background:#00BCD4; color:#fff; border:none; border-radius:8px; font-weight:900; font-size:16px; cursor:pointer; margin-top:10px; }
+
+/* 테스트 화면 */
+#test.active { justify-content:flex-start; }
+.header { background:#1a472a; color:#fff; padding:16px; text-align:center; border-bottom:4px solid #00BCD4; margin:-20px -20px 20px -20px; }
+.header-title { font-size:14px; }
+.header-progress { font-size:20px; font-weight:900; margin-top:8px; }
+.content { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+.image-container { width:100%; max-width:320px; aspect-ratio:1; background:#f5f5f5; border:3px solid #00BCD4; border-radius:12px; display:flex; align-items:center; justify-content:center; margin-bottom:30px; overflow:hidden; }
+.image-container img { width:100%; height:100%; object-fit:contain; }
+.question { font-size:16px; font-weight:900; color:#1a472a; margin-bottom:20px; }
+.options { width:100%; max-width:320px; display:flex; flex-direction:column; gap:10px; }
+.option-btn { padding:14px; background:#fff; border:2px solid #ddd; border-radius:8px; font-size:14px; font-weight:700; cursor:pointer; text-align:center; }
+.option-btn.active { border-color:#00BCD4; background:#E0F7FA; color:#00695C; }
+.nav { display:flex; gap:10px; margin-top:30px; width:100%; max-width:320px; }
+.nav-btn { flex:1; padding:12px; border:2px solid #ddd; background:#fff; border-radius:8px; font-weight:700; cursor:pointer; }
+.nav-btn:disabled { opacity:0.3; cursor:not-allowed; }
+
+/* 결과 화면 */
+#result.active { justify-content:flex-start; overflow-y:auto; }
+.result-card { background:#1a472a; color:#fff; padding:20px; text-align:center; border-radius:12px; margin-bottom:20px; }
+.result-title { font-size:24px; font-weight:900; }
+.result-sub { font-size:13px; margin-top:8px; opacity:0.9; }
+.info-card { background:#fff; border-left:4px solid #00BCD4; padding:16px; border-radius:12px; margin-bottom:12px; border:1px solid #ddd; }
+.info-label { font-size:12px; color:#666; margin-bottom:4px; }
+.info-value { font-size:24px; font-weight:900; color:#1a472a; }
+.detail-card { background:#fff; padding:16px; border-radius:12px; margin-bottom:12px; border:1px solid #ddd; }
+.detail-title { font-size:14px; font-weight:900; color:#1a472a; margin-bottom:12px; }
+.detail-item { display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid #eee; }
+.detail-name { font-size:12px; }
+.detail-score { font-size:14px; font-weight:900; color:#00695C; }
+.domain-item { margin-bottom:12px; }
+.domain-bar { display:flex; justify-content:space-between; margin-bottom:4px; }
+.domain-label { font-size:12px; }
+.domain-value { font-size:12px; font-weight:900; }
+.bar { width:100%; height:6px; background:#e0e0e0; border-radius:3px; overflow:hidden; }
+.bar-fill { height:100%; background:linear-gradient(90deg,#00BCD4,#0097A7); }
+
+.btn-restart { width:100%; padding:14px; background:#00BCD4; color:#fff; border:none; border-radius:8px; font-weight:900; cursor:pointer; margin-bottom:40px; margin-top:20px; }
 </style>
 </head>
 <body>
 
 <div class="container">
 
-<div id="screen1" class="screen active">
-  <h1>BAM 진단</h1>
-  <input type="text" id="name" placeholder="이름">
-  <select id="gender">
-    <option value="">성별</option>
-    <option value="M">남</option>
-    <option value="F">여</option>
-  </select>
-  <input type="date" id="birth">
-  <button onclick="start()">시작</button>
-</div>
-
-<div id="screen2" class="screen">
-  <h2 id="prog">1/20</h2>
-  <div class="image-box">
-    <img id="img" src="">
+<!-- 시작 화면 -->
+<div id="intro" class="screen active">
+  <div class="intro-box">
+    <div class="intro-emoji">🧠</div>
+    <h1 class="intro-title">BAM 뇌나이 진단</h1>
+    <p class="intro-sub">당신의 신경계 발달 수준을<br>20개 이미지로 측정합니다</p>
+    
+    <label>이름</label>
+    <input type="text" id="userName" class="form-input" placeholder="홍길동">
+    
+    <label>성별</label>
+    <select id="userGender" class="form-input">
+      <option value="">선택</option>
+      <option value="M">남</option>
+      <option value="F">여</option>
+    </select>
+    
+    <label>생년월일</label>
+    <input type="date" id="userBirth" class="form-input">
+    
+    <button class="btn" onclick="startTest()">진단 시작</button>
   </div>
-  <p>첫 반응은?</p>
-  <div id="opts" class="options"></div>
-  <button onclick="prev()">이전</button>
-  <button id="nextBtn" onclick="next()">다음</button>
 </div>
 
-<div id="screen3" class="screen">
-  <h1>결과</h1>
-  <h2 id="brainAge">-</h2>
-  <p id="bs">하위뇌: -</p>
-  <p id="mb">중뇌: -</p>
-  <p id="ct">상위뇌: -</p>
-  <div id="domains"></div>
-  <button onclick="location.reload()">다시</button>
+<!-- 테스트 화면 -->
+<div id="test" class="screen">
+  <div class="header">
+    <div class="header-title">📋 BAM 진단 진행 중</div>
+    <div class="header-progress" id="progress">1/20</div>
+  </div>
+  
+  <div class="content">
+    <div class="image-container">
+      <img id="testImage" src="" alt="테스트 이미지">
+    </div>
+    
+    <div class="question">첫 반응은?</div>
+    
+    <div class="options" id="optionsContainer"></div>
+    
+    <div class="nav">
+      <button class="nav-btn" id="prevBtn" onclick="prevQuestion()" disabled>← 이전</button>
+      <button class="nav-btn" id="nextBtn" onclick="nextQuestion()">다음 →</button>
+    </div>
+  </div>
+</div>
+
+<!-- 결과 화면 -->
+<div id="result" class="screen">
+  <div class="result-card">
+    <div class="result-title" id="resultTitle">진단 완료</div>
+    <div class="result-sub">당신의 신경계 발달이 분석되었습니다</div>
+  </div>
+  
+  <div class="info-card">
+    <div class="info-label">뇌나이</div>
+    <div class="info-value" id="brainAge">0</div>
+  </div>
+  
+  <div class="detail-card">
+    <div class="detail-title">뇌 영역별 발달</div>
+    <div class="detail-item">
+      <div class="detail-name">🔴 하위뇌 (반응속도)</div>
+      <div class="detail-score" id="scoreBs">0</div>
+    </div>
+    <div class="detail-item">
+      <div class="detail-name">🟠 중뇌 (조절력)</div>
+      <div class="detail-score" id="scoreMb">0</div>
+    </div>
+    <div class="detail-item">
+      <div class="detail-name">🟡 상위뇌 (판단력)</div>
+      <div class="detail-score" id="scoreCt">0</div>
+    </div>
+  </div>
+  
+  <div class="detail-card">
+    <div class="detail-title">도메인별 신경 효율성</div>
+    <div id="domainList"></div>
+  </div>
+  
+  <button class="btn-restart" onclick="location.reload()">다시 진단하기</button>
 </div>
 
 </div>
 
 <script>
-const domains=[
-  {name:'반응속도',bs:60,mb:30,ct:10},
-  {name:'보상처리',bs:20,mb:60,ct:20},
-  {name:'동기부여',bs:20,mb:70,ct:10},
-  {name:'감정반응',bs:50,mb:35,ct:15},
-  {name:'판단력',bs:5,mb:15,ct:80},
-  {name:'실행력',bs:10,mb:70,ct:20},
-  {name:'조절력',bs:10,mb:80,ct:10},
-  {name:'공간감각',bs:15,mb:15,ct:70},
-  {name:'창의성',bs:5,mb:15,ct:80},
-  {name:'통찰력',bs:5,mb:20,ct:75}
+const domains = [
+  {name:'반응속도', bs:60, mb:30, ct:10},
+  {name:'보상처리', bs:20, mb:60, ct:20},
+  {name:'동기부여', bs:20, mb:70, ct:10},
+  {name:'감정반응', bs:50, mb:35, ct:15},
+  {name:'판단력', bs:5, mb:15, ct:80},
+  {name:'실행력', bs:10, mb:70, ct:20},
+  {name:'조절력', bs:10, mb:80, ct:10},
+  {name:'공간감각', bs:15, mb:15, ct:70},
+  {name:'창의성', bs:5, mb:15, ct:80},
+  {name:'통찰력', bs:5, mb:20, ct:75}
 ];
 
-const imgs=['/assets/img/bam-projection-1.jpg','/assets/img/bam-projection-2.png','/assets/img/bam-projection-3.png','/assets/img/bam-projection-4.jpg','/assets/img/bam-projection-5.png','/assets/img/bam-projection-6.png','/assets/img/bam-projection-7.png','/assets/img/bam-projection-8.png','/assets/img/bam-projection-9.png','/assets/img/bam-projection-10.png','/assets/img/bam-projection-11.png','/assets/img/bam-projection-12.png','/assets/img/bam-projection-13.jpg','/assets/img/bam-projection-14.jpg','/assets/img/bam-projection-15.jpg','/assets/img/bam-projection-16.jpg','/assets/img/bam-projection-17.png','/assets/img/bam-projection-18.png','/assets/img/bam-projection-19.jpg','/assets/img/bam-projection-20.jpg'];
+const images = [
+  'assets/img/bam-projection-1.jpg',
+  'assets/img/bam-projection-2.png',
+  'assets/img/bam-projection-3.png',
+  'assets/img/bam-projection-4.jpg',
+  'assets/img/bam-projection-5.png',
+  'assets/img/bam-projection-6.png',
+  'assets/img/bam-projection-7.png',
+  'assets/img/bam-projection-8.png',
+  'assets/img/bam-projection-9.png',
+  'assets/img/bam-projection-10.png',
+  'assets/img/bam-projection-11.png',
+  'assets/img/bam-projection-12.png',
+  'assets/img/bam-projection-13.jpg',
+  'assets/img/bam-projection-14.jpg',
+  'assets/img/bam-projection-15.jpg',
+  'assets/img/bam-projection-16.jpg',
+  'assets/img/bam-projection-17.png',
+  'assets/img/bam-projection-18.png',
+  'assets/img/bam-projection-19.jpg',
+  'assets/img/bam-projection-20.jpg'
+];
 
-let q=0, ans={};
+let currentQ = 0;
+let answers = {};
+let user = {};
 
-function start(){
-  const n=document.getElementById('name').value;
-  const g=document.getElementById('gender').value;
-  const b=document.getElementById('birth').value;
-  if(!n||!g||!b)return alert('입력하세요');
-  q=0;
-  ans={};
-  show('screen2');
-  load();
+function switchScreen(screenId) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(screenId).classList.add('active');
 }
 
-function show(id){
-  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
+function startTest() {
+  const name = document.getElementById('userName').value.trim();
+  const gender = document.getElementById('userGender').value;
+  const birth = document.getElementById('userBirth').value;
+  
+  if (!name || !gender || !birth) {
+    alert('모든 정보를 입력해주세요');
+    return;
+  }
+  
+  user = {name, gender, birth};
+  currentQ = 0;
+  answers = {};
+  
+  switchScreen('test');
+  loadQuestion();
 }
 
-function load(){
-  document.getElementById('prog').textContent=(q+1)+'/20';
-  document.getElementById('img').src=imgs[q];
-  const os=document.getElementById('opts');
-  os.innerHTML='';
-  ['즉각 끌림','조금 끌림','조금 거부','즉각 거부'].forEach(o=>{
-    const d=document.createElement('div');
-    d.className='opt';
-    if(ans[q]?.o===o)d.classList.add('selected');
-    d.textContent=o;
-    d.onclick=()=>pick(q,o,d);
-    os.appendChild(d);
+function loadQuestion() {
+  const img = images[currentQ];
+  document.getElementById('testImage').src = img;
+  document.getElementById('progress').textContent = (currentQ + 1) + '/20';
+  
+  const container = document.getElementById('optionsContainer');
+  container.innerHTML = '';
+  
+  const options = ['즉각 끌림', '조금 끌림', '조금 거부', '즉각 거부'];
+  options.forEach(opt => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    if (answers[currentQ]?.option === opt) {
+      btn.classList.add('active');
+    }
+    btn.textContent = opt;
+    btn.onclick = () => selectOption(currentQ, opt, btn);
+    container.appendChild(btn);
   });
-  document.getElementById('nextBtn').textContent=q===19?'완료':'다음';
+  
+  document.getElementById('prevBtn').disabled = currentQ === 0;
+  document.getElementById('nextBtn').textContent = currentQ === 19 ? '완료' : '다음 →';
 }
 
-function pick(idx,opt,elem){
-  const sc={'즉각 끌림':100,'조금 끌림':70,'조금 거부':40,'즉각 거부':0};
-  ans[idx]={o:opt,s:sc[opt]};
-  document.querySelectorAll('.opt').forEach(e=>e.classList.remove('selected'));
-  elem.classList.add('selected');
+function selectOption(idx, option, elem) {
+  const scores = {
+    '즉각 끌림': 100,
+    '조금 끌림': 70,
+    '조금 거부': 40,
+    '즉각 거부': 0
+  };
+  
+  answers[idx] = {
+    option: option,
+    score: scores[option]
+  };
+  
+  document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('active'));
+  elem.classList.add('active');
 }
 
-function prev(){
-  if(q>0){q--;load();}
+function prevQuestion() {
+  if (currentQ > 0) {
+    currentQ--;
+    loadQuestion();
+  }
 }
 
-function next(){
-  if(!ans[q])return alert('선택');
-  if(q<19){q++;load();}else calc();
+function nextQuestion() {
+  if (!answers[currentQ]) {
+    alert('선택해주세요');
+    return;
+  }
+  
+  if (currentQ < 19) {
+    currentQ++;
+    loadQuestion();
+  } else {
+    calculateResult();
+  }
 }
 
-function calc(){
-  let bsS=0,mbS=0,ctS=0;
-  const da=domains.map((d,i)=>{
-    let ds=[];
-    for(let k in ans){
-      if(parseInt(k)%10===i){
-        ds.push(ans[k].s);
+function calculateResult() {
+  let bsSum = 0, mbSum = 0, ctSum = 0;
+  
+  const domainScores = domains.map((domain, idx) => {
+    let scores = [];
+    for (let q in answers) {
+      if (parseInt(q) % 10 === idx) {
+        scores.push(answers[q].score);
       }
     }
-    let da=ds.length?ds.reduce((a,b)=>a+b,0)/ds.length:0;
-    bsS+=da*(d.bs/100);
-    mbS+=da*(d.mb/100);
-    ctS+=da*(d.ct/100);
-    return{n:d.name,s:Math.round(da)};
+    
+    const avg = scores.length > 0 ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length) : 0;
+    
+    bsSum += avg * (domain.bs / 100);
+    mbSum += avg * (domain.mb / 100);
+    ctSum += avg * (domain.ct / 100);
+    
+    return {
+      name: domain.name,
+      score: avg
+    };
   });
   
-  let bs=Math.round(bsS/10);
-  let mb=Math.round(mbS/10);
-  let ct=Math.round(ctS/10);
-  let ba=Math.round(bs*0.6+mb*0.3+ct*0.1);
+  const bs = Math.round(bsSum / 10);
+  const mb = Math.round(mbSum / 10);
+  const ct = Math.round(ctSum / 10);
+  const brainAge = Math.round(bs * 0.6 + mb * 0.3 + ct * 0.1);
   
-  document.getElementById('brainAge').textContent=ba+'점';
-  document.getElementById('bs').textContent='하위뇌: '+bs;
-  document.getElementById('mb').textContent='중뇌: '+mb;
-  document.getElementById('ct').textContent='상위뇌: '+ct;
+  document.getElementById('brainAge').textContent = brainAge;
+  document.getElementById('scoreBs').textContent = bs;
+  document.getElementById('scoreMb').textContent = mb;
+  document.getElementById('scoreCt').textContent = ct;
   
-  let dh='<h3>도메인</h3>';
-  da.forEach(d=>{dh+='<p>'+d.n+': '+d.s+'</p>';});
-  document.getElementById('domains').innerHTML=dh;
+  let domainHtml = '';
+  domainScores.forEach(d => {
+    domainHtml += '<div class="domain-item">';
+    domainHtml += '<div class="domain-bar"><div class="domain-label">' + d.name + '</div><div class="domain-value">' + d.score + '점</div></div>';
+    domainHtml += '<div class="bar"><div class="bar-fill" style="width:' + d.score + '%"></div></div>';
+    domainHtml += '</div>';
+  });
+  document.getElementById('domainList').innerHTML = domainHtml;
   
-  show('screen3');
+  switchScreen('result');
 }
 </script>
 
