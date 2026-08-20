@@ -2,146 +2,341 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>BAM 뇌나이 진단</title>
 <style>
-* { margin:0; padding:0; box-sizing:border-box; }
-html, body { width:100%; height:100%; background:#fff; font-family:'Noto Sans KR',sans-serif; }
-.container { max-width:480px; margin:0 auto; min-height:100vh; display:flex; flex-direction:column; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 100%; height: 100%; background: #fff; font-family: 'Noto Sans KR', sans-serif; }
 
-.screen { display:none; }
-.screen.active { display:flex; flex-direction:column; min-height:100vh; padding:20px; }
+body {
+  background: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.wrapper {
+  width: 100%;
+  max-width: 480px;
+  background: #fff;
+}
 
 /* 시작 화면 */
-#intro.active { justify-content:center; align-items:center; }
-.intro-box { text-align:center; width:100%; }
-.intro-emoji { font-size:80px; margin-bottom:20px; }
-.intro-title { font-size:28px; font-weight:900; color:#1a472a; margin-bottom:10px; }
-.intro-sub { color:#666; margin-bottom:30px; line-height:1.6; }
-.form-input { width:100%; padding:12px; border:2px solid #ddd; border-radius:8px; margin:10px 0; font-size:14px; }
-.btn { width:100%; padding:14px; background:#00BCD4; color:#fff; border:none; border-radius:8px; font-weight:900; font-size:16px; cursor:pointer; margin-top:10px; }
+.intro-screen {
+  display: none;
+  min-height: 100vh;
+  background: #fff;
+  padding: 40px 20px;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+}
+
+.intro-screen.active {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.intro-emoji { font-size: 100px; margin-bottom: 30px; }
+.intro-title { font-size: 32px; font-weight: 900; color: #1a472a; margin-bottom: 10px; }
+.intro-sub { color: #666; font-size: 14px; line-height: 1.6; margin-bottom: 40px; }
+
+.form-group {
+  width: 100%;
+  max-width: 320px;
+  margin-bottom: 15px;
+}
+
+.form-label { display: block; text-align: left; font-size: 12px; font-weight: 700; color: #333; margin-bottom: 6px; }
+.form-input { width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 14px; }
+
+.btn-start {
+  width: 100%;
+  max-width: 320px;
+  padding: 14px;
+  background: linear-gradient(135deg, #00BCD4, #0097A7);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-weight: 900;
+  font-size: 16px;
+  cursor: pointer;
+  margin-top: 20px;
+}
 
 /* 테스트 화면 */
-#test.active { justify-content:flex-start; }
-.header { background:#1a472a; color:#fff; padding:16px; text-align:center; border-bottom:4px solid #00BCD4; margin:-20px -20px 20px -20px; }
-.header-title { font-size:14px; }
-.header-progress { font-size:20px; font-weight:900; margin-top:8px; }
-.content { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; }
-.image-container { width:100%; max-width:320px; aspect-ratio:1; background:#f5f5f5; border:3px solid #00BCD4; border-radius:12px; display:flex; align-items:center; justify-content:center; margin-bottom:30px; overflow:hidden; }
-.image-container img { width:100%; height:100%; object-fit:contain; }
-.question { font-size:16px; font-weight:900; color:#1a472a; margin-bottom:20px; }
-.options { width:100%; max-width:320px; display:flex; flex-direction:column; gap:10px; }
-.option-btn { padding:14px; background:#fff; border:2px solid #ddd; border-radius:8px; font-size:14px; font-weight:700; cursor:pointer; text-align:center; }
-.option-btn.active { border-color:#00BCD4; background:#E0F7FA; color:#00695C; }
-.nav { display:flex; gap:10px; margin-top:30px; width:100%; max-width:320px; }
-.nav-btn { flex:1; padding:12px; border:2px solid #ddd; background:#fff; border-radius:8px; font-weight:700; cursor:pointer; }
-.nav-btn:disabled { opacity:0.3; cursor:not-allowed; }
+.test-screen {
+  display: none;
+  min-height: 100vh;
+  background: #fff;
+  flex-direction: column;
+}
+
+.test-screen.active {
+  display: flex;
+}
+
+.header {
+  background: #1a472a;
+  color: #fff;
+  padding: 16px 20px;
+  text-align: center;
+  border-bottom: 4px solid #00BCD4;
+}
+
+.header-title { font-size: 12px; font-weight: 700; }
+.header-progress { font-size: 24px; font-weight: 900; margin-top: 8px; }
+
+.test-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 30px 20px;
+  overflow-y: auto;
+}
+
+.image-box {
+  width: 100%;
+  max-width: 340px;
+  aspect-ratio: 1;
+  background: #f5f5f5;
+  border: 3px solid #00BCD4;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 30px;
+  overflow: hidden;
+}
+
+.image-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.question-box {
+  width: 100%;
+  max-width: 340px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.question-label { font-size: 13px; font-weight: 700; color: #666; margin-bottom: 4px; }
+.question-text { font-size: 18px; font-weight: 900; color: #1a472a; }
+
+.options-box {
+  width: 100%;
+  max-width: 340px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 30px;
+}
+
+.option-btn {
+  width: 100%;
+  padding: 14px;
+  background: #fff;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #333;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.2s;
+}
+
+.option-btn:active { transform: scale(0.98); }
+
+.option-btn.selected {
+  border-color: #00BCD4;
+  background: #E0F7FA;
+  color: #00695C;
+}
+
+.nav-box {
+  width: 100%;
+  max-width: 340px;
+  display: flex;
+  gap: 10px;
+  padding-bottom: 30px;
+}
+
+.nav-btn {
+  flex: 1;
+  padding: 12px;
+  border: 2px solid #ddd;
+  background: #fff;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.nav-btn:disabled { opacity: 0.3; }
 
 /* 결과 화면 */
-#result.active { justify-content:flex-start; overflow-y:auto; }
-.result-card { background:#1a472a; color:#fff; padding:20px; text-align:center; border-radius:12px; margin-bottom:20px; }
-.result-title { font-size:24px; font-weight:900; }
-.result-sub { font-size:13px; margin-top:8px; opacity:0.9; }
-.info-card { background:#fff; border-left:4px solid #00BCD4; padding:16px; border-radius:12px; margin-bottom:12px; border:1px solid #ddd; }
-.info-label { font-size:12px; color:#666; margin-bottom:4px; }
-.info-value { font-size:24px; font-weight:900; color:#1a472a; }
-.detail-card { background:#fff; padding:16px; border-radius:12px; margin-bottom:12px; border:1px solid #ddd; }
-.detail-title { font-size:14px; font-weight:900; color:#1a472a; margin-bottom:12px; }
-.detail-item { display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid #eee; }
-.detail-name { font-size:12px; }
-.detail-score { font-size:14px; font-weight:900; color:#00695C; }
-.domain-item { margin-bottom:12px; }
-.domain-bar { display:flex; justify-content:space-between; margin-bottom:4px; }
-.domain-label { font-size:12px; }
-.domain-value { font-size:12px; font-weight:900; }
-.bar { width:100%; height:6px; background:#e0e0e0; border-radius:3px; overflow:hidden; }
-.bar-fill { height:100%; background:linear-gradient(90deg,#00BCD4,#0097A7); }
+.result-screen {
+  display: none;
+  min-height: 100vh;
+  background: #f5f5f5;
+  padding: 20px;
+  overflow-y: auto;
+}
 
-.btn-restart { width:100%; padding:14px; background:#00BCD4; color:#fff; border:none; border-radius:8px; font-weight:900; cursor:pointer; margin-bottom:40px; margin-top:20px; }
+.result-screen.active {
+  display: block;
+}
+
+.result-header {
+  background: #1a472a;
+  color: #fff;
+  padding: 20px;
+  text-align: center;
+  border-radius: 12px;
+  margin-bottom: 20px;
+}
+
+.result-title { font-size: 24px; font-weight: 900; }
+.result-sub { font-size: 13px; margin-top: 8px; opacity: 0.9; }
+
+.card {
+  background: #fff;
+  padding: 16px;
+  border-radius: 12px;
+  margin-bottom: 12px;
+  border: 1px solid #ddd;
+}
+
+.card-label { font-size: 12px; color: #666; margin-bottom: 4px; }
+.card-value { font-size: 28px; font-weight: 900; color: #1a472a; }
+.card-title { font-size: 14px; font-weight: 900; color: #1a472a; margin-bottom: 12px; }
+
+.brain-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.brain-item:last-child { border-bottom: none; }
+.brain-name { font-size: 12px; }
+.brain-score { font-size: 14px; font-weight: 900; color: #00695C; }
+
+.domain-item { margin-bottom: 14px; }
+.domain-head { display: flex; justify-content: space-between; margin-bottom: 4px; }
+.domain-name { font-size: 12px; }
+.domain-score { font-size: 12px; font-weight: 900; }
+.domain-bar { width: 100%; height: 6px; background: #e0e0e0; border-radius: 3px; overflow: hidden; }
+.domain-fill { height: 100%; background: linear-gradient(90deg, #00BCD4, #0097A7); }
+
+.btn-restart {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, #00BCD4, #0097A7);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-weight: 900;
+  cursor: pointer;
+  margin-bottom: 40px;
+}
 </style>
 </head>
 <body>
 
-<div class="container">
+<div class="wrapper">
 
 <!-- 시작 화면 -->
-<div id="intro" class="screen active">
-  <div class="intro-box">
-    <div class="intro-emoji">🧠</div>
-    <h1 class="intro-title">BAM 뇌나이 진단</h1>
-    <p class="intro-sub">당신의 신경계 발달 수준을<br>20개 이미지로 측정합니다</p>
-    
-    <label>이름</label>
-    <input type="text" id="userName" class="form-input" placeholder="홍길동">
-    
-    <label>성별</label>
-    <select id="userGender" class="form-input">
+<div class="intro-screen active">
+  <div class="intro-emoji">🧠</div>
+  <h1 class="intro-title">BAM 뇌나이 진단</h1>
+  <p class="intro-sub">당신의 신경계 발달 수준을<br>20개 이미지로 측정합니다</p>
+  
+  <div class="form-group">
+    <label class="form-label">이름</label>
+    <input type="text" class="form-input" id="name" placeholder="홍길동">
+  </div>
+  
+  <div class="form-group">
+    <label class="form-label">성별</label>
+    <select class="form-input" id="gender">
       <option value="">선택</option>
       <option value="M">남</option>
       <option value="F">여</option>
     </select>
-    
-    <label>생년월일</label>
-    <input type="date" id="userBirth" class="form-input">
-    
-    <button class="btn" onclick="startTest()">진단 시작</button>
   </div>
+  
+  <div class="form-group">
+    <label class="form-label">생년월일</label>
+    <input type="date" class="form-input" id="birth">
+  </div>
+  
+  <button class="btn-start" onclick="start()">진단 시작</button>
 </div>
 
 <!-- 테스트 화면 -->
-<div id="test" class="screen">
+<div class="test-screen">
   <div class="header">
-    <div class="header-title">📋 BAM 진단 진행 중</div>
+    <div class="header-title">📋 촉정 진행 중</div>
     <div class="header-progress" id="progress">1/20</div>
   </div>
   
-  <div class="content">
-    <div class="image-container">
-      <img id="testImage" src="" alt="테스트 이미지">
+  <div class="test-content">
+    <div class="image-box">
+      <img id="testImg" src="" alt="">
     </div>
     
-    <div class="question">첫 반응은?</div>
+    <div class="question-box">
+      <div class="question-label">【집중】</div>
+      <div class="question-text">?</div>
+    </div>
     
-    <div class="options" id="optionsContainer"></div>
+    <div class="options-box" id="options"></div>
     
-    <div class="nav">
-      <button class="nav-btn" id="prevBtn" onclick="prevQuestion()" disabled>← 이전</button>
-      <button class="nav-btn" id="nextBtn" onclick="nextQuestion()">다음 →</button>
+    <div class="nav-box">
+      <button class="nav-btn" id="prevBtn" onclick="prev()" disabled>← 이전</button>
+      <button class="nav-btn" id="nextBtn" onclick="next()">다음 →</button>
     </div>
   </div>
 </div>
 
 <!-- 결과 화면 -->
-<div id="result" class="screen">
-  <div class="result-card">
-    <div class="result-title" id="resultTitle">진단 완료</div>
+<div class="result-screen">
+  <div class="result-header">
+    <div class="result-title">진단 완료</div>
     <div class="result-sub">당신의 신경계 발달이 분석되었습니다</div>
   </div>
   
-  <div class="info-card">
-    <div class="info-label">뇌나이</div>
-    <div class="info-value" id="brainAge">0</div>
+  <div class="card">
+    <div class="card-label">뇌나이</div>
+    <div class="card-value" id="brainAge">0</div>
   </div>
   
-  <div class="detail-card">
-    <div class="detail-title">뇌 영역별 발달</div>
-    <div class="detail-item">
-      <div class="detail-name">🔴 하위뇌 (반응속도)</div>
-      <div class="detail-score" id="scoreBs">0</div>
+  <div class="card">
+    <div class="card-title">뇌 영역별 발달</div>
+    <div class="brain-item">
+      <div class="brain-name">🔴 하위뇌 (반응속도)</div>
+      <div class="brain-score" id="bs">0</div>
     </div>
-    <div class="detail-item">
-      <div class="detail-name">🟠 중뇌 (조절력)</div>
-      <div class="detail-score" id="scoreMb">0</div>
+    <div class="brain-item">
+      <div class="brain-name">🟠 중뇌 (조절력)</div>
+      <div class="brain-score" id="mb">0</div>
     </div>
-    <div class="detail-item">
-      <div class="detail-name">🟡 상위뇌 (판단력)</div>
-      <div class="detail-score" id="scoreCt">0</div>
+    <div class="brain-item">
+      <div class="brain-name">🟡 상위뇌 (판단력)</div>
+      <div class="brain-score" id="ct">0</div>
     </div>
   </div>
   
-  <div class="detail-card">
-    <div class="detail-title">도메인별 신경 효율성</div>
-    <div id="domainList"></div>
+  <div class="card">
+    <div class="card-title">도메인별 신경 효율성</div>
+    <div id="domains"></div>
   </div>
   
   <button class="btn-restart" onclick="location.reload()">다시 진단하기</button>
@@ -151,173 +346,102 @@ html, body { width:100%; height:100%; background:#fff; font-family:'Noto Sans KR
 
 <script>
 const domains = [
-  {name:'반응속도', bs:60, mb:30, ct:10},
-  {name:'보상처리', bs:20, mb:60, ct:20},
-  {name:'동기부여', bs:20, mb:70, ct:10},
-  {name:'감정반응', bs:50, mb:35, ct:15},
-  {name:'판단력', bs:5, mb:15, ct:80},
-  {name:'실행력', bs:10, mb:70, ct:20},
-  {name:'조절력', bs:10, mb:80, ct:10},
-  {name:'공간감각', bs:15, mb:15, ct:70},
-  {name:'창의성', bs:5, mb:15, ct:80},
-  {name:'통찰력', bs:5, mb:20, ct:75}
+  {n:'반응속도', b:60, m:30, c:10},
+  {n:'보상처리', b:20, m:60, c:20},
+  {n:'동기부여', b:20, m:70, c:10},
+  {n:'감정반응', b:50, m:35, c:15},
+  {n:'판단력', b:5, m:15, c:80},
+  {n:'실행력', b:10, m:70, c:20},
+  {n:'조절력', b:10, m:80, c:10},
+  {n:'공간감각', b:15, m:15, c:70},
+  {n:'창의성', b:5, m:15, c:80},
+  {n:'통찰력', b:5, m:20, c:75}
 ];
 
-const images = [
-  'assets/img/bam-projection-1.jpg',
-  'assets/img/bam-projection-2.png',
-  'assets/img/bam-projection-3.png',
-  'assets/img/bam-projection-4.jpg',
-  'assets/img/bam-projection-5.png',
-  'assets/img/bam-projection-6.png',
-  'assets/img/bam-projection-7.png',
-  'assets/img/bam-projection-8.png',
-  'assets/img/bam-projection-9.png',
-  'assets/img/bam-projection-10.png',
-  'assets/img/bam-projection-11.png',
-  'assets/img/bam-projection-12.png',
-  'assets/img/bam-projection-13.jpg',
-  'assets/img/bam-projection-14.jpg',
-  'assets/img/bam-projection-15.jpg',
-  'assets/img/bam-projection-16.jpg',
-  'assets/img/bam-projection-17.png',
-  'assets/img/bam-projection-18.png',
-  'assets/img/bam-projection-19.jpg',
-  'assets/img/bam-projection-20.jpg'
-];
+const imgs = ['assets/img/bam-projection-1.jpg','assets/img/bam-projection-2.png','assets/img/bam-projection-3.png','assets/img/bam-projection-4.jpg','assets/img/bam-projection-5.png','assets/img/bam-projection-6.png','assets/img/bam-projection-7.png','assets/img/bam-projection-8.png','assets/img/bam-projection-9.png','assets/img/bam-projection-10.png','assets/img/bam-projection-11.png','assets/img/bam-projection-12.png','assets/img/bam-projection-13.jpg','assets/img/bam-projection-14.jpg','assets/img/bam-projection-15.jpg','assets/img/bam-projection-16.jpg','assets/img/bam-projection-17.png','assets/img/bam-projection-18.png','assets/img/bam-projection-19.jpg','assets/img/bam-projection-20.jpg'];
 
-let currentQ = 0;
-let answers = {};
-let user = {};
+let q = 0, ans = {};
 
-function switchScreen(screenId) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById(screenId).classList.add('active');
-}
-
-function startTest() {
-  const name = document.getElementById('userName').value.trim();
-  const gender = document.getElementById('userGender').value;
-  const birth = document.getElementById('userBirth').value;
-  
-  if (!name || !gender || !birth) {
-    alert('모든 정보를 입력해주세요');
+function start() {
+  if (!document.getElementById('name').value || !document.getElementById('gender').value || !document.getElementById('birth').value) {
+    alert('입력하세요');
     return;
   }
-  
-  user = {name, gender, birth};
-  currentQ = 0;
-  answers = {};
-  
-  switchScreen('test');
-  loadQuestion();
+  q = 0;
+  ans = {};
+  document.querySelector('.intro-screen').classList.remove('active');
+  document.querySelector('.test-screen').classList.add('active');
+  load();
 }
 
-function loadQuestion() {
-  const img = images[currentQ];
-  document.getElementById('testImage').src = img;
-  document.getElementById('progress').textContent = (currentQ + 1) + '/20';
+function load() {
+  document.getElementById('testImg').src = imgs[q];
+  document.getElementById('progress').textContent = (q+1) + '/20';
   
-  const container = document.getElementById('optionsContainer');
-  container.innerHTML = '';
+  const opts = document.getElementById('options');
+  opts.innerHTML = '';
   
-  const options = ['즉각 끌림', '조금 끌림', '조금 거부', '즉각 거부'];
-  options.forEach(opt => {
-    const btn = document.createElement('button');
-    btn.className = 'option-btn';
-    if (answers[currentQ]?.option === opt) {
-      btn.classList.add('active');
+  ['금정적', '보통', '부정적', '강부정'].forEach(o => {
+    const b = document.createElement('button');
+    b.className = 'option-btn';
+    if (ans[q]?.o === o) b.classList.add('selected');
+    b.textContent = o;
+    b.onclick = () => pick(q, o, b);
+    opts.appendChild(b);
+  });
+  
+  document.getElementById('prevBtn').disabled = q === 0;
+  document.getElementById('nextBtn').textContent = q === 19 ? '완료' : '다음 →';
+}
+
+function pick(idx, o, e) {
+  const s = {'금정적': 100, '보통': 50, '부정적': 30, '강부정': 0};
+  ans[idx] = {o, s: s[o]};
+  document.querySelectorAll('.option-btn').forEach(x => x.classList.remove('selected'));
+  e.classList.add('selected');
+}
+
+function prev() {
+  if (q > 0) { q--; load(); }
+}
+
+function next() {
+  if (!ans[q]) { alert('선택'); return; }
+  if (q < 19) { q++; load(); } else calc();
+}
+
+function calc() {
+  let bSum = 0, mSum = 0, cSum = 0;
+  const da = domains.map((d, i) => {
+    let sc = [];
+    for (let k in ans) {
+      if (parseInt(k) % 10 === i) sc.push(ans[k].s);
     }
-    btn.textContent = opt;
-    btn.onclick = () => selectOption(currentQ, opt, btn);
-    container.appendChild(btn);
+    const avg = sc.length ? Math.round(sc.reduce((a,b) => a+b) / sc.length) : 0;
+    bSum += avg * d.b / 100;
+    mSum += avg * d.m / 100;
+    cSum += avg * d.c / 100;
+    return {n: d.n, s: avg};
   });
   
-  document.getElementById('prevBtn').disabled = currentQ === 0;
-  document.getElementById('nextBtn').textContent = currentQ === 19 ? '완료' : '다음 →';
-}
-
-function selectOption(idx, option, elem) {
-  const scores = {
-    '즉각 끌림': 100,
-    '조금 끌림': 70,
-    '조금 거부': 40,
-    '즉각 거부': 0
-  };
+  const bs = Math.round(bSum / 10);
+  const mb = Math.round(mSum / 10);
+  const ct = Math.round(cSum / 10);
+  const ba = Math.round(bs * 0.6 + mb * 0.3 + ct * 0.1);
   
-  answers[idx] = {
-    option: option,
-    score: scores[option]
-  };
+  document.getElementById('brainAge').textContent = ba;
+  document.getElementById('bs').textContent = bs;
+  document.getElementById('mb').textContent = mb;
+  document.getElementById('ct').textContent = ct;
   
-  document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('active'));
-  elem.classList.add('active');
-}
-
-function prevQuestion() {
-  if (currentQ > 0) {
-    currentQ--;
-    loadQuestion();
-  }
-}
-
-function nextQuestion() {
-  if (!answers[currentQ]) {
-    alert('선택해주세요');
-    return;
-  }
-  
-  if (currentQ < 19) {
-    currentQ++;
-    loadQuestion();
-  } else {
-    calculateResult();
-  }
-}
-
-function calculateResult() {
-  let bsSum = 0, mbSum = 0, ctSum = 0;
-  
-  const domainScores = domains.map((domain, idx) => {
-    let scores = [];
-    for (let q in answers) {
-      if (parseInt(q) % 10 === idx) {
-        scores.push(answers[q].score);
-      }
-    }
-    
-    const avg = scores.length > 0 ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length) : 0;
-    
-    bsSum += avg * (domain.bs / 100);
-    mbSum += avg * (domain.mb / 100);
-    ctSum += avg * (domain.ct / 100);
-    
-    return {
-      name: domain.name,
-      score: avg
-    };
+  let dh = '';
+  da.forEach(d => {
+    dh += '<div class="domain-item"><div class="domain-head"><div class="domain-name">' + d.n + '</div><div class="domain-score">' + d.s + '점</div></div><div class="domain-bar"><div class="domain-fill" style="width:' + d.s + '%"></div></div></div>';
   });
+  document.getElementById('domains').innerHTML = dh;
   
-  const bs = Math.round(bsSum / 10);
-  const mb = Math.round(mbSum / 10);
-  const ct = Math.round(ctSum / 10);
-  const brainAge = Math.round(bs * 0.6 + mb * 0.3 + ct * 0.1);
-  
-  document.getElementById('brainAge').textContent = brainAge;
-  document.getElementById('scoreBs').textContent = bs;
-  document.getElementById('scoreMb').textContent = mb;
-  document.getElementById('scoreCt').textContent = ct;
-  
-  let domainHtml = '';
-  domainScores.forEach(d => {
-    domainHtml += '<div class="domain-item">';
-    domainHtml += '<div class="domain-bar"><div class="domain-label">' + d.name + '</div><div class="domain-value">' + d.score + '점</div></div>';
-    domainHtml += '<div class="bar"><div class="bar-fill" style="width:' + d.score + '%"></div></div>';
-    domainHtml += '</div>';
-  });
-  document.getElementById('domainList').innerHTML = domainHtml;
-  
-  switchScreen('result');
+  document.querySelector('.test-screen').classList.remove('active');
+  document.querySelector('.result-screen').classList.add('active');
 }
 </script>
 
