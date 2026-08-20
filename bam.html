@@ -544,9 +544,9 @@
             const imageName = imageList[state.currentQuestion];
             const isValidated = imageName.startsWith('1000073');
             const baseUrl = isValidated 
-                ? 'https://raw.githubusercontent.com/limsaboo/kbrain-home/main/assets/img/bac-projection-images/'
-                : 'https://raw.githubusercontent.com/limsaboo/kbrain-home/main/assets/img/bhc-brain-cards/';
-            const imageUrl = baseUrl + imageName.replace(/ /g, '%20') + '?t=' + Date.now();
+                ? '/assets/img/bac-projection-images/'
+                : '/assets/img/bhc-brain-cards/';
+            const imageUrl = baseUrl + imageName.replace(/ /g, '%20');
             
             const cardImage = document.getElementById('cardImage');
             const imageStatus = document.getElementById('imageStatus');
