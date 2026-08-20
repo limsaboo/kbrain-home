@@ -6,7 +6,7 @@
 <meta http-equiv="cache-control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="pragma" content="no-cache">
 <meta http-equiv="expires" content="0">
-<title>BAM 뇌 기능 평가 | 한국뇌심리연구소</title>
+<title>BAM 뇌나이 진단 | 한국뇌심리연구소</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -35,33 +35,34 @@ body {
 .screen { display: none; width: 100%; min-height: 100%; padding: 20px; flex-direction: column; }
 .screen.active { display: flex; }
 
-.header { background: #1a472a; color: white; padding: 20px; text-align: center; margin-bottom: 20px; }
+.header { background: linear-gradient(135deg, #2D5A3D 0%, #1a472a 100%); color: white; padding: 20px; text-align: center; margin-bottom: 20px; }
 .header h1 { font-size: 28px; font-weight: 900; margin-bottom: 8px; }
 .header p { font-size: 13px; opacity: 0.9; }
 
 .start-screen { justify-content: flex-start; gap: 20px; }
-.logo-box { background: linear-gradient(135deg, #FF6B6B 0%, #FF8E8E 100%); border-radius: 20px; padding: 35px 20px; text-align: center; color: white; margin-bottom: 15px; }
+.logo-box { background: linear-gradient(135deg, #4CAF50 0%, #66BB6A 100%); border-radius: 20px; padding: 35px 20px; text-align: center; color: white; margin-bottom: 15px; }
 .logo-emoji { font-size: 60px; margin-bottom: 15px; }
 .logo-title { font-size: 32px; font-weight: 900; margin-bottom: 5px; }
 .logo-subtitle { font-size: 13px; opacity: 0.9; line-height: 1.6; }
 
-.info-box { background: #FFF5F5; border-left: 5px solid #FF6B6B; border-radius: 12px; padding: 16px; font-size: 13px; line-height: 1.8; color: #333; margin-bottom: 15px; font-weight: 600; }
+.info-box { background: #E8F5E9; border-left: 5px solid #4CAF50; border-radius: 12px; padding: 16px; font-size: 13px; line-height: 1.8; color: #333; margin-bottom: 15px; font-weight: 600; }
+.info-box strong { color: #1B5E20; }
 
 .form-group { margin-bottom: 16px; }
 .form-label { font-size: 13px; font-weight: 700; color: #333; margin-bottom: 8px; display: block; }
-.form-input, .form-select { width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 10px; font-size: 13px; }
+.form-input, .form-select { width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 10px; font-size: 13px; font-weight: 600; }
 
 .btn { width: 100%; padding: 14px; border: none; border-radius: 12px; font-size: 14px; font-weight: 700; cursor: pointer; margin-top: 10px; }
-.btn-primary { background: linear-gradient(135deg, #FF6B6B 0%, #FF8E8E 100%); color: white; }
+.btn-primary { background: linear-gradient(135deg, #4CAF50 0%, #66BB6A 100%); color: white; }
 
 .test-screen { justify-content: flex-start; gap: 14px; }
 .progress-bar-container { background: #e8e8e8; height: 6px; border-radius: 20px; margin-bottom: 12px; }
-.progress-bar { height: 100%; background: linear-gradient(90deg, #FF6B6B 0%, #FF8E8E 100%); transition: width 0.3s; }
+.progress-bar { height: 100%; background: linear-gradient(90deg, #4CAF50 0%, #66BB6A 100%); transition: width 0.3s; }
 .progress-text { font-size: 12px; color: #666; font-weight: 600; margin-bottom: 12px; }
 
 .image-section { 
     background: linear-gradient(135deg, #f5f5f5 0%, #eeeeee 100%);
-    border: 3px solid #FF6B6B;
+    border: 3px solid #4CAF50;
     border-radius: 12px;
     padding: 16px;
     display: flex;
@@ -77,7 +78,7 @@ body {
     object-fit: contain;
 }
 
-.question-text { font-size: 15px; font-weight: 900; color: #FF6B6B; margin: 15px 0; text-align: center; }
+.question-text { font-size: 15px; font-weight: 900; color: #1B5E20; margin: 15px 0; text-align: center; }
 
 .options { display: grid; grid-template-columns: 1fr; gap: 10px; margin: 15px 0; }
 .option-btn { 
@@ -95,19 +96,23 @@ body {
     justify-content: center;
 }
 
-.option-btn.selected { border-color: #FF6B6B; background: #FFE5E5; color: #FF6B6B; }
+.option-btn.selected { border-color: #4CAF50; background: #E8F5E9; color: #1B5E20; }
 
 .nav-buttons { display: flex; gap: 10px; margin-top: auto; padding-top: 15px; }
-.btn-nav { flex: 1; padding: 12px; border: 2px solid #FF6B6B; background: white; color: #FF6B6B; border-radius: 10px; font-weight: 700; font-size: 13px; cursor: pointer; }
+.btn-nav { flex: 1; padding: 12px; border: 2px solid #4CAF50; background: white; color: #4CAF50; border-radius: 10px; font-weight: 700; font-size: 13px; cursor: pointer; }
 .btn-nav:disabled { opacity: 0.3; }
 
 .result-screen { justify-content: flex-start; gap: 15px; }
-.result-box { background: linear-gradient(135deg, #FF6B6B 0%, #FF8E8E 100%); color: white; border-radius: 16px; padding: 25px; text-align: center; }
+.result-box { background: linear-gradient(135deg, #4CAF50 0%, #66BB6A 100%); color: white; border-radius: 16px; padding: 25px; text-align: center; }
 .result-label { font-size: 12px; opacity: 0.9; font-weight: 600; }
-.result-value { font-size: 48px; font-weight: 900; }
+.result-value { font-size: 52px; font-weight: 900; }
+.result-unit { font-size: 14px; margin-top: 4px; opacity: 0.95; }
 
-.brain-region { margin-top: 20px; padding: 15px; background: linear-gradient(135deg, #FFF5F5 0%, #FFE5E5 100%); border: 2px solid #FF6B6B; border-radius: 12px; }
-.brain-region-title { font-weight: 900; color: #FF6B6B; margin-bottom: 12px; font-size: 15px; }
+.brain-analysis { margin-top: 20px; padding: 16px; background: linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 100%); border: 2px solid #4CAF50; border-radius: 12px; }
+.brain-title { font-weight: 900; color: #1B5E20; margin-bottom: 12px; font-size: 15px; }
+.brain-item { padding: 10px 0; border-bottom: 1px solid #A5D6A7; font-size: 13px; font-weight: 600; color: #333; }
+.brain-item:last-child { border-bottom: none; }
+.brain-score { color: #1B5E20; font-weight: 900; }
 
 @media (max-width: 600px) {
     .screen { padding: 12px; }
@@ -120,24 +125,25 @@ body {
 <div class="container">
     <div id="startScreen" class="screen active">
         <div class="header">
-            <h1>📋 BAM 평가</h1>
-            <p>뇌 기능 평가 시스템</p>
+            <h1>📊 BAM 진단</h1>
+            <p>뇌나이 진단 시스템</p>
         </div>
         
         <div class="logo-box">
             <div class="logo-emoji">🧠</div>
-            <div class="logo-title">원초적 욕구 분석</div>
-            <div class="logo-subtitle">상위뇌의 페르소나 이전에<br>중뇌의 진정한 욕구를 캐치합니다</div>
+            <div class="logo-title">뇌나이 진단</div>
+            <div class="logo-subtitle">당신의 신경계 발달 수준을<br>측정합니다</div>
         </div>
         
         <div class="info-box">
-            💡 <strong>한국뇌심리연구소 개발원칙:</strong><br>
-            그림투사를 통해 상위뇌의 이기적 페르소나 이전에<br>
-            중뇌의 도파민 반응과 원초적 감정을 측정합니다.<br><br>
-            ✓ 정답이 없습니다<br>
-            ✓ 시간 제한이 없습니다<br>
-            ✓ <strong>첫 느낌만 선택하세요</strong><br>
-            ✓ 소요 시간: 약 5~10분
+            <strong>한국뇌심리연구소 개발원칙:</strong><br><br>
+            🔴 <strong>하위뇌(Brainstem) 중심</strong><br>
+            → 반응속도, 생존본능, 원초반응<br><br>
+            🟠 <strong>중뇌(Midbrain) 포함</strong><br>
+            → 도파민 반응, 보상처리<br><br>
+            ❌ <strong>상위뇌(Cortex) 배제</strong><br>
+            → 페르소나 우회, 거짓 반응 제거<br><br>
+            → 뇌나이 = 신경계의 원초적 반응 효율성
         </div>
 
         <div class="form-group">
@@ -183,12 +189,12 @@ body {
             </select>
         </div>
 
-        <button class="btn btn-primary" onclick="startTest()">평가 시작</button>
+        <button class="btn btn-primary" onclick="startTest()">진단 시작</button>
     </div>
 
     <div id="testScreen" class="screen">
         <div class="header">
-            <h1>📋 BAM 평가</h1>
+            <h1>📊 BAM 진단</h1>
             <p id="progressText">1/20</p>
         </div>
 
@@ -200,7 +206,7 @@ body {
             <img id="testImage" src="" alt="뇌 반응 자극 이미지">
         </div>
 
-        <p class="question-text" id="questionText">첫 느낌은?</p>
+        <p class="question-text" id="questionText">첫 반응은?</p>
 
         <div class="options" id="optionsContainer"></div>
 
@@ -212,29 +218,35 @@ body {
 
     <div id="resultScreen" class="screen">
         <div class="header">
-            <h1>✅ 평가 완료</h1>
-            <p>당신의 진정한 욕구가 드러났습니다</p>
+            <h1>✅ 진단 완료</h1>
+            <p>당신의 뇌나이가 분석되었습니다</p>
         </div>
 
         <div class="result-box">
-            <div class="result-label">원초적 욕구 반응점수</div>
-            <div class="result-value" id="avgScore">0</div>
+            <div class="result-label">신경계 반응 효율성</div>
+            <div class="result-value" id="brainAge">0</div>
+            <div class="result-unit">뇌 발달 수준</div>
         </div>
 
-        <div id="brainAnalysis" class="brain-region">
-            <div class="brain-region-title">🧠 중뇌(Midbrain) 도파민 반응 분석</div>
-            <div style="font-size: 13px; line-height: 1.8; color: #333; font-weight: 600;">
-                <div style="margin-bottom: 12px;">
-                    <strong style="color: #FF6B6B;">중뇌의 역할:</strong><br>
-                    도파민 시스템 중추 / 진정한 욕구 / 보상 시스템 / 동기 부여
-                </div>
-                <div id="brainResults" style="margin-top: 12px; padding-top: 12px; border-top: 2px solid #FFD0D0;"></div>
+        <div class="brain-analysis">
+            <div class="brain-title">🧠 신경계 발달 분석</div>
+            <div class="brain-item">
+                🔴 <strong>하위뇌 반응속도</strong>
+                <div style="float: right;" class="brain-score" id="brainstemScore">0점</div>
+            </div>
+            <div class="brain-item">
+                🟠 <strong>중뇌 도파민 반응</strong>
+                <div style="float: right;" class="brain-score" id="midbriainScore">0점</div>
+            </div>
+            <div class="brain-item">
+                📊 <strong>종합 신경 효율성</strong>
+                <div style="float: right;" class="brain-score" id="efficiencyScore">0점</div>
             </div>
         </div>
 
         <div id="domainResults" style="margin: 20px 0; padding: 15px; background: #f5f5f5; border-radius: 12px; font-size: 13px; font-weight: 600;"></div>
 
-        <button class="btn btn-primary" onclick="location.reload()">다시 평가하기</button>
+        <button class="btn btn-primary" onclick="location.reload()">다시 진단하기</button>
     </div>
 </div>
 
@@ -243,7 +255,7 @@ const SUPABASE_URL = 'https://grxqfaeznqqohnlltged.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdyeHFmYWV6bnFxb2hubmx0Z2VkIiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTQxNzk4NzAsImV4cCI6MjAwOTc1OTg3MH0.LRQWT2F2o7L-KKGP3Ek-V72B_VAhJbKWzG4cN_8i9Gc';
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-const domains = ['욕구', '보상', '동기', '감정', '판단', '실행', '조절', '공간', '창의', '통찰'];
+const domains = ['반응속도', '보상처리', '동기부여', '감정반응', '판단력', '실행력', '자기조절', '공간감각', '창의성', '통찰력'];
 
 const imageList = [
     '/assets/img/bam-projection-1.jpg',
@@ -304,7 +316,7 @@ function loadQuestion() {
     const optionsContainer = document.getElementById('optionsContainer');
     optionsContainer.innerHTML = '';
     
-    ['강하게 끌림', '약간 끌림', '약간 거부', '강하게 거부'].forEach(opt => {
+    ['즉각 끌림', '조금 끌림', '조금 거부', '즉각 거부'].forEach(opt => {
         const btn = document.createElement('div');
         btn.className = 'option-btn';
         if (state.answers[q]?.option === opt) btn.classList.add('selected');
@@ -318,7 +330,7 @@ function loadQuestion() {
 }
 
 function selectAnswer(q, option, elem) {
-    const scoreMap = { '강하게 끌림': 100, '약간 끌림': 60, '약간 거부': 30, '강하게 거부': 0 };
+    const scoreMap = { '즉각 끌림': 100, '조금 끌림': 70, '조금 거부': 40, '즉각 거부': 0 };
     state.answers[q] = {
         domain: domains[q % 10],
         option,
@@ -354,7 +366,9 @@ async function showResults() {
     const scores = Object.values(state.answers).map(a => a.score);
     const avgScore = Math.round(scores.reduce((a, b) => a + b, 0) / scores.length);
     
-    document.getElementById('avgScore').textContent = avgScore;
+    // 뇌나이 계산
+    const brainAge = Math.round(avgScore);
+    document.getElementById('brainAge').textContent = brainAge;
     
     const domainScores = {};
     domains.forEach(d => domainScores[d] = []);
@@ -366,38 +380,34 @@ async function showResults() {
     // 도메인별 점수
     const html = Object.entries(domainScores).map(([d, scores]) => {
         const avg = Math.round(scores.reduce((a, b) => a + b, 0) / scores.length);
-        return `<div style="padding: 8px 0; border-bottom: 1px solid #ddd; display: flex; justify-content: space-between;"><span><strong>${d}</strong></span> <span style="color: #FF6B6B; font-weight: 900;">${avg}점</span></div>`;
+        return `<div style="padding: 8px 0; border-bottom: 1px solid #ddd; display: flex; justify-content: space-between;"><span><strong>${d}</strong></span> <span style="color: #1B5E20; font-weight: 900;">${avg}점</span></div>`;
     }).join('');
     
-    // 중뇌 도파민 점수
-    const dopamineScore = Math.round((domainScores['욕구'].reduce((a,b)=>a+b,0)/domainScores['욕구'].length + 
-                                      domainScores['보상'].reduce((a,b)=>a+b,0)/domainScores['보상'].length +
-                                      domainScores['동기'].reduce((a,b)=>a+b,0)/domainScores['동기'].length) / 3);
+    // 하위뇌(반응속도) 점수
+    const brainstemScore = Math.round(domainScores['반응속도'].reduce((a,b)=>a+b,0)/domainScores['반응속도'].length);
     
-    const brainHtml = `
-        <div style="padding: 12px; background: white; border-radius: 8px; margin-top: 8px;">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <span><strong>도파민 반응강도</strong></span>
-                <span style="color: #FF6B6B; font-weight: 900; font-size: 18px;">${dopamineScore}점</span>
-            </div>
-            <div style="margin-top: 8px; font-size: 12px; color: #666; line-height: 1.6;">
-                <span style="background: #FFE5E5; padding: 4px 8px; border-radius: 4px;">
-                    당신의 진정한 욕구: <strong style="color: #FF6B6B;">${dopamineScore > 70 ? '강한 동기 추진력' : dopamineScore > 40 ? '중간 수준의 욕구' : '낮은 도파민 반응'}</strong>
-                </span>
-            </div>
-        </div>
-    `;
+    // 중뇌(보상+동기) 점수
+    const midbriainScore = Math.round((domainScores['보상처리'].reduce((a,b)=>a+b,0)/domainScores['보상처리'].length + 
+                                       domainScores['동기부여'].reduce((a,b)=>a+b,0)/domainScores['동기부여'].length) / 2);
+    
+    // 종합 신경 효율성
+    const efficiencyScore = Math.round((brainstemScore + midbriainScore) / 2);
+    
+    document.getElementById('brainstemScore').textContent = brainstemScore + '점';
+    document.getElementById('midbriainScore').textContent = midbriainScore + '점';
+    document.getElementById('efficiencyScore').textContent = efficiencyScore + '점';
     
     document.getElementById('domainResults').innerHTML = html;
-    document.getElementById('brainResults').innerHTML = brainHtml;
     
     await supabase.from('bam_results').insert({
         name: state.userData.name,
         gender: state.userData.gender,
         birth_date: state.userData.birth,
         region: state.userData.region,
-        avg_score: avgScore,
-        dopamine_score: dopamineScore,
+        brain_age: brainAge,
+        brainstem_score: brainstemScore,
+        midbrain_score: midbriainScore,
+        efficiency_score: efficiencyScore,
         answers: JSON.stringify(state.answers),
         created_at: new Date().toISOString()
     });
