@@ -2,182 +2,58 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<meta http-equiv="cache-control" content="no-cache, no-store, must-revalidate">
-<meta http-equiv="pragma" content="no-cache">
-<meta http-equiv="expires" content="0">
-<title>BAM 뇌나이 진단</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BAM TEST</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-html,body{width:100%;height:100%;background:#fff;font-family:'Noto Sans KR',sans-serif;color:#333;overflow-x:hidden;}
-
-body{display:flex;align-items:center;justify-content:center;}
-.container{width:100%;height:100vh;display:flex;flex-direction:column;max-width:480px;}
-
-.screen{display:none;width:100%;height:100%;flex-direction:column;}
-.screen.active{display:flex;}
-
-#introScreen{background:#fff;justify-content:center;align-items:center;padding:20px;}
-.intro-box{text-align:center;max-width:360px;}
-.intro-emoji{font-size:80px;margin-bottom:20px;}
-.intro-title{font-size:28px;font-weight:900;color:#1a472a;margin-bottom:10px;}
-.intro-subtitle{font-size:14px;color:#666;margin-bottom:30px;line-height:1.6;}
-
-.form-group{margin-bottom:15px;}
-.form-label{font-size:12px;font-weight:700;color:#333;margin-bottom:6px;display:block;}
-input,select{width:100%;padding:12px;border:2px solid #ddd;border-radius:8px;font-size:14px;font-weight:600;}
-input:focus,select:focus{outline:none;border-color:#00BCD4;}
-
-.btn-start{width:100%;padding:16px;background:linear-gradient(135deg,#00BCD4,#0097A7);color:#fff;border:none;border-radius:8px;font-size:16px;font-weight:900;cursor:pointer;margin-top:20px;}
-
-#testScreen{background:#fff;padding:0;flex-direction:column;}
-
-.test-header{background:#1a472a;color:#fff;padding:16px 20px;text-align:center;border-bottom:4px solid #00BCD4;}
-.test-title{font-size:14px;font-weight:700;}
-.test-progress{font-size:20px;font-weight:900;margin-top:8px;}
-
-.test-content{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;overflow-y:auto;}
-
-.image-box{width:100%;max-width:320px;aspect-ratio:1;background:#f5f5f5;border:3px solid #00BCD4;border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:30px;overflow:hidden;}
-.image-box img{width:100%;height:100%;object-fit:contain;}
-
-.question-text{font-size:16px;font-weight:900;color:#1a472a;margin-bottom:20px;text-align:center;}
-
-.options-group{width:100%;max-width:320px;display:flex;flex-direction:column;gap:10px;}
-.opt-btn{padding:14px;background:#fff;border:2px solid #ddd;border-radius:8px;font-size:14px;font-weight:700;color:#333;cursor:pointer;transition:all .2s;text-align:center;}
-.opt-btn.selected{border-color:#00BCD4;background:#E0F7FA;color:#00695C;}
-
-.nav-buttons{display:flex;gap:10px;margin-top:20px;width:100%;max-width:320px;}
-.nav-btn{flex:1;padding:12px;border:2px solid #ddd;background:#fff;border-radius:8px;font-weight:700;cursor:pointer;}
-.nav-btn:disabled{opacity:.3;}
-
-#resultScreen{background:#f5f5f5;padding:20px;overflow-y:auto;justify-content:flex-start;}
-
-.result-header{background:#1a472a;color:#fff;padding:20px;text-align:center;border-radius:12px;margin-bottom:20px;}
-.result-title{font-size:24px;font-weight:900;margin-bottom:8px;}
-.result-subtitle{font-size:13px;opacity:.9;}
-
-.score-card{background:#fff;padding:16px;border-radius:12px;margin-bottom:12px;border-left:4px solid #00BCD4;}
-.score-label{font-size:12px;color:#666;font-weight:600;}
-.score-value{font-size:28px;font-weight:900;color:#1a472a;margin-top:4px;}
-
-.brain-section{background:#fff;padding:16px;border-radius:12px;margin-bottom:12px;}
-.brain-title{font-size:14px;font-weight:900;color:#1a472a;margin-bottom:12px;}
-.brain-item{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #eee;}
-.brain-item:last-child{border-bottom:none;}
-.brain-name{font-size:12px;font-weight:600;}
-.brain-score{font-size:14px;font-weight:900;color:#00695C;}
-
-.domain-section{background:#fff;padding:16px;border-radius:12px;margin-bottom:12px;}
-.domain-title{font-size:14px;font-weight:900;color:#1a472a;margin-bottom:12px;}
-.domain-item{margin-bottom:12px;}
-.domain-head{display:flex;justify-content:space-between;margin-bottom:4px;}
-.domain-name{font-size:12px;font-weight:600;}
-.domain-value{font-size:13px;font-weight:900;color:#00695C;}
-.domain-bar{width:100%;height:6px;background:#e0e0e0;border-radius:3px;overflow:hidden;}
-.domain-fill{height:100%;background:linear-gradient(90deg,#00BCD4,#0097A7);}
-
-.book-section{background:linear-gradient(135deg,#E3F2FD,#BBDEFB);padding:16px;border-radius:12px;margin-bottom:20px;}
-.book-title{font-size:13px;font-weight:900;color:#0D47A1;margin-bottom:8px;}
-.book-text{font-size:12px;color:#0D47A1;line-height:1.6;}
-
-.btn-restart{width:100%;padding:14px;background:linear-gradient(135deg,#00BCD4,#0097A7);color:#fff;border:none;border-radius:8px;font-weight:900;cursor:pointer;margin-bottom:40px;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:#fff;font-family:'Noto Sans KR';color:#333;}
+.container{max-width:480px;margin:0 auto;}
+.screen{display:none;padding:20px;min-height:100vh;}
+.screen.active{display:block;}
+input,select{width:100%;padding:10px;margin:10px 0;border:1px solid #ddd;border-radius:5px;}
+button{width:100%;padding:12px;background:#00BCD4;color:#fff;border:none;border-radius:5px;cursor:pointer;font-weight:bold;margin:10px 0;}
+.image-box{width:100%;max-width:300px;height:300px;background:#f0f0f0;border:2px solid #00BCD4;border-radius:8px;margin:20px auto;display:flex;align-items:center;justify-content:center;}
+.image-box img{max-width:100%;max-height:100%;object-fit:contain;}
+.options{display:flex;flex-direction:column;gap:10px;margin:20px 0;}
+.opt{padding:10px;border:2px solid #ddd;border-radius:5px;cursor:pointer;text-align:center;}
+.opt.selected{border-color:#00BCD4;background:#E0F7FA;}
 </style>
 </head>
 <body>
 
 <div class="container">
 
-<div id="introScreen" class="screen active">
-  <div class="intro-box">
-    <div class="intro-emoji">🧠</div>
-    <div class="intro-title">BAM 뇌나이 진단</div>
-    <div class="intro-subtitle">당신의 신경계 발달 수준을<br>20개 이미지로 측정합니다</div>
-    
-    <div class="form-group">
-      <label class="form-label">이름</label>
-      <input type="text" id="userName" placeholder="홍길동">
-    </div>
-    
-    <div class="form-group">
-      <label class="form-label">성별</label>
-      <select id="userGender">
-        <option value="">선택</option>
-        <option value="M">남</option>
-        <option value="F">여</option>
-      </select>
-    </div>
-    
-    <div class="form-group">
-      <label class="form-label">생년월일</label>
-      <input type="date" id="userBirth">
-    </div>
-    
-    <button class="btn-start" onclick="startTest()">진단 시작</button>
-  </div>
+<div id="screen1" class="screen active">
+  <h1>BAM 진단</h1>
+  <input type="text" id="name" placeholder="이름">
+  <select id="gender">
+    <option value="">성별</option>
+    <option value="M">남</option>
+    <option value="F">여</option>
+  </select>
+  <input type="date" id="birth">
+  <button onclick="start()">시작</button>
 </div>
 
-<div id="testScreen" class="screen">
-  <div class="test-header">
-    <div class="test-title">📋 BAM 진단 진행 중</div>
-    <div class="test-progress" id="progress">1/20</div>
+<div id="screen2" class="screen">
+  <h2 id="prog">1/20</h2>
+  <div class="image-box">
+    <img id="img" src="">
   </div>
-  
-  <div class="test-content">
-    <div class="image-box">
-      <img id="testImage" src="" alt="">
-    </div>
-    
-    <div class="question-text">첫 반응은?</div>
-    
-    <div class="options-group" id="optionsGroup"></div>
-    
-    <div class="nav-buttons">
-      <button class="nav-btn" id="prevBtn" onclick="prevQ()" disabled>← 이전</button>
-      <button class="nav-btn" id="nextBtn" onclick="nextQ()">다음 →</button>
-    </div>
-  </div>
+  <p>첫 반응은?</p>
+  <div id="opts" class="options"></div>
+  <button onclick="prev()">이전</button>
+  <button id="nextBtn" onclick="next()">다음</button>
 </div>
 
-<div id="resultScreen" class="screen">
-  <div class="result-header">
-    <div class="result-title" id="resTitle">진단 완료</div>
-    <div class="result-subtitle">당신의 신경계 발달이 분석되었습니다</div>
-  </div>
-  
-  <div class="score-card">
-    <div class="score-label">뇌나이 (신경계 반응 효율성)</div>
-    <div class="score-value" id="brainAge">0</div>
-  </div>
-  
-  <div class="brain-section">
-    <div class="brain-title">뇌 영역별 발달 점수</div>
-    <div class="brain-item">
-      <div class="brain-name">🔴 하위뇌 (반응속도)</div>
-      <div class="brain-score" id="bs">0</div>
-    </div>
-    <div class="brain-item">
-      <div class="brain-name">🟠 중뇌 (조절력)</div>
-      <div class="brain-score" id="mb">0</div>
-    </div>
-    <div class="brain-item">
-      <div class="brain-name">🟡 상위뇌 (판단력)</div>
-      <div class="brain-score" id="ct">0</div>
-    </div>
-  </div>
-  
-  <div class="domain-section" id="domainSection"></div>
-  
-  <div class="book-section">
-    <div class="book-title">📚 다음 책을 읽어보세요</div>
-    <div class="book-text">
-      <strong>『효자는 진정 누구인가?』</strong><br>
-      부제: 『왜 지식인이 될수록 효자와 멀어지는가?』<br><br>
-      당신의 조절력을 이해하고 진정한 효도의 의미를 알 수 있습니다.
-    </div>
-  </div>
-  
-  <button class="btn-restart" onclick="location.reload()">다시 진단하기</button>
+<div id="screen3" class="screen">
+  <h1>결과</h1>
+  <h2 id="brainAge">-</h2>
+  <p id="bs">하위뇌: -</p>
+  <p id="mb">중뇌: -</p>
+  <p id="ct">상위뇌: -</p>
+  <div id="domains"></div>
+  <button onclick="location.reload()">다시</button>
 </div>
 
 </div>
@@ -196,19 +72,18 @@ const domains=[
   {name:'통찰력',bs:5,mb:20,ct:75}
 ];
 
-const images=['/assets/img/bam-projection-1.jpg','/assets/img/bam-projection-2.png','/assets/img/bam-projection-3.png','/assets/img/bam-projection-4.jpg','/assets/img/bam-projection-5.png','/assets/img/bam-projection-6.png','/assets/img/bam-projection-7.png','/assets/img/bam-projection-8.png','/assets/img/bam-projection-9.png','/assets/img/bam-projection-10.png','/assets/img/bam-projection-11.png','/assets/img/bam-projection-12.png','/assets/img/bam-projection-13.jpg','/assets/img/bam-projection-14.jpg','/assets/img/bam-projection-15.jpg','/assets/img/bam-projection-16.jpg','/assets/img/bam-projection-17.png','/assets/img/bam-projection-18.png','/assets/img/bam-projection-19.jpg','/assets/img/bam-projection-20.jpg'];
+const imgs=['/assets/img/bam-projection-1.jpg','/assets/img/bam-projection-2.png','/assets/img/bam-projection-3.png','/assets/img/bam-projection-4.jpg','/assets/img/bam-projection-5.png','/assets/img/bam-projection-6.png','/assets/img/bam-projection-7.png','/assets/img/bam-projection-8.png','/assets/img/bam-projection-9.png','/assets/img/bam-projection-10.png','/assets/img/bam-projection-11.png','/assets/img/bam-projection-12.png','/assets/img/bam-projection-13.jpg','/assets/img/bam-projection-14.jpg','/assets/img/bam-projection-15.jpg','/assets/img/bam-projection-16.jpg','/assets/img/bam-projection-17.png','/assets/img/bam-projection-18.png','/assets/img/bam-projection-19.jpg','/assets/img/bam-projection-20.jpg'];
 
-let state={q:0,ans:{},user:{}};
+let q=0, ans={};
 
-function startTest(){
-  const n=document.getElementById('userName').value.trim();
-  const g=document.getElementById('userGender').value;
-  const b=document.getElementById('userBirth').value;
-  if(!n||!g||!b){alert('모두 입력하세요');return;}
-  state.user={n,g,b};
-  state.q=0;
-  state.ans={};
-  show('testScreen');
+function start(){
+  const n=document.getElementById('name').value;
+  const g=document.getElementById('gender').value;
+  const b=document.getElementById('birth').value;
+  if(!n||!g||!b)return alert('입력하세요');
+  q=0;
+  ans={};
+  show('screen2');
   load();
 }
 
@@ -218,70 +93,68 @@ function show(id){
 }
 
 function load(){
-  document.getElementById('testImage').src=images[state.q];
-  document.getElementById('progress').textContent=(state.q+1)+'/20';
-  
-  const opts=document.getElementById('optionsGroup');
-  opts.innerHTML='';
+  document.getElementById('prog').textContent=(q+1)+'/20';
+  document.getElementById('img').src=imgs[q];
+  const os=document.getElementById('opts');
+  os.innerHTML='';
   ['즉각 끌림','조금 끌림','조금 거부','즉각 거부'].forEach(o=>{
-    const b=document.createElement('button');
-    b.className='opt-btn';
-    if(state.ans[state.q]?.o===o)b.classList.add('selected');
-    b.textContent=o;
-    b.onclick=()=>pick(state.q,o,b);
-    opts.appendChild(b);
+    const d=document.createElement('div');
+    d.className='opt';
+    if(ans[q]?.o===o)d.classList.add('selected');
+    d.textContent=o;
+    d.onclick=()=>pick(q,o,d);
+    os.appendChild(d);
   });
-  
-  document.getElementById('prevBtn').disabled=state.q===0;
-  document.getElementById('nextBtn').textContent=state.q===19?'완료':'다음 →';
+  document.getElementById('nextBtn').textContent=q===19?'완료':'다음';
 }
 
-function pick(q,o,b){
+function pick(idx,opt,elem){
   const sc={'즉각 끌림':100,'조금 끌림':70,'조금 거부':40,'즉각 거부':0};
-  state.ans[q]={o,s:sc[o]||0};
-  document.querySelectorAll('.opt-btn').forEach(e=>e.classList.remove('selected'));
-  b.classList.add('selected');
+  ans[idx]={o:opt,s:sc[opt]};
+  document.querySelectorAll('.opt').forEach(e=>e.classList.remove('selected'));
+  elem.classList.add('selected');
 }
 
-function prevQ(){
-  if(state.q>0){state.q--;load();}
+function prev(){
+  if(q>0){q--;load();}
 }
 
-function nextQ(){
-  if(!state.ans[state.q]){alert('선택해주세요');return;}
-  if(state.q<19){state.q++;load();}else result();
+function next(){
+  if(!ans[q])return alert('선택');
+  if(q<19){q++;load();}else calc();
 }
 
-function result(){
-  const sc=Object.values(state.ans).map(a=>a.s);
-  const avg=Math.round(sc.reduce((a,b)=>a+b,0)/sc.length);
-  
-  let bsSum=0,mbSum=0,ctSum=0;
-  const davg=domains.map((d,i)=>{
-    const dsc=[];
-    Object.entries(state.ans).forEach((k,v)=>{if(parseInt(k[0])%10===i)dsc.push(k[1].s);});
-    const da=dsc.length?Math.round(dsc.reduce((a,b)=>a+b,0)/dsc.length):0;
-    bsSum+=da*(d.bs/100);
-    mbSum+=da*(d.mb/100);
-    ctSum+=da*(d.ct/100);
-    return{n:d.name,s:da};
+function calc(){
+  let bsS=0,mbS=0,ctS=0;
+  const da=domains.map((d,i)=>{
+    let ds=[];
+    for(let k in ans){
+      if(parseInt(k)%10===i){
+        ds.push(ans[k].s);
+      }
+    }
+    let da=ds.length?ds.reduce((a,b)=>a+b,0)/ds.length:0;
+    bsS+=da*(d.bs/100);
+    mbS+=da*(d.mb/100);
+    ctS+=da*(d.ct/100);
+    return{n:d.name,s:Math.round(da)};
   });
   
-  const bs=Math.round(bsSum/10);
-  const mb=Math.round(mbSum/10);
-  const ct=Math.round(ctSum/10);
-  const ba=Math.round(bs*0.6+mb*0.3+ct*0.1);
+  let bs=Math.round(bsS/10);
+  let mb=Math.round(mbS/10);
+  let ct=Math.round(ctS/10);
+  let ba=Math.round(bs*0.6+mb*0.3+ct*0.1);
   
-  document.getElementById('resTitle').textContent=ba+'점';
-  document.getElementById('brainAge').textContent=ba;
-  document.getElementById('bs').textContent=bs;
-  document.getElementById('mb').textContent=mb;
-  document.getElementById('ct').textContent=ct;
+  document.getElementById('brainAge').textContent=ba+'점';
+  document.getElementById('bs').textContent='하위뇌: '+bs;
+  document.getElementById('mb').textContent='중뇌: '+mb;
+  document.getElementById('ct').textContent='상위뇌: '+ct;
   
-  const dh=davg.map(d=>'<div class="domain-item"><div class="domain-head"><div class="domain-name">'+d.n+'</div><div class="domain-value">'+d.s+'점</div></div><div class="domain-bar"><div class="domain-fill" style="width:'+d.s+'%"></div></div></div>').join('');
-  document.getElementById('domainSection').innerHTML='<div class="domain-title">10개 도메인 신경 효율성</div>'+dh;
+  let dh='<h3>도메인</h3>';
+  da.forEach(d=>{dh+='<p>'+d.n+': '+d.s+'</p>';});
+  document.getElementById('domains').innerHTML=dh;
   
-  show('resultScreen');
+  show('screen3');
 }
 </script>
 
