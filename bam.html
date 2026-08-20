@@ -2,536 +2,338 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <meta http-equiv="cache-control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="pragma" content="no-cache">
 <meta http-equiv="expires" content="0">
 <title>BAM 뇌나이 진단 | 한국뇌심리연구소</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-* { margin: 0; padding: 0; box-sizing: border-box; }
-html, body { width: 100%; height: 100%; }
-body { 
-    background: linear-gradient(180deg, #1a472a 0%, #2d5a3d 100%);
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans KR', sans-serif;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0;
-    overflow: hidden;
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+:root{
+  --bg:#07091a;--bg2:#0d1030;--bg3:#111535;
+  --gold:#c9a84c;--gold2:#f0d080;--gold3:rgba(201,168,76,.12);
+  --neon:#a78bfa;--red:#ef4444;--amber:#f59e0b;
+  --tx:#e8eaf6;--tx2:#90939e;--border:rgba(201,168,76,.22);
+  --border2:rgba(255,255,255,.08);
 }
+html,body{min-height:100%;background:var(--bg);font-family:'Apple SD Gothic Neo','Noto Sans KR',sans-serif;color:var(--tx);overflow-x:hidden;}
 
-.container {
-    width: 100%;
-    height: 100%;
-    max-width: 100%;
-    background: white;
-    display: flex;
-    flex-direction: column;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-}
+.screen{display:none;min-height:100vh;flex-direction:column;align-items:center;justify-content:center;}
+.screen.active{display:flex;}
 
-.screen { display: none; width: 100%; min-height: 100%; padding: 20px; flex-direction: column; }
-.screen.active { display: flex; }
+.topbar{width:100%;max-width:560px;display:flex;align-items:center;justify-content:space-between;padding:16px 20px;background:rgba(7,9,26,.95);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:50;backdrop-filter:blur(10px);}
+.tb-logo{font-size:16px;font-weight:800;color:var(--gold);letter-spacing:.5px;}
+.tb-badge{font-size:13px;font-weight:700;color:#d8dae8;background:rgba(255,255,255,.1);padding:5px 14px;border-radius:20px;}
 
-.header { background: linear-gradient(135deg, #2D5A3D 0%, #1a472a 100%); color: white; padding: 20px; text-align: center; margin-bottom: 20px; border-radius: 12px; }
-.header h1 { font-size: 28px; font-weight: 900; margin-bottom: 8px; }
-.header p { font-size: 13px; opacity: 0.9; }
+.intro-hero{width:100%;max-width:480px;padding:40px 24px 24px;text-align:center;}
+.brain-ring{width:120px;height:120px;border-radius:50%;background:radial-gradient(circle at 38% 38%,#1a1f5e 0%,#070918 70%);border:2px solid var(--gold);box-shadow:0 0 50px rgba(167,139,250,.35);display:flex;align-items:center;justify-content:center;margin:0 auto 22px;}
+.brain-emoji{font-size:52px;line-height:1;}
+.intro-title{font-size:26px;font-weight:900;color:var(--gold2);letter-spacing:-1px;line-height:1.25;margin-bottom:8px;}
+.intro-divider{width:60px;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:10px auto 10px;}
+.intro-en{font-size:10px;font-weight:700;color:var(--neon);letter-spacing:3px;margin-bottom:10px;}
+.intro-sub{font-size:13px;color:var(--tx2);line-height:1.7;}
 
-.start-screen { justify-content: flex-start; gap: 20px; }
-.logo-box { background: linear-gradient(135deg, #4CAF50 0%, #66BB6A 100%); border-radius: 20px; padding: 35px 20px; text-align: center; color: white; margin-bottom: 15px; box-shadow: 0 8px 24px rgba(76, 175, 80, 0.3); }
-.logo-emoji { font-size: 60px; margin-bottom: 15px; }
-.logo-title { font-size: 32px; font-weight: 900; margin-bottom: 5px; }
-.logo-subtitle { font-size: 13px; opacity: 0.9; line-height: 1.6; }
+.cont{width:100%;max-width:480px;padding:16px 18px 48px;display:flex;flex-direction:column;gap:14px;}
 
-.principle-box { background: #E8F5E9; border: 2px solid #4CAF50; border-radius: 12px; padding: 16px; font-size: 12px; line-height: 1.8; color: #1B5E20; margin-bottom: 15px; font-weight: 600; }
-.principle-box strong { font-size: 13px; display: block; margin-bottom: 8px; }
+.info-card{background:var(--bg3);border:1px solid var(--border);border-radius:14px;padding:14px 16px;}
+.info-row{display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid var(--border2);}
+.info-row:last-child{border-bottom:none;}
+.info-icon{font-size:16px;width:22px;flex-shrink:0;}
+.info-label{font-size:11px;font-weight:700;color:var(--gold);width:70px;flex-shrink:0;}
+.info-val{font-size:13px;color:var(--tx);}
 
-.form-group { margin-bottom: 16px; }
-.form-label { font-size: 13px; font-weight: 700; color: #333; margin-bottom: 8px; display: block; }
-.form-input, .form-select { width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 10px; font-size: 13px; font-weight: 600; }
+.logic-card{background:linear-gradient(135deg,rgba(167,139,250,.08),rgba(201,168,76,.05));border:1px solid rgba(167,139,250,.25);border-radius:14px;padding:14px 16px;}
+.logic-title{font-size:12px;font-weight:700;color:var(--neon);letter-spacing:1px;margin-bottom:10px;}
+.logic-steps{display:flex;flex-direction:column;gap:7px;}
+.logic-step{display:flex;align-items:center;gap:10px;}
+.step-num{width:22px;height:22px;border-radius:50%;background:rgba(167,139,250,.2);border:1px solid rgba(167,139,250,.4);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:var(--neon);flex-shrink:0;}
+.step-txt{font-size:12px;color:var(--tx);line-height:1.5;}
+.step-txt b{color:var(--gold2);}
 
-.btn { width: 100%; padding: 14px; border: none; border-radius: 12px; font-size: 14px; font-weight: 700; cursor: pointer; margin-top: 10px; }
-.btn-primary { background: linear-gradient(135deg, #4CAF50 0%, #66BB6A 100%); color: white; box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3); }
+.btn-primary{width:100%;padding:17px;background:linear-gradient(135deg,#1a2070,#0d0f3a);border:1.5px solid var(--gold);border-radius:14px;color:var(--gold2);font-size:17px;font-weight:800;cursor:pointer;letter-spacing:.5px;transition:all .2s;box-shadow:0 4px 20px rgba(201,168,76,.15);}
+.btn-primary:active{opacity:.8;transform:scale(.98);}
 
-.test-screen { justify-content: flex-start; gap: 14px; }
-.progress-bar-container { background: #e8e8e8; height: 6px; border-radius: 20px; margin-bottom: 12px; overflow: hidden; }
-.progress-bar { height: 100%; background: linear-gradient(90deg, #4CAF50 0%, #66BB6A 100%); transition: width 0.3s; }
-.progress-text { font-size: 12px; color: #666; font-weight: 600; margin-bottom: 12px; }
+.btn-secondary{width:100%;padding:13px;background:transparent;border:1px solid var(--border2);border-radius:12px;color:var(--tx2);font-size:14px;font-weight:600;cursor:pointer;transition:all .2s;}
+.btn-secondary:active{opacity:.7;}
 
-.image-section { 
-    background: linear-gradient(135deg, #f5f5f5 0%, #eeeeee 100%);
-    border: 3px solid #4CAF50;
-    border-radius: 12px;
-    padding: 16px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 260px;
-    margin: 12px 0;
-}
+#testOverlay{position:fixed;inset:0;background:#000;z-index:200;display:none;flex-direction:column;align-items:center;justify-content:center;}
+#testOverlay.active{display:flex;}
 
-.image-section img {
-    max-width: 95%;
-    max-height: 95%;
-    object-fit: contain;
-    border-radius: 8px;
-}
+.test-topinfo{position:absolute;top:0;left:0;right:0;padding:16px 20px;display:flex;justify-content:space-between;align-items:center;}
+.test-label{font-size:11px;font-weight:700;color:rgba(201,168,76,.6);letter-spacing:2px;}
+.test-counter{font-size:13px;font-weight:700;color:var(--gold);}
 
-.question-text { font-size: 15px; font-weight: 900; color: #1B5E20; margin: 15px 0; text-align: center; }
+.image-stage{width:min(320px,80vw);position:relative;margin-bottom:30px;}
+.image-stage img{width:100%;display:block;border:1px solid rgba(201,168,76,.3);border-radius:4px;opacity:0;transition:opacity .12s ease;}
+.image-stage img.show{opacity:1;}
 
-.options { display: grid; grid-template-columns: 1fr; gap: 10px; margin: 15px 0; }
-.option-btn { 
-    border: 2px solid #ddd;
-    border-radius: 10px;
-    padding: 14px 16px;
-    background: white;
-    color: #333;
-    font-size: 13px;
-    font-weight: 700;
-    cursor: pointer;
-    min-height: 48px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s;
-}
+.options-wrap{display:flex;flex-direction:column;gap:10px;width:min(320px,80vw);}
+.opt-btn{padding:14px 20px;background:rgba(255,255,255,.08);border:1.5px solid var(--border2);border-radius:12px;color:var(--tx);font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;text-align:center;}
+.opt-btn:active{transform:scale(.96);}
+.opt-btn.selected{border-color:var(--gold);background:rgba(201,168,76,.15);color:var(--gold2);}
 
-.option-btn:active { transform: scale(0.96); }
-.option-btn.selected { border-color: #4CAF50; background: #E8F5E9; color: #1B5E20; }
+#resultScreen{display:none;min-height:100vh;flex-direction:column;align-items:center;background:var(--bg);}
+#resultScreen.active{display:flex;}
 
-.nav-buttons { display: flex; gap: 10px; margin-top: auto; padding-top: 15px; }
-.btn-nav { flex: 1; padding: 12px; border: 2px solid #4CAF50; background: white; color: #4CAF50; border-radius: 10px; font-weight: 700; font-size: 13px; cursor: pointer; }
-.btn-nav:disabled { opacity: 0.3; }
+.result-hero{width:100%;max-width:480px;padding:32px 18px 20px;text-align:center;background:linear-gradient(180deg,rgba(167,139,250,.1) 0%,transparent 100%);}
+.result-emblem{width:110px;height:110px;border-radius:50%;border:3px solid var(--gold);background:radial-gradient(circle at 38% 38%,#1a1f5e,#07091a);box-shadow:0 0 36px rgba(167,139,250,.45);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:46px;}
+.result-title-main{font-size:clamp(22px,5.5vw,28px);font-weight:900;color:var(--gold2);margin-bottom:6px;}
+.result-sub{font-size:16px;font-weight:700;color:#c7c9dc;margin-bottom:22px;}
 
-.result-screen { justify-content: flex-start; gap: 15px; }
+.rsec{width:100%;max-width:480px;padding:0 18px;margin-bottom:14px;}
+.rsec-t{font-size:17px;font-weight:900;color:#e8eaf6;padding-bottom:10px;border-bottom:2px solid var(--border);margin-bottom:14px;}
 
-.brain-age-card { background: linear-gradient(135deg, #4CAF50 0%, #66BB6A 100%); color: white; border-radius: 16px; padding: 25px; text-align: center; margin-bottom: 15px; box-shadow: 0 8px 24px rgba(76, 175, 80, 0.3); }
-.brain-age-label { font-size: 12px; opacity: 0.9; font-weight: 600; }
-.brain-age-number { font-size: 52px; font-weight: 900; }
-.brain-age-desc { font-size: 13px; margin-top: 8px; opacity: 0.95; }
+.diag-box{background:var(--bg3);border:2px solid var(--border);border-radius:18px;padding:22px;}
+.diag-title{font-size:19px;font-weight:900;color:var(--gold2);margin-bottom:10px;}
+.diag-body{font-size:15px;font-weight:600;color:#e8eaf6;line-height:1.8;white-space:pre-wrap;}
 
-.warning-box { background: linear-gradient(135deg, #FFF3E0 0%, #FFE0B2 100%); border: 2px solid #FF9800; border-radius: 12px; padding: 16px; margin: 15px 0; }
-.warning-title { font-weight: 900; color: #E65100; margin-bottom: 8px; font-size: 14px; }
-.warning-text { font-size: 13px; color: #BF360C; line-height: 1.8; font-weight: 600; }
+.insight-box{background:linear-gradient(135deg,rgba(167,139,250,.09),rgba(201,168,76,.05));border:1.5px solid rgba(167,139,250,.25);border-radius:16px;padding:18px 20px;margin-top:14px;}
+.insight-lbl{font-size:10px;font-weight:700;color:var(--neon);letter-spacing:2px;margin-bottom:8px;}
+.insight-body{font-size:15px;font-weight:600;color:#d8c8fd;line-height:1.85;}
 
-.hope-box { background: linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 100%); border: 2px solid #4CAF50; border-radius: 12px; padding: 16px; margin: 15px 0; }
-.hope-title { font-weight: 900; color: #1B5E20; margin-bottom: 8px; font-size: 14px; }
-.hope-text { font-size: 13px; color: #2E7D32; line-height: 1.8; font-weight: 600; }
+.domain-box{background:var(--bg3);border:1px solid var(--border2);border-radius:14px;padding:14px 16px;margin-bottom:10px;}
+.domain-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+.domain-name{font-size:13px;font-weight:700;color:var(--tx);}
+.domain-score{font-size:14px;font-weight:900;color:var(--gold2);}
+.domain-bar{width:100%;height:6px;background:rgba(255,255,255,.1);border-radius:3px;overflow:hidden;}
+.domain-fill{height:100%;background:linear-gradient(90deg,var(--neon),var(--gold));transition:width .3s;}
 
-.brain-analysis { margin: 20px 0; padding: 16px; background: linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 100%); border: 2px solid #4CAF50; border-radius: 12px; }
-.brain-title { font-weight: 900; color: #1B5E20; margin-bottom: 12px; font-size: 15px; }
-.brain-item { padding: 10px 0; border-bottom: 1px solid #A5D6A7; font-size: 13px; font-weight: 600; color: #333; display: flex; justify-content: space-between; align-items: center; }
-.brain-item:last-child { border-bottom: none; }
-.brain-score { color: #1B5E20; font-weight: 900; }
-
-.domain-results { margin: 20px 0; padding: 15px; background: #f5f5f5; border-radius: 12px; }
-.domain-title { font-weight: 900; color: #1B5E20; margin-bottom: 12px; }
-.domain-item { padding: 8px 0; border-bottom: 1px solid #ddd; display: flex; justify-content: space-between; font-size: 13px; font-weight: 600; }
-.domain-item:last-child { border-bottom: none; }
-
-.book-promotion { background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 100%); border: 2px solid #2196F3; border-radius: 12px; padding: 16px; margin: 20px 0; }
-.book-title { font-weight: 900; color: #1565C0; margin-bottom: 8px; font-size: 14px; }
-.book-subtitle { font-size: 12px; color: #1565C0; margin-bottom: 10px; font-weight: 700; }
-.book-text { font-size: 13px; color: #0D47A1; line-height: 1.8; font-weight: 600; }
-
-@media (max-width: 600px) {
-    .screen { padding: 12px; }
-    .header { padding: 15px; }
+@media(max-width:600px){
+  .screen{padding:0;}
+  .intro-hero{padding:30px 24px 20px;}
 }
 </style>
 </head>
 <body>
 
-<div class="container">
-    <div id="startScreen" class="screen active">
-        <div class="header">
-            <h1>📊 BAM 진단</h1>
-            <p>뇌나이 진단 시스템</p>
-        </div>
-        
-        <div class="logo-box">
-            <div class="logo-emoji">🧠</div>
-            <div class="logo-title">뇌나이 진단</div>
-            <div class="logo-subtitle">당신의 신경계 발달 수준을<br>정확히 측정합니다</div>
-        </div>
-        
-        <div class="principle-box">
-            <strong>🧠 한국뇌심리연구소 BAM 원칙</strong>
-            
-            <strong style="color: #FF6B6B; margin-top: 10px;">뇌나이 = 신경계 반응 효율성</strong>
-            
-            <div style="margin-top: 10px;">
-            🔴 <strong>하위뇌(60%)</strong> 중심<br>
-            → 반응속도, 생존본능<br><br>
-            
-            🟠 <strong>중뇌(30%)</strong> 포함<br>
-            → 도파민, 조절력, 보상<br><br>
-            
-            ❌ <strong>상위뇌(10%)</strong> 배제<br>
-            → 거짓 페르소나 우회<br><br>
-            
-            <strong style="color: #1B5E20;">⭐ 조절력이 뇌나이를 결정한다!</strong>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label class="form-label">이름</label>
-            <input type="text" id="userName" class="form-input" placeholder="홍길동">
-        </div>
-
-        <div class="form-group">
-            <label class="form-label">성별</label>
-            <select id="userGender" class="form-select">
-                <option value="">선택</option>
-                <option value="남">남</option>
-                <option value="여">여</option>
-            </select>
-        </div>
-
-        <div class="form-group">
-            <label class="form-label">생년월일</label>
-            <input type="date" id="userBirth" class="form-input">
-        </div>
-
-        <div class="form-group">
-            <label class="form-label">지역</label>
-            <select id="userRegion" class="form-select">
-                <option value="">선택</option>
-                <option value="서울">서울</option>
-                <option value="부산">부산</option>
-                <option value="대구">대구</option>
-                <option value="인천">인천</option>
-                <option value="광주">광주</option>
-                <option value="대전">대전</option>
-                <option value="울산">울산</option>
-                <option value="세종">세종</option>
-                <option value="경기">경기</option>
-                <option value="강원">강원</option>
-                <option value="충북">충북</option>
-                <option value="충남">충남</option>
-                <option value="전북">전북</option>
-                <option value="전남">전남</option>
-                <option value="경북">경북</option>
-                <option value="경남">경남</option>
-                <option value="제주">제주</option>
-            </select>
-        </div>
-
-        <button class="btn btn-primary" onclick="startTest()">진단 시작</button>
+<div id="startScreen" class="screen active">
+  <div class="topbar">
+    <div class="tb-logo">한국뇌심리연구소</div>
+    <div class="tb-badge">BAM</div>
+  </div>
+  
+  <div class="intro-hero">
+    <div class="brain-ring"><div class="brain-emoji">🧠</div></div>
+    <div class="intro-en">BRAIN AGE MEASUREMENT</div>
+    <div class="intro-title">뇌나이 진단</div>
+    <div class="intro-divider"></div>
+    <div class="intro-sub">당신의 신경계 발달 수준을<br>정확히 측정합니다</div>
+  </div>
+  
+  <div class="cont">
+    <div class="info-card">
+      <div class="info-row"><div class="info-icon">🧠</div><div class="info-label">측정방식</div><div class="info-val">이미지 반응 분석</div></div>
+      <div class="info-row"><div class="info-icon">⏱️</div><div class="info-label">소요시간</div><div class="info-val">약 5~10분</div></div>
+      <div class="info-row"><div class="info-icon">✓</div><div class="info-label">특징</div><div class="info-val">정답 없음, 첫 느낌만 선택</div></div>
     </div>
-
-    <div id="testScreen" class="screen">
-        <div class="header">
-            <h1>📊 BAM 진단</h1>
-            <p id="progressText">1/20</p>
-        </div>
-
-        <div class="progress-bar-container">
-            <div class="progress-bar" id="progressBar"></div>
-        </div>
-
-        <div class="image-section">
-            <img id="testImage" src="" alt="뇌 반응 자극 이미지">
-        </div>
-
-        <p class="question-text" id="questionText">첫 반응은?</p>
-
-        <div class="options" id="optionsContainer"></div>
-
-        <div class="nav-buttons">
-            <button class="btn-nav" id="prevBtn" onclick="prevQ()" disabled>← 이전</button>
-            <button class="btn-nav" id="nextBtn" onclick="nextQ()">다음 →</button>
-        </div>
+    
+    <div class="logic-card">
+      <div class="logic-title">🧠 측정 원칙</div>
+      <div class="logic-steps">
+        <div class="logic-step"><div class="step-num">1</div><div class="step-txt">20개 이미지를 보고</div></div>
+        <div class="logic-step"><div class="step-num">2</div><div class="step-txt"><b>첫 느낌만</b> 선택</div></div>
+        <div class="logic-step"><div class="step-num">3</div><div class="step-txt">뇌나이 & 조절력 분석</div></div>
+      </div>
     </div>
+    
+    <input type="text" id="userName" placeholder="이름" style="width:100%;padding:12px;border:1px solid var(--border2);border-radius:8px;background:rgba(255,255,255,.05);color:var(--tx);font-size:14px;">
+    <select id="userGender" style="width:100%;padding:12px;border:1px solid var(--border2);border-radius:8px;background:rgba(255,255,255,.05);color:var(--tx);font-size:14px;">
+      <option value="">성별</option>
+      <option value="M">남</option>
+      <option value="F">여</option>
+    </select>
+    <input type="date" id="userBirth" style="width:100%;padding:12px;border:1px solid var(--border2);border-radius:8px;background:rgba(255,255,255,.05);color:var(--tx);font-size:14px;">
+    
+    <button class="btn-primary" onclick="startTest()">진단 시작</button>
+  </div>
+</div>
 
-    <div id="resultScreen" class="screen">
-        <div class="header">
-            <h1>✅ 진단 완료</h1>
-            <p>당신의 신경계 발달이 분석되었습니다</p>
-        </div>
-
-        <div class="brain-age-card">
-            <div class="brain-age-label">신경계 반응 효율성</div>
-            <div class="brain-age-number" id="brainAge">0</div>
-            <div class="brain-age-desc">뇌 발달 점수</div>
-        </div>
-
-        <div class="brain-analysis">
-            <div class="brain-title">🧠 뇌 영역별 신경 발달</div>
-            <div class="brain-item">
-                <span>🔴 하위뇌 (반응속도)</span>
-                <span class="brain-score" id="brainstemScore">0점</span>
-            </div>
-            <div class="brain-item">
-                <span>🟠 중뇌 (조절력)</span>
-                <span class="brain-score" id="midbriainScore">0점</span>
-            </div>
-            <div class="brain-item">
-                <span>⭐ <strong>조절력(중뇌 80%)</strong></span>
-                <span class="brain-score" id="controlScore">0점</span>
-            </div>
-        </div>
-
-        <div class="domain-results">
-            <div class="domain-title">📊 10개 도메인 신경 효율성</div>
-            <div id="domainResults"></div>
-        </div>
-
-        <div id="warningSection"></div>
-        <div id="hopeSection"></div>
-        <div id="bookSection"></div>
-
-        <button class="btn btn-primary" onclick="location.reload()">다시 진단하기</button>
+<div id="testScreen" class="screen">
+  <div class="topbar">
+    <div class="tb-logo">BAM 진단</div>
+    <div class="tb-badge" id="testBadge">1/20</div>
+  </div>
+  
+  <div id="testOverlay" class="active">
+    <div class="test-topinfo">
+      <div class="test-label">QUESTION</div>
+      <div class="test-counter" id="testProgress">1/20</div>
     </div>
+    
+    <div class="image-stage">
+      <img id="testImage" src="" alt="">
+    </div>
+    
+    <div class="options-wrap" id="optionsWrap"></div>
+  </div>
+</div>
+
+<div id="resultScreen">
+  <div class="topbar">
+    <div class="tb-logo">진단 결과</div>
+    <div class="tb-badge">완료</div>
+  </div>
+  
+  <div class="result-hero">
+    <div class="result-emblem">🧠</div>
+    <div class="result-title-main" id="resultTitle">뇌나이</div>
+    <div class="result-sub" id="resultSub">신경계 발달 분석</div>
+  </div>
+  
+  <div class="rsec">
+    <div class="rsec-t">신경 발달 점수</div>
+    <div id="brainScores" style="display:flex;flex-direction:column;gap:10px;"></div>
+  </div>
+  
+  <div class="rsec">
+    <div class="rsec-t">도메인별 신경 효율성</div>
+    <div id="domainScores" style="display:flex;flex-direction:column;gap:8px;"></div>
+  </div>
+  
+  <div class="rsec">
+    <div class="rsec-t">종합 분석</div>
+    <div class="diag-box">
+      <div class="diag-title" id="diagTitle">당신의 신경계</div>
+      <div class="diag-body" id="diagBody"></div>
+      <div class="insight-box">
+        <div class="insight-lbl">💡 통찰</div>
+        <div class="insight-body" id="insightBody"></div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="rsec">
+    <div class="rsec-t">다음 단계</div>
+    <div class="logic-card">
+      <div class="logic-title">📖 추천 도서</div>
+      <div style="font-size:13px;color:var(--tx);line-height:1.8;">
+        <div style="margin:8px 0;"><b style="color:var(--gold2);">『효자는 진정 누구인가?』</b></div>
+        <div style="color:var(--tx2);font-size:12px;">부제: 『왜 지식인이 될수록 효자와 멀어지는가?』</div>
+        <div style="margin-top:10px;font-size:12px;color:var(--neon);">당신의 조절력을 이해하고 개선하는 책</div>
+      </div>
+    </div>
+  </div>
+  
+  <div style="padding:20px 18px 48px;width:100%;max-width:480px;">
+    <button class="btn-primary" onclick="location.reload()">다시 진단하기</button>
+  </div>
 </div>
 
 <script>
-const SUPABASE_URL = 'https://grxqfaeznqqohnlltged.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdyeHFmYWV6bnFxb2hubmx0Z2VkIiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTQxNzk4NzAsImV4cCI6MjAwOTc1OTg3MH0.LRQWT2F2o7L-KKGP3Ek-V72B_VAhJbKWzG4cN_8i9Gc';
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const SUPABASE_URL='https://grxqfaeznqqohnlltged.supabase.co';
+const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdyeHFmYWV6bnFxb2hubmx0Z2VkIiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTQxNzk4NzAsImV4cCI6MjAwOTc1OTg3MH0.LRQWT2F2o7L-KKGP3Ek-V72B_VAhJbKWzG4cN_8i9Gc';
+const supabase=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
-// 10개 도메인과 뇌 영역 비율 (하위뇌%, 중뇌%, 상위뇌%)
-const domains = [
-    { name: '반응속도', brainstem: 60, midbrain: 30, cortex: 10 },
-    { name: '보상처리', brainstem: 20, midbrain: 60, cortex: 20 },
-    { name: '동기부여', brainstem: 20, midbrain: 70, cortex: 10 },
-    { name: '감정반응', brainstem: 50, midbrain: 35, cortex: 15 },
-    { name: '판단력', brainstem: 5, midbrain: 15, cortex: 80 },
-    { name: '실행력', brainstem: 10, midbrain: 70, cortex: 20 },
-    { name: '조절력', brainstem: 10, midbrain: 80, cortex: 10 }, // ⭐핵심
-    { name: '공간감각', brainstem: 15, midbrain: 15, cortex: 70 },
-    { name: '창의성', brainstem: 5, midbrain: 15, cortex: 80 },
-    { name: '통찰력', brainstem: 5, midbrain: 20, cortex: 75 }
+const domains=[
+  {name:'반응속도',brainstem:60,midbrain:30,cortex:10},
+  {name:'보상처리',brainstem:20,midbrain:60,cortex:20},
+  {name:'동기부여',brainstem:20,midbrain:70,cortex:10},
+  {name:'감정반응',brainstem:50,midbrain:35,cortex:15},
+  {name:'판단력',brainstem:5,midbrain:15,cortex:80},
+  {name:'실행력',brainstem:10,midbrain:70,cortex:20},
+  {name:'조절력',brainstem:10,midbrain:80,cortex:10},
+  {name:'공간감각',brainstem:15,midbrain:15,cortex:70},
+  {name:'창의성',brainstem:5,midbrain:15,cortex:80},
+  {name:'통찰력',brainstem:5,midbrain:20,cortex:75}
 ];
 
-const imageList = [
-    '/assets/img/bam-projection-1.jpg',
-    '/assets/img/bam-projection-2.png',
-    '/assets/img/bam-projection-3.png',
-    '/assets/img/bam-projection-4.jpg',
-    '/assets/img/bam-projection-5.png',
-    '/assets/img/bam-projection-6.png',
-    '/assets/img/bam-projection-7.png',
-    '/assets/img/bam-projection-8.png',
-    '/assets/img/bam-projection-9.png',
-    '/assets/img/bam-projection-10.png',
-    '/assets/img/bam-projection-11.png',
-    '/assets/img/bam-projection-12.png',
-    '/assets/img/bam-projection-13.jpg',
-    '/assets/img/bam-projection-14.jpg',
-    '/assets/img/bam-projection-15.jpg',
-    '/assets/img/bam-projection-16.jpg',
-    '/assets/img/bam-projection-17.png',
-    '/assets/img/bam-projection-18.png',
-    '/assets/img/bam-projection-19.jpg',
-    '/assets/img/bam-projection-20.jpg'
-];
+const images=['/assets/img/bam-projection-1.jpg','/assets/img/bam-projection-2.png','/assets/img/bam-projection-3.png','/assets/img/bam-projection-4.jpg','/assets/img/bam-projection-5.png','/assets/img/bam-projection-6.png','/assets/img/bam-projection-7.png','/assets/img/bam-projection-8.png','/assets/img/bam-projection-9.png','/assets/img/bam-projection-10.png','/assets/img/bam-projection-11.png','/assets/img/bam-projection-12.png','/assets/img/bam-projection-13.jpg','/assets/img/bam-projection-14.jpg','/assets/img/bam-projection-15.jpg','/assets/img/bam-projection-16.jpg','/assets/img/bam-projection-17.png','/assets/img/bam-projection-18.png','/assets/img/bam-projection-19.jpg','/assets/img/bam-projection-20.jpg'];
 
-let state = { currentQ: 0, answers: {}, userData: {} };
+let state={current:0,answers:{},user:{}};
 
-function showScreen(id) {
-    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
+function startTest(){
+  const name=document.getElementById('userName').value.trim();
+  const gender=document.getElementById('userGender').value;
+  const birth=document.getElementById('userBirth').value;
+  if(!name||!gender||!birth){alert('모든 정보를 입력하세요');return;}
+  state.user={name,gender,birth};
+  state.current=0;
+  state.answers={};
+  loadQuestion();
+  document.getElementById('startScreen').classList.remove('active');
+  document.getElementById('testScreen').classList.add('active');
 }
 
-function startTest() {
-    const name = document.getElementById('userName').value.trim();
-    const gender = document.getElementById('userGender').value;
-    const birth = document.getElementById('userBirth').value;
-    const region = document.getElementById('userRegion').value;
-    
-    if (!name || !gender || !birth || !region) {
-        alert('모든 정보를 입력해주세요.');
-        return;
-    }
-    
-    state.userData = { name, gender, birth, region };
-    state.currentQ = 0;
-    state.answers = {};
-    loadQuestion();
-    showScreen('testScreen');
+function loadQuestion(){
+  const q=state.current;
+  document.getElementById('testBadge').textContent=(q+1)+'/20';
+  document.getElementById('testProgress').textContent=(q+1)+'/20';
+  document.getElementById('testImage').src=images[q];
+  
+  const wrap=document.getElementById('optionsWrap');
+  wrap.innerHTML='';
+  ['즉각 끌림','조금 끌림','조금 거부','즉각 거부'].forEach(opt=>{
+    const btn=document.createElement('div');
+    btn.className='opt-btn';
+    if(state.answers[q]?.opt===opt)btn.classList.add('selected');
+    btn.textContent=opt;
+    btn.onclick=()=>selectOpt(q,opt,btn);
+    wrap.appendChild(btn);
+  });
+  
+  setTimeout(()=>{document.getElementById('testImage').classList.add('show');},100);
 }
 
-function loadQuestion() {
-    const q = state.currentQ;
-    const img = imageList[q];
-    
-    document.getElementById('progressBar').style.width = ((q + 1) / 20 * 100) + '%';
-    document.getElementById('progressText').textContent = (q + 1) + '/20';
-    document.getElementById('testImage').src = img;
-    
-    const optionsContainer = document.getElementById('optionsContainer');
-    optionsContainer.innerHTML = '';
-    
-    ['즉각 끌림', '조금 끌림', '조금 거부', '즉각 거부'].forEach(opt => {
-        const btn = document.createElement('div');
-        btn.className = 'option-btn';
-        if (state.answers[q]?.option === opt) btn.classList.add('selected');
-        btn.textContent = opt;
-        btn.onclick = () => selectAnswer(q, opt, btn);
-        optionsContainer.appendChild(btn);
-    });
-    
-    document.getElementById('prevBtn').disabled = q === 0;
-    document.getElementById('nextBtn').textContent = q === 19 ? '완료' : '다음 →';
+function selectOpt(q,opt,elem){
+  const scores={' 즉각 끌림':100,'조금 끌림':70,'조금 거부':40,'즉각 거부':0};
+  state.answers[q]={opt,score:scores[opt]||0,domainIdx:q%10};
+  document.querySelectorAll('.opt-btn').forEach(e=>e.classList.remove('selected'));
+  elem.classList.add('selected');
+  
+  if(q<19)setTimeout(()=>{state.current++;loadQuestion();},400);
+  else setTimeout(()=>showResult(),400);
 }
 
-function selectAnswer(q, option, elem) {
-    const scoreMap = { '즉각 끌림': 100, '조금 끌림': 70, '조금 거부': 40, '즉각 거부': 0 };
-    const domain = domains[q % 10];
-    
-    state.answers[q] = {
-        domainIdx: q % 10,
-        option,
-        score: scoreMap[option],
-        domain: domain.name
-    };
-    
-    document.querySelectorAll('.option-btn').forEach(e => e.classList.remove('selected'));
-    elem.classList.add('selected');
-}
-
-function prevQ() {
-    if (state.currentQ > 0) {
-        state.currentQ--;
-        loadQuestion();
-    }
-}
-
-function nextQ() {
-    if (!state.answers[state.currentQ]) {
-        alert('반응을 선택해주세요.');
-        return;
-    }
-    
-    if (state.currentQ < 19) {
-        state.currentQ++;
-        loadQuestion();
-    } else {
-        showResults();
-    }
-}
-
-async function showResults() {
-    // 도메인별 점수 계산
-    const domainScores = domains.map(d => ({ name: d.name, scores: [] }));
-    
-    Object.values(state.answers).forEach(a => {
-        domainScores[a.domainIdx].scores.push(a.score);
-    });
-    
-    const domainAvg = domainScores.map(d => 
-        Math.round(d.scores.reduce((a,b)=>a+b,0) / d.scores.length)
-    );
-    
-    // 뇌 영역별 점수 계산
-    let brainstemTotal = 0, midbriainTotal = 0, cortexTotal = 0;
-    
-    domainAvg.forEach((score, idx) => {
-        const domain = domains[idx];
-        brainstemTotal += score * (domain.brainstem / 100);
-        midbriainTotal += score * (domain.midbrain / 100);
-        cortexTotal += score * (domain.cortex / 100);
-    });
-    
-    const brainstemScore = Math.round(brainstemTotal / 10);
-    const midbriainScore = Math.round(midbriainTotal / 10);
-    const cortexScore = Math.round(cortexTotal / 10);
-    
-    // 뇌나이 계산 (하위뇌 60% + 중뇌 30% + 상위뇌 10%)
-    const brainAge = Math.round(brainstemScore * 0.6 + midbriainScore * 0.3 + cortexScore * 0.1);
-    
-    // 조절력 점수 (10번 도메인이 조절력)
-    const controlScore = domainAvg[6];
-    
-    document.getElementById('brainAge').textContent = brainAge;
-    document.getElementById('brainstemScore').textContent = brainstemScore + '점';
-    document.getElementById('midbriainScore').textContent = midbriainScore + '점';
-    document.getElementById('controlScore').textContent = controlScore + '점';
-    
-    // 도메인 결과
-    const domainHtml = domainAvg.map((score, idx) => {
-        return `<div class="domain-item"><span>${domains[idx].name}</span> <span style="color: #1B5E20; font-weight: 900;">${score}점</span></div>`;
-    }).join('');
-    document.getElementById('domainResults').innerHTML = domainHtml;
-    
-    // 경고/희망 메시지
-    const warningHtml = controlScore < 50 ? `
-    <div class="warning-box">
-        <div class="warning-title">🚨 위험 신호</div>
-        <div class="warning-text">
-        당신의 뇌나이는 ${brainAge}이지만,
-        조절력 점수는 ${controlScore}점입니다.<br><br>
-        
-        <strong>당신은 지능은 높지만 조절력이 약합니다.</strong><br>
-        순간의 실수로 인생이 망가질 수 있습니다.<br><br>
-        
-        부모에게 효도하지 못하고 있지는 않습니까?<br>
-        형제를 챙기지 못하고 있지는 않습니까?<br>
-        자기욕심으로 살아가지는 않습니까?
-        </div>
-    </div>
-    ` : '';
-    document.getElementById('warningSection').innerHTML = warningHtml;
-    
-    const hopeHtml = `
-    <div class="hope-box">
-        <div class="hope-title">✨ 희망의 메시지</div>
-        <div class="hope-text">
-        뇌는 변할 수 있습니다! (신경가소성)<br><br>
-        
-        <strong>지금부터 조절력을 키우세요:</strong><br>
-        1. 부모에게 전화하세요<br>
-        2. 하루 벌이 중 일부를 부모에게 드리세요<br>
-        3. 형제를 챙기세요<br>
-        4. BHC로 조절력을 훈련하세요<br><br>
-        
-        <strong>조절력이 높아질 때,
-        당신은 진정한 효자가 됩니다!</strong>
-        </div>
-    </div>
-    `;
-    document.getElementById('hopeSection').innerHTML = hopeHtml;
-    
-    const bookHtml = `
-    <div class="book-promotion">
-        <div class="book-title">📚 다음 책을 꼭 읽어보세요</div>
-        <div class="book-subtitle">『효자는 진정 누구인가?』<br>부제: 『왜 지식인이 될수록 효자와 멀어지는가?』</div>
-        <div class="book-text">
-        지능이 높을수록 왜 효도는 멀어질까?<br><br>
-        
-        박사 아들은 부모를 버리고,<br>
-        농부 형은 부모를 챙긴다.<br><br>
-        
-        <strong>이 책은 당신의 뇌를 알고,
-        당신을 구하는 책입니다.</strong><br><br>
-        
-        조절력 = 진정한 인간성<br>
-        조절력 = 효도의 본질<br>
-        조절력 = 당신의 미래
-        </div>
-    </div>
-    `;
-    document.getElementById('bookSection').innerHTML = bookHtml;
-    
-    // Supabase 저장
-    await supabase.from('bam_results').insert({
-        name: state.userData.name,
-        gender: state.userData.gender,
-        birth_date: state.userData.birth,
-        region: state.userData.region,
-        brain_age: brainAge,
-        brainstem_score: brainstemScore,
-        midbrain_score: midbriainScore,
-        cortex_score: cortexScore,
-        control_score: controlScore,
-        answers: JSON.stringify(state.answers),
-        created_at: new Date().toISOString()
-    });
-    
-    showScreen('resultScreen');
+async function showResult(){
+  document.getElementById('testScreen').classList.remove('active');
+  document.getElementById('resultScreen').classList.add('active');
+  
+  const scores=Object.values(state.answers).map(a=>a.score);
+  const avg=Math.round(scores.reduce((a,b)=>a+b,0)/scores.length);
+  
+  let brainstemSum=0,midbriainSum=0,cortexSum=0;
+  const domainAvg=domains.map((d,i)=>{
+    const dScores=Object.values(state.answers).filter(a=>a.domainIdx===i).map(a=>a.score);
+    const dAvg=dScores.length?Math.round(dScores.reduce((a,b)=>a+b,0)/dScores.length):0;
+    brainstemSum+=dAvg*(d.brainstem/100);
+    midbriainSum+=dAvg*(d.midbrain/100);
+    cortexSum+=dAvg*(d.cortex/100);
+    return{name:d.name,score:dAvg};
+  });
+  
+  const bs=Math.round(brainstemSum/10);
+  const mb=Math.round(midbriainSum/10);
+  const ct=Math.round(cortexSum/10);
+  const brainAge=Math.round(bs*0.6+mb*0.3+ct*0.1);
+  
+  document.getElementById('resultTitle').textContent=brainAge+'점';
+  document.getElementById('resultSub').textContent='신경계 발달 수준';
+  
+  const brainHtml=`
+    <div class="domain-box"><div class="domain-head"><div class="domain-name">🔴 하위뇌 (반응속도)</div><div class="domain-score">${bs}</div></div><div class="domain-bar"><div class="domain-fill" style="width:${bs}%"></div></div></div>
+    <div class="domain-box"><div class="domain-head"><div class="domain-name">🟠 중뇌 (조절력)</div><div class="domain-score">${mb}</div></div><div class="domain-bar"><div class="domain-fill" style="width:${mb}%"></div></div></div>
+    <div class="domain-box"><div class="domain-head"><div class="domain-name">🟡 상위뇌 (판단력)</div><div class="domain-score">${ct}</div></div><div class="domain-bar"><div class="domain-fill" style="width:${ct}%"></div></div></div>
+  `;
+  document.getElementById('brainScores').innerHTML=brainHtml;
+  
+  const domainHtml=domainAvg.map(d=>`
+    <div class="domain-box"><div class="domain-head"><div class="domain-name">${d.name}</div><div class="domain-score">${d.score}</div></div><div class="domain-bar"><div class="domain-fill" style="width:${d.score}%"></div></div></div>
+  `).join('');
+  document.getElementById('domainScores').innerHTML=domainHtml;
+  
+  const controlScore=domainAvg[6].score;
+  document.getElementById('diagTitle').textContent='당신의 신경계 발달';
+  document.getElementById('diagBody').textContent=`뇌나이: ${brainAge}점\n\n당신의 조절력: ${controlScore}점\n\n${controlScore<50?'⚠️ 조절력이 약해 순간의 실패가 인생을 바꿀 수 있습니다. 지금부터 조절력을 키우세요!':'✨ 조절력이 우수합니다. 부모에게 효도하고 형제를 챙기세요.'}`;
+  document.getElementById('insightBody').textContent='지능만으로는 성공하지 못합니다.\n조절력이 뇌나이를 결정합니다.\n\n박사도 조절력이 없으면 부모를 버리고,\n농부도 조절력이 높으면 부모를 돕습니다.\n\n당신의 진정한 가치는 조절력입니다.';
+  
+  await supabase.from('bam_results').insert({
+    name:state.user.name,gender:state.user.gender,birth_date:state.user.birth,
+    brain_age:brainAge,brainstem_score:bs,midbrain_score:mb,cortex_score:ct,
+    control_score:controlScore,answers:JSON.stringify(state.answers),created_at:new Date().toISOString()
+  });
+  
+  window.scrollTo(0,0);
 }
 </script>
 
