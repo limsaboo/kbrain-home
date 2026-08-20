@@ -6,45 +6,54 @@
 <title>BAM</title>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: 'Noto Sans KR'; background: white; }
-.screen { display: none; }
-.screen.show { display: block; }
+html,body { width: 100%; height: 100%; font-family: 'Noto Sans KR'; background: white; overflow-x: hidden; }
 
-.intro { min-height: 100vh; padding: 40px 20px; text-align: center; background: white; }
-.intro h1 { font-size: 36px; color: #1a472a; margin: 30px 0; font-weight: 900; }
+.screen { display: none; }
+.screen.show { display: flex; }
+
+.intro { width: 100vw; height: 100vh; flex-direction: column; justify-content: center; align-items: center; padding: 20px; }
+.intro h1 { font-size: 36px; color: #1a472a; font-weight: 900; margin: 30px 0; }
 .intro p { color: #666; margin: 20px 0; }
 .intro input, .intro select { width: 100%; max-width: 300px; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; }
 .intro button { width: 100%; max-width: 300px; padding: 14px; margin-top: 20px; background: #00BCD4; color: white; border: none; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; }
 
-.test { min-height: 100vh; display: flex; flex-direction: column; }
-.test-header { background: #1a472a; color: white; padding: 20px; text-align: center; border-bottom: 4px solid #00BCD4; }
+.test { width: 100vw; height: 100vh; flex-direction: column; }
+.test-header { background: #1a472a; color: white; padding: 20px; text-align: center; border-bottom: 4px solid #00BCD4; min-height: 80px; }
 .test-header h2 { font-size: 24px; font-weight: 900; }
-.test-body { flex: 1; padding: 30px 20px; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; }
-.test-image { width: 100%; max-width: 340px; height: 340px; border: 3px solid #00BCD4; border-radius: 12px; margin-bottom: 30px; display: flex; align-items: center; justify-content: center; background: #f5f5f5; }
-.test-image img { width: 100%; height: 100%; object-fit: contain; }
-.test-question { width: 100%; max-width: 340px; text-align: center; margin-bottom: 20px; }
-.test-question p { font-size: 18px; font-weight: 900; color: #1a472a; }
-.test-options { width: 100%; max-width: 340px; display: flex; flex-direction: column; gap: 8px; margin-bottom: 30px; }
-.test-opt { padding: 12px; border: 2px solid #ddd; background: white; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 700; }
-.test-opt.active { border-color: #00BCD4; background: #E0F7FA; }
-.test-nav { width: 100%; max-width: 340px; display: flex; gap: 10px; padding-bottom: 30px; }
-.test-nav button { flex: 1; padding: 12px; border: 1px solid #ddd; background: white; border-radius: 6px; font-weight: bold; cursor: pointer; }
-.test-nav button:disabled { opacity: 0.3; }
+.test-body { flex: 1; padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; overflow-y: auto; }
 
-.result { min-height: 100vh; padding: 20px; background: #f5f5f5; }
-.result-box { background: white; padding: 20px; margin-bottom: 12px; border-radius: 8px; }
-.result-title { font-size: 24px; font-weight: 900; color: #1a472a; margin-bottom: 8px; }
-.result-value { font-size: 32px; font-weight: 900; color: #1a472a; }
+.test-image { width: 100%; max-width: 320px; height: 320px; border: 3px solid #00BCD4; border-radius: 12px; margin-bottom: 20px; display: flex; align-items: center; justify-content: center; background: #f5f5f5; }
+.test-image img { width: 100%; height: 100%; object-fit: contain; }
+
+.test-question { width: 100%; text-align: center; margin-bottom: 15px; }
+.test-question p { font-size: 16px; font-weight: 900; color: #1a472a; }
+
+.test-options { width: 100%; max-width: 320px; display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+.test-opt { padding: 14px; border: 2px solid #ccc; background: white; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 700; text-align: center; }
+.test-opt.active { border-color: #00BCD4; background: #00BCD4; color: white; }
+
+.test-nav { width: 100%; max-width: 320px; display: flex; gap: 10px; padding-bottom: 20px; }
+.test-nav button { flex: 1; padding: 12px; border: 1px solid #ccc; background: white; border-radius: 6px; font-weight: bold; cursor: pointer; }
+.test-nav button:disabled { opacity: 0.3; cursor: not-allowed; }
+
+.result { width: 100vw; min-height: 100vh; flex-direction: column; padding: 20px; background: #f5f5f5; }
+.result-header { background: #1a472a; color: white; padding: 20px; text-align: center; border-radius: 8px; margin-bottom: 20px; }
+.result-header h2 { font-size: 24px; font-weight: 900; }
+
+.result-box { background: white; padding: 16px; margin-bottom: 12px; border-radius: 8px; }
+.result-value { font-size: 32px; font-weight: 900; color: #1a472a; margin-top: 8px; }
 .result-label { font-size: 12px; color: #666; }
 .result-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #eee; }
+.result-item:last-child { border-bottom: none; }
 .result-bar { width: 100%; height: 6px; background: #e0e0e0; margin-top: 4px; border-radius: 3px; }
-.result-fill { height: 100%; background: #00BCD4; }
+.result-fill { height: 100%; background: #00BCD4; border-radius: 3px; }
+
 .result-btn { width: 100%; padding: 14px; background: #00BCD4; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 20px; margin-bottom: 30px; }
 </style>
 </head>
 <body>
 
-<div id="intro" class="screen show">
+<div class="screen intro show">
   <h1>🧠 BAM</h1>
   <p>뇌나이 진단</p>
   <input type="text" id="name" placeholder="이름">
@@ -57,7 +66,7 @@ body { font-family: 'Noto Sans KR'; background: white; }
   <button onclick="start()">시작</button>
 </div>
 
-<div id="test" class="screen">
+<div class="screen test">
   <div class="test-header">
     <h2 id="progress">1/20</h2>
   </div>
@@ -76,9 +85,9 @@ body { font-family: 'Noto Sans KR'; background: white; }
   </div>
 </div>
 
-<div id="result" class="screen">
-  <div class="result-box" style="background: #1a472a; color: white; text-align: center;">
-    <p>진단 완료</p>
+<div class="screen result">
+  <div class="result-header">
+    <h2>진단 완료</h2>
   </div>
   <div class="result-box">
     <div class="result-label">뇌나이</div>
@@ -86,18 +95,9 @@ body { font-family: 'Noto Sans KR'; background: white; }
   </div>
   <div class="result-box">
     <p style="font-weight: 900; margin-bottom: 12px;">뇌 영역</p>
-    <div class="result-item">
-      <span>하위뇌</span>
-      <span id="bs">0</span>
-    </div>
-    <div class="result-item">
-      <span>중뇌</span>
-      <span id="mb">0</span>
-    </div>
-    <div class="result-item">
-      <span>상위뇌</span>
-      <span id="ct">0</span>
-    </div>
+    <div class="result-item"><span>하위뇌</span><span id="bs">0</span></div>
+    <div class="result-item"><span>중뇌</span><span id="mb">0</span></div>
+    <div class="result-item"><span>상위뇌</span><span id="ct">0</span></div>
   </div>
   <div class="result-box">
     <p style="font-weight: 900; margin-bottom: 12px;">도메인</p>
@@ -122,16 +122,16 @@ const domains=[
 
 const imgs=['assets/img/bam-projection-1.jpg','assets/img/bam-projection-2.png','assets/img/bam-projection-3.png','assets/img/bam-projection-4.jpg','assets/img/bam-projection-5.png','assets/img/bam-projection-6.png','assets/img/bam-projection-7.png','assets/img/bam-projection-8.png','assets/img/bam-projection-9.png','assets/img/bam-projection-10.png','assets/img/bam-projection-11.png','assets/img/bam-projection-12.png','assets/img/bam-projection-13.jpg','assets/img/bam-projection-14.jpg','assets/img/bam-projection-15.jpg','assets/img/bam-projection-16.jpg','assets/img/bam-projection-17.png','assets/img/bam-projection-18.png','assets/img/bam-projection-19.jpg','assets/img/bam-projection-20.jpg'];
 
-let q=0, a={};
+let q=0,a={};
 
-function show(id){
-  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('show'));
-  document.getElementById(id).classList.add('show');
+function show(s){
+  document.querySelectorAll('.screen').forEach(x=>x.classList.remove('show'));
+  document.querySelectorAll('.' + s).forEach(x=>x.classList.add('show'));
 }
 
 function start(){
-  if(!document.getElementById('name').value) return alert('입력');
-  q=0; a={}; show('test'); load();
+  if(!document.getElementById('name').value)return alert('입력');
+  q=0;a={};show('test');load();
 }
 
 function load(){
@@ -139,39 +139,39 @@ function load(){
   document.getElementById('img').src=imgs[q];
   const o=document.getElementById('opts');
   o.innerHTML='';
-  ['끌림','조금','거부','강거부'].forEach(t=>{
+  ['금정적','보통','거부','무관심'].forEach(t=>{
     const b=document.createElement('button');
     b.className='test-opt';
     if(a[q]?.t===t)b.classList.add('active');
     b.textContent=t;
-    b.onclick=()=>{a[q]={t,s:t==='끌림'?100:t==='조금'?70:t==='거부'?40:0}; document.querySelectorAll('.test-opt').forEach(x=>x.classList.remove('active')); b.classList.add('active');};
+    b.onclick=()=>{
+      a[q]={t,s:t==='금정적'?100:t==='보통'?50:t==='거부'?25:0};
+      document.querySelectorAll('.test-opt').forEach(x=>x.classList.remove('active'));
+      b.classList.add('active');
+    };
     o.appendChild(b);
   });
   document.getElementById('prev').disabled=q===0;
   document.getElementById('next').textContent=q===19?'완료':'다음';
 }
 
-function prev(){
-  if(q>0){q--; load();}
-}
-
+function prev(){if(q>0){q--;load();}}
 function next(){
-  if(!a[q]) return alert('선택');
-  if(q<19){q++; load();}else calc();
+  if(!a[q])return alert('선택');
+  if(q<19){q++;load();}else calc();
 }
 
 function calc(){
   let bS=0,mS=0,cS=0;
   const ds=domains.map((d,i)=>{
     let ss=[];
-    for(let k in a) if(parseInt(k)%10===i) ss.push(a[k].s);
+    for(let k in a)if(parseInt(k)%10===i)ss.push(a[k].s);
     const av=ss.length?Math.round(ss.reduce((x,y)=>x+y)/ss.length):0;
-    bS+=av*d.b/100; mS+=av*d.m/100; cS+=av*d.c/100;
+    bS+=av*d.b/100;mS+=av*d.m/100;cS+=av*d.c/100;
     return{n:d.n,s:av};
   });
   
-  const bs=Math.round(bS/10), mb=Math.round(mS/10), ct=Math.round(cS/10), ba=Math.round(bs*0.6+mb*0.3+ct*0.1);
-  
+  const bs=Math.round(bS/10),mb=Math.round(mS/10),ct=Math.round(cS/10),ba=Math.round(bs*0.6+mb*0.3+ct*0.1);
   document.getElementById('brain').textContent=ba;
   document.getElementById('bs').textContent=bs;
   document.getElementById('mb').textContent=mb;
