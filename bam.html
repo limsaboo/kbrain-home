@@ -7,7 +7,6 @@
 <meta http-equiv="pragma" content="no-cache">
 <meta http-equiv="expires" content="0">
 <title>BAM 뇌나이 진단</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 html,body{width:100%;height:100%;background:#fff;font-family:'Noto Sans KR',sans-serif;color:#333;overflow-x:hidden;}
@@ -18,7 +17,6 @@ body{display:flex;align-items:center;justify-content:center;}
 .screen{display:none;width:100%;height:100%;flex-direction:column;}
 .screen.active{display:flex;}
 
-/* ─ INTRO ─ */
 #introScreen{background:#fff;justify-content:center;align-items:center;padding:20px;}
 .intro-box{text-align:center;max-width:360px;}
 .intro-emoji{font-size:80px;margin-bottom:20px;}
@@ -31,9 +29,7 @@ input,select{width:100%;padding:12px;border:2px solid #ddd;border-radius:8px;fon
 input:focus,select:focus{outline:none;border-color:#00BCD4;}
 
 .btn-start{width:100%;padding:16px;background:linear-gradient(135deg,#00BCD4,#0097A7);color:#fff;border:none;border-radius:8px;font-size:16px;font-weight:900;cursor:pointer;margin-top:20px;}
-.btn-start:active{opacity:.9;}
 
-/* ─ TEST ─ */
 #testScreen{background:#fff;padding:0;flex-direction:column;}
 
 .test-header{background:#1a472a;color:#fff;padding:16px 20px;text-align:center;border-bottom:4px solid #00BCD4;}
@@ -49,15 +45,12 @@ input:focus,select:focus{outline:none;border-color:#00BCD4;}
 
 .options-group{width:100%;max-width:320px;display:flex;flex-direction:column;gap:10px;}
 .opt-btn{padding:14px;background:#fff;border:2px solid #ddd;border-radius:8px;font-size:14px;font-weight:700;color:#333;cursor:pointer;transition:all .2s;text-align:center;}
-.opt-btn:active{transform:scale(.96);}
 .opt-btn.selected{border-color:#00BCD4;background:#E0F7FA;color:#00695C;}
 
 .nav-buttons{display:flex;gap:10px;margin-top:20px;width:100%;max-width:320px;}
 .nav-btn{flex:1;padding:12px;border:2px solid #ddd;background:#fff;border-radius:8px;font-weight:700;cursor:pointer;}
-.nav-btn:disabled{opacity:.3;cursor:not-allowed;}
-.nav-btn:active:not(:disabled){opacity:.8;}
+.nav-btn:disabled{opacity:.3;}
 
-/* ─ RESULT ─ */
 #resultScreen{background:#f5f5f5;padding:20px;overflow-y:auto;justify-content:flex-start;}
 
 .result-header{background:#1a472a;color:#fff;padding:20px;text-align:center;border-radius:12px;margin-bottom:20px;}
@@ -70,38 +63,31 @@ input:focus,select:focus{outline:none;border-color:#00BCD4;}
 
 .brain-section{background:#fff;padding:16px;border-radius:12px;margin-bottom:12px;}
 .brain-title{font-size:14px;font-weight:900;color:#1a472a;margin-bottom:12px;}
-
-.brain-item{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #eee;}
+.brain-item{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #eee;}
 .brain-item:last-child{border-bottom:none;}
-.brain-name{font-size:12px;font-weight:600;color:#333;}
+.brain-name{font-size:12px;font-weight:600;}
 .brain-score{font-size:14px;font-weight:900;color:#00695C;}
 
 .domain-section{background:#fff;padding:16px;border-radius:12px;margin-bottom:12px;}
 .domain-title{font-size:14px;font-weight:900;color:#1a472a;margin-bottom:12px;}
-
 .domain-item{margin-bottom:12px;}
 .domain-head{display:flex;justify-content:space-between;margin-bottom:4px;}
 .domain-name{font-size:12px;font-weight:600;}
 .domain-value{font-size:13px;font-weight:900;color:#00695C;}
 .domain-bar{width:100%;height:6px;background:#e0e0e0;border-radius:3px;overflow:hidden;}
-.domain-fill{height:100%;background:linear-gradient(90deg,#00BCD4,#0097A7);transition:width .3s;}
+.domain-fill{height:100%;background:linear-gradient(90deg,#00BCD4,#0097A7);}
 
 .book-section{background:linear-gradient(135deg,#E3F2FD,#BBDEFB);padding:16px;border-radius:12px;margin-bottom:20px;}
 .book-title{font-size:13px;font-weight:900;color:#0D47A1;margin-bottom:8px;}
 .book-text{font-size:12px;color:#0D47A1;line-height:1.6;}
 
 .btn-restart{width:100%;padding:14px;background:linear-gradient(135deg,#00BCD4,#0097A7);color:#fff;border:none;border-radius:8px;font-weight:900;cursor:pointer;margin-bottom:40px;}
-
-@media(max-width:480px){
-  .container{max-width:100%;}
-}
 </style>
 </head>
 <body>
 
 <div class="container">
 
-<!-- INTRO -->
 <div id="introScreen" class="screen active">
   <div class="intro-box">
     <div class="intro-emoji">🧠</div>
@@ -131,7 +117,6 @@ input:focus,select:focus{outline:none;border-color:#00BCD4;}
   </div>
 </div>
 
-<!-- TEST -->
 <div id="testScreen" class="screen">
   <div class="test-header">
     <div class="test-title">📋 BAM 진단 진행 중</div>
@@ -154,7 +139,6 @@ input:focus,select:focus{outline:none;border-color:#00BCD4;}
   </div>
 </div>
 
-<!-- RESULT -->
 <div id="resultScreen" class="screen">
   <div class="result-header">
     <div class="result-title" id="resTitle">진단 완료</div>
@@ -199,10 +183,6 @@ input:focus,select:focus{outline:none;border-color:#00BCD4;}
 </div>
 
 <script>
-const SUPABASE_URL='https://grxqfaeznqqohnlltged.supabase.co';
-const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdyeHFmYWV6bnFxb2hubmx0Z2VkIiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTQxNzk4NzAsImV4cCI6MjAwOTc1OTg3MH0.LRQWT2F2o7L-KKGP3Ek-V72B_VAhJbKWzG4cN_8i9Gc';
-const supabase=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-
 const domains=[
   {name:'반응속도',bs:60,mb:30,ct:10},
   {name:'보상처리',bs:20,mb:60,ct:20},
@@ -238,8 +218,7 @@ function show(id){
 }
 
 function load(){
-  const i=images[state.q];
-  document.getElementById('testImage').src=i;
+  document.getElementById('testImage').src=images[state.q];
   document.getElementById('progress').textContent=(state.q+1)+'/20';
   
   const opts=document.getElementById('optionsGroup');
@@ -258,7 +237,7 @@ function load(){
 }
 
 function pick(q,o,b){
-  const sc={' 즉각 끌림':100,'조금 끌림':70,'조금 거부':40,'즉각 거부':0};
+  const sc={'즉각 끌림':100,'조금 끌림':70,'조금 거부':40,'즉각 거부':0};
   state.ans[q]={o,s:sc[o]||0};
   document.querySelectorAll('.opt-btn').forEach(e=>e.classList.remove('selected'));
   b.classList.add('selected');
@@ -273,13 +252,14 @@ function nextQ(){
   if(state.q<19){state.q++;load();}else result();
 }
 
-async function result(){
+function result(){
   const sc=Object.values(state.ans).map(a=>a.s);
   const avg=Math.round(sc.reduce((a,b)=>a+b,0)/sc.length);
   
   let bsSum=0,mbSum=0,ctSum=0;
   const davg=domains.map((d,i)=>{
-    const dsc=Object.values(state.ans).filter((a,j)=>j%10===i).map(a=>a.s);
+    const dsc=[];
+    Object.entries(state.ans).forEach((k,v)=>{if(parseInt(k[0])%10===i)dsc.push(k[1].s);});
     const da=dsc.length?Math.round(dsc.reduce((a,b)=>a+b,0)/dsc.length):0;
     bsSum+=da*(d.bs/100);
     mbSum+=da*(d.mb/100);
@@ -298,18 +278,8 @@ async function result(){
   document.getElementById('mb').textContent=mb;
   document.getElementById('ct').textContent=ct;
   
-  const dh=davg.map(d=>`
-    <div class="domain-item">
-      <div class="domain-head">
-        <div class="domain-name">${d.n}</div>
-        <div class="domain-value">${d.s}점</div>
-      </div>
-      <div class="domain-bar"><div class="domain-fill" style="width:${d.s}%"></div></div>
-    </div>
-  `).join('');
-  document.getElementById('domainSection').innerHTML=`<div class="domain-title">10개 도메인 신경 효율성</div>${dh}`;
-  
-  await supabase.from('bam_results').insert({name:state.user.n,gender:state.user.g,birth_date:state.user.b,brain_age:ba,brainstem_score:bs,midbrain_score:mb,cortex_score:ct,answers:JSON.stringify(state.ans),created_at:new Date().toISOString()});
+  const dh=davg.map(d=>'<div class="domain-item"><div class="domain-head"><div class="domain-name">'+d.n+'</div><div class="domain-value">'+d.s+'점</div></div><div class="domain-bar"><div class="domain-fill" style="width:'+d.s+'%"></div></div></div>').join('');
+  document.getElementById('domainSection').innerHTML='<div class="domain-title">10개 도메인 신경 효율성</div>'+dh;
   
   show('resultScreen');
 }
