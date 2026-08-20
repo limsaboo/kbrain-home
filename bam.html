@@ -462,7 +462,7 @@
             userAge: 0
         };
         
-        // 20개 이미지 정확한 경로 - 모두 GitHub에서 정상 로드되는 파일들만 사용
+        // 20개 이미지 정확한 경로
         const imageList = [
             '1000073550.png',  // 1
             '1000073552.png',  // 2
@@ -476,14 +476,14 @@
             '1000073599.png',  // 10
             '1000073601.png',  // 11
             '1000073607.png',  // 12
-            '1000073611.png',  // 13
-            '1000073613.png',  // 14
-            '1000073615.png',  // 15
-            '우뇌구성력 R1 상.png',  // 16
-            '우뇌상황력맥락이해 R6 상.png',  // 17
-            '우뇌주의력 R3 중.png',  // 18
-            '우뇌집중력 R2 상.png',  // 19
-            '우뇌창의응용력 R5 상.png'  // 20
+            '1.라이프디자인(우주와 뇌 금빛나침반).png',
+            '2.페르소나와 조절력(환상의정의상징).png',
+            '3.가짜마음과 그림자(상황력맥락이해기능).jpeg',
+            '4.잠재력해방(회복력지속력메타인지).jpeg',
+            '5.진짜나(회복력지속력메타인지).jpeg',
+            '5대오라클마스터카드 뒷면.jpeg',
+            '우뇌구성력 R1 상.png',
+            '우뇌상황력맥락이해 R6 상.png'
         ];
         
         const domainColors = {"기억":"#2563EB","속도":"#5FA76F","집중":"#00BCD4","감정":"#E8708A","판단":"#7C5BA8","실행":"#D97348","조절":"#4A7BA7","공간":"#FF69B4"};
@@ -544,8 +544,8 @@
             const imageName = imageList[state.currentQuestion];
             const isValidated = imageName.startsWith('1000073');
             const baseUrl = isValidated 
-                ? '/assets/img/bac-projection-images/'
-                : '/assets/img/bhc-brain-cards/';
+                ? 'https://raw.githubusercontent.com/limsaboo/kbrain-home/main/assets/img/bac-projection-images/'
+                : 'https://raw.githubusercontent.com/limsaboo/kbrain-home/main/assets/img/bhc-brain-cards/';
             const imageUrl = baseUrl + imageName.replace(/ /g, '%20') + '?t=' + Date.now();
             
             const cardImage = document.getElementById('cardImage');
