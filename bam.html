@@ -2,446 +2,186 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>BAM 뇌나이 진단</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BAM</title>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
-html, body { width: 100%; height: 100%; background: #fff; font-family: 'Noto Sans KR', sans-serif; }
+body { font-family: 'Noto Sans KR'; background: white; }
+.screen { display: none; }
+.screen.show { display: block; }
 
-body {
-  background: #fff;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-}
+.intro { min-height: 100vh; padding: 40px 20px; text-align: center; background: white; }
+.intro h1 { font-size: 36px; color: #1a472a; margin: 30px 0; font-weight: 900; }
+.intro p { color: #666; margin: 20px 0; }
+.intro input, .intro select { width: 100%; max-width: 300px; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; }
+.intro button { width: 100%; max-width: 300px; padding: 14px; margin-top: 20px; background: #00BCD4; color: white; border: none; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; }
 
-.wrapper {
-  width: 100%;
-  max-width: 480px;
-  background: #fff;
-}
+.test { min-height: 100vh; display: flex; flex-direction: column; }
+.test-header { background: #1a472a; color: white; padding: 20px; text-align: center; border-bottom: 4px solid #00BCD4; }
+.test-header h2 { font-size: 24px; font-weight: 900; }
+.test-body { flex: 1; padding: 30px 20px; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; }
+.test-image { width: 100%; max-width: 340px; height: 340px; border: 3px solid #00BCD4; border-radius: 12px; margin-bottom: 30px; display: flex; align-items: center; justify-content: center; background: #f5f5f5; }
+.test-image img { width: 100%; height: 100%; object-fit: contain; }
+.test-question { width: 100%; max-width: 340px; text-align: center; margin-bottom: 20px; }
+.test-question p { font-size: 18px; font-weight: 900; color: #1a472a; }
+.test-options { width: 100%; max-width: 340px; display: flex; flex-direction: column; gap: 8px; margin-bottom: 30px; }
+.test-opt { padding: 12px; border: 2px solid #ddd; background: white; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 700; }
+.test-opt.active { border-color: #00BCD4; background: #E0F7FA; }
+.test-nav { width: 100%; max-width: 340px; display: flex; gap: 10px; padding-bottom: 30px; }
+.test-nav button { flex: 1; padding: 12px; border: 1px solid #ddd; background: white; border-radius: 6px; font-weight: bold; cursor: pointer; }
+.test-nav button:disabled { opacity: 0.3; }
 
-/* 시작 화면 */
-.intro-screen {
-  display: none;
-  min-height: 100vh;
-  background: #fff;
-  padding: 40px 20px;
-  text-align: center;
-  justify-content: center;
-  align-items: center;
-}
-
-.intro-screen.active {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-.intro-emoji { font-size: 100px; margin-bottom: 30px; }
-.intro-title { font-size: 32px; font-weight: 900; color: #1a472a; margin-bottom: 10px; }
-.intro-sub { color: #666; font-size: 14px; line-height: 1.6; margin-bottom: 40px; }
-
-.form-group {
-  width: 100%;
-  max-width: 320px;
-  margin-bottom: 15px;
-}
-
-.form-label { display: block; text-align: left; font-size: 12px; font-weight: 700; color: #333; margin-bottom: 6px; }
-.form-input { width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 14px; }
-
-.btn-start {
-  width: 100%;
-  max-width: 320px;
-  padding: 14px;
-  background: linear-gradient(135deg, #00BCD4, #0097A7);
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  font-weight: 900;
-  font-size: 16px;
-  cursor: pointer;
-  margin-top: 20px;
-}
-
-/* 테스트 화면 */
-.test-screen {
-  display: none;
-  min-height: 100vh;
-  background: #fff;
-  flex-direction: column;
-}
-
-.test-screen.active {
-  display: flex;
-}
-
-.header {
-  background: #1a472a;
-  color: #fff;
-  padding: 16px 20px;
-  text-align: center;
-  border-bottom: 4px solid #00BCD4;
-}
-
-.header-title { font-size: 12px; font-weight: 700; }
-.header-progress { font-size: 24px; font-weight: 900; margin-top: 8px; }
-
-.test-content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  padding: 30px 20px;
-  overflow-y: auto;
-}
-
-.image-box {
-  width: 100%;
-  max-width: 340px;
-  aspect-ratio: 1;
-  background: #f5f5f5;
-  border: 3px solid #00BCD4;
-  border-radius: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 30px;
-  overflow: hidden;
-}
-
-.image-box img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
-
-.question-box {
-  width: 100%;
-  max-width: 340px;
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-.question-label { font-size: 13px; font-weight: 700; color: #666; margin-bottom: 4px; }
-.question-text { font-size: 18px; font-weight: 900; color: #1a472a; }
-
-.options-box {
-  width: 100%;
-  max-width: 340px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-bottom: 30px;
-}
-
-.option-btn {
-  width: 100%;
-  padding: 14px;
-  background: #fff;
-  border: 2px solid #ddd;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 700;
-  color: #333;
-  cursor: pointer;
-  text-align: center;
-  transition: all 0.2s;
-}
-
-.option-btn:active { transform: scale(0.98); }
-
-.option-btn.selected {
-  border-color: #00BCD4;
-  background: #E0F7FA;
-  color: #00695C;
-}
-
-.nav-box {
-  width: 100%;
-  max-width: 340px;
-  display: flex;
-  gap: 10px;
-  padding-bottom: 30px;
-}
-
-.nav-btn {
-  flex: 1;
-  padding: 12px;
-  border: 2px solid #ddd;
-  background: #fff;
-  border-radius: 8px;
-  font-weight: 700;
-  cursor: pointer;
-}
-
-.nav-btn:disabled { opacity: 0.3; }
-
-/* 결과 화면 */
-.result-screen {
-  display: none;
-  min-height: 100vh;
-  background: #f5f5f5;
-  padding: 20px;
-  overflow-y: auto;
-}
-
-.result-screen.active {
-  display: block;
-}
-
-.result-header {
-  background: #1a472a;
-  color: #fff;
-  padding: 20px;
-  text-align: center;
-  border-radius: 12px;
-  margin-bottom: 20px;
-}
-
-.result-title { font-size: 24px; font-weight: 900; }
-.result-sub { font-size: 13px; margin-top: 8px; opacity: 0.9; }
-
-.card {
-  background: #fff;
-  padding: 16px;
-  border-radius: 12px;
-  margin-bottom: 12px;
-  border: 1px solid #ddd;
-}
-
-.card-label { font-size: 12px; color: #666; margin-bottom: 4px; }
-.card-value { font-size: 28px; font-weight: 900; color: #1a472a; }
-.card-title { font-size: 14px; font-weight: 900; color: #1a472a; margin-bottom: 12px; }
-
-.brain-item {
-  display: flex;
-  justify-content: space-between;
-  padding: 8px 0;
-  border-bottom: 1px solid #eee;
-}
-
-.brain-item:last-child { border-bottom: none; }
-.brain-name { font-size: 12px; }
-.brain-score { font-size: 14px; font-weight: 900; color: #00695C; }
-
-.domain-item { margin-bottom: 14px; }
-.domain-head { display: flex; justify-content: space-between; margin-bottom: 4px; }
-.domain-name { font-size: 12px; }
-.domain-score { font-size: 12px; font-weight: 900; }
-.domain-bar { width: 100%; height: 6px; background: #e0e0e0; border-radius: 3px; overflow: hidden; }
-.domain-fill { height: 100%; background: linear-gradient(90deg, #00BCD4, #0097A7); }
-
-.btn-restart {
-  width: 100%;
-  padding: 14px;
-  background: linear-gradient(135deg, #00BCD4, #0097A7);
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  font-weight: 900;
-  cursor: pointer;
-  margin-bottom: 40px;
-}
+.result { min-height: 100vh; padding: 20px; background: #f5f5f5; }
+.result-box { background: white; padding: 20px; margin-bottom: 12px; border-radius: 8px; }
+.result-title { font-size: 24px; font-weight: 900; color: #1a472a; margin-bottom: 8px; }
+.result-value { font-size: 32px; font-weight: 900; color: #1a472a; }
+.result-label { font-size: 12px; color: #666; }
+.result-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #eee; }
+.result-bar { width: 100%; height: 6px; background: #e0e0e0; margin-top: 4px; border-radius: 3px; }
+.result-fill { height: 100%; background: #00BCD4; }
+.result-btn { width: 100%; padding: 14px; background: #00BCD4; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 20px; margin-bottom: 30px; }
 </style>
 </head>
 <body>
 
-<div class="wrapper">
-
-<!-- 시작 화면 -->
-<div class="intro-screen active">
-  <div class="intro-emoji">🧠</div>
-  <h1 class="intro-title">BAM 뇌나이 진단</h1>
-  <p class="intro-sub">당신의 신경계 발달 수준을<br>20개 이미지로 측정합니다</p>
-  
-  <div class="form-group">
-    <label class="form-label">이름</label>
-    <input type="text" class="form-input" id="name" placeholder="홍길동">
-  </div>
-  
-  <div class="form-group">
-    <label class="form-label">성별</label>
-    <select class="form-input" id="gender">
-      <option value="">선택</option>
-      <option value="M">남</option>
-      <option value="F">여</option>
-    </select>
-  </div>
-  
-  <div class="form-group">
-    <label class="form-label">생년월일</label>
-    <input type="date" class="form-input" id="birth">
-  </div>
-  
-  <button class="btn-start" onclick="start()">진단 시작</button>
+<div id="intro" class="screen show">
+  <h1>🧠 BAM</h1>
+  <p>뇌나이 진단</p>
+  <input type="text" id="name" placeholder="이름">
+  <select id="gender">
+    <option value="">성별</option>
+    <option value="M">남</option>
+    <option value="F">여</option>
+  </select>
+  <input type="date" id="birth">
+  <button onclick="start()">시작</button>
 </div>
 
-<!-- 테스트 화면 -->
-<div class="test-screen">
-  <div class="header">
-    <div class="header-title">📋 촉정 진행 중</div>
-    <div class="header-progress" id="progress">1/20</div>
+<div id="test" class="screen">
+  <div class="test-header">
+    <h2 id="progress">1/20</h2>
   </div>
-  
-  <div class="test-content">
-    <div class="image-box">
-      <img id="testImg" src="" alt="">
+  <div class="test-body">
+    <div class="test-image">
+      <img id="img" src="">
     </div>
-    
-    <div class="question-box">
-      <div class="question-label">【집중】</div>
-      <div class="question-text">?</div>
+    <div class="test-question">
+      <p>?</p>
     </div>
-    
-    <div class="options-box" id="options"></div>
-    
-    <div class="nav-box">
-      <button class="nav-btn" id="prevBtn" onclick="prev()" disabled>← 이전</button>
-      <button class="nav-btn" id="nextBtn" onclick="next()">다음 →</button>
+    <div class="test-options" id="opts"></div>
+    <div class="test-nav">
+      <button id="prev" onclick="prev()" disabled>이전</button>
+      <button id="next" onclick="next()">다음</button>
     </div>
   </div>
 </div>
 
-<!-- 결과 화면 -->
-<div class="result-screen">
-  <div class="result-header">
-    <div class="result-title">진단 완료</div>
-    <div class="result-sub">당신의 신경계 발달이 분석되었습니다</div>
+<div id="result" class="screen">
+  <div class="result-box" style="background: #1a472a; color: white; text-align: center;">
+    <p>진단 완료</p>
   </div>
-  
-  <div class="card">
-    <div class="card-label">뇌나이</div>
-    <div class="card-value" id="brainAge">0</div>
+  <div class="result-box">
+    <div class="result-label">뇌나이</div>
+    <div class="result-value" id="brain">0</div>
   </div>
-  
-  <div class="card">
-    <div class="card-title">뇌 영역별 발달</div>
-    <div class="brain-item">
-      <div class="brain-name">🔴 하위뇌 (반응속도)</div>
-      <div class="brain-score" id="bs">0</div>
+  <div class="result-box">
+    <p style="font-weight: 900; margin-bottom: 12px;">뇌 영역</p>
+    <div class="result-item">
+      <span>하위뇌</span>
+      <span id="bs">0</span>
     </div>
-    <div class="brain-item">
-      <div class="brain-name">🟠 중뇌 (조절력)</div>
-      <div class="brain-score" id="mb">0</div>
+    <div class="result-item">
+      <span>중뇌</span>
+      <span id="mb">0</span>
     </div>
-    <div class="brain-item">
-      <div class="brain-name">🟡 상위뇌 (판단력)</div>
-      <div class="brain-score" id="ct">0</div>
+    <div class="result-item">
+      <span>상위뇌</span>
+      <span id="ct">0</span>
     </div>
   </div>
-  
-  <div class="card">
-    <div class="card-title">도메인별 신경 효율성</div>
-    <div id="domains"></div>
+  <div class="result-box">
+    <p style="font-weight: 900; margin-bottom: 12px;">도메인</p>
+    <div id="doms"></div>
   </div>
-  
-  <button class="btn-restart" onclick="location.reload()">다시 진단하기</button>
-</div>
-
+  <button class="result-btn" onclick="location.reload()">다시</button>
 </div>
 
 <script>
-const domains = [
-  {n:'반응속도', b:60, m:30, c:10},
-  {n:'보상처리', b:20, m:60, c:20},
-  {n:'동기부여', b:20, m:70, c:10},
-  {n:'감정반응', b:50, m:35, c:15},
-  {n:'판단력', b:5, m:15, c:80},
-  {n:'실행력', b:10, m:70, c:20},
-  {n:'조절력', b:10, m:80, c:10},
-  {n:'공간감각', b:15, m:15, c:70},
-  {n:'창의성', b:5, m:15, c:80},
-  {n:'통찰력', b:5, m:20, c:75}
+const domains=[
+  {n:'반응속도',b:60,m:30,c:10},
+  {n:'보상처리',b:20,m:60,c:20},
+  {n:'동기부여',b:20,m:70,c:10},
+  {n:'감정반응',b:50,m:35,c:15},
+  {n:'판단력',b:5,m:15,c:80},
+  {n:'실행력',b:10,m:70,c:20},
+  {n:'조절력',b:10,m:80,c:10},
+  {n:'공간감각',b:15,m:15,c:70},
+  {n:'창의성',b:5,m:15,c:80},
+  {n:'통찰력',b:5,m:20,c:75}
 ];
 
-const imgs = ['assets/img/bam-projection-1.jpg','assets/img/bam-projection-2.png','assets/img/bam-projection-3.png','assets/img/bam-projection-4.jpg','assets/img/bam-projection-5.png','assets/img/bam-projection-6.png','assets/img/bam-projection-7.png','assets/img/bam-projection-8.png','assets/img/bam-projection-9.png','assets/img/bam-projection-10.png','assets/img/bam-projection-11.png','assets/img/bam-projection-12.png','assets/img/bam-projection-13.jpg','assets/img/bam-projection-14.jpg','assets/img/bam-projection-15.jpg','assets/img/bam-projection-16.jpg','assets/img/bam-projection-17.png','assets/img/bam-projection-18.png','assets/img/bam-projection-19.jpg','assets/img/bam-projection-20.jpg'];
+const imgs=['assets/img/bam-projection-1.jpg','assets/img/bam-projection-2.png','assets/img/bam-projection-3.png','assets/img/bam-projection-4.jpg','assets/img/bam-projection-5.png','assets/img/bam-projection-6.png','assets/img/bam-projection-7.png','assets/img/bam-projection-8.png','assets/img/bam-projection-9.png','assets/img/bam-projection-10.png','assets/img/bam-projection-11.png','assets/img/bam-projection-12.png','assets/img/bam-projection-13.jpg','assets/img/bam-projection-14.jpg','assets/img/bam-projection-15.jpg','assets/img/bam-projection-16.jpg','assets/img/bam-projection-17.png','assets/img/bam-projection-18.png','assets/img/bam-projection-19.jpg','assets/img/bam-projection-20.jpg'];
 
-let q = 0, ans = {};
+let q=0, a={};
 
-function start() {
-  if (!document.getElementById('name').value || !document.getElementById('gender').value || !document.getElementById('birth').value) {
-    alert('입력하세요');
-    return;
-  }
-  q = 0;
-  ans = {};
-  document.querySelector('.intro-screen').classList.remove('active');
-  document.querySelector('.test-screen').classList.add('active');
-  load();
+function show(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('show'));
+  document.getElementById(id).classList.add('show');
 }
 
-function load() {
-  document.getElementById('testImg').src = imgs[q];
-  document.getElementById('progress').textContent = (q+1) + '/20';
-  
-  const opts = document.getElementById('options');
-  opts.innerHTML = '';
-  
-  ['금정적', '보통', '부정적', '강부정'].forEach(o => {
-    const b = document.createElement('button');
-    b.className = 'option-btn';
-    if (ans[q]?.o === o) b.classList.add('selected');
-    b.textContent = o;
-    b.onclick = () => pick(q, o, b);
-    opts.appendChild(b);
+function start(){
+  if(!document.getElementById('name').value) return alert('입력');
+  q=0; a={}; show('test'); load();
+}
+
+function load(){
+  document.getElementById('progress').textContent=(q+1)+'/20';
+  document.getElementById('img').src=imgs[q];
+  const o=document.getElementById('opts');
+  o.innerHTML='';
+  ['끌림','조금','거부','강거부'].forEach(t=>{
+    const b=document.createElement('button');
+    b.className='test-opt';
+    if(a[q]?.t===t)b.classList.add('active');
+    b.textContent=t;
+    b.onclick=()=>{a[q]={t,s:t==='끌림'?100:t==='조금'?70:t==='거부'?40:0}; document.querySelectorAll('.test-opt').forEach(x=>x.classList.remove('active')); b.classList.add('active');};
+    o.appendChild(b);
+  });
+  document.getElementById('prev').disabled=q===0;
+  document.getElementById('next').textContent=q===19?'완료':'다음';
+}
+
+function prev(){
+  if(q>0){q--; load();}
+}
+
+function next(){
+  if(!a[q]) return alert('선택');
+  if(q<19){q++; load();}else calc();
+}
+
+function calc(){
+  let bS=0,mS=0,cS=0;
+  const ds=domains.map((d,i)=>{
+    let ss=[];
+    for(let k in a) if(parseInt(k)%10===i) ss.push(a[k].s);
+    const av=ss.length?Math.round(ss.reduce((x,y)=>x+y)/ss.length):0;
+    bS+=av*d.b/100; mS+=av*d.m/100; cS+=av*d.c/100;
+    return{n:d.n,s:av};
   });
   
-  document.getElementById('prevBtn').disabled = q === 0;
-  document.getElementById('nextBtn').textContent = q === 19 ? '완료' : '다음 →';
-}
-
-function pick(idx, o, e) {
-  const s = {'금정적': 100, '보통': 50, '부정적': 30, '강부정': 0};
-  ans[idx] = {o, s: s[o]};
-  document.querySelectorAll('.option-btn').forEach(x => x.classList.remove('selected'));
-  e.classList.add('selected');
-}
-
-function prev() {
-  if (q > 0) { q--; load(); }
-}
-
-function next() {
-  if (!ans[q]) { alert('선택'); return; }
-  if (q < 19) { q++; load(); } else calc();
-}
-
-function calc() {
-  let bSum = 0, mSum = 0, cSum = 0;
-  const da = domains.map((d, i) => {
-    let sc = [];
-    for (let k in ans) {
-      if (parseInt(k) % 10 === i) sc.push(ans[k].s);
-    }
-    const avg = sc.length ? Math.round(sc.reduce((a,b) => a+b) / sc.length) : 0;
-    bSum += avg * d.b / 100;
-    mSum += avg * d.m / 100;
-    cSum += avg * d.c / 100;
-    return {n: d.n, s: avg};
-  });
+  const bs=Math.round(bS/10), mb=Math.round(mS/10), ct=Math.round(cS/10), ba=Math.round(bs*0.6+mb*0.3+ct*0.1);
   
-  const bs = Math.round(bSum / 10);
-  const mb = Math.round(mSum / 10);
-  const ct = Math.round(cSum / 10);
-  const ba = Math.round(bs * 0.6 + mb * 0.3 + ct * 0.1);
+  document.getElementById('brain').textContent=ba;
+  document.getElementById('bs').textContent=bs;
+  document.getElementById('mb').textContent=mb;
+  document.getElementById('ct').textContent=ct;
   
-  document.getElementById('brainAge').textContent = ba;
-  document.getElementById('bs').textContent = bs;
-  document.getElementById('mb').textContent = mb;
-  document.getElementById('ct').textContent = ct;
+  let dh='';
+  ds.forEach(d=>{dh+='<div class="result-item"><span>'+d.n+'</span><span>'+d.s+'</span></div><div class="result-bar"><div class="result-fill" style="width:'+d.s+'%"></div></div>';});
+  document.getElementById('doms').innerHTML=dh;
   
-  let dh = '';
-  da.forEach(d => {
-    dh += '<div class="domain-item"><div class="domain-head"><div class="domain-name">' + d.n + '</div><div class="domain-score">' + d.s + '점</div></div><div class="domain-bar"><div class="domain-fill" style="width:' + d.s + '%"></div></div></div>';
-  });
-  document.getElementById('domains').innerHTML = dh;
-  
-  document.querySelector('.test-screen').classList.remove('active');
-  document.querySelector('.result-screen').classList.add('active');
+  show('result');
 }
 </script>
 
