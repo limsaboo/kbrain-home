@@ -256,8 +256,13 @@ body { background: linear-gradient(180deg, #1a472a 0%, #2d5a3d 100%); font-famil
 const SUPABASE_URL = "https://grxqfaeznqqohnlltged.supabase.co";
 const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdyeHFmYWV6bnFxb2hubGx0Z2VkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDY4MjQ3MzUsImV4cCI6MjAyMjQwMDczNX0.7sLJ-8VKTvGu9d7rC0q5HN4bQ0K1H5ZmQsQ3B5X0Y5M";
 
-const { createClient } = window.supabase;
-const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+let supabase = null;
+try {
+  const { createClient } = window.supabase;
+  supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+} catch (e) {
+  console.warn("Supabase 초기화 실패 (오프라인 모드)", e);
+}
 
 // ===== 문제 데이터 =====
 const BAC_DATA = {
@@ -537,6 +542,16 @@ async function finishTest() {
 
 async function saveToBDatabase(brainAge, scores) {
   try {
+    // Supabase 연결 확인
+    if (!supabase) {
+      document.getElementById("saveStatus").className = "save-status";
+      document.getElementById("saveStatus").innerHTML = `
+        <div class="status-text">✅ 체크가 완료되었습니다!<br>
+        <small>(오프라인 모드: 데이터 저장은 인터넷 연결 시 가능합니다)</small></div>
+      `;
+      return;
+    }
+
     // 1. 사용자 정보 저장
     const birthDateStr = `${userData.year}-${String(userData.month).padStart(2, '0')}-${String(userData.day).padStart(2, '0')}`;
     const { data: user_data, error: userError } = await supabase.from("bac_users").insert([{
