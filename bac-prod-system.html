@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>BAC 뇌나이 진단 | 한국뇌심리연구소</title>
+<title>BAC 뇌건강 체크 | 한국뇌심리연구소</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; -webkit-user-select: none; user-select: none; -webkit-tap-highlight-color: transparent; }
@@ -110,23 +110,23 @@ body { background: linear-gradient(180deg, #1a472a 0%, #2d5a3d 100%); font-famil
   <div id="startScreen" class="screen active">
     <div class="logo-box">
       <span class="logo-emoji">🧠</span>
-      <div class="logo-title">뇌 나이 진단</div>
+      <div class="logo-title">뇌건강 체크</div>
       <div class="logo-subtitle">Brain Age Check (BAC) 시스템</div>
     </div>
     <div class="info-box">
-      <p><strong>5가지 인지 영역</strong> 측정</p>
+      <p><strong>5가지 인지 영역</strong> 점검</p>
       <p>기억력 · 집중력 · 감정력 · 판단력 · 실행력</p>
       <p><strong>⏱️ 약 10분</strong> 소요 (50문항)</p>
-      <p>당신의 현재 뇌 나이를 정확히 진단하세요! 💡</p>
+      <p>당신의 뇌 건강 상태를 체계적으로 점검하세요! 💡</p>
     </div>
-    <button class="btn btn-primary" onclick="goToUserInfo()">🚀 진단 시작</button>
+    <button class="btn btn-primary" onclick="goToUserInfo()">🚀 체크 시작</button>
   </div>
 
   <!-- 사용자 정보 입력 -->
   <div id="userInfoScreen" class="screen">
     <div class="info-title">📋 기본 정보 입력</div>
     <div class="info-box">
-      <p>진단 결과를 안전하게 저장하기 위해 기본 정보를 입력해주세요.</p>
+      <p>체크 결과를 안전하게 저장하기 위해 기본 정보를 입력해주세요.</p>
     </div>
 
     <div class="form-group">
@@ -179,7 +179,7 @@ body { background: linear-gradient(180deg, #1a472a 0%, #2d5a3d 100%); font-famil
       <input type="text" id="userInstitution" class="form-input" placeholder="예: 종로노인복지관" maxlength="50">
     </div>
 
-    <button class="btn btn-primary" onclick="startTest()">✅ 진단 시작</button>
+    <button class="btn btn-primary" onclick="startTest()">✅ 체크 시작</button>
     <button class="btn btn-secondary" onclick="goToStart()">← 뒤로</button>
   </div>
 
@@ -220,10 +220,10 @@ body { background: linear-gradient(180deg, #1a472a 0%, #2d5a3d 100%); font-famil
 
   <!-- 결과 화면 -->
   <div id="resultScreen" class="screen">
-    <div class="result-title">🎉 진단 완료!</div>
+    <div class="result-title">🎉 체크 완료!</div>
     
     <div class="brain-age-card">
-      <div class="brain-age-label">당신의 뇌 나이</div>
+      <div class="brain-age-label">당신의 뇌 건강도</div>
       <div class="brain-age-number" id="brainAge">--</div>
       <div class="brain-age-desc">5개 영역 상세 분석 결과 ↓</div>
     </div>
@@ -240,13 +240,13 @@ body { background: linear-gradient(180deg, #1a472a 0%, #2d5a3d 100%); font-famil
     </div>
 
     <div class="analysis-section">
-      <div class="section-title">💡 진단 결과 해석</div>
+      <div class="section-title">💡 체크 결과 해석</div>
       <div id="interpretation" style="line-height: 1.8; font-size: 13px; color: #555;"></div>
     </div>
 
     <div style="display: flex; flex-direction: column; gap: 10px;">
       <button class="btn btn-primary" onclick="goToStart()">🏠 홈페이지로</button>
-      <button class="btn btn-secondary" onclick="restartTest()">🔄 다시 진단</button>
+      <button class="btn btn-secondary" onclick="restartTest()">🔄 다시 체크</button>
     </div>
   </div>
 </div>
@@ -580,7 +580,7 @@ async function saveToBDatabase(brainAge, scores) {
     document.getElementById("saveStatus").className = "save-status";
     document.getElementById("saveStatus").innerHTML = `
       <div class="status-text">✅ 검사 결과가 안전하게 저장되었습니다!<br>
-      <small>진단 ID: ${testId.substring(0, 8)}...</small></div>
+      <small>체크 ID: ${testId.substring(0, 8)}...</small></div>
     `;
   } catch (error) {
     console.error(error);
