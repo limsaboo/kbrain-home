@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta http-equiv="cache-control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="pragma" content="no-cache">
+<meta http-equiv="expires" content="0">
+<title>BAM 뇌나이 진단</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 100%; height: 100%; font-family: 'Noto Sans KR'; background: white; }
+
+.start { display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; text-align: center; }
+.start.hide { display: none; }
+.start h1 { font-size: 60px; margin: 30px 0; }
+.start h2 { font-size: 32px; color: #1a472a; font-weight: 900; margin-bottom: 30px; }
+.start input, .start select { width: 100%; max-width: 300px; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; }
+.start button { width: 100%; max-width: 300px; padding: 14px; margin-top: 20px; background: #00BCD4; color: white; border: none; border-radius: 6px; font-weight: bold; font-size: 16px; cursor: pointer; }
+
+.test { display: none; flex-direction: column; width: 100%; min-height: 100vh; }
+.test.show { display: flex; }
+.test-head { background: #1a472a; color: white; padding: 20px; text-align: center; border-bottom: 4px solid #00BCD4; }
+.test-head h3 { font-size: 28px; font-weight: 900; }
+.test-body { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding: 20px; overflow-y: auto; }
+
+.img-box { width: 100%; max-width: 320px; height: 320px; border: 3px solid #00BCD4; border-radius: 12px; margin-bottom: 20px; display: flex; align-items: center; justify-content: center; background: #f5f5f5; }
+.img-box img { width: 100%; height: 100%; object-fit: contain; }
+
+.q-box { width: 100%; text-align: center; margin-bottom: 15px; font-size: 18px; font-weight: 900; color: #1a472a; }
+
+.opt-list { width: 100%; max-width: 320px; display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+.opt-item { padding: 14px; border: 2px solid #999; background: white; border-radius: 6px; font-weight: 700; font-size: 14px; cursor: pointer; text-align: center; }
+.opt-item.sel { border-color: #00BCD4; background: #00BCD4; color: white; }
+
+.btn-group { width: 100%; max-width: 320px; display: flex; gap: 10px; padding-bottom: 20px; }
+.btn-group button { flex: 1; padding: 12px; border: 1px solid #999; background: white; border-radius: 6px; font-weight: bold; cursor: pointer; }
+.btn-group button:disabled { opacity: 0.4; }
+
+.res { display: none; flex-direction: column; width: 100%; min-height: 100vh; padding: 20px; background: #f5f5f5; }
+.res.show { display: flex; }
+.res-head { background: #1a472a; color: white; padding: 20px; text-align: center; border-radius: 8px; margin-bottom: 20px; font-size: 24px; font-weight: 900; }
+
+.res-card { background: white; padding: 16px; border-radius: 8px; margin-bottom: 12px; }
+.res-label { font-size: 12px; color: #666; margin-bottom: 4px; }
+.res-value { font-size: 32px; font-weight: 900; color: #1a472a; }
+.res-title { font-weight: 900; margin-bottom: 10px; }
+.res-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #eee; }
+.res-row:last-child { border: none; }
+
+.res-btn { width: 100%; padding: 14px; background: #00BCD4; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 20px; margin-bottom: 30px; }
+</style>
+</head>
+<body>
+
+<div class="start">
+  <h1>🧠</h1>
+  <h2>BAM 뇌나이 진단</h2>
+  <input type="text" id="nm" placeholder="이름">
+  <select id="gd">
+    <option value="">성별</option>
+    <option value="M">남</option>
+    <option value="F">여</option>
+  </select>
+  <input type="date" id="bd">
+  <button onclick="start()">시작</button>
+</div>
+
+<div class="test">
+  <div class="test-head">
+    <h3 id="pg">1/20</h3>
+  </div>
+  <div class="test-body">
+    <div class="img-box">
+      <img id="im" src="" alt="">
+    </div>
+    <div class="q-box">?</div>
+    <div class="opt-list" id="ol"></div>
+    <div class="btn-group">
+      <button id="pb" onclick="prev()" disabled>이전</button>
+      <button id="nb" onclick="next()">다음</button>
+    </div>
+  </div>
+</div>
+
+<div class="res">
+  <div class="res-head">완료</div>
+  <div class="res-card">
+    <div class="res-label">뇌나이</div>
+    <div class="res-value" id="ba">0</div>
+  </div>
+  <div class="res-card">
+    <div class="res-title">뇌 영역</div>
+    <div class="res-row"><span>하위뇌</span><span id="bs">0</span></div>
+    <div class="res-row"><span>중뇌</span><span id="mb">0</span></div>
+    <div class="res-row"><span>상위뇌</span><span id="ct">0</span></div>
+  </div>
+  <div class="res-card">
+    <div class="res-title">도메인</div>
+    <div id="dm"></div>
+  </div>
+  <button class="res-btn" onclick="location.reload()">다시</button>
+</div>
+
+<script>
+const d=[{t:'반응속도',b:60,m:30,c:10},{t:'보상처리',b:20,m:60,c:20},{t:'동기부여',b:20,m:70,c:10},{t:'감정반응',b:50,m:35,c:15},{t:'판단력',b:5,m:15,c:80},{t:'실행력',b:10,m:70,c:20},{t:'조절력',b:10,m:80,c:10},{t:'공간감각',b:15,m:15,c:70},{t:'창의성',b:5,m:15,c:80},{t:'통찰력',b:5,m:20,c:75}];
+const i=['assets/img/bam-projection-1.jpg','assets/img/bam-projection-2.png','assets/img/bam-projection-3.png','assets/img/bam-projection-4.jpg','assets/img/bam-projection-5.png','assets/img/bam-projection-6.png','assets/img/bam-projection-7.png','assets/img/bam-projection-8.png','assets/img/bam-projection-9.png','assets/img/bam-projection-10.png','assets/img/bam-projection-11.png','assets/img/bam-projection-12.png','assets/img/bam-projection-13.jpg','assets/img/bam-projection-14.jpg','assets/img/bam-projection-15.jpg','assets/img/bam-projection-16.jpg','assets/img/bam-projection-17.png','assets/img/bam-projection-18.png','assets/img/bam-projection-19.jpg','assets/img/bam-projection-20.jpg'];
+let q=0,a={};
+function start(){if(!document.getElementById('nm').value)return;document.querySelector('.start').classList.add('hide');document.querySelector('.test').classList.add('show');load();}
+function load(){document.getElementById('pg').textContent=(q+1)+'/20';document.getElementById('im').src=i[q];const ol=document.getElementById('ol');ol.innerHTML='';['금정적','보통','거부','무관심'].forEach(e=>{const b=document.createElement('div');b.className='opt-item';if(a[q]?.v===e)b.classList.add('sel');b.textContent=e;b.onclick=()=>{a[q]={v:e,s:e==='금정적'?100:e==='보통'?50:e==='거부'?25:0};document.querySelectorAll('.opt-item').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');};ol.appendChild(b);});document.getElementById('pb').disabled=q===0;document.getElementById('nb').textContent=q===19?'완료':'다음';}
+function prev(){if(q>0){q--;load();}}
+function next(){if(!a[q])return;if(q<19){q++;load();}else{let bS=0,mS=0,cS=0;const ds=d.map((d,i)=>{let s=[];for(let k in a)if(parseInt(k)%10===i)s.push(a[k].s);const av=s.length?Math.round(s.reduce((x,y)=>x+y)/s.length):0;bS+=av*d.b/100;mS+=av*d.m/100;cS+=av*d.c/100;return{t:d.t,v:av};});const bs=Math.round(bS/10),mb=Math.round(mS/10),ct=Math.round(cS/10),ba=Math.round(bs*0.6+mb*0.3+ct*0.1);document.getElementById('ba').textContent=ba;document.getElementById('bs').textContent=bs;document.getElementById('mb').textContent=mb;document.getElementById('ct').textContent=ct;let dh='';ds.forEach(d=>{dh+='<div class="res-row"><span>'+d.t+'</span><span>'+d.v+'</span></div>';});document.getElementById('dm').innerHTML=dh;document.querySelector('.test').classList.remove('show');document.querySelector('.res').classList.add('show');}}
+</script>
+
+</body>
+</html>
