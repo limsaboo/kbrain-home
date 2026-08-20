@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="cache-control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="expires" content="0">
+    <title>뇌나이측정</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { width: 100%; height: 100%; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #fff; }
+        
+        .app { width: 100%; min-height: 100vh; display: flex; flex-direction: column; }
+        .page { display: none; width: 100%; min-height: 100vh; flex-direction: column; }
+        .page.active { display: flex; }
+        
+        /* ===== 랜딩 ===== */
+        .landing-page {
+            background: linear-gradient(135deg, #00BCD4 0%, #0097a7 100%);
+            color: white;
+            padding: 20px;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .landing-content {
+            text-align: center;
+            gap: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+            width: 100%;
+        }
+        
+        .brain-icon { font-size: 80px; animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
+        
+        .landing-title { font-size: 36px; font-weight: 900; }
+        .landing-subtitle { font-size: 14px; font-weight: 600; }
+        
+        .landing-info {
+            background: rgba(255,255,255,0.15);
+            border-radius: 16px;
+            padding: 16px;
+            gap: 12px;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            max-width: 320px;
+        }
+        
+        .info-item { font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+        .landing-buttons { display: flex; flex-direction: column; gap: 12px; width: 100%; max-width: 320px; }
+        .landing-btn {
+            background: white;
+            color: #00BCD4;
+            border: none;
+            padding: 16px 32px;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 900;
+            cursor: pointer;
+            width: 100%;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+        .landing-btn.secondary { background: rgba(255,255,255,0.3); color: white; }
+        
+        /* ===== 정보 페이지 ===== */
+        .info-page { background: #f5f5f5; }
+        .page-header {
+            background: linear-gradient(135deg, #1a472a 0%, #2d5a3d 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 4px solid #00BCD4;
+        }
+        .page-header h1 { font-size: 24px; font-weight: 900; }
+        
+        .page-content {
+            flex: 1;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            overflow-y: auto;
+        }
+        
+        .info-section {
+            background: white;
+            border-radius: 14px;
+            padding: 18px;
+            border-left: 4px solid #00BCD4;
+        }
+        .info-section h2 { color: #00BCD4; font-size: 16px; font-weight: 900; margin-bottom: 12px; }
+        .info-section p { color: #333; font-size: 13px; line-height: 1.7; font-weight: 600; }
+        
+        .info-list { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
+        .info-list-item {
+            background: #f0f9ff;
+            padding: 10px 12px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #1a472a;
+            border-left: 3px solid #00BCD4;
+        }
+        
+        .privacy-notice {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            color: #856404;
+            font-weight: 600;
+            line-height: 1.6;
+        }
+        
+        .page-footer { padding: 15px; gap: 10px; display: flex; flex-direction: column; background: white; border-top: 2px solid #e0e0e0; }
+        .btn-group { display: flex; flex-direction: column; gap: 10px; }
+        .btn {
+            border: none;
+            padding: 14px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 900;
+            cursor: pointer;
+            -webkit-appearance: none;
+        }
+        .btn-back { background: #e0e0e0; color: #333; }
+        .btn-primary { background: linear-gradient(135deg, #00BCD4 0%, #0097a7 100%); color: white; }
+        
+        /* ===== 입력 페이지 ===== */
+        .input-page { background: white; }
+        .input-form {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f7fa 100%);
+            border: 2px solid #00BCD4;
+            border-radius: 12px;
+            padding: 18px;
+            gap: 14px;
+            display: flex;
+            flex-direction: column;
+            margin: 20px;
+        }
+        
+        .form-group { display: flex; flex-direction: column; gap: 6px; }
+        .form-label { font-size: 13px; font-weight: 800; color: #1a472a; }
+        .form-input {
+            width: 100%;
+            padding: 12px 14px;
+            font-size: 16px;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            font-weight: 600;
+            -webkit-appearance: none;
+        }
+        .form-input:focus { outline: none; border-color: #00BCD4; background: #f0f9ff; }
+        
+        .gender-options, .region-options { display: flex; gap: 10px; flex-wrap: wrap; }
+        .gender-btn, .region-btn {
+            padding: 11px 12px;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            background: white;
+            font-weight: 700;
+            font-size: 13px;
+            color: #333;
+            cursor: pointer;
+            -webkit-appearance: none;
+        }
+        .gender-btn { flex: 1; min-width: 90px; }
+        .gender-btn.selected, .region-btn.selected { border-color: #00BCD4; background: #00BCD4; color: white; }
+        .region-options { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .region-btn { padding: 9px 10px; font-size: 12px; text-align: center; }
+        .age-display { text-align: center; font-size: 14px; font-weight: 700; color: #00BCD4; padding: 10px; background: #f0f9ff; border-radius: 8px; }
+        
+        /* ===== 테스트 ===== */
+        .test-page { background: white; }
+        .test-header {
+            background: linear-gradient(135deg, #1a472a 0%, #2d5a3d 100%);
+            color: white;
+            padding: 10px 15px;
+            border-bottom: 3px solid #00BCD4;
+        }
+        
+        .progress-bar { width: 100%; height: 6px; background: #e0e0e0; overflow: hidden; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, #00BCD4 0%, #0097a7 100%); transition: width 0.3s; }
+        .question-counter { text-align: center; font-size: 11px; color: #666; font-weight: 700; padding: 6px 0; }
+        
+        .test-content {
+            flex: 1;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            padding: 10px;
+            gap: 6px;
+        }
+        
+        .card-container {
+            background: linear-gradient(135deg, #f5f5f5 0%, #eeeeee 100%);
+            border: 2px solid #00BCD4;
+            border-radius: 12px;
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex: 0 0 auto;
+            max-height: 280px;
+            min-height: 200px;
+        }
+        
+        .card-image { 
+            max-width: 95%;
+            max-height: 95%;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            border-radius: 10px;
+        }
+        .image-loading { color: #e53935; font-size: 13px; font-weight: 700; }
+        .question-text { font-size: 13px; font-weight: 800; color: #1a472a; text-align: center; line-height: 1.4; }
+        
+        .options { display: flex; flex-direction: column; gap: 6px; flex: 1; overflow-y: auto; }
+        .option {
+            padding: 11px 14px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 13px;
+            color: #333;
+            transition: all 0.2s;
+            -webkit-appearance: none;
+        }
+        .option.selected { border-color: #00BCD4; background: #00BCD4; color: white; }
+        
+        .button-group { display: flex; gap: 8px; }
+        .button-group .btn { flex: 1; padding: 12px; font-size: 13px; }
+        
+        /* ===== 결과 ===== */
+        .result-page { background: white; }
+        .result-box {
+            background: linear-gradient(135deg, #e0f7fa 0%, #b2ebf2 100%);
+            border: 2px solid #00BCD4;
+            border-radius: 12px;
+            padding: 14px;
+            text-align: center;
+            margin: 12px;
+        }
+        .brain-age-number { font-size: 48px; font-weight: 900; color: #1a472a; }
+        .status-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: 900;
+            font-size: 11px;
+            margin-top: 8px;
+        }
+        .status-good { background: #c8e6c9; color: #2e7d32; }
+        .status-warning { background: #fff9c4; color: #f57f17; }
+        .status-alert { background: #ffcdd2; color: #c62828; }
+        
+        .domain-chart { padding: 12px; display: flex; flex-direction: column; gap: 6px; }
+        .domain-row { display: flex; align-items: center; gap: 8px; font-size: 11px; }
+        .domain-label { min-width: 40px; font-weight: 900; color: #1a472a; }
+        .domain-bar-container { flex: 1; height: 24px; background: #f0f0f0; border-radius: 4px; overflow: hidden; border: 1px solid #e0e0e0; }
+        .domain-bar { height: 100%; display: flex; align-items: center; justify-content: flex-end; padding-right: 6px; color: white; font-weight: 900; font-size: 10px; }
+        .domain-score { min-width: 30px; text-align: right; font-weight: 900; color: #1a472a; }
+        
+        .result-info { padding: 12px; background: #f0f9ff; border-radius: 10px; border-left: 3px solid #00BCD4; margin: 12px; font-size: 13px; font-weight: 600; color: #1a472a; line-height: 1.6; }
+        .result-marketing {
+            padding: 14px;
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            border-left: 4px solid #2e7d32;
+            border-radius: 10px;
+            margin: 12px;
+            font-size: 12px;
+            font-weight: 700;
+            color: #1b5e20;
+            line-height: 1.7;
+        }
+        .result-bhc {
+            padding: 14px;
+            background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+            border-left: 4px solid #e65100;
+            border-radius: 10px;
+            margin: 12px;
+            font-size: 12px;
+            font-weight: 700;
+            color: #e65100;
+            line-height: 1.7;
+        }
+        .result-benefit {
+            padding: 14px;
+            background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%);
+            border-left: 4px solid #6a1b9a;
+            border-radius: 10px;
+            margin: 12px;
+            font-size: 12px;
+            font-weight: 700;
+            color: #6a1b9a;
+            line-height: 1.7;
+        }
+        .age-comparison {
+            padding: 12px;
+            background: #f5f5f5;
+            border-radius: 8px;
+            margin: 8px 12px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <!-- 랜딩 -->
+        <div id="landing" class="page active landing-page">
+            <div class="landing-content">
+                <div class="brain-icon">🧠</div>
+                <div class="landing-title">뇌 나이 측정</div>
+                <div class="landing-subtitle">Brain Age Measurement (BAM)</div>
+                <div class="landing-info">
+                    <div class="info-item">⚡ 8가지 인지 영역</div>
+                    <div class="info-item">⏱️ 약 5분 (20문항)</div>
+                    <div class="info-item">🎯 당신의 뇌나이는?</div>
+                </div>
+                <div class="landing-buttons">
+                    <button class="landing-btn" onclick="showPageFn('info')">📖 검사 안내</button>
+                    <button class="landing-btn secondary" onclick="showPageFn('input')">🚀 측정 시작</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 정보 -->
+        <div id="info" class="page info-page">
+            <div class="page-header">
+                <h1>뇌 나이 측정이란?</h1>
+            </div>
+            <div class="page-content">
+                <div class="info-section">
+                    <h2>📌 검사 개요</h2>
+                    <p>뇌 나이 측정(BAM)은 현재 당신의 뇌 상태를 과학적으로 측정하는 종합 인지능력 검사입니다.</p>
+                </div>
+                <div class="info-section">
+                    <h2>🧠 8가지 측정 영역</h2>
+                    <div class="info-list">
+                        <div class="info-list-item">기억 • 속도 • 집중 • 감정</div>
+                        <div class="info-list-item">판단 • 실행 • 조절 • 공간</div>
+                    </div>
+                </div>
+                <div class="privacy-notice">
+                    <strong>📋 통계 자료 수집</strong><br>
+                    이름, 성별, 지역, 생년월일 수집. 개인정보보호법 준수하여 활용됩니다.
+                </div>
+            </div>
+            <div class="page-footer">
+                <div class="btn-group">
+                    <button class="btn btn-back" onclick="showPageFn('landing')">← 돌아가기</button>
+                    <button class="btn btn-primary" onclick="showPageFn('input')">🚀 측정 시작</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 입력 -->
+        <div id="input" class="page input-page">
+            <div class="page-header">
+                <h1>📋 정보 입력</h1>
+            </div>
+            <div class="page-content">
+                <div class="input-form">
+                    <div class="form-group">
+                        <label class="form-label">👤 이름</label>
+                        <input type="text" id="nameInput" class="form-input" placeholder="이름">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">👥 성별</label>
+                        <div class="gender-options">
+                            <button type="button" class="gender-btn" onclick="setGender('남성', this)">👨 남성</button>
+                            <button type="button" class="gender-btn" onclick="setGender('여성', this)">👩 여성</button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">📍 지역</label>
+                        <div class="region-options">
+                            <button type="button" class="region-btn" onclick="setRegion('서울', this)">서울</button>
+                            <button type="button" class="region-btn" onclick="setRegion('부산', this)">부산</button>
+                            <button type="button" class="region-btn" onclick="setRegion('대구', this)">대구</button>
+                            <button type="button" class="region-btn" onclick="setRegion('인천', this)">인천</button>
+                            <button type="button" class="region-btn" onclick="setRegion('광주', this)">광주</button>
+                            <button type="button" class="region-btn" onclick="setRegion('대전', this)">대전</button>
+                            <button type="button" class="region-btn" onclick="setRegion('울산', this)">울산</button>
+                            <button type="button" class="region-btn" onclick="setRegion('세종', this)">세종</button>
+                            <button type="button" class="region-btn" onclick="setRegion('경기', this)">경기</button>
+                            <button type="button" class="region-btn" onclick="setRegion('강원', this)">강원</button>
+                            <button type="button" class="region-btn" onclick="setRegion('충북', this)">충북</button>
+                            <button type="button" class="region-btn" onclick="setRegion('충남', this)">충남</button>
+                            <button type="button" class="region-btn" onclick="setRegion('전북', this)">전북</button>
+                            <button type="button" class="region-btn" onclick="setRegion('전남', this)">전남</button>
+                            <button type="button" class="region-btn" onclick="setRegion('경북', this)">경북</button>
+                            <button type="button" class="region-btn" onclick="setRegion('경남', this)">경남</button>
+                            <button type="button" class="region-btn" onclick="setRegion('제주', this)">제주</button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">📅 생년월일</label>
+                        <input type="date" id="birthDateInput" class="form-input" onchange="calcAge()">
+                    </div>
+                    <div class="age-display" id="ageDisplay">생년월일 선택</div>
+                </div>
+            </div>
+            <div class="page-footer">
+                <div class="btn-group">
+                    <button class="btn btn-back" onclick="showPageFn('landing')">← 돌아가기</button>
+                    <button class="btn btn-primary" onclick="startTest()">측정 시작</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 테스트 -->
+        <div id="test" class="page test-page">
+            <div class="page-header test-header">
+                <h1>📋 측정 진행 중</h1>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="question-counter"><span id="currentQuestion">1</span>/20</div>
+            <div class="test-content">
+                <div class="card-container">
+                    <div class="image-loading" id="imageStatus">이미지 로드 중...</div>
+                    <img id="cardImage" class="card-image" src="" alt="" style="display:none;">
+                </div>
+                <p class="question-text" id="questionText">【영역】?</p>
+                <div class="options" id="optionsContainer"></div>
+                <div class="button-group">
+                    <button class="btn btn-back" id="prevBtn" onclick="prevQ()" disabled>←</button>
+                    <button class="btn btn-primary" id="nextBtn" onclick="nextQ()">→</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 결과 -->
+        <div id="result" class="page result-page">
+            <div class="page-header">
+                <h1>✅ 측정 완료</h1>
+            </div>
+            <div class="page-content" id="resultContent"></div>
+        </div>
+    </div>
+
+    <script>
+        let state = {
+            currentQuestion: 0,
+            answers: {},
+            userName: '',
+            userGender: '',
+            userRegion: '',
+            userAge: 0
+        };
+        
+        // 20개 이미지 정확한 경로 - 모두 GitHub에서 정상 로드되는 파일들만 사용
+        const imageList = [
+            '1000073550.png',  // 1
+            '1000073552.png',  // 2
+            '1000073554.png',  // 3
+            '1000073556.png',  // 4
+            '1000073558.png',  // 5
+            '1000073560.png',  // 6
+            '1000073562.png',  // 7
+            '1000073564.png',  // 8
+            '1000073566.png',  // 9
+            '1000073599.png',  // 10
+            '1000073601.png',  // 11
+            '1000073607.png',  // 12
+            '1000073611.png',  // 13
+            '1000073613.png',  // 14
+            '1000073615.png',  // 15
+            '우뇌구성력 R1 상.png',  // 16
+            '우뇌상황력맥락이해 R6 상.png',  // 17
+            '우뇌주의력 R3 중.png',  // 18
+            '우뇌집중력 R2 상.png',  // 19
+            '우뇌창의응용력 R5 상.png'  // 20
+        ];
+        
+        const domainColors = {"기억":"#2563EB","속도":"#5FA76F","집중":"#00BCD4","감정":"#E8708A","판단":"#7C5BA8","실행":"#D97348","조절":"#4A7BA7","공간":"#FF69B4"};
+        const domains = ["기억","속도","집중","감정","판단","실행","조절","공간"];
+        
+        function showPageFn(pageId) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+        }
+        
+        function setGender(gender, btn) {
+            state.userGender = gender;
+            document.querySelectorAll('.gender-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+        }
+        
+        function setRegion(region, btn) {
+            state.userRegion = region;
+            document.querySelectorAll('.region-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+        }
+        
+        function calcAge() {
+            const birthDate = document.getElementById('birthDateInput').value;
+            if (!birthDate) return;
+            const today = new Date();
+            const birth = new Date(birthDate);
+            let age = today.getFullYear() - birth.getFullYear();
+            if (today.getMonth() < birth.getMonth() || (today.getMonth() === birth.getMonth() && today.getDate() < birth.getDate())) age--;
+            state.userAge = Math.max(0, age);
+            document.getElementById('ageDisplay').textContent = `만 ${state.userAge}세`;
+        }
+        
+        function startTest() {
+            const birthDate = document.getElementById('birthDateInput').value;
+            if (!birthDate || !state.userGender || !state.userRegion) {
+                alert('모든 정보를 입력해주세요');
+                return;
+            }
+            state.userName = document.getElementById('nameInput').value || '사용자';
+            state.currentQuestion = 0;
+            state.answers = {};
+            showPageFn('test');
+            loadQuestion();
+        }
+        
+        function loadQuestion() {
+            if (state.currentQuestion >= 20) {
+                showResults();
+                return;
+            }
+            
+            const domain = domains[state.currentQuestion % 8];
+            document.getElementById('currentQuestion').textContent = state.currentQuestion + 1;
+            document.getElementById('questionText').textContent = `【${domain}】`;
+            document.getElementById('progressFill').style.width = ((state.currentQuestion + 1) / 20 * 100) + '%';
+            
+            const imageName = imageList[state.currentQuestion];
+            const isValidated = imageName.startsWith('1000073');
+            const baseUrl = isValidated 
+                ? 'https://raw.githubusercontent.com/limsaboo/kbrain-home/main/assets/img/bac-projection-images/'
+                : 'https://raw.githubusercontent.com/limsaboo/kbrain-home/main/assets/img/bhc-brain-cards/';
+            const imageUrl = baseUrl + imageName.replace(/ /g, '%20') + '?t=' + Date.now();
+            
+            const cardImage = document.getElementById('cardImage');
+            const imageStatus = document.getElementById('imageStatus');
+            
+            cardImage.onerror = () => {
+                imageStatus.textContent = '계속 진행 가능';
+                imageStatus.style.display = 'block';
+            };
+            
+            cardImage.onload = () => {
+                imageStatus.style.display = 'none';
+                cardImage.style.display = 'block';
+            };
+            
+            cardImage.src = imageUrl;
+            
+            const optionsContainer = document.getElementById('optionsContainer');
+            optionsContainer.innerHTML = '';
+            ['긍정적','보통','부정적','무관심'].forEach(option => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'option';
+                if (state.answers[state.currentQuestion]?.option === option) btn.classList.add('selected');
+                btn.textContent = option;
+                btn.onclick = () => selectOption(option, btn);
+                optionsContainer.appendChild(btn);
+            });
+            
+            document.getElementById('prevBtn').disabled = state.currentQuestion === 0;
+            document.getElementById('nextBtn').textContent = state.currentQuestion === 19 ? '완료' : '→';
+        }
+        
+        function selectOption(option, btn) {
+            const scoreMap = {'긍정적':100,'보통':50,'부정적':25,'무관심':10};
+            state.answers[state.currentQuestion] = {domain:domains[state.currentQuestion%8], option, score:scoreMap[option]};
+            document.querySelectorAll('.option').forEach(el => el.classList.remove('selected'));
+            btn.classList.add('selected');
+        }
+        
+        function prevQ() { if (state.currentQuestion > 0) { state.currentQuestion--; loadQuestion(); } }
+        function nextQ() { if (!state.answers[state.currentQuestion]) return; if (state.currentQuestion < 19) { state.currentQuestion++; loadQuestion(); } else { showResults(); } }
+        
+        function showResults() {
+            const domainScores = {};
+            domains.forEach(d => domainScores[d] = []);
+            Object.values(state.answers).forEach(ans => domainScores[ans.domain].push(ans.score));
+            
+            const avgScores = {};
+            let totalScore = 0;
+            domains.forEach(d => {
+                const avg = domainScores[d].length ? domainScores[d].reduce((a,b)=>a+b)/domainScores[d].length : 0;
+                avgScores[d] = Math.round(avg);
+                totalScore += avgScores[d];
+            });
+            
+            const score = Math.round(totalScore / 8);
+            const brainAge = score >= 90 ? 20 : score >= 80 ? 30 : score >= 70 ? 40 : score >= 60 ? 50 : score >= 50 ? 60 : score >= 40 ? 70 : 80;
+            const ageGroup = state.userAge < 30 ? '20대' : state.userAge < 40 ? '30대' : state.userAge < 50 ? '40대' : state.userAge < 60 ? '50대' : '60대 이상';
+            const ageGroupAvg = state.userAge < 30 ? 72 : state.userAge < 40 ? 65 : state.userAge < 50 ? 58 : state.userAge < 60 ? 52 : 48;
+            
+            let html = `
+                <div class="result-box">
+                    <div style="font-size: 12px; font-weight: 800; color: #1a472a;">당신의 뇌나이는</div>
+                    <div class="brain-age-number">${brainAge}</div>
+                    <div style="font-size: 14px; font-weight: 800; color: #00BCD4;">세</div>
+                    <div class="status-badge ${score >= 80 ? 'status-good' : score >= 60 ? 'status-warning' : 'status-alert'}">
+                        ${score >= 80 ? '✓ 우수' : score >= 60 ? '⚠️ 주의' : '❌ 경고'}
+                    </div>
+                </div>
+                
+                <div class="age-comparison">
+                    📊 ${ageGroup} 평균: ${ageGroupAvg}점 | 당신: ${score}점
+                </div>
+                
+                <div class="result-info">
+                    <strong>📌 당신의 뇌나이 상태:</strong><br>
+                    점수 ${score}점 = 뇌나이 ${brainAge}세<br>
+                    ${score >= 80 ? '우수합니다! 현재 수준 유지하세요.' : score >= 60 ? '관리가 필요합니다. 훈련으로 개선 가능합니다.' : '긴급 개선이 필요합니다. 체계적 훈련을 추천합니다.'}
+                </div>
+                
+                <div style="font-size: 12px; font-weight: 900; color: #00BCD4; padding: 0 12px;">📊 8가지 뇌 영역</div>
+                <div class="domain-chart">
+            `;
+            
+            domains.forEach(domain => {
+                const s = avgScores[domain];
+                const pct = (s/100)*100;
+                html += `
+                    <div class="domain-row">
+                        <div class="domain-label">${domain}</div>
+                        <div class="domain-bar-container">
+                            <div class="domain-bar" style="width:${pct}%;background:${domainColors[domain]};">${s}</div>
+                        </div>
+                        <div class="domain-score">${s}</div>
+                    </div>
+                `;
+            });
+            
+            html += `</div>
+                
+                <div class="result-marketing">
+                    <strong>🧠 뇌도 피부처럼 가꾸면 반짝이고 매끄러워집니다!</strong><br>
+                    ${score >= 80 ? '우수한 상태 유지를 위해 꾸준한 훈련이 중요합니다.' : '매일 5~10분 훈련으로 뇌나이를 3~5세 젊게 만들 수 있습니다!'}
+                </div>
+                
+                <div class="result-bhc">
+                    <strong>💪 BHC 뇌건강훈련 추천</strong><br>
+                    ✓ 약점 영역 집중 훈련<br>
+                    ✓ 하루 5~10분<br>
+                    ✓ 무료로 지금 시작하세요!
+                </div>
+                
+                <div class="result-benefit">
+                    <strong>🎁 훈련 후기 공유 시 마일리지!</strong><br>
+                    ✓ 전/후 비교 + 후기<br>
+                    ✓ 마일리지 적립<br>
+                    ✓ 이벤트 혜택 제공
+                </div>
+                
+                <div style="padding: 12px; display: flex; flex-direction: column; gap: 8px;">
+                    <button class="btn btn-primary" onclick="location.href='https://k-brain.co.kr/bhc'" style="width: 100%; background: linear-gradient(135deg, #1a472a 0%, #2d5a3d 100%);">🏥 BHC 훈련 시작</button>
+                    <button class="btn btn-back" onclick="showPageFn('landing')" style="width: 100%;">🏠 홈</button>
+                </div>
+            `;
+            
+            document.getElementById('resultContent').innerHTML = html;
+            showPageFn('result');
+        }
+    </script>
+</body>
+</html>
