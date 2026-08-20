@@ -35,13 +35,13 @@ body {
 .screen { display: none; width: 100%; min-height: 100%; padding: 20px; flex-direction: column; }
 .screen.active { display: flex; }
 
-.header { background: #1a472a; color: white; padding: 20px; text-align: center; margin-bottom: 20px; border-radius: 0; }
+.header { background: #1a472a; color: white; padding: 20px; text-align: center; margin-bottom: 20px; }
 .header h1 { font-size: 28px; font-weight: 900; margin-bottom: 8px; }
 .header p { font-size: 13px; opacity: 0.9; }
 
 .start-screen { justify-content: flex-start; gap: 20px; }
-.logo-box { background: linear-gradient(135deg, #00BCD4 0%, #0097A7 100%); border-radius: 20px; padding: 35px 20px; text-align: center; color: white; margin-bottom: 15px; box-shadow: 0 8px 20px rgba(0, 188, 212, 0.3); }
-.logo-emoji { font-size: 60px; display: block; margin-bottom: 15px; }
+.logo-box { background: linear-gradient(135deg, #00BCD4 0%, #0097A7 100%); border-radius: 20px; padding: 35px 20px; text-align: center; color: white; margin-bottom: 15px; }
+.logo-emoji { font-size: 60px; margin-bottom: 15px; }
 .logo-title { font-size: 32px; font-weight: 900; margin-bottom: 5px; }
 .logo-subtitle { font-size: 13px; opacity: 0.9; }
 
@@ -49,14 +49,13 @@ body {
 
 .form-group { margin-bottom: 16px; }
 .form-label { font-size: 13px; font-weight: 700; color: #333; margin-bottom: 8px; display: block; }
-.form-input, .form-select { width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 10px; font-size: 13px; font-weight: 600; }
+.form-input, .form-select { width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 10px; font-size: 13px; }
 
 .btn { width: 100%; padding: 14px; border: none; border-radius: 12px; font-size: 14px; font-weight: 700; cursor: pointer; margin-top: 10px; }
 .btn-primary { background: linear-gradient(135deg, #00BCD4 0%, #0097A7 100%); color: white; }
-.btn-primary:active { transform: scale(0.98); }
 
 .test-screen { justify-content: flex-start; gap: 14px; }
-.progress-bar-container { background: #e8e8e8; height: 6px; border-radius: 20px; overflow: hidden; margin-bottom: 12px; }
+.progress-bar-container { background: #e8e8e8; height: 6px; border-radius: 20px; margin-bottom: 12px; }
 .progress-bar { height: 100%; background: linear-gradient(90deg, #00BCD4 0%, #0097A7 100%); transition: width 0.3s; }
 .progress-text { font-size: 12px; color: #666; font-weight: 600; margin-bottom: 12px; }
 
@@ -70,14 +69,12 @@ body {
     justify-content: center;
     min-height: 240px;
     margin: 12px 0;
-    overflow: hidden;
 }
 
 .image-section img {
     max-width: 95%;
     max-height: 95%;
     object-fit: contain;
-    border-radius: 8px;
 }
 
 .question-text { font-size: 14px; font-weight: 700; color: #222; margin: 15px 0; text-align: center; }
@@ -98,25 +95,23 @@ body {
     justify-content: center;
 }
 
-.option-btn:active { transform: scale(0.96); }
-.option-btn.selected { border-color: #00BCD4; background: linear-gradient(135deg, #B2EBF2 0%, #80DEEA 100%); }
+.option-btn.selected { border-color: #00BCD4; background: #B2EBF2; }
 
 .nav-buttons { display: flex; gap: 10px; margin-top: auto; padding-top: 15px; }
 .btn-nav { flex: 1; padding: 12px; border: 2px solid #00BCD4; background: white; color: #00BCD4; border-radius: 10px; font-weight: 700; font-size: 13px; cursor: pointer; }
-.btn-nav:active:not(:disabled) { background: #00BCD4; color: white; }
 .btn-nav:disabled { opacity: 0.3; }
 
 .result-screen { justify-content: flex-start; gap: 15px; }
 .result-box { background: linear-gradient(135deg, #00BCD4 0%, #0097A7 100%); color: white; border-radius: 16px; padding: 25px; text-align: center; }
-.result-label { font-size: 12px; opacity: 0.9; margin-bottom: 8px; }
+.result-label { font-size: 12px; opacity: 0.9; }
 .result-value { font-size: 48px; font-weight: 900; }
 
+.brain-region { margin-top: 20px; padding: 15px; background: linear-gradient(135deg, #FFE5E5 0%, #E8F5FF 100%); border-radius: 12px; }
+.brain-region-title { font-weight: 900; color: #1a472a; margin-bottom: 12px; }
+
 @media (max-width: 600px) {
-    .container { padding-bottom: 10px; }
     .screen { padding: 12px; }
-    .header { padding: 15px; margin-bottom: 15px; }
-    .header h1 { font-size: 24px; }
-    .image-section { min-height: 200px; }
+    .header { padding: 15px; }
 }
 </style>
 </head>
@@ -132,7 +127,7 @@ body {
         <div class="logo-box">
             <div class="logo-emoji">🧠</div>
             <div class="logo-title">뇌 기능 평가</div>
-            <div class="logo-subtitle">20개 그림을 보고 직관적으로 반응해주세요</div>
+            <div class="logo-subtitle">20개 그림으로 편도체·기저핵·소뇌 반응 측정</div>
         </div>
         
         <div class="info-box">
@@ -198,7 +193,7 @@ body {
             <div class="progress-bar" id="progressBar"></div>
         </div>
 
-        <div class="image-section" id="imageSection">
+        <div class="image-section">
             <img id="testImage" src="" alt="테스트 이미지">
         </div>
 
@@ -225,6 +220,11 @@ body {
 
         <div id="domainResults" style="margin: 20px 0; padding: 15px; background: #f5f5f5; border-radius: 12px;"></div>
 
+        <div id="brainAnalysis" class="brain-region">
+            <div class="brain-region-title">🧠 뇌 영역별 반응 분석</div>
+            <div id="brainResults"></div>
+        </div>
+
         <button class="btn btn-primary" onclick="location.reload()">다시 평가하기</button>
     </div>
 </div>
@@ -237,26 +237,26 @@ const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 const domains = ['기억', '속도', '집중', '감정', '판단', '실행', '조절', '공간', '창의', '통찰'];
 
 const imageList = [
-    '/assets/img/bam-projection-1.jpg',   // 1
-    '/assets/img/bam-projection-2.png',   // 2
-    '/assets/img/bam-projection-3.png',   // 3
-    '/assets/img/bam-projection-4.jpg',   // 4
-    '/assets/img/bam-projection-5.png',   // 5
-    '/assets/img/bam-projection-6.png',   // 6
-    '/assets/img/bam-projection-7.png',   // 7
-    '/assets/img/bam-projection-8.png',   // 8
-    '/assets/img/bam-projection-9.png',   // 9
-    '/assets/img/bam-projection-10.png',  // 10
-    '/assets/img/bam-projection-11.png',  // 11
-    '/assets/img/bam-projection-12.png',  // 12
-    '/assets/img/bam-projection-13.jpg',  // 13
-    '/assets/img/bam-projection-14.jpg',  // 14
-    '/assets/img/bam-projection-15.jpg',  // 15
-    '/assets/img/bam-projection-16.jpg',  // 16
-    '/assets/img/bam-projection-17.png',  // 17
-    '/assets/img/bam-projection-18.png',  // 18
-    '/assets/img/bam-projection-19.jpg',  // 19
-    '/assets/img/bam-projection-20.jpg'   // 20
+    '/assets/img/bam-projection-1.jpg',
+    '/assets/img/bam-projection-2.png',
+    '/assets/img/bam-projection-3.png',
+    '/assets/img/bam-projection-4.jpg',
+    '/assets/img/bam-projection-5.png',
+    '/assets/img/bam-projection-6.png',
+    '/assets/img/bam-projection-7.png',
+    '/assets/img/bam-projection-8.png',
+    '/assets/img/bam-projection-9.png',
+    '/assets/img/bam-projection-10.png',
+    '/assets/img/bam-projection-11.png',
+    '/assets/img/bam-projection-12.png',
+    '/assets/img/bam-projection-13.jpg',
+    '/assets/img/bam-projection-14.jpg',
+    '/assets/img/bam-projection-15.jpg',
+    '/assets/img/bam-projection-16.jpg',
+    '/assets/img/bam-projection-17.png',
+    '/assets/img/bam-projection-18.png',
+    '/assets/img/bam-projection-19.jpg',
+    '/assets/img/bam-projection-20.jpg'
 ];
 
 let state = { currentQ: 0, answers: {}, userData: {} };
@@ -287,7 +287,6 @@ function startTest() {
 function loadQuestion() {
     const q = state.currentQ;
     const img = imageList[q];
-    const domain = domains[q % 10];
     
     document.getElementById('progressBar').style.width = ((q + 1) / 20 * 100) + '%';
     document.getElementById('progressText').textContent = (q + 1) + '/20';
@@ -355,12 +354,28 @@ async function showResults() {
         domainScores[a.domain].push(a.score);
     });
     
+    // 도메인별 점수
     const html = Object.entries(domainScores).map(([d, scores]) => {
         const avg = Math.round(scores.reduce((a, b) => a + b, 0) / scores.length);
         return `<div style="padding: 8px 0; border-bottom: 1px solid #ddd; display: flex; justify-content: space-between; font-weight: 700;"><span>${d}</span> <span style="color: #00BCD4;">${avg}점</span></div>`;
     }).join('');
     
+    // 뇌 영역별 점수 계산
+    const amygdalaScore = Math.round((domainScores['감정'].reduce((a,b)=>a+b,0)/domainScores['감정'].length + 
+                                      domainScores['판단'].reduce((a,b)=>a+b,0)/domainScores['판단'].length) / 2);
+    const basalGangliaScore = Math.round((domainScores['실행'].reduce((a,b)=>a+b,0)/domainScores['실행'].length + 
+                                         domainScores['조절'].reduce((a,b)=>a+b,0)/domainScores['조절'].length) / 2);
+    const cerebellumScore = Math.round((domainScores['속도'].reduce((a,b)=>a+b,0)/domainScores['속도'].length + 
+                                       domainScores['집중'].reduce((a,b)=>a+b,0)/domainScores['집중'].length) / 2);
+    
+    const brainHtml = `
+        <div style="padding: 8px 0; display: flex; justify-content: space-between; border-bottom: 1px solid #ddd;"><span style="font-weight: 700;">❤️ 편도체 (정서)</span> <span style="color: #FF6B6B; font-weight: 900;">${amygdalaScore}점</span></div>
+        <div style="padding: 8px 0; display: flex; justify-content: space-between; border-bottom: 1px solid #ddd;"><span style="font-weight: 700;">⚡ 기저핵 (의사결정)</span> <span style="color: #FFD93D; font-weight: 900;">${basalGangliaScore}점</span></div>
+        <div style="padding: 8px 0; display: flex; justify-content: space-between;"><span style="font-weight: 700;">🎯 소뇌 (시간감각)</span> <span style="color: #6BCB77; font-weight: 900;">${cerebellumScore}점</span></div>
+    `;
+    
     document.getElementById('domainResults').innerHTML = html;
+    document.getElementById('brainResults').innerHTML = brainHtml;
     
     await supabase.from('bam_results').insert({
         name: state.userData.name,
@@ -368,6 +383,9 @@ async function showResults() {
         birth_date: state.userData.birth,
         region: state.userData.region,
         avg_score: avgScore,
+        amygdala_score: amygdalaScore,
+        basal_ganglia_score: basalGangliaScore,
+        cerebellum_score: cerebellumScore,
         answers: JSON.stringify(state.answers),
         created_at: new Date().toISOString()
     });
