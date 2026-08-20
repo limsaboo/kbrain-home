@@ -234,15 +234,15 @@
             color: #333;
             transition: all 0.2s;
             -webkit-appearance: none;
-            min-height: 48px;
+            min-height: 52px;
             display: flex;
             align-items: center;
             justify-content: center;
         }
         .option.selected { border-color: #00BCD4; background: #00BCD4; color: white; }
         
-        .button-group { display: flex; gap: 8px; }
-        .button-group .btn { flex: 1; padding: 12px; font-size: 13px; }
+        .button-group { display: flex; gap: 12px; }
+        .button-group .btn { flex: 1; padding: 14px 16px; font-size: 13px; min-height: 48px; }
         
         /* ===== 결과 ===== */
         .result-page { background: white; }
@@ -468,26 +468,26 @@
         
         // 20개 이미지 정확한 경로
         const imageList = [
-            '1000073550.png',  // 1
-            '1000073552.png',  // 2
-            '1000073554.png',  // 3
-            '1000073556.png',  // 4
-            '1000073558.png',  // 5
-            '1000073560.png',  // 6
-            '1000073562.png',  // 7
-            '1000073564.png',  // 8
-            '1000073566.png',  // 9
-            '1000073599.png',  // 10
-            '1000073601.png',  // 11
-            '1000073607.png',  // 12
-            '1.라이프디자인(우주와 뇌 금빛나침반).png',
-            '2.페르소나와 조절력(환상의정의상징).png',
-            '3.가짜마음과 그림자(상황력맥락이해기능).jpeg',
-            '4.잠재력해방(회복력지속력메타인지).jpeg',
-            '5.진짜나(회복력지속력메타인지).jpeg',
-            '5대오라클마스터카드 뒷면.jpeg',
-            '우뇌구성력 R1 상.png',
-            '우뇌상황력맥락이해 R6 상.png'
+            'bac-projection-images/1000073550.png',  // 1
+            'bac-projection-images/1000073552.png',  // 2
+            'bac-projection-images/1000073554.png',  // 3
+            'bac-projection-images/1000073556.png',  // 4
+            'bac-projection-images/1000073558.png',  // 5
+            'bac-projection-images/1000073560.png',  // 6
+            'bac-projection-images/1000073562.png',  // 7
+            'bac-projection-images/1000073564.png',  // 8
+            'bac-projection-images/1000073566.png',  // 9
+            'bac-projection-images/1000073599.png',  // 10
+            'bac-projection-images/1000073601.png',  // 11
+            'bac-projection-images/1000073607.png',  // 12
+            'bhc-brain-cards/우뇌구성력 R1 상.png',  // 13
+            'bhc-brain-cards/우뇌상황력맥락이해 R6 상.png',  // 14
+            'bhc-brain-cards/우뇌주의력 R3 중.png',  // 15
+            'bhc-brain-cards/우뇌집중력 R2 상.png',  // 16
+            'bhc-brain-cards/우뇌창의응용력 R5 상.png',  // 17
+            'bac-projection-images/1000073821.png',  // 18
+            'bac-projection-images/1000073823.png',  // 19
+            'bac-projection-images/1000073825.png'   // 20
         ];
         
         const domainColors = {"기억":"#2563EB","속도":"#5FA76F","집중":"#00BCD4","감정":"#E8708A","판단":"#7C5BA8","실행":"#D97348","조절":"#4A7BA7","공간":"#FF69B4"};
