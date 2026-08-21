@@ -341,12 +341,10 @@
     
     /* ===== 버튼 섹션 ===== */
     .button-section{
-      display: flex !important;
-      flex-direction: row;
-      flex-wrap: wrap;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
       gap: 10px;
       margin: 25px 0;
-      width: 100%;
     }
     
     .button-full {
@@ -363,14 +361,9 @@
       transition: all 0.3s ease;
       box-shadow: 0 2px 6px rgba(0,0,0,0.1);
       min-height: 44px;
-      display: block;
-      width: auto;
-      flex: 1;
-    }
-    
-    .action-btn.button-full {
-      width: 100%;
-      flex: 1 1 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
     
     .action-btn:active {
@@ -448,21 +441,10 @@
       }
       
       .button-section{
-        max-width: 100%;
+        max-width: 500px;
         margin-left: auto;
         margin-right: auto;
-        gap: 10px;
-        display: flex !important;
-        flex-direction: row !important;
-      }
-      
-      .button-section .action-btn {
-        flex: 1 1 auto;
-        min-width: 0;
-      }
-      
-      .button-section .action-btn.button-full {
-        flex: 1 1 100%;
+        gap: 12px;
       }
     }
     
@@ -502,7 +484,7 @@
   <div class="profile-wrapper print-hide">
     <div class="profile">
       <div class="profile-image">
-        <img src="data:image/webp;base64,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" alt="임찬우 소장">
+        <img src="https://raw.githubusercontent.com/limsaboo/kbrain-home/main/assets/img/profile_im_chanwoo.webp" alt="임찬우 소장">
       </div>
       <div class="profile-info">
         <h3>한국뇌심리연구소</h3>
