@@ -467,22 +467,114 @@
     }
     
     @media print {
-      .print-hide { display: none !important; }
-      .page-break { page-break-after: always; }
+      * {
+        margin: 0 !important;
+        padding: 0 !important;
+        box-shadow: none !important;
+      }
+      
+      .print-hide { 
+        display: none !important; 
+        visibility: hidden !important;
+      }
+      
       body { 
         background: white !important;
         margin: 0;
         padding: 0;
+        font-size: 11pt;
+        line-height: 1.4;
       }
+      
       .container { 
-        padding: 20px;
+        padding: 15mm;
         background: white !important;
         box-shadow: none;
         max-width: 100%;
+        width: 100%;
       }
-      img { max-width: 100%; }
-      table { width: 100%; }
-      .btn { display: none; }
+      
+      /* 섹션별 페이지 나누기 */
+      .header {
+        page-break-after: avoid;
+        padding-bottom: 10px;
+      }
+      
+      .score-cards {
+        page-break-after: avoid;
+        padding-bottom: 10px;
+      }
+      
+      .profile-section {
+        page-break-after: avoid;
+        padding-bottom: 10px;
+      }
+      
+      .chart-section {
+        page-break-after: avoid;
+        padding-bottom: 10px;
+      }
+      
+      /* 테이블 최적화 */
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        page-break-inside: avoid;
+      }
+      
+      table tr {
+        page-break-inside: avoid;
+      }
+      
+      th, td {
+        padding: 8px;
+        border: 1px solid #ccc;
+        text-align: center;
+      }
+      
+      /* 이미지 최적화 */
+      img {
+        max-width: 100%;
+        height: auto;
+        page-break-inside: avoid;
+      }
+      
+      .chart-container {
+        max-height: 300px;
+        page-break-inside: avoid;
+      }
+      
+      /* 버튼/액션 요소 숨김 */
+      .btn,
+      button,
+      .action-btn,
+      .button-section {
+        display: none !important;
+      }
+      
+      /* 텍스트 최적화 */
+      h1, h2, h3 {
+        page-break-after: avoid;
+        margin-top: 10px;
+        margin-bottom: 8px;
+      }
+      
+      p {
+        page-break-inside: avoid;
+        margin-bottom: 5px;
+      }
+      
+      /* 색상 최적화 (검은색 텍스트) */
+      * {
+        color: black !important;
+        background: white !important;
+      }
+      
+      /* 레이더차트 크기 조정 */
+      canvas {
+        max-height: 250px;
+        page-break-inside: avoid;
+      }
     }
   </style>
 </head>
@@ -773,15 +865,20 @@ function savePDF() {
       scale: 2, 
       useCORS: true,
       logging: false,
-      backgroundColor: '#ffffff'
+      backgroundColor: '#ffffff',
+      allowTaint: true
     },
     jsPDF: { 
       orientation: 'portrait', 
       unit: 'mm', 
       format: 'a4',
-      compress: true
+      compress: true,
+      precision: 2
     },
-    pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+    pagebreak: { 
+      mode: ['avoid-all', 'css', 'legacy'],
+      before: '.page-break'
+    }
   };
   
   html2pdf()
