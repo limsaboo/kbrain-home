@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>관리자 대시보드 | 한국뇌심리연구소</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{-webkit-text-size-adjust:100%}
+body{background:#0f1230;color:#e8ecf5;font-family:-apple-system,BlinkMacSystemFont,'Noto Sans KR',sans-serif;line-height:1.7;min-height:100vh}
+.wrap{max-width:1100px;margin:0 auto;padding:20px 16px 60px}
+
+/* 로그인 */
+#login{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+.card-login{width:100%;max-width:400px;background:#171b3f;border:1px solid rgba(201,168,76,.3);border-radius:18px;padding:32px 24px;text-align:center}
+.card-login h1{font-size:21px;font-weight:900;margin-bottom:6px;color:#fff;word-break:keep-all}
+.card-login p{font-size:12.5px;color:#9aa3c0;margin-bottom:24px;word-break:keep-all}
+.inp{width:100%;padding:15px;border:2px solid #2b3163;border-radius:11px;background:#10142f;color:#fff;font-size:16px;font-weight:700;text-align:center}
+.inp:focus{outline:none;border-color:#c9a84c}
+.btn{width:100%;min-height:52px;margin-top:12px;border:none;border-radius:11px;background:linear-gradient(135deg,#d4b45a,#c9a84c);color:#161a3d;font-size:16px;font-weight:900;cursor:pointer}
+.btn:active{transform:scale(.98)}
+.btn-sub{background:#252a55;color:#cfd6ea}
+.msg{min-height:20px;font-size:12.5px;font-weight:800;color:#ff8080;margin-top:10px}
+
+/* 헤더 */
+.top{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;padding:16px 0 18px;border-bottom:1px solid #262b57;margin-bottom:20px}
+.top h1{font-size:19px;font-weight:900;color:#fff;word-break:keep-all}
+.top .sub{font-size:11.5px;color:#8b93b5;font-weight:600}
+.top-actions{display:flex;gap:8px;flex-wrap:wrap}
+.mini{padding:9px 14px;border:1px solid #343a6d;border-radius:9px;background:#1b2048;color:#cfd6ea;font-size:12.5px;font-weight:800;cursor:pointer}
+.mini.on{background:#c9a84c;color:#161a3d;border-color:#c9a84c}
+
+/* 탭 */
+.tabs{display:flex;gap:6px;overflow-x:auto;padding-bottom:12px;margin-bottom:18px;-webkit-overflow-scrolling:touch}
+.tab{flex:0 0 auto;padding:11px 17px;border:1px solid #2f3565;border-radius:999px;background:#181d43;color:#a8b0d0;font-size:13.5px;font-weight:800;cursor:pointer;white-space:nowrap}
+.tab.on{background:#c9a84c;color:#161a3d;border-color:#c9a84c}
+.panel{display:none}.panel.on{display:block}
+
+/* 카드 */
+.kpis{display:grid;grid-template-columns:repeat(2,1fr);gap:11px;margin-bottom:20px}
+@media(min-width:700px){.kpis{grid-template-columns:repeat(4,1fr)}}
+.kpi{background:#171b3f;border:1px solid #262b57;border-left:4px solid #c9a84c;border-radius:13px;padding:16px 14px}
+.kpi .lab{font-size:11.5px;color:#8b93b5;font-weight:800;margin-bottom:6px;word-break:keep-all}
+.kpi .val{font-size:26px;font-weight:900;color:#fff;line-height:1.2}
+.kpi .un{font-size:12px;color:#9aa3c0;font-weight:700;margin-left:3px}
+
+.box{background:#171b3f;border:1px solid #262b57;border-radius:14px;padding:18px 16px;margin-bottom:18px}
+.box h2{font-size:15px;font-weight:900;color:#c9a84c;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid #262b57;word-break:keep-all}
+.chart{position:relative;height:280px}
+
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th,td{padding:10px 8px;text-align:left;border-bottom:1px solid #242a52;word-break:keep-all}
+th{color:#8b93b5;font-weight:800;font-size:11.5px;white-space:nowrap}
+td{color:#dbe1f2;font-weight:600}
+td.num,th.num{text-align:right;white-space:nowrap}
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.empty{padding:26px 10px;text-align:center;color:#7d85a8;font-size:13px;font-weight:700;word-break:keep-all}
+
+/* 소식 폼 */
+.form-row{margin-bottom:12px}
+.form-row label{display:block;font-size:12px;font-weight:800;color:#9aa3c0;margin-bottom:6px}
+.fi{width:100%;padding:12px;border:1px solid #2f3565;border-radius:9px;background:#10142f;color:#fff;font-size:14px;font-weight:600}
+.fi:focus{outline:none;border-color:#c9a84c}
+textarea.fi{min-height:110px;resize:vertical;line-height:1.7}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.badge{display:inline-block;padding:3px 9px;border-radius:6px;font-size:11px;font-weight:800}
+.b-on{background:rgba(0,200,120,.18);color:#4fe0a0}
+.b-off{background:rgba(255,255,255,.08);color:#9aa3c0}
+.note{font-size:11.5px;color:#7d85a8;line-height:1.75;word-break:keep-all;background:#121634;border-radius:9px;padding:12px;margin-top:12px}
+</style>
+</head>
+<body>
+
+<!-- 로그인 -->
+<div id="login">
+  <div class="card-login">
+    <h1>한국뇌심리연구소<br>관리자 대시보드</h1>
+    <p>관리자 전용 화면입니다</p>
+    <input type="password" id="pw" class="inp" placeholder="비밀번호"
+           onkeydown="if(event.key==='Enter')doLogin()">
+    <div class="msg" id="loginMsg"></div>
+    <button class="btn" onclick="doLogin()">로그인</button>
+    <button class="btn btn-sub" onclick="location.href='/'">홈으로</button>
+  </div>
+</div>
+
+<!-- 대시보드 -->
+<div class="wrap" id="app" style="display:none">
+  <div class="top">
+    <div>
+      <h1>관리자 대시보드</h1>
+      <div class="sub" id="stamp">-</div>
+    </div>
+    <div class="top-actions">
+      <button class="mini" data-days="7"  onclick="setDays(7)">7일</button>
+      <button class="mini on" data-days="30" onclick="setDays(30)">30일</button>
+      <button class="mini" data-days="90" onclick="setDays(90)">90일</button>
+      <button class="mini" onclick="loadAll()">새로고침</button>
+      <button class="mini" onclick="downloadCsv()">CSV</button>
+      <button class="mini" onclick="logout()">로그아웃</button>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab on" onclick="showTab(0,this)">방문 현황</button>
+    <button class="tab" onclick="showTab(1,this)">페이지·체류</button>
+    <button class="tab" onclick="showTab(2,this)">검사 실적</button>
+    <button class="tab" onclick="showTab(3,this)">회원</button>
+    <button class="tab" onclick="showTab(4,this)">소식·이벤트</button>
+  </div>
+
+  <!-- 0 방문 현황 -->
+  <div class="panel on">
+    <div class="kpis" id="kpis"></div>
+    <div class="box"><h2>일자별 방문 추이</h2><div class="chart"><canvas id="cDay"></canvas></div></div>
+    <div class="box"><h2>유입 경로</h2><div class="scroll" id="tRef"></div></div>
+    <div class="box"><h2>접속 기기</h2><div class="scroll" id="tDev"></div></div>
+  </div>
+
+  <!-- 1 페이지 -->
+  <div class="panel">
+    <div class="box"><h2>페이지별 조회수 · 평균 체류시간</h2><div class="scroll" id="tPage"></div></div>
+    <div class="box"><h2>페이지별 조회수 그래프</h2><div class="chart"><canvas id="cPage"></canvas></div></div>
+  </div>
+
+  <!-- 2 검사 -->
+  <div class="panel">
+    <div class="box"><h2>BHC 8영역 평균 점수</h2><div class="chart"><canvas id="cDomain"></canvas></div></div>
+    <div class="box"><h2>BHC 판정 분포</h2><div class="scroll" id="tGrade"></div></div>
+    <div class="box"><h2>연령대별 뇌 건강도</h2><div class="scroll" id="tAge"></div></div>
+  </div>
+
+  <!-- 3 회원 -->
+  <div class="panel">
+    <div class="box"><h2>월별 가입자</h2><div class="scroll" id="tSignup"></div></div>
+    <div class="box"><h2>회원별 이용 현황 (상위 20명)</h2><div class="scroll" id="tMember"></div>
+      <div class="note">개인 식별을 줄이기 위해 이메일 일부를 가립니다. 로그인 기능이 연결된 페이지에서만 회원 단위 기록이 남습니다.</div>
+    </div>
+  </div>
+
+  <!-- 4 소식 -->
+  <div class="panel">
+    <div class="box">
+      <h2>소식 · 이벤트 · 세미나 등록</h2>
+      <div class="form-row"><label>분류</label>
+        <select id="nCat" class="fi">
+          <option>소식</option><option>이벤트</option><option>세미나</option><option>쿠폰</option>
+        </select></div>
+      <div class="form-row"><label>제목</label><input id="nTitle" class="fi" maxlength="120"></div>
+      <div class="form-row"><label>내용</label><textarea id="nBody" class="fi"></textarea></div>
+      <div class="form-row"><label>링크 (선택)</label><input id="nLink" class="fi" placeholder="https://"></div>
+      <div class="form-row two">
+        <div><label>시작일</label><input id="nStart" type="date" class="fi"></div>
+        <div><label>종료일</label><input id="nEnd" type="date" class="fi"></div>
+      </div>
+      <button class="btn" onclick="saveNotice()">등록하기</button>
+      <div class="msg" id="nMsg" style="color:#4fe0a0"></div>
+    </div>
+    <div class="box"><h2>등록된 소식</h2><div class="scroll" id="tNotice"></div></div>
+  </div>
+</div>
+
+<script>
+var SUPABASE_URL = "https://grxqfaeznqqohnlltged.supabase.co";
+var SUPABASE_KEY = "sb_publishable_Sgv6BVPo1dOnVICcX1tfzA_gf7T5Z4I";
+var ADMIN_PW = "brain2025!";
+var sb = null, DAYS = 30, DATA = null, CHARTS = {};
+try { sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY); } catch (e) {}
+
+function $(id){ return document.getElementById(id); }
+function n(v){ return (v===null||v===undefined) ? 0 : v; }
+function fmt(v){ return Number(n(v)).toLocaleString('ko-KR'); }
+
+function doLogin(){
+  if ($("pw").value !== ADMIN_PW){ $("loginMsg").textContent="비밀번호가 일치하지 않습니다."; return; }
+  $("login").style.display="none"; $("app").style.display="block";
+  try{ sb.from("admin_access_logs").insert([{action:"로그인",detail:navigator.userAgent.slice(0,120)}]).then(function(){},function(){}); }catch(e){}
+  loadAll();
+}
+function logout(){ location.reload(); }
+function showTab(i, el){
+  var ps=document.querySelectorAll(".panel"), ts=document.querySelectorAll(".tab");
+  for(var k=0;k<ps.length;k++) ps[k].classList.remove("on");
+  for(var k=0;k<ts.length;k++) ts[k].classList.remove("on");
+  ps[i].classList.add("on"); el.classList.add("on");
+  window.scrollTo(0,0);
+}
+function setDays(d){
+  DAYS=d;
+  var b=document.querySelectorAll(".mini[data-days]");
+  for(var i=0;i<b.length;i++) b[i].classList.toggle("on", Number(b[i].dataset.days)===d);
+  loadAll();
+}
+
+function loadAll(){
+  $("stamp").textContent="불러오는 중...";
+  if(!sb){ $("stamp").textContent="인터넷 연결이 필요합니다"; return; }
+  sb.rpc("kbpi_stats",{days:DAYS}).then(function(r){
+    if(r.error) throw r.error;
+    DATA=r.data; render();
+    $("stamp").textContent = new Date().toLocaleString('ko-KR') + " 기준 · 최근 " + DAYS + "일";
+  }).catch(function(e){
+    $("stamp").textContent="통계 조회 실패";
+    $("kpis").innerHTML='<div class="kpi" style="grid-column:1/-1;border-left-color:#ff6b6b">'+
+      '<div class="lab">오류</div><div style="font-size:13px;color:#ffb3b3;font-weight:700;line-height:1.7">'+
+      (e.message||e)+'<br><br>Supabase에서 kbpi-setup.sql 을 아직 실행하지 않았다면 먼저 실행해 주세요.</div></div>';
+  });
+  loadNotices();
+}
+
+function tbl(rows, cols, emptyMsg){
+  if(!rows || !rows.length) return '<div class="empty">'+(emptyMsg||'데이터가 없습니다')+'</div>';
+  var h='<table><tr>';
+  for(var c=0;c<cols.length;c++) h+='<th class="'+(cols[c][2]?'num':'')+'">'+cols[c][0]+'</th>';
+  h+='</tr>';
+  for(var i=0;i<rows.length;i++){
+    h+='<tr>';
+    for(var c=0;c<cols.length;c++){
+      var v=rows[i][cols[c][1]];
+      if(cols[c][3]) v=cols[c][3](v,rows[i]);
+      h+='<td class="'+(cols[c][2]?'num':'')+'">'+(v===null||v===undefined?'-':v)+'</td>';
+    }
+    h+='</tr>';
+  }
+  return h+'</table>';
+}
+
+function line(id, labels, sets){
+  try{
+    if(CHARTS[id]) CHARTS[id].destroy();
+    if(typeof Chart==='undefined') return;
+    CHARTS[id]=new Chart($(id).getContext('2d'),{
+      type:'line',
+      data:{labels:labels,datasets:sets},
+      options:{responsive:true,maintainAspectRatio:false,animation:false,
+        plugins:{legend:{labels:{color:'#cfd6ea',font:{weight:'bold'}}}},
+        scales:{x:{ticks:{color:'#8b93b5'},grid:{color:'rgba(255,255,255,.06)'}},
+                y:{beginAtZero:true,ticks:{color:'#8b93b5'},grid:{color:'rgba(255,255,255,.06)'}}}}
+    });
+  }catch(e){}
+}
+function bar(id, labels, data, color, max){
+  try{
+    if(CHARTS[id]) CHARTS[id].destroy();
+    if(typeof Chart==='undefined') return;
+    CHARTS[id]=new Chart($(id).getContext('2d'),{
+      type:'bar',
+      data:{labels:labels,datasets:[{data:data,backgroundColor:color||'#c9a84c',borderRadius:5}]},
+      options:{responsive:true,maintainAspectRatio:false,animation:false,
+        plugins:{legend:{display:false}},
+        scales:{x:{ticks:{color:'#8b93b5'},grid:{display:false}},
+                y:{beginAtZero:true,max:max,ticks:{color:'#8b93b5'},grid:{color:'rgba(255,255,255,.06)'}}}}
+    });
+  }catch(e){}
+}
+
+function render(){
+  var d=DATA;
+  var mins = Math.round(n(d.avg_stay_sec)/6)/10;
+  var kpi=[
+    ['오늘 방문', fmt(d.visits_today), '건'],
+    ['기간 내 방문', fmt(d.visits_range), '건'],
+    ['방문자 수', fmt(d.visitors_range), '명'],
+    ['평균 체류시간', mins, '분'],
+    ['누적 방문', fmt(d.visits_total), '건'],
+    ['등록 회원', fmt(d.members_total), '명'],
+    ['BHC 검사', fmt(d.bhc_total), '건'],
+    ['쿠폰 사용', fmt(d.coupons_used)+' / '+fmt(d.coupons_total), '']
+  ];
+  var h='';
+  for(var i=0;i<kpi.length;i++)
+    h+='<div class="kpi"><div class="lab">'+kpi[i][0]+'</div><div class="val">'+kpi[i][1]+
+       '<span class="un">'+kpi[i][2]+'</span></div></div>';
+  $("kpis").innerHTML=h;
+
+  var days=d.by_day||[];
+  line('cDay', days.map(function(x){return x.day;}), [
+    {label:'조회수',data:days.map(function(x){return x.views;}),borderColor:'#c9a84c',backgroundColor:'rgba(201,168,76,.15)',fill:true,tension:.3},
+    {label:'방문 세션',data:days.map(function(x){return x.sessions;}),borderColor:'#14b8ad',backgroundColor:'rgba(20,184,173,.1)',fill:true,tension:.3}
+  ]);
+
+  $("tRef").innerHTML=tbl(d.by_referrer,[['유입 경로','source'],['조회수','views',true,fmt]]);
+  $("tDev").innerHTML=tbl(d.by_device,[['기기','device'],['조회수','views',true,fmt]]);
+
+  var pg=d.by_page||[];
+  $("tPage").innerHTML=tbl(pg,[
+    ['페이지','page'],['조회수','views',true,fmt],['세션','sessions',true,fmt],
+    ['평균 체류','avg_sec',true,function(v){ return v? (Math.round(v/6)/10)+'분' : '-'; }]
+  ]);
+  bar('cPage', pg.slice(0,10).map(function(x){return x.page.replace('.html','').replace('/','')||'홈';}),
+      pg.slice(0,10).map(function(x){return x.views;}));
+
+  var dm=d.bhc_domain_avg||{};
+  var keys=['기억','속도','집중','감정','판단','실행','조절','공간'];
+  var vals=keys.map(function(k){ return n(dm[k]); });
+  if(vals.some(function(v){return v>0;})) bar('cDomain', keys, vals, '#14b8ad', 100);
+  else { var c=$("cDomain"); if(c&&c.parentNode) c.parentNode.innerHTML='<div class="empty">BHC 검사 결과가 아직 없습니다</div>'; }
+
+  $("tGrade").innerHTML=tbl(d.bhc_by_grade,[['판정','grade'],['인원','n',true,fmt],['평균 점수','avg_score',true]],'BHC 검사 결과가 아직 없습니다');
+  $("tAge").innerHTML=tbl(d.bhc_by_age,[['연령대','band'],['인원','n',true,fmt],['평균 점수','avg_score',true]],'BHC 검사 결과가 아직 없습니다');
+  $("tSignup").innerHTML=tbl(d.members_by_month,[['월','month'],['가입','n',true,fmt]],'가입 기록이 없습니다');
+
+  $("tMember").innerHTML=tbl(d.top_members,[
+    ['회원','email',false,function(v){
+      if(!v) return '-';
+      var p=v.split('@'); return p[0].slice(0,3)+'***@'+(p[1]||'');
+    }],
+    ['조회','views',true,fmt],['세션','sessions',true,fmt],
+    ['총 체류','total_min',true,function(v){return v+'분';}],
+    ['최근 방문','last_seen',false,function(v){return v? new Date(v).toLocaleDateString('ko-KR'):'-';}]
+  ],'회원 단위 방문 기록이 아직 없습니다');
+}
+
+function loadNotices(){
+  if(!sb) return;
+  sb.rpc("kbpi_notice_list",{pw:ADMIN_PW}).then(function(r){
+    if(r.error) throw r.error;
+    $("tNotice").innerHTML=tbl(r.data,[
+      ['분류','category'],['제목','title'],
+      ['기간','starts_on',false,function(v,row){ return (v||'-')+' ~ '+(row.ends_on||'-'); }],
+      ['상태','is_published',false,function(v){ return v?'<span class="badge b-on">게시중</span>':'<span class="badge b-off">숨김</span>'; }]
+    ],'등록된 소식이 없습니다');
+  }).catch(function(){ $("tNotice").innerHTML='<div class="empty">소식 목록을 불러오지 못했습니다</div>'; });
+}
+
+function saveNotice(){
+  var t=$("nTitle").value.trim();
+  if(!t){ $("nMsg").style.color="#ff8080"; $("nMsg").textContent="제목을 입력해 주세요."; return; }
+  sb.rpc("kbpi_notice_save",{
+    pw:ADMIN_PW, p_id:0, p_category:$("nCat").value, p_title:t,
+    p_body:$("nBody").value, p_link:$("nLink").value||null,
+    p_starts:$("nStart").value||null, p_ends:$("nEnd").value||null, p_published:true
+  }).then(function(r){
+    if(r.error) throw r.error;
+    if(r.data && r.data.ok===false) throw new Error(r.data.error);
+    $("nMsg").style.color="#4fe0a0"; $("nMsg").textContent="등록되었습니다.";
+    $("nTitle").value=""; $("nBody").value=""; $("nLink").value="";
+    loadNotices();
+  }).catch(function(e){
+    $("nMsg").style.color="#ff8080"; $("nMsg").textContent="등록 실패: "+(e.message||e);
+  });
+}
+
+function downloadCsv(){
+  if(!DATA){ return; }
+  var rows=[["구분","항목","값1","값2"]];
+  (DATA.by_page||[]).forEach(function(x){ rows.push(["페이지별",x.page,x.views,x.avg_sec]); });
+  (DATA.by_day||[]).forEach(function(x){ rows.push(["일자별",x.day,x.views,x.sessions]); });
+  (DATA.by_referrer||[]).forEach(function(x){ rows.push(["유입경로",x.source,x.views,""]); });
+  (DATA.bhc_by_grade||[]).forEach(function(x){ rows.push(["BHC판정",x.grade,x.n,x.avg_score]); });
+  var csv="\uFEFF"+rows.map(function(r){
+    return r.map(function(c){ return '"'+String(c===null||c===undefined?'':c).replace(/"/g,'""')+'"'; }).join(",");
+  }).join("\n");
+  var a=document.createElement("a");
+  a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv;charset=utf-8"}));
+  a.download="연구소통계_"+new Date().toISOString().slice(0,10)+".csv";
+  a.click();
+}
+</script>
+</body>
+</html>
