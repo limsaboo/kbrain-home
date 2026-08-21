@@ -7,6 +7,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { 
@@ -18,7 +19,7 @@
       max-width: 100%; 
       background: white; 
       padding: 30px 40px; 
-      line-height: 1.8;
+      line-height: 1.618;
     }
     
     .page-break { page-break-after: always; border-top: 3px solid #00BCD4; padding-top: 30px; margin-top: 30px; }
@@ -89,13 +90,19 @@
       margin-top: 10px;
     }
     
+    .profile-wrapper {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+    
     .profile { 
+      flex: 1;
       background: #f9f9f9; 
       padding: 20px; 
       border-radius: 10px; 
       display: flex; 
       gap: 20px; 
-      margin-bottom: 20px;
       border-left: 4px solid #00BCD4;
       text-align: left;
     }
@@ -110,6 +117,38 @@
     .profile-image img { width: 100%; height: 100%; object-fit: cover; }
     .profile-info h3 { color: #00BCD4; font-size: 14px; margin-bottom: 8px; }
     .profile-info p { font-size: 12px; color: #666; margin-bottom: 5px; }
+    
+    .social-links {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 15px;
+      padding: 20px;
+    }
+    
+    .social-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      text-decoration: none;
+      font-size: 24px;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+    }
+    
+    .social-icon:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    
+    .social-youtube { background: #FF0000; }
+    .social-instagram { background: linear-gradient(45deg, #F58529, #DD2A7B, #8134AF); }
+    .social-tiktok { background: #000000; }
+    .social-blog { background: #00C73C; }
     
     .chart-section {
       position: relative;
@@ -135,33 +174,33 @@
       box-shadow: 0 4px 16px rgba(0,0,0,0.1);
     }
     
-    .chart-legend {
+    .chart-legend{
       display: flex;
       justify-content: center;
       gap: 30px;
-      margin-top: 20px;
+      margin-top: 12px;
       font-size: 13px;
       font-weight: 700;
     }
     
-    .legend-item {
+    .legend-item{
       display: flex;
       align-items: center;
       gap: 8px;
     }
     
-    .legend-box {
+    .legend-box{
       width: 20px;
       height: 20px;
       border-radius: 3px;
     }
     
-    .legend-box.solid {
+    .legend-box.solid{
       background: #00AA00;
       border: 2px solid #00AA00;
     }
     
-    .legend-box.dashed {
+    .legend-box.dashed{
       background: white;
       border: 2px dashed #FF0000;
     }
@@ -180,7 +219,7 @@
     }
     .section-content { 
       font-size: 13px; 
-      line-height: 1.8; 
+      line-height: 1.618; 
       color: #555;
     }
     
@@ -204,9 +243,8 @@
       text-align: left;
     }
     .recommendation h4 { color: #2E7D32; margin-bottom: 10px; }
-    .recommendation p { font-size: 13px; color: #388E3C; line-height: 1.7; }
+    .recommendation p { font-size: 13px; color: #388E3C; line-height: 1.618; }
     
-    /* 테이블 스타일 */
     table { 
       width: 100%; 
       border-collapse: collapse; 
@@ -221,6 +259,7 @@
       text-align: center; 
       font-size: 13px;
       font-weight: 500;
+      line-height: 1.618;
     }
     th { 
       background: linear-gradient(135deg, #00BCD4 0%, #0097A7 100%);
@@ -235,8 +274,7 @@
       transition: background 0.2s ease;
     }
     
-    /* 버튼 섹션 */
-    .button-section {
+    .button-section{
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 12px;
@@ -303,16 +341,32 @@
     </div>
   </div>
   
-  <div class="profile">
-    <div class="profile-image">
-      <img src="https://raw.githubusercontent.com/limsaboo/kbrain-home/main/assets/img/profile_im_chanwoo.webp" alt="임찬우 소장">
+  <div class="profile-wrapper print-hide">
+    <div class="profile">
+      <div class="profile-image">
+        <img src="https://raw.githubusercontent.com/limsaboo/kbrain-home/main/assets/img/profile_im_chanwoo.webp" alt="임찬우 소장">
+      </div>
+      <div class="profile-info">
+        <h3>한국뇌심리연구소</h3>
+        <p><strong>소장 임찬우</strong></p>
+        <p>📞 010-4119-0031</p>
+        <p>✉️ brain.saboo@gmail.com</p>
+        <p style="font-size: 11px; color: #999; margin-top: 8px;">17년 이상 뇌심리 분야 전문가</p>
+      </div>
     </div>
-    <div class="profile-info">
-      <h3>한국뇌심리연구소</h3>
-      <p><strong>소장 임찬우</strong></p>
-      <p>📞 010-4119-0031</p>
-      <p>✉️ brain.saboo@gmail.com</p>
-      <p style="font-size: 11px; color: #999; margin-top: 8px;">17년 이상 뇌심리 분야 전문가</p>
+    <div class="social-links">
+      <a href="https://www.youtube.com/@kbrainpsychology" class="social-icon social-youtube" title="YouTube" target="_blank">
+        <i class="fab fa-youtube"></i>
+      </a>
+      <a href="https://www.instagram.com/kbrain_psychology" class="social-icon social-instagram" title="Instagram" target="_blank">
+        <i class="fab fa-instagram"></i>
+      </a>
+      <a href="https://www.tiktok.com/@kbrainpsychology" class="social-icon social-tiktok" title="TikTok" target="_blank">
+        <i class="fab fa-tiktok"></i>
+      </a>
+      <a href="https://blog.naver.com/brain-psychology" class="social-icon social-blog" title="Blog" target="_blank">
+        <i class="fas fa-blog"></i>
+      </a>
     </div>
   </div>
   
