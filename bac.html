@@ -115,9 +115,9 @@
     .chart-container { 
       position: relative; 
       width: 100%; 
-      max-width: 500px; 
+      max-width: 550px; 
       margin: 30px auto; 
-      height: 350px; 
+      height: 400px; 
       background: white;
       border-radius: 10px;
       padding: 20px;
@@ -237,7 +237,7 @@
   <div class="section">
     <div class="section-title">📊 검사 개요</div>
     <div class="section-content">
-      이 검사는 5개 뇌 영역(기억력, 집중력, 감정력, 판단력, 실행력)에 대한 종합적 평가를 통해 당신의 뇌 건강 상태를 진단합니다. 각 영역별 점수는 연령층 평균값과 비교되어 상대적 강점과 개선 영역을 파악할 수 있도록 구성되었습니다.
+      이 검사는 좌뇌와 우뇌의 12가지 능력을 종합적으로 평가하여 당신의 뇌 건강 상태와 좌뇌/우뇌 균형을 진단합니다. 각 능력별 점수는 연령층 평균값과 비교되어 상대적 강점과 개선 영역을 파악할 수 있도록 구성되었습니다.
     </div>
   </div>
   
@@ -248,44 +248,66 @@
     </div>
     
     <div class="section">
-      <div class="section-title">💡 종합 분석</div>
+      <div class="section-title">💡 좌뇌 vs 우뇌 분석</div>
       <div class="section-content">
-        <p>당신의 평균 뇌 건강도는 <strong>75점</strong>으로 양호한 수준입니다.</p>
-        <p style="margin-top: 10px;"><strong>강점 영역:</strong> 실행력(85점), 집중력(80점)</p>
-        <p><strong>개선 영역:</strong> 판단력(65점)</p>
-        <p style="margin-top: 10px;">정기적인 뇌 훈련을 통해 전체 능력을 더욱 향상시킬 수 있습니다.</p>
+        <p><strong>좌뇌(논리적 사고):</strong> 계획력, 판별력, 추리력, 논리력, 분석력 등 분석적 능력</p>
+        <p style="margin-top: 10px;"><strong>우뇌(창의적 사고):</strong> 구성력, 집중력, 주의력, 지닉력, 창의력, 상황력 등 창의적 능력</p>
+        <p style="margin-top: 10px;">당신의 평균 뇌 건강도는 <strong>75점</strong>으로 양호한 수준입니다. 좌뇌와 우뇌가 <strong>균형있게 발달</strong>되어 있습니다.</p>
       </div>
     </div>
   </div>
   
-  <!-- PAGE 3: 상세 점수 -->
+  <!-- PAGE 3: 좌뇌/우뇌별 상세 점수 -->
   <div class="page-break">
     <div class="section">
-      <div class="section-title">📈 5가지 뇌 영역 상세 점수</div>
+      <div class="section-title">📈 좌뇌(L) vs 우뇌(R) 상세 점수</div>
       
-      <div class="score-detail">
-        <div class="score-detail-label">🔷 기억력: 70점 (평균 65점)</div>
-        <div class="score-detail-value">✅ 우수 | 새로운 정보를 잘 습득하고 기억하는 능력이 뛰어납니다.</div>
+      <div style="background: #E3F2FD; padding: 15px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #1976D2;">
+        <h4 style="color: #1976D2; margin-bottom: 10px;">🧠 좌뇌(L) - 논리적 사고</h4>
+        <div class="score-detail">
+          <div class="score-detail-label">계획력: 80점 (평균 75점)</div>
+          <div class="score-detail-value">✅ 우수 | 미래를 체계적으로 계획하는 능력이 뛰어납니다.</div>
+        </div>
+        <div class="score-detail">
+          <div class="score-detail-label">판별력: 75점 (평균 70점)</div>
+          <div class="score-detail-value">✅ 우수 | 옳고 그름을 명확하게 구분하는 판단력이 좋습니다.</div>
+        </div>
+        <div class="score-detail">
+          <div class="score-detail-label">추리력: 70점 (평균 65점)</div>
+          <div class="score-detail-value">✅ 우수 | 논리적으로 결론을 도출하는 능력이 양호합니다.</div>
+        </div>
+        <div class="score-detail">
+          <div class="score-detail-label">논리력: 72점 (평균 68점)</div>
+          <div class="score-detail-value">✅ 우수 | 일관성있는 논리적 사고를 유지합니다.</div>
+        </div>
       </div>
       
-      <div class="score-detail">
-        <div class="score-detail-label">🟠 집중력: 80점 (평균 70점)</div>
-        <div class="score-detail-value">✅ 우수 | 한 가지 일에 오래 집중할 수 있는 능력이 매우 좋습니다.</div>
-      </div>
-      
-      <div class="score-detail">
-        <div class="score-detail-label">🟢 감정력: 75점 (평균 75점)</div>
-        <div class="score-detail-value">✅ 우수 | 감정 인식과 조절 능력이 양호한 수준입니다.</div>
-      </div>
-      
-      <div class="score-detail">
-        <div class="score-detail-label">🔴 판단력: 65점 (평균 60점)</div>
-        <div class="score-detail-value">⚠️ 개선필요 | 논리적 사고와 의사결정 능력을 향상시킬 수 있습니다.</div>
-      </div>
-      
-      <div class="score-detail">
-        <div class="score-detail-label">🟣 실행력: 85점 (평균 65점)</div>
-        <div class="score-detail-value">✅ 우수 | 계획을 세우고 실행하는 능력이 뛰어납니다.</div>
+      <div style="background: #FCE4EC; padding: 15px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #C2185B;">
+        <h4 style="color: #C2185B; margin-bottom: 10px;">🎨 우뇌(R) - 창의적 사고</h4>
+        <div class="score-detail">
+          <div class="score-detail-label">구성력: 78점 (평균 72점)</div>
+          <div class="score-detail-value">✅ 우수 | 새로운 것을 만들고 조직하는 능력이 뛰어납니다.</div>
+        </div>
+        <div class="score-detail">
+          <div class="score-detail-label">집중력: 82점 (평균 75점)</div>
+          <div class="score-detail-value">✅ 우수 | 한 가지 일에 집중하는 능력이 매우 좋습니다.</div>
+        </div>
+        <div class="score-detail">
+          <div class="score-detail-label">주의력: 76점 (평균 70점)</div>
+          <div class="score-detail-value">✅ 우수 | 세부 사항을 관찰하는 능력이 양호합니다.</div>
+        </div>
+        <div class="score-detail">
+          <div class="score-detail-label">창의력: 80점 (평균 72점)</div>
+          <div class="score-detail-value">✅ 우수 | 새롭고 독창적인 생각을 하는 능력이 뛰어납니다.</div>
+        </div>
+        <div class="score-detail">
+          <div class="score-detail-label">상황력: 74점 (평균 68점)</div>
+          <div class="score-detail-value">✅ 우수 | 상황에 적응하는 능력이 양호합니다.</div>
+        </div>
+        <div class="score-detail">
+          <div class="score-detail-label">지닉력: 68점 (평균 65점)</div>
+          <div class="score-detail-value">⚠️ 개선필요 | 지식을 기억하고 보유하는 능력 개선이 필요합니다.</div>
+        </div>
       </div>
     </div>
   </div>
@@ -293,25 +315,30 @@
   <!-- PAGE 4: 개선방안 & 안내 -->
   <div class="page-break">
     <div class="recommendation">
-      <h4>🎯 개선 권장사항</h4>
+      <h4>🎯 좌뇌/우뇌 균형 발달 권장사항</h4>
       <p>
-        <strong>판단력 강화를 위해:</strong><br>
-        • 논리적 사고 훈련 (문제해결 게임, 체스 등)<br>
-        • 정보 분석 능력 개발 (독서, 토론)<br>
-        • 의사결정 시뮬레이션 훈련<br><br>
+        <strong>좌뇌 강화를 위해:</strong><br>
+        • 논리적 문제해결 훈련 (수학, 퍼즐 등)<br>
+        • 체계적인 계획 수립 연습<br>
+        • 분석적 읽기 및 토론<br><br>
+        
+        <strong>우뇌 강화를 위해:</strong><br>
+        • 창의적 표현 활동 (미술, 음악, 글쓰기)<br>
+        • 직관적 사고 연습<br>
+        • 새로운 경험 및 탐험<br><br>
         
         <strong>지속적 뇌 건강 유지를 위해:</strong><br>
+        • 좌뇌/우뇌 균형잡힌 활동<br>
         • 주 3-4회, 30분 이상 규칙적 운동<br>
         • 충분한 수면 (7-8시간)<br>
-        • 균형잡힌 식단<br>
-        • 사회적 상호작용
+        • 균형잡힌 식단
       </p>
     </div>
     
     <div class="recommendation" style="background: #E8F5E9; border-left-color: #4CAF50;">
       <h4>🏥 한국뇌심리연구소 BHC 무료 뇌헬스훈련센터</h4>
       <p>
-        ✅ <strong>1:1 맞춤형 뇌훈련 프로그램</strong> - 당신의 약점 영역에 집중한 개인화된 훈련<br>
+        ✅ <strong>1:1 맞춤형 뇌훈련 프로그램</strong> - 좌뇌/우뇌 균형을 위한 개인화된 훈련<br>
         ✅ <strong>전문 뇌심리 상담사 상시 운영</strong> - 검사 결과 해석 및 맞춤 상담<br>
         ✅ <strong>첫 방문 무료 뇌 건강 상담</strong> - 추가 비용 없이 전문가 상담<br><br>
         
@@ -362,45 +389,82 @@
 </div>
 
 <script>
-const scores = { 기억력: 70, 집중력: 80, 감정력: 75, 판단력: 65, 실행력: 85 };
-const averages = { 기억력: 65, 집중력: 70, 감정력: 75, 판단력: 60, 실행력: 65 };
+// 좌뇌/우뇌 데이터
+const leftBrainScores = {
+  계획력: 80,
+  판별력: 75,
+  추리력: 70,
+  논리력: 72
+};
+
+const rightBrainScores = {
+  구성력: 78,
+  집중력: 82,
+  주의력: 76,
+  창의력: 80,
+  상황력: 74,
+  지닉력: 68
+};
+
+const leftBrainAvg = {
+  계획력: 75,
+  판별력: 70,
+  추리력: 65,
+  논리력: 68
+};
+
+const rightBrainAvg = {
+  구성력: 72,
+  집중력: 75,
+  주의력: 70,
+  창의력: 72,
+  상황력: 68,
+  지닉력: 65
+};
 
 window.addEventListener('load', function() {
   drawRadarChart();
 });
 
-// 별 모양 레이더 차트 - 초록색/빨강색
+// 12개 항목 원형 레이더 차트
 function drawRadarChart() {
   const ctx = document.getElementById('radarChart').getContext('2d');
+  
+  // 12개 항목 구성
+  const labels = ['계획력', '판별력', '추리력', '논리력', '구성력', '집중력', 
+                  '주의력', '창의력', '상황력', '지닉력'];
+  
+  const userData = [80, 75, 70, 72, 78, 82, 76, 80, 74, 68];
+  const avgData = [75, 70, 65, 68, 72, 75, 70, 72, 68, 65];
   
   new Chart(ctx, {
     type: 'radar',
     data: {
-      labels: ['기억력', '판단력', '집중력', '감정력', '실행력'],
+      labels: labels,
       datasets: [
         {
           label: '당신의 능력',
-          data: [scores['기억력'], scores['판단력'], scores['집중력'], scores['감정력'], scores['실행력']],
+          data: userData,
           borderColor: '#00AA00',  // 원색 초록색
-          backgroundColor: 'rgba(0, 170, 0, 0.2)',
+          backgroundColor: 'rgba(0, 170, 0, 0.15)',
           pointBackgroundColor: '#00AA00',
           pointBorderColor: '#fff',
-          pointRadius: 8,
-          pointHoverRadius: 10,
+          pointRadius: 6,
+          pointHoverRadius: 8,
           pointBorderWidth: 2,
-          tension: 0,
+          tension: 0.2,
           fill: true
         },
         {
           label: '연령층 평균',
-          data: [averages['기억력'], averages['판단력'], averages['집중력'], averages['감정력'], averages['실행력']],
+          data: avgData,
           borderColor: '#FF0000',  // 원색 빨강색
-          backgroundColor: 'rgba(255, 0, 0, 0.05)',
+          backgroundColor: 'rgba(255, 0, 0, 0.08)',
           pointBackgroundColor: '#FF0000',
           pointBorderColor: '#fff',
-          pointRadius: 6,
+          pointRadius: 5,
           borderDash: [6, 3],
-          tension: 0,
+          tension: 0.2,
           fill: false
         }
       ]
@@ -424,7 +488,7 @@ function drawRadarChart() {
           max: 100,
           ticks: {
             stepSize: 20,
-            font: { size: 11 }
+            font: { size: 10 }
           },
           grid: {
             color: 'rgba(0,0,0,0.08)',
