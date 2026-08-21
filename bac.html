@@ -466,115 +466,11 @@
       }
     }
     
-    @media print {
-      * {
-        margin: 0 !important;
-        padding: 0 !important;
-        box-shadow: none !important;
-      }
-      
-      .print-hide { 
-        display: none !important; 
-        visibility: hidden !important;
-      }
-      
-      body { 
-        background: white !important;
-        margin: 0;
-        padding: 0;
-        font-size: 11pt;
-        line-height: 1.4;
-      }
-      
-      .container { 
-        padding: 15mm;
-        background: white !important;
-        box-shadow: none;
-        max-width: 100%;
-        width: 100%;
-      }
-      
-      /* 섹션별 페이지 나누기 */
-      .header {
-        page-break-after: avoid;
-        padding-bottom: 10px;
-      }
-      
-      .score-cards {
-        page-break-after: avoid;
-        padding-bottom: 10px;
-      }
-      
-      .profile-section {
-        page-break-after: avoid;
-        padding-bottom: 10px;
-      }
-      
-      .chart-section {
-        page-break-after: avoid;
-        padding-bottom: 10px;
-      }
-      
-      /* 테이블 최적화 */
-      table {
-        width: 100%;
-        border-collapse: collapse;
-        page-break-inside: avoid;
-      }
-      
-      table tr {
-        page-break-inside: avoid;
-      }
-      
-      th, td {
-        padding: 8px;
-        border: 1px solid #ccc;
-        text-align: center;
-      }
-      
-      /* 이미지 최적화 */
-      img {
-        max-width: 100%;
-        height: auto;
-        page-break-inside: avoid;
-      }
-      
-      .chart-container {
-        max-height: 300px;
-        page-break-inside: avoid;
-      }
-      
-      /* 버튼/액션 요소 숨김 */
-      .btn,
-      button,
-      .action-btn,
-      .button-section {
-        display: none !important;
-      }
-      
-      /* 텍스트 최적화 */
-      h1, h2, h3 {
-        page-break-after: avoid;
-        margin-top: 10px;
-        margin-bottom: 8px;
-      }
-      
-      p {
-        page-break-inside: avoid;
-        margin-bottom: 5px;
-      }
-      
-      /* 색상 최적화 (검은색 텍스트) */
-      * {
-        color: black !important;
-        background: white !important;
-      }
-      
-      /* 레이더차트 크기 조정 */
-      canvas {
-        max-height: 250px;
-        page-break-inside: avoid;
-      }
+    @print {
+      .print-hide { display: none; }
+      .page-break { page-break-after: always; }
+      body { background: white; }
+      .container { padding: 20px; }
     }
   </style>
 </head>
@@ -850,79 +746,24 @@ function drawRadarChart() {
 }
 
 function savePDF() {
-  // 임시로 print-hide 요소 숨기기
-  const hiddenElements = document.querySelectorAll('.print-hide');
-  hiddenElements.forEach(el => {
-    el.style.display = 'none';
-  });
-  
   const element = document.querySelector('.container');
   const opt = {
-    margin: [10, 10, 10, 10],
+    margin: [8, 8, 8, 8],
     filename: '뇌건강체크_' + new Date().toISOString().slice(0,10) + '.pdf',
-    image: { type: 'jpeg', quality: 0.98 },
-    html2canvas: { 
-      scale: 2, 
-      useCORS: true,
-      logging: false,
-      backgroundColor: '#ffffff',
-      allowTaint: true
-    },
-    jsPDF: { 
-      orientation: 'portrait', 
-      unit: 'mm', 
-      format: 'a4',
-      compress: true,
-      precision: 2
-    },
-    pagebreak: { 
-      mode: ['avoid-all', 'css', 'legacy'],
-      before: '.page-break'
-    }
+    image: { type: 'jpeg', quality: 0.95 },
+    html2canvas: { scale: 2, useCORS: true },
+    jsPDF: { orientation: 'portrait', unit: 'mm', format: 'a4' }
   };
-  
-  html2pdf()
-    .set(opt)
-    .from(element)
-    .save()
-    .finally(() => {
-      // PDF 생성 후 요소 다시 표시
-      hiddenElements.forEach(el => {
-        el.style.display = '';
-      });
-    });
+  html2pdf().set(opt).from(element).save();
 }
 
 function saveAsImage() {
-  // 임시로 print-hide 요소 숨기기
-  const hiddenElements = document.querySelectorAll('.print-hide');
-  hiddenElements.forEach(el => {
-    el.style.display = 'none';
-  });
-  
   const element = document.querySelector('.container');
-  
-  html2canvas(element, { 
-    scale: 2,
-    useCORS: true,
-    backgroundColor: '#ffffff',
-    logging: false
-  }).then(canvas => {
+  html2canvas(element, { scale: 2 }).then(canvas => {
     const link = document.createElement('a');
     link.href = canvas.toDataURL('image/png');
     link.download = '뇌건강체크_' + new Date().toISOString().slice(0,10) + '.png';
     link.click();
-    
-    // 이미지 저장 후 요소 다시 표시
-    hiddenElements.forEach(el => {
-      el.style.display = '';
-    });
-  }).catch(err => {
-    console.error('이미지 저장 실패:', err);
-    // 에러 발생 시에도 요소 다시 표시
-    hiddenElements.forEach(el => {
-      el.style.display = '';
-    });
   });
 }
 </script>
