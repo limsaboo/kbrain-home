@@ -245,7 +245,7 @@ body { background: linear-gradient(180deg, #1a472a 0%, #2d5a3d 100%); font-famil
     </div>
 
     <div style="display: flex; flex-direction: column; gap: 10px;">
-      <button class="btn btn-primary" onclick="goToStart()">🏠 홈페이지로</button>
+      <button class="btn btn-primary" onclick="window.location.href='/'">🏠 홈페이지로</button>
       <button class="btn btn-secondary" onclick="restartTest()">🔄 다시 체크</button>
     </div>
   </div>
@@ -515,29 +515,69 @@ function showResults() {
   
   document.getElementById("brainAge").textContent = brainAge;
   
-  // 점수 표시
-  const scoresDisplay = document.getElementById("scoresDisplay");
-  scoresDisplay.innerHTML = DOMAIN_NAMES.map(domain => `
-    <div class="score-item">
-      <div class="score-label">${domain}</div>
-      <div class="score-number">${scores[domain]}</div>
-    </div>
-  `).join("");
+  // 평균값 (연령층 기준)
+  const averages = {
+    기억력: 65,
+    집중력: 70,
+    감정력: 75,
+    판단력: 60,
+    실행력: 65
+  };
   
-  // 해석 표시
+  // 점수 표시 + 비교
+  const scoresDisplay = document.getElementById("scoresDisplay");
+  scoresDisplay.innerHTML = DOMAIN_NAMES.map(domain => {
+    const userScore = scores[domain];
+    const avgScore = averages[domain];
+    const comparison = userScore >= avgScore ? '✅ 우수' : '⚠️ 개선필요';
+    return `
+      <div class="score-item">
+        <div class="score-label">${domain}</div>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <div class="score-number">${userScore}점</div>
+          <small style="color: #999;">평균: ${avgScore}점 ${comparison}</small>
+        </div>
+      </div>
+    `;
+  }).join("");
+  
+  // 상세 분석
   const interpretation = document.getElementById("interpretation");
+  const analysisText = generateAnalysis(scores, brainAge);
+  
   interpretation.innerHTML = `
-    <strong>📊 평균 뇌 건강도: ${brainAge}점</strong><br><br>
-    5개 영역에서의 성과를 바탕으로 당신의 뇌 건강 상태를 분석했습니다.<br>
-    <strong>기억력:</strong> ${scores['기억력']}점<br>
-    <strong>집중력:</strong> ${scores['집중력']}점<br>
-    <strong>감정력:</strong> ${scores['감정력']}점<br>
-    <strong>판단력:</strong> ${scores['판단력']}점<br>
-    <strong>실행력:</strong> ${scores['실행력']}점
+    <strong>🧠 당신의 뇌 건강 상태</strong><br><br>
+    ${analysisText}<br><br>
+    <strong>💡 추천 훈련</strong><br>
+    ${generateRecommendation(scores)}<br><br>
+    <strong>🎯 한국뇌심리연구소 BHC 무료 뇌헬스훈련센터</strong><br>
+    • 1:1 맞춤형 뇌훈련 프로그램<br>
+    • 전문 뇌심리 상담사 상시 운영<br>
+    • 첫 방문 무료 뇌 건강 상담<br>
+    📞 문의: 한국뇌심리연구소
   `;
   
   // 데이터 저장 시도
   saveToBDatabase(brainAge, scores);
+}
+
+function generateAnalysis(scores, brainAge) {
+  if (brainAge >= 80) {
+    return `평균 뇌 건강도: <strong>${brainAge}점 (우수)</strong><br>전반적인 인지 기능이 매우 우수합니다. 현재 수준을 유지하고 지속적인 훈련을 권장합니다.`;
+  } else if (brainAge >= 70) {
+    return `평균 뇌 건강도: <strong>${brainAge}점 (양호)</strong><br>대체로 양호한 상태입니다. 특히 약한 영역의 집중 훈련이 도움됩니다.`;
+  } else if (brainAge >= 60) {
+    return `평균 뇌 건강도: <strong>${brainAge}점 (보통)</strong><br>개선의 여지가 있습니다. 정기적인 뇌 훈련을 통해 개선 가능합니다.`;
+  } else {
+    return `평균 뇌 건강도: <strong>${brainAge}점 (관심필요)</strong><br>전문가와의 상담을 권장합니다. 맞춤형 훈련 프로그램이 효과적입니다.`;
+  }
+}
+
+function generateRecommendation(scores) {
+  const minDomain = Object.entries(scores).reduce((a, b) => 
+    a[1] < b[1] ? a : b
+  );
+  return `가장 개선이 필요한 영역: <strong>${minDomain[0]} (${minDomain[1]}점)</strong><br>이 영역 중심의 훈련을 권장합니다.`;
 }
 
 function calculateBrainAge() {
