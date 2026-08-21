@@ -205,25 +205,69 @@
     .recommendation h4 { color: #2E7D32; margin-bottom: 10px; }
     .recommendation p { font-size: 13px; color: #388E3C; line-height: 1.7; }
     
-    .action-buttons { 
-      display: flex; 
-      gap: 10px; 
-      margin: 30px auto; 
-      justify-content: center;
-      flex-wrap: wrap;
+    /* 테이블 스타일 */
+    table { 
+      width: 100%; 
+      border-collapse: collapse; 
+      margin: 25px 0; 
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      border-radius: 8px;
+      overflow: hidden;
     }
+    th, td { 
+      border: 1px solid #E0E0E0;
+      padding: 16px; 
+      text-align: center; 
+      font-size: 13px;
+      font-weight: 500;
+    }
+    th { 
+      background: linear-gradient(135deg, #00BCD4 0%, #0097A7 100%);
+      color: white;
+      font-weight: 700;
+    }
+    tr:nth-child(even) {
+      background: #F5F5F5;
+    }
+    tr:hover {
+      background: #FFFACD;
+      transition: background 0.2s ease;
+    }
+    
+    /* 버튼 섹션 */
+    .button-section {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin: 35px auto;
+      max-width: 500px;
+    }
+    
+    .button-full {
+      grid-column: 1 / -1;
+    }
+    
     .action-btn { 
-      padding: 12px 20px; 
+      padding: 14px 20px; 
       border: none; 
-      border-radius: 8px; 
+      border-radius: 10px; 
       cursor: pointer; 
       font-weight: 700; 
       font-size: 13px;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+    }
+    .action-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    .action-btn:active {
+      transform: translateY(0);
     }
     .btn-pdf { background: #4CAF50; color: white; }
     .btn-print { background: #2196F3; color: white; }
     .btn-image { background: #FF9800; color: white; }
-    .btn-home { background: #00BCD4; color: white; padding: 14px 30px; }
+    .btn-home { background: #00BCD4; color: white; width: 100%; }
     
     .print-hide { display: block; }
     @media print {
@@ -231,10 +275,6 @@
       .page-break { page-break-after: always; }
       body { background: white; }
     }
-    
-    table { width: 100%; border-collapse: collapse; margin: 15px 0; }
-    th, td { border: 1px solid #ddd; padding: 12px; text-align: left; font-size: 12px; }
-    th { background: #f0f0f0; font-weight: 700; }
   </style>
 </head>
 <body>
@@ -377,9 +417,9 @@
     
     <table>
       <tr>
-        <th>뇌 건강도 범위</th>
-        <th>평가</th>
-        <th>해석</th>
+        <th style="font-weight: 700;">뇌 건강도 범위</th>
+        <th style="font-weight: 700;">평가</th>
+        <th style="font-weight: 700;">해석</th>
       </tr>
       <tr>
         <td>90점 이상</td>
@@ -409,11 +449,11 @@
     </table>
   </div>
   
-  <div class="action-buttons print-hide" style="margin-top: 40px;">
+  <div class="button-section print-hide">
     <button class="action-btn btn-pdf" onclick="savePDF()">📄 PDF 저장</button>
     <button class="action-btn btn-print" onclick="window.print()">🖨️ 인쇄</button>
     <button class="action-btn btn-image" onclick="saveAsImage()">🖼️ 이미지 저장</button>
-    <button class="action-btn btn-home" onclick="window.location='https://k-brain.co.kr/'">🏠 홈페이지로</button>
+    <button class="action-btn btn-home button-full" onclick="window.location='https://k-brain.co.kr/'">🏠 홈페이지로</button>
   </div>
 </div>
 
@@ -437,20 +477,20 @@ function drawRadarChart() {
         {
           label: '당신의 능력',
           data: [scores['기억력'], scores['판단력'], scores['집중력'], scores['감정력'], scores['실행력']],
-          borderColor: '#00AA00',  // 원색 초록색
+          borderColor: '#00AA00',
           backgroundColor: 'rgba(0, 170, 0, 0.2)',
           pointBackgroundColor: '#00AA00',
           pointBorderColor: '#fff',
           pointRadius: 8,
           pointHoverRadius: 10,
           pointBorderWidth: 2,
-          tension: 0,  // 직선 연결 (별 모양)
+          tension: 0,
           fill: true
         },
         {
           label: '연령층 평균',
           data: [averages['기억력'], averages['판단력'], averages['집중력'], averages['감정력'], averages['실행력']],
-          borderColor: '#FF0000',  // 원색 빨강색
+          borderColor: '#FF0000',
           backgroundColor: 'rgba(255, 0, 0, 0.05)',
           pointBackgroundColor: '#FF0000',
           pointBorderColor: '#fff',
