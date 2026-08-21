@@ -267,64 +267,64 @@ try {
 // ===== 문제 데이터 =====
 const BAC_DATA = {
   기억력: [
-    { stimulus: '숫자 기억하기', question: '방금 본 숫자들을 순서대로 말하세요: 3, 7, 2, 9, 5', options: ['3,7,2,9,5', '3,7,5,2,9', '3,2,7,9,5'], correct: 0 },
-    { stimulus: '물건 기억하기', question: '방금 본 물건들을 모두 말해주세요', options: ['책, 컵, 펜', '책, 펜, 시계', '책, 컵, 시계'], correct: 2 },
-    { stimulus: '장면 기억하기', question: '앞의 장면에서 빠진 것은?', options: ['나무', '새', '사람'], correct: 1 },
-    { stimulus: '이야기 기억하기', question: '이야기의 주인공은 누구?', options: ['철수', '영희', '맑음'], correct: 0 },
-    { stimulus: '주소 기억하기', question: '주소의 번지수는?', options: ['123', '231', '312'], correct: 1 },
-    { stimulus: '이름 기억하기', question: '소개받은 사람의 이름은?', options: ['김철수', '이영희', '박민준'], correct: 2 },
-    { stimulus: '날짜 기억하기', question: '방금 본 날짜는?', options: ['2026년 8월 16일', '2026년 7월 16일', '2026년 8월 15일'], correct: 0 },
-    { stimulus: '순서 기억하기', question: '순서가 맞는 것은?', options: ['가→나→다', '나→가→다', '다→나→가'], correct: 0 },
-    { stimulus: '색상 기억하기', question: '본 색상은?', options: ['빨강, 파랑, 노랑', '빨강, 노랑, 초록', '초록, 파랑, 노랑'], correct: 1 },
-    { stimulus: '음성 기억하기', question: '들은 단어들을 말해주세요', options: ['책, 펜', '책, 연필', '책, 사과'], correct: 0 }
+    { title: '숫자 기억하기', stimulus: '3, 7, 2, 9, 5', question: '방금 본 숫자들을 순서대로 말하세요', options: ['3,7,2,9,5', '3,7,5,2,9', '3,2,7,9,5'], correct: 0 },
+    { title: '물건 기억하기', stimulus: '책 · 컵 · 펜 · 시계', question: '방금 본 물건들을 모두 말해주세요', options: ['책, 컵, 펜', '책, 펜, 시계', '책, 컵, 시계'], correct: 2 },
+    { title: '장면 기억하기', stimulus: '🌳 🐦 🌞', question: '앞의 장면에서 빠진 것은?', options: ['나무', '새', '사람'], correct: 2 },
+    { title: '이야기 기억하기', stimulus: '철수가 학교에 갔다', question: '이야기의 주인공은?', options: ['철수', '영희', '맑음'], correct: 0 },
+    { title: '주소 기억하기', stimulus: '서울시 강남구 123', question: '주소의 번지수는?', options: ['123', '231', '312'], correct: 0 },
+    { title: '이름 기억하기', stimulus: '김철수 · 이영희 · 박민준', question: '소개받은 사람들의 이름은?', options: ['김철수', '이영희', '박민준'], correct: 0 },
+    { title: '날짜 기억하기', stimulus: '2026년 8월 21일', question: '방금 본 날짜는?', options: ['2026년 8월 16일', '2026년 7월 16일', '2026년 8월 21일'], correct: 2 },
+    { title: '순서 기억하기', stimulus: '가 → 나 → 다 → 라', question: '순서가 맞는 것은?', options: ['가→나→다', '나→가→다', '다→나→가'], correct: 0 },
+    { title: '색상 기억하기', stimulus: '🔴 🔵 🟡 🟢', question: '본 색상은?', options: ['빨강, 파랑, 노랑', '빨강, 노랑, 초록', '초록, 파랑, 노랑'], correct: 1 },
+    { title: '음성 기억하기', stimulus: '책 · 펜 · 사과 · 나무', question: '들은 단어들을 말해주세요', options: ['책, 펜', '책, 연필', '책, 사과'], correct: 2 }
   ],
   집중력: [
-    { stimulus: '반복된 숫자 찾기', question: '반복된 숫자는?', options: ['3', '7', '2'], correct: 1 },
-    { stimulus: '같은 글자 찾기', question: '다른 글자는?', options: ['가', '나', '다'], correct: 1 },
-    { stimulus: '색상 구분하기', question: '다른 색상은?', options: ['빨강', '파랑', '주황'], correct: 2 },
-    { stimulus: '패턴 인식하기', question: '다음 패턴은?', options: ['①', '②', '③'], correct: 1 },
-    { stimulus: '숫자 세기', question: '총 몇 개?', options: ['5개', '6개', '7개'], correct: 1 },
-    { stimulus: '글자 찾기', question: '특정 글자는 몇 개?', options: ['3개', '4개', '5개'], correct: 2 },
-    { stimulus: '그림 찾기', question: '숨겨진 그림은?', options: ['삼각형', '원', '사각형'], correct: 0 },
-    { stimulus: '소리 구분하기', question: '다른 소리는?', options: ['①번', '②번', '③번'], correct: 1 },
-    { stimulus: '방해 제거하기', question: '정답은?', options: ['A', 'B', 'C'], correct: 0 },
-    { stimulus: '동시 처리하기', question: '두 작업을 동시에 했을 때 정답은?', options: ['①', '②', '③'], correct: 1 }
+    { title: '반복된 숫자 찾기', stimulus: '3, 5, 7, 5, 2', question: '반복된 숫자는?', options: ['3', '5', '2'], correct: 1 },
+    { title: '같은 글자 찾기', stimulus: '가, 나, 가, 다', question: '반복된 글자는?', options: ['가', '나', '다'], correct: 0 },
+    { title: '색상 구분하기', stimulus: '🔴 🔵 🟠', question: '다른 색상은?', options: ['빨강', '파랑', '주황'], correct: 2 },
+    { title: '패턴 인식하기', stimulus: '■ □ ■ □ ■', question: '다음 패턴은?', options: ['□', '■', '◇'], correct: 0 },
+    { title: '숫자 세기', stimulus: '🔴🔴🔴🔴🔴🔴', question: '총 몇 개?', options: ['5개', '6개', '7개'], correct: 1 },
+    { title: '글자 찾기', stimulus: 'A A B A C A', question: '"A"는 몇 개?', options: ['3개', '4개', '5개'], correct: 1 },
+    { title: '그림 찾기', stimulus: '△ ○ □ △ △', question: '삼각형은 몇 개?', options: ['2개', '3개', '4개'], correct: 1 },
+    { title: '소리 구분하기', stimulus: '빠 빠 따 빠', question: '다른 소리는?', options: ['1번', '2번', '3번'], correct: 2 },
+    { title: '방해 제거하기', stimulus: 'A B C D E', question: '세 번째 글자는?', options: ['A', 'C', 'E'], correct: 1 },
+    { title: '동시 처리하기', stimulus: '3 + 2 = ?', question: '답은?', options: ['4', '5', '6'], correct: 1 }
   ],
   감정력: [
-    { stimulus: '표정 해석', question: '이 표정의 감정은?', options: ['행복', '슬픔', '놀람'], correct: 0 },
-    { stimulus: '상황 이해', question: '이 상황의 감정은?', options: ['기쁨', '화남', '불안'], correct: 1 },
-    { stimulus: '음성 감정', question: '음성의 감정은?', options: ['친절함', '분노', '슬픔'], correct: 0 },
-    { stimulus: '감정 일치', question: '말과 표정이 일치하나?', options: ['예', '아니오'], correct: 1 },
-    { stimulus: '공감 능력', question: '상대방의 기분은?', options: ['좋음', '나쁨', '중립'], correct: 1 },
-    { stimulus: '감정 강도', question: '감정 강도는?', options: ['약함', '중간', '강함'], correct: 1 },
-    { stimulus: '감정 변화', question: '감정이 변했나?', options: ['예', '아니오'], correct: 0 },
-    { stimulus: '감정 표현', question: '적절한 표현은?', options: ['①', '②', '③'], correct: 0 },
-    { stimulus: '감정 조절', question: '감정을 조절할 수 있나?', options: ['가능', '불가능', '어려움'], correct: 0 },
-    { stimulus: '감정 이해', question: '감정을 이해하나?', options: ['완벽', '보통', '어려움'], correct: 1 }
+    { title: '표정 해석', stimulus: '😊', question: '이 표정의 감정은?', options: ['행복', '슬픔', '놀람'], correct: 0 },
+    { title: '상황 이해', stimulus: '📚 학교에서 시험 준비', question: '이 상황의 감정은?', options: ['기쁨', '긴장', '슬픔'], correct: 1 },
+    { title: '음성 감정', stimulus: '"안녕하세요!"', question: '음성의 감정은?', options: ['친절함', '분노', '슬픔'], correct: 0 },
+    { title: '감정 일치', stimulus: '😢 "정말 행복해!"', question: '말과 표정이 일치하나?', options: ['예', '아니오'], correct: 1 },
+    { title: '공감 능력', stimulus: '친구가 넘어져서 다쳤다', question: '친구의 기분은?', options: ['좋음', '나쁨', '중립'], correct: 1 },
+    { title: '감정 강도', stimulus: '😡😡😡', question: '감정 강도는?', options: ['약함', '중간', '강함'], correct: 2 },
+    { title: '감정 변화', stimulus: '😊 → 😢', question: '감정이 변했나?', options: ['예', '아니오'], correct: 0 },
+    { title: '감정 표현', stimulus: '기쁠 때 웃는다', question: '적절한 표현인가?', options: ['예', '아니오'], correct: 0 },
+    { title: '감정 조절', stimulus: '화가 날 때', question: '감정을 조절할 수 있나?', options: ['가능', '불가능', '어려움'], correct: 0 },
+    { title: '감정 이해', stimulus: '사람마다 감정이 다르다', question: '이해하나?', options: ['완벽', '보통', '어려움'], correct: 1 }
   ],
   판단력: [
-    { stimulus: '논리적 추론', question: '다음 중 맞는 것은?', options: ['①', '②', '③'], correct: 0 },
-    { stimulus: '문제 해결', question: '올바른 해결책은?', options: ['①', '②', '③'], correct: 1 },
-    { stimulus: '인과관계 이해', question: '원인은?', options: ['①', '②', '③'], correct: 0 },
-    { stimulus: '위험 판단', question: '더 안전한 것은?', options: ['①', '②', '③'], correct: 1 },
-    { stimulus: '우선순위 판단', question: '먼저 할 일은?', options: ['①', '②', '③'], correct: 0 },
-    { stimulus: '도덕적 판단', question: '옳은 것은?', options: ['①', '②', '③'], correct: 1 },
-    { stimulus: '재정적 판단', question: '현명한 선택은?', options: ['①', '②', '③'], correct: 0 },
-    { stimulus: '논쟁 분석', question: '올바른 주장은?', options: ['①', '②', '③'], correct: 1 },
-    { stimulus: '신뢰도 판단', question: '신뢰할 수 있는 정보는?', options: ['①', '②', '③'], correct: 0 },
-    { stimulus: '결정 내리기', question: '가장 좋은 결정은?', options: ['①', '②', '③'], correct: 1 }
+    { title: '논리적 추론', stimulus: '모든 새는 날 수 있다', question: '펭귄도 날 수 있나?', options: ['예', '아니오'], correct: 1 },
+    { title: '문제 해결', stimulus: '우산이 없는데 비가 온다', question: '해결책은?', options: ['집에 있기', '우산 빌리기', '그냥 맞기'], correct: 1 },
+    { title: '인과관계', stimulus: '벼락 → 천둥소리', question: '원인은?', options: ['천둥', '벼락'], correct: 1 },
+    { title: '위험 판단', stimulus: '불 · 물 · 얼음', question: '가장 위험한 것은?', options: ['물', '얼음', '불'], correct: 2 },
+    { title: '우선순위', stimulus: '공부 · 놀이 · 밥', question: '먼저 할 일은?', options: ['밥', '놀이', '공부'], correct: 0 },
+    { title: '도덕적 판단', stimulus: '남의 것을 가져가면?', question: '옳은가?', options: ['옳다', '틀렸다'], correct: 1 },
+    { title: '재정 판단', stimulus: '용돈 5만원', question: '저축하는 것이 나은가?', options: ['예', '아니오'], correct: 0 },
+    { title: '논쟁 분석', stimulus: 'A: 맞다 / B: 틀렸다', question: '누가 맞나?', options: ['A', 'B', '모르겠음'], correct: 2 },
+    { title: '신뢰도 판단', stimulus: '유명인 vs 전문가', question: '더 믿을 수 있는 사람은?', options: ['유명인', '전문가'], correct: 1 },
+    { title: '결정 내리기', stimulus: '직업 선택하기', question: '가장 좋은 결정은?', options: ['흥미 우선', '돈 우선', '둘 다 고려'], correct: 2 }
   ],
   실행력: [
-    { stimulus: '순서 따르기', question: '올바른 순서는?', options: ['1→2→3', '2→1→3', '3→2→1'], correct: 0 },
-    { stimulus: '지시 이해', question: '지시를 이해했나?', options: ['예', '아니오'], correct: 0 },
-    { stimulus: '계획 실행', question: '계획을 실행했나?', options: ['성공', '실패', '부분'], correct: 0 },
-    { stimulus: '목표 달성', question: '목표를 달성했나?', options: ['예', '아니오'], correct: 0 },
-    { stimulus: '작업 완료', question: '작업을 끝냈나?', options: ['완벽', '대부분', '미완료'], correct: 0 },
-    { stimulus: '자기 통제', question: '자기 통제가 가능한가?', options: ['매우', '보통', '어려움'], correct: 1 },
-    { stimulus: '충동 억제', question: '충동을 억제할 수 있나?', options: ['가능', '불가능'], correct: 0 },
-    { stimulus: '인내심', question: '인내심이 있나?', options: ['많음', '보통', '적음'], correct: 0 },
-    { stimulus: '동기 유지', question: '동기가 유지되나?', options: ['예', '아니오'], correct: 0 },
-    { stimulus: '책임감', question: '책임을 질 수 있나?', options: ['예', '아니오'], correct: 0 }
+    { title: '순서 따르기', stimulus: '1. 손 씻기\n2. 밥 먹기\n3. 양치하기', question: '올바른 순서인가?', options: ['예', '아니오'], correct: 0 },
+    { title: '지시 이해', stimulus: '"빨간 버튼을 누르세요"', question: '지시를 이해했나?', options: ['예', '아니오'], correct: 0 },
+    { title: '계획 실행', stimulus: '계획: 1시간 공부하기', question: '실행했나?', options: ['성공', '실패', '부분'], correct: 0 },
+    { title: '목표 달성', stimulus: '목표: 책 읽기', question: '달성했나?', options: ['예', '아니오'], correct: 0 },
+    { title: '작업 완료', stimulus: '세 가지 할 일', question: '모두 끝냈나?', options: ['완벽', '대부분', '미완료'], correct: 0 },
+    { title: '자기 통제', stimulus: '유혹 앞에서도 견딜 수 있나?', question: '자기 통제 능력은?', options: ['매우', '보통', '어려움'], correct: 1 },
+    { title: '충동 억제', stimulus: '화날 때 참을 수 있나?', question: '충동을 억제할 수 있나?', options: ['가능', '불가능'], correct: 0 },
+    { title: '인내심', stimulus: '어려운 일을 계속하나?', question: '인내심이 있나?', options: ['많음', '보통', '적음'], correct: 0 },
+    { title: '동기 유지', stimulus: '장기 목표를 위해 노력하나?', question: '동기가 유지되나?', options: ['예', '아니오'], correct: 0 },
+    { title: '책임감', stimulus: '실수했을 때 책임지나?', question: '책임을 질 수 있나?', options: ['예', '아니오'], correct: 0 }
   ]
 };
 
@@ -430,20 +430,15 @@ function showQuestion() {
   document.getElementById("progressPct").textContent = pct + "%";
   document.getElementById("qNum").textContent = `문항 ${domainIdx * 10 + questionIdx + 1}/50`;
   document.getElementById("qDomain").textContent = domain;
-  document.getElementById("stimulusTitle").textContent = q.stimulus;
+  document.getElementById("stimulusTitle").textContent = q.title;
   document.getElementById("stimulusContent").textContent = q.stimulus;
   document.getElementById("questionText").textContent = q.question;
 
   // 선택지 생성
   const choicesDiv = document.getElementById("choices");
-  choicesDiv.innerHTML = "";
-  q.options.forEach((opt, i) => {
-    const btn = document.createElement("button");
-    btn.className = "option-btn";
-    btn.textContent = opt;
-    btn.onclick = () => selectAnswer(i);
-    choicesDiv.appendChild(btn);
-  });
+  choicesDiv.innerHTML = q.options.map((opt, i) => 
+    `<button class="option-btn" onclick="if(selectAnswer)selectAnswer(${i});else alert('클릭됨: ${i}');">${opt}</button>`
+  ).join("");
 
   // 카운트다운
   let count = 3;
@@ -455,6 +450,8 @@ function showQuestion() {
     document.getElementById("countdown").textContent = count;
     if (count <= 0) {
       clearInterval(stimulusTimer);
+      // ✅ 카운트다운 종료 후 자극 섹션 숨기기
+      document.getElementById("stimulusContent").textContent = "";
       document.getElementById("countdown").textContent = "✅";
       document.getElementById("questionSection").style.display = "block";
     }
@@ -466,17 +463,38 @@ function showQuestion() {
 }
 
 function selectAnswer(idx) {
-  clearInterval(stimulusTimer);
-  const domain = DOMAIN_NAMES[domainIdx];
-  const questionIdx = currentIdx % 10;
-  const q = BAC_DATA[domain][questionIdx];
+  try {
+    clearInterval(stimulusTimer);
+    const domain = DOMAIN_NAMES[domainIdx];
+    const questionIdx = currentIdx % 10;
+    const q = BAC_DATA[domain][questionIdx];
 
-  if (idx === q.correct) {
-    scores[domain] += 10;
+    if (idx === q.correct) {
+      scores[domain] += 10;
+    }
+
+    // 다음 질문으로 넘어가기
+    currentIdx++;
+    
+    // 현재 도메인이 끝났는지 확인
+    if (currentIdx >= 10) {
+      domainIdx++;
+      currentIdx = 0;
+    }
+
+    // 모든 질문 완료 확인
+    if (domainIdx >= DOMAIN_NAMES.length) {
+      showResults();
+      return;
+    }
+
+    // 다음 질문 표시
+    setTimeout(() => {
+      showQuestion();
+    }, 100);
+  } catch (e) {
+    console.error("selectAnswer error:", e);
   }
-
-  document.getElementById("nextBtn").disabled = false;
-  document.getElementById("nextBtn").textContent = "다음 →";
 }
 
 function prevQ() {
@@ -487,6 +505,45 @@ function prevQ() {
     currentIdx = 9;
   }
   showQuestion();
+}
+
+function showResults() {
+  const brainAge = calculateBrainAge();
+  
+  document.getElementById("testScreen").style.display = "none";
+  document.getElementById("resultScreen").style.display = "flex";
+  
+  document.getElementById("brainAge").textContent = brainAge;
+  
+  // 점수 표시
+  const scoresDisplay = document.getElementById("scoresDisplay");
+  scoresDisplay.innerHTML = DOMAIN_NAMES.map(domain => `
+    <div class="score-item">
+      <div class="score-label">${domain}</div>
+      <div class="score-number">${scores[domain]}</div>
+    </div>
+  `).join("");
+  
+  // 해석 표시
+  const interpretation = document.getElementById("interpretation");
+  interpretation.innerHTML = `
+    <strong>📊 평균 뇌 건강도: ${brainAge}점</strong><br><br>
+    5개 영역에서의 성과를 바탕으로 당신의 뇌 건강 상태를 분석했습니다.<br>
+    <strong>기억력:</strong> ${scores['기억력']}점<br>
+    <strong>집중력:</strong> ${scores['집중력']}점<br>
+    <strong>감정력:</strong> ${scores['감정력']}점<br>
+    <strong>판단력:</strong> ${scores['판단력']}점<br>
+    <strong>실행력:</strong> ${scores['실행력']}점
+  `;
+  
+  // 데이터 저장 시도
+  saveToBDatabase(brainAge, scores);
+}
+
+function calculateBrainAge() {
+  const total = Object.values(scores).reduce((a, b) => a + b, 0);
+  const average = Math.round(total / DOMAIN_NAMES.length);
+  return average;
 }
 
 function nextQ() {
