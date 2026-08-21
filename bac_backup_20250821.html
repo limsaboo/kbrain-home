@@ -239,10 +239,7 @@ body { background: linear-gradient(180deg, #1a472a 0%, #2d5a3d 100%); font-famil
 
     <div class="analysis-section">
       <div class="section-title">📊 5가지 영역 점수</div>
-          <div style="position: relative; width: 100%; max-width: 400px; margin: 20px auto; height: 300px;">
-      <canvas id="radarChart"></canvas>
-    </div>
-    <div id="scoresDisplay"></div>
+      <div id="scoresDisplay"></div>
     </div>
 
     <div class="analysis-section">
@@ -565,15 +562,6 @@ function showResults() {
   
   // 데이터 저장 시도
   saveToBDatabase(brainAge, scores);
-  
-  // 레이더 차트 그리기 (100ms 후)
-  setTimeout(() => {
-    try {
-      drawRadarChart();
-    } catch (e) {
-      console.log("레이더 차트 그리기 오류:", e);
-    }
-  }, 100);
 }
 
 function generateAnalysis(scores, brainAge) {

@@ -102,6 +102,9 @@ body { background: linear-gradient(180deg, #1a472a 0%, #2d5a3d 100%); font-famil
   .brain-age-number { font-size: 42px; }
 }
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
 
@@ -236,7 +239,10 @@ body { background: linear-gradient(180deg, #1a472a 0%, #2d5a3d 100%); font-famil
 
     <div class="analysis-section">
       <div class="section-title">📊 5가지 영역 점수</div>
-      <div id="scoresDisplay"></div>
+          <div style="position: relative; width: 100%; max-width: 400px; margin: 20px auto; height: 300px;">
+      <canvas id="radarChart"></canvas>
+    </div>
+    <div id="scoresDisplay"></div>
     </div>
 
     <div class="analysis-section">
@@ -559,6 +565,15 @@ function showResults() {
   
   // 데이터 저장 시도
   saveToBDatabase(brainAge, scores);
+  
+  // 레이더 차트 그리기 (100ms 후)
+  setTimeout(() => {
+    try {
+      drawRadarChart();
+    } catch (e) {
+      console.log("레이더 차트 그리기 오류:", e);
+    }
+  }, 100);
 }
 
 function generateAnalysis(scores, brainAge) {
@@ -707,3 +722,105 @@ function restartTest() { goToUserInfo(); }
 
 </body>
 </html>
+
+<script>
+// PDF 저장 함수
+function savePDF() {
+  const element = document.getElementById('resultScreen');
+  const opt = {
+    margin: 10,
+    filename: '뇌건강체크_결과보고서_' + new Date().toISOString().slice(0,10) + '.pdf',
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: { scale: 2 },
+    jsPDF: { orientation: 'portrait', unit: 'mm', format: 'a4' }
+  };
+  html2pdf().set(opt).from(element).save();
+}
+
+// 인쇄 함수
+function printResult() {
+  window.print();
+}
+
+// 이미지 저장 함수
+function saveAsImage() {
+  const element = document.getElementById('resultScreen');
+  html2canvas(element, { scale: 2 }).then(canvas => {
+    const link = document.createElement('a');
+    link.href = canvas.toDataURL('image/png');
+    link.download = '뇌건강체크_결과_' + new Date().toISOString().slice(0,10) + '.png';
+    link.click();
+  });
+}
+
+// 레이더 차트 그리기
+function drawRadarChart() {
+  try {
+    // 기존 차트 제거
+    if (window.radarChartInstance) {
+      window.radarChartInstance.destroy();
+    }
+    
+    const ctx = document.getElementById('radarChart');
+    if (!ctx) return;
+    
+    const averages = {
+      기억력: 65,
+      집중력: 70,
+      감정력: 75,
+      판단력: 60,
+      실행력: 65
+    };
+    
+    window.radarChartInstance = new Chart(ctx.getContext('2d'), {
+      type: 'radar',
+      data: {
+        labels: DOMAIN_NAMES,
+        datasets: [
+          {
+            label: '당신의 점수',
+            data: DOMAIN_NAMES.map(d => scores[d]),
+            borderColor: '#00BCD4',
+            backgroundColor: 'rgba(0, 188, 212, 0.2)',
+            pointBackgroundColor: '#00BCD4',
+            pointBorderColor: '#fff',
+            pointHoverBackgroundColor: '#fff',
+            pointHoverBorderColor: '#00BCD4',
+            tension: 0.1
+          },
+          {
+            label: '평균값',
+            data: DOMAIN_NAMES.map(d => averages[d]),
+            borderColor: '#FF9800',
+            backgroundColor: 'rgba(255, 152, 0, 0.1)',
+            pointBackgroundColor: '#FF9800',
+            borderDash: [5, 5],
+            tension: 0.1
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        plugins: {
+          legend: {
+            display: true,
+            position: 'top'
+          }
+        },
+        scales: {
+          r: {
+            beginAtZero: true,
+            max: 100,
+            ticks: {
+              stepSize: 20
+            }
+          }
+        }
+      }
+    });
+  } catch (e) {
+    console.error("차트 그리기 오류:", e);
+  }
+}
+</script>
