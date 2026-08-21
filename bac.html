@@ -568,6 +568,19 @@ body { background: linear-gradient(180deg, #1a472a 0%, #2d5a3d 100%); font-famil
     }
   </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+
+<!-- Chart.js 로드 확인 -->
+<script>
+  window.chartJsLoaded = false;
+  document.addEventListener('DOMContentLoaded', function() {
+    if (typeof Chart !== 'undefined') {
+      window.chartJsLoaded = true;
+    } else {
+      console.warn('Chart.js CDN이 차단됨. 막대그래프로 대체합니다.');
+      window.chartJsLoaded = false;
+    }
+  });
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
@@ -725,7 +738,7 @@ body { background: linear-gradient(180deg, #1a472a 0%, #2d5a3d 100%); font-famil
 <script>
 // ===== Supabase 초기화 =====
 const SUPABASE_URL = "https://grxqfaeznqqohnlltged.supabase.co";
-const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdyeHFmYWV6bnFxb2hubGx0Z2VkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDY4MjQ3MzUsImV4cCI6MjAyMjQwMDczNX0.7sLJ-8VKTvGu9d7rC0q5HN4bQ0K1H5ZmQsQ3B5X0Y5M";
+const SUPABASE_KEY = "sb_publishable_Sgv6BVPo1dOnVICcX1tfzA_gf7T5Z4I";
 
 let sbClient = null;
 try {
@@ -1061,9 +1074,38 @@ function generateRecommendation(scores) {
 }
 
 function calculateBrainAge() {
+  // 뇌건강도 = 5개 영역의 평균
   const total = Object.values(scores).reduce((a, b) => a + b, 0);
-  const average = Math.round(total / DOMAIN_NAMES.length);
-  return average;
+  const healthScore = Math.round(total / DOMAIN_NAMES.length);
+  
+  // 만나이 가져오기
+  const year = parseInt(document.getElementById("birthYear").value);
+  const month = parseInt(document.getElementById("birthMonth").value);
+  const day = parseInt(document.getElementById("birthDay").value);
+  
+  if (!year || !month || !day) {
+    return healthScore;
+  }
+  
+  // 만나이 계산
+  const today = new Date();
+  const birthDate = new Date(year, month - 1, day);
+  
+  let age = today.getFullYear() - birthDate.getFullYear();
+  const monthDiff = today.getMonth() - birthDate.getMonth();
+  if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+    age--;
+  }
+  
+  // 뇌나이 = 만나이 − (뇌건강도 − 70) × 0.2
+  let brainAge = age - (healthScore - 70) * 0.2;
+  
+  // ±10세 범위 제한 (보수적 설계)
+  const minAge = Math.max(0, age - 10);
+  const maxAge = age + 10;
+  brainAge = Math.round(Math.max(minAge, Math.min(maxAge, brainAge)));
+  
+  return brainAge;
 }
 
 function nextQ() {
