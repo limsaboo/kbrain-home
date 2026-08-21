@@ -213,7 +213,7 @@ body { background: linear-gradient(180deg, #1a472a 0%, #2d5a3d 100%); font-famil
     </div>
 
     <div class="nav-buttons">
-      <button class="btn-nav" onclick="prevQ()" id="prevBtn" disabled>← 이전</button>
+      <button class="btn-nav" onclick="if(prevQ)prevQ();else alert('이전 버튼');" id="prevBtn">← 이전</button>
       <button class="btn-nav" onclick="nextQ()" id="nextBtn">다음 →</button>
     </div>
   </div>
@@ -267,64 +267,64 @@ try {
 // ===== 문제 데이터 =====
 const BAC_DATA = {
   기억력: [
-    { title: '숫자 기억하기', stimulus: '3, 7, 2, 9, 5', question: '방금 본 숫자들을 순서대로 말하세요', options: ['3,7,2,9,5', '3,7,5,2,9', '3,2,7,9,5'], correct: 0 },
-    { title: '물건 기억하기', stimulus: '책 · 컵 · 펜 · 시계', question: '방금 본 물건들을 모두 말해주세요', options: ['책, 컵, 펜', '책, 펜, 시계', '책, 컵, 시계'], correct: 2 },
-    { title: '장면 기억하기', stimulus: '🌳 🐦 🌞', question: '앞의 장면에서 빠진 것은?', options: ['나무', '새', '사람'], correct: 2 },
-    { title: '이야기 기억하기', stimulus: '철수가 학교에 갔다', question: '이야기의 주인공은?', options: ['철수', '영희', '맑음'], correct: 0 },
-    { title: '주소 기억하기', stimulus: '서울시 강남구 123', question: '주소의 번지수는?', options: ['123', '231', '312'], correct: 0 },
-    { title: '이름 기억하기', stimulus: '김철수 · 이영희 · 박민준', question: '소개받은 사람들의 이름은?', options: ['김철수', '이영희', '박민준'], correct: 0 },
-    { title: '날짜 기억하기', stimulus: '2026년 8월 21일', question: '방금 본 날짜는?', options: ['2026년 8월 16일', '2026년 7월 16일', '2026년 8월 21일'], correct: 2 },
-    { title: '순서 기억하기', stimulus: '가 → 나 → 다 → 라', question: '순서가 맞는 것은?', options: ['가→나→다', '나→가→다', '다→나→가'], correct: 0 },
-    { title: '색상 기억하기', stimulus: '🔴 🔵 🟡 🟢', question: '본 색상은?', options: ['빨강, 파랑, 노랑', '빨강, 노랑, 초록', '초록, 파랑, 노랑'], correct: 1 },
-    { title: '음성 기억하기', stimulus: '책 · 펜 · 사과 · 나무', question: '들은 단어들을 말해주세요', options: ['책, 펜', '책, 연필', '책, 사과'], correct: 2 }
+    { title: '숫자 기억하기', stimulus: '3, 7, 2, 9, 5', question: '방금 본 숫자들을 정확히 순서대로 말하세요', options: ['3,7,2,9,5', '3,7,5,2,9', '7,3,2,9,5'], correct: 0 },
+    { title: '물건 기억하기', stimulus: '책 · 컵 · 펜 · 시계', question: '방금 본 4개 물건을 모두 말하세요', options: ['책, 컵, 펜', '책, 컵, 펜, 시계', '책, 펜, 시계'], correct: 1 },
+    { title: '이름 기억하기', stimulus: '김철수 · 이영희 · 박민준', question: '세 사람의 이름을 모두 말하세요', options: ['김철수, 이영희, 박민준', '김철수, 박민준', '이영희, 박민준'], correct: 0 },
+    { title: '순서 기억하기', stimulus: '1번째: 가\n2번째: 나\n3번째: 다', question: '정확한 순서는?', options: ['가→나→다', '나→가→다', '다→나→가'], correct: 0 },
+    { title: '색상 기억하기', stimulus: '🔴 🔵 🟡 🟢', question: '본 색상의 개수는?', options: ['3개', '4개', '5개'], correct: 1 },
+    { title: '위치 기억하기', stimulus: '왼쪽: 책\n중앙: 펜\n오른쪽: 시계', question: '펜은 어디 위치에 있었나?', options: ['왼쪽', '중앙', '오른쪽'], correct: 1 },
+    { title: '이야기 기억하기', stimulus: '"철수가 공원에서 개를 만났다"', question: '철수가 어디서 개를 만났나?', options: ['공원', '집', '학교'], correct: 0 },
+    { title: '얼굴 기억하기', stimulus: '😊 😢 😡 😮 😴', question: '본 표정의 개수는?', options: ['3개', '4개', '5개'], correct: 2 },
+    { title: '음성 기억하기', stimulus: '"사과, 포도, 딸기"', question: '들은 과일은?', options: ['사과, 포도, 딸기', '포도, 딸기, 바나나', '사과, 딸기, 수박'], correct: 0 },
+    { title: '날짜 기억하기', stimulus: '2026년 8월 21일 금요일', question: '방금 본 날짜는?', options: ['2026년 8월 20일', '2026년 8월 21일', '2026년 7월 21일'], correct: 1 }
   ],
   집중력: [
-    { title: '반복된 숫자 찾기', stimulus: '3, 5, 7, 5, 2', question: '반복된 숫자는?', options: ['3', '5', '2'], correct: 1 },
-    { title: '같은 글자 찾기', stimulus: '가, 나, 가, 다', question: '반복된 글자는?', options: ['가', '나', '다'], correct: 0 },
-    { title: '색상 구분하기', stimulus: '🔴 🔵 🟠', question: '다른 색상은?', options: ['빨강', '파랑', '주황'], correct: 2 },
-    { title: '패턴 인식하기', stimulus: '■ □ ■ □ ■', question: '다음 패턴은?', options: ['□', '■', '◇'], correct: 0 },
-    { title: '숫자 세기', stimulus: '🔴🔴🔴🔴🔴🔴', question: '총 몇 개?', options: ['5개', '6개', '7개'], correct: 1 },
-    { title: '글자 찾기', stimulus: 'A A B A C A', question: '"A"는 몇 개?', options: ['3개', '4개', '5개'], correct: 1 },
-    { title: '그림 찾기', stimulus: '△ ○ □ △ △', question: '삼각형은 몇 개?', options: ['2개', '3개', '4개'], correct: 1 },
-    { title: '소리 구분하기', stimulus: '빠 빠 따 빠', question: '다른 소리는?', options: ['1번', '2번', '3번'], correct: 2 },
-    { title: '방해 제거하기', stimulus: 'A B C D E', question: '세 번째 글자는?', options: ['A', 'C', 'E'], correct: 1 },
-    { title: '동시 처리하기', stimulus: '3 + 2 = ?', question: '답은?', options: ['4', '5', '6'], correct: 1 }
+    { title: '숫자 찾기', stimulus: '3 5 7 5 2 9 5 6 3 2\n(5가 몇 개인가?)', question: '숫자 5는 몇 개?', options: ['2개', '3개', '4개'], correct: 1 },
+    { title: '글자 찾기', stimulus: 'A B C A D A E B A\n(A가 몇 개인가?)', question: '글자 A는 몇 개?', options: ['2개', '3개', '4개'], correct: 1 },
+    { title: '같은 그림 찾기', stimulus: '▲ ■ ● ▲ ◆ ▲ ◇ ■', question: '삼각형(▲)은 몇 개?', options: ['2개', '3개', '4개'], correct: 1 },
+    { title: '색상 구분', stimulus: '빨강 파랑 노랑 빨강 초록', question: '빨강은 몇 개?', options: ['1개', '2개', '3개'], correct: 1 },
+    { title: '빠진 것 찾기', stimulus: '1 2 3 ? 5 6', question: '빠진 숫자는?', options: ['3', '4', '5'], correct: 1 },
+    { title: '규칙 찾기', stimulus: '2 4 6 8 10 ?', question: '다음은?', options: ['11', '12', '14'], correct: 1 },
+    { title: '다른 것 찾기', stimulus: '빨강 파랑 노랑 하늘\n(다른 색은?)', question: '다른 색은?', options: ['빨강', '파랑', '하늘'], correct: 2 },
+    { title: '같은 소리 찾기', stimulus: '"바 파 바 마 바"\n(바가 몇 개?)', question: '같은 소리 "바"는 몇 개?', options: ['1개', '2개', '3개'], correct: 2 },
+    { title: '패턴 찾기', stimulus: '■ □ ■ □ ■ ?', question: '다음은?', options: ['■', '□', '◇'], correct: 1 },
+    { title: '집합 찾기', stimulus: '사과 포도 딸기 바나나\n(과일이 몇 개?)', question: '과일의 개수는?', options: ['3개', '4개', '5개'], correct: 1 }
   ],
   감정력: [
-    { title: '표정 해석', stimulus: '😊', question: '이 표정의 감정은?', options: ['행복', '슬픔', '놀람'], correct: 0 },
-    { title: '상황 이해', stimulus: '📚 학교에서 시험 준비', question: '이 상황의 감정은?', options: ['기쁨', '긴장', '슬픔'], correct: 1 },
-    { title: '음성 감정', stimulus: '"안녕하세요!"', question: '음성의 감정은?', options: ['친절함', '분노', '슬픔'], correct: 0 },
-    { title: '감정 일치', stimulus: '😢 "정말 행복해!"', question: '말과 표정이 일치하나?', options: ['예', '아니오'], correct: 1 },
-    { title: '공감 능력', stimulus: '친구가 넘어져서 다쳤다', question: '친구의 기분은?', options: ['좋음', '나쁨', '중립'], correct: 1 },
-    { title: '감정 강도', stimulus: '😡😡😡', question: '감정 강도는?', options: ['약함', '중간', '강함'], correct: 2 },
-    { title: '감정 변화', stimulus: '😊 → 😢', question: '감정이 변했나?', options: ['예', '아니오'], correct: 0 },
-    { title: '감정 표현', stimulus: '기쁠 때 웃는다', question: '적절한 표현인가?', options: ['예', '아니오'], correct: 0 },
-    { title: '감정 조절', stimulus: '화가 날 때', question: '감정을 조절할 수 있나?', options: ['가능', '불가능', '어려움'], correct: 0 },
-    { title: '감정 이해', stimulus: '사람마다 감정이 다르다', question: '이해하나?', options: ['완벽', '보통', '어려움'], correct: 1 }
+    { title: '표정 읽기', stimulus: '😊', question: '이 표정은?', options: ['슬픔', '기쁨', '화남'], correct: 1 },
+    { title: '상황 이해', stimulus: '친구가 떨어졌다', question: '친구의 감정은?', options: ['기쁨', '슬픔', '놀람'], correct: 1 },
+    { title: '음성 감정', stimulus: '"안녕!"\n(밝은 톤)', question: '말하는 사람의 감정?', options: ['슬픔', '기쁨', '화남'], correct: 1 },
+    { title: '감정 표현', stimulus: '눈물을 흘렸다', question: '그 사람의 감정은?', options: ['행복', '슬픔', '놀람'], correct: 1 },
+    { title: '공감 능력', stimulus: '친구가 시험에 떨어졌다', question: '친구를 어떻게 도와줄까?', options: ['놀려주기', '위로하고 격려하기', '무시하기'], correct: 1 },
+    { title: '감정 강도', stimulus: '😢😢😢\n(3개의 우는 얼굴)', question: '슬픔의 정도는?', options: ['약함', '중간', '강함'], correct: 2 },
+    { title: '감정 변화', stimulus: '😊 → 😢', question: '감정이 변했나?', options: ['아니오', '예'], correct: 1 },
+    { title: '상황 감정', stimulus: '상 받았다', question: '감정은?', options: ['슬픔', '행복', '불안'], correct: 1 },
+    { title: '타인 감정', stimulus: '엄마가 피곤해 보인다', question: '엄마의 감정은?', options: ['행복', '지쳐있음', '화남'], correct: 1 },
+    { title: '감정 조절', stimulus: '화났을 때', question: '어떻게 할까?', options: ['소리 치기', '깊게 숨쉬고 진정하기', '때리기'], correct: 1 }
   ],
   판단력: [
-    { title: '논리적 추론', stimulus: '모든 새는 날 수 있다', question: '펭귄도 날 수 있나?', options: ['예', '아니오'], correct: 1 },
-    { title: '문제 해결', stimulus: '우산이 없는데 비가 온다', question: '해결책은?', options: ['집에 있기', '우산 빌리기', '그냥 맞기'], correct: 1 },
-    { title: '인과관계', stimulus: '벼락 → 천둥소리', question: '원인은?', options: ['천둥', '벼락'], correct: 1 },
-    { title: '위험 판단', stimulus: '불 · 물 · 얼음', question: '가장 위험한 것은?', options: ['물', '얼음', '불'], correct: 2 },
-    { title: '우선순위', stimulus: '공부 · 놀이 · 밥', question: '먼저 할 일은?', options: ['밥', '놀이', '공부'], correct: 0 },
-    { title: '도덕적 판단', stimulus: '남의 것을 가져가면?', question: '옳은가?', options: ['옳다', '틀렸다'], correct: 1 },
-    { title: '재정 판단', stimulus: '용돈 5만원', question: '저축하는 것이 나은가?', options: ['예', '아니오'], correct: 0 },
-    { title: '논쟁 분석', stimulus: 'A: 맞다 / B: 틀렸다', question: '누가 맞나?', options: ['A', 'B', '모르겠음'], correct: 2 },
-    { title: '신뢰도 판단', stimulus: '유명인 vs 전문가', question: '더 믿을 수 있는 사람은?', options: ['유명인', '전문가'], correct: 1 },
-    { title: '결정 내리기', stimulus: '직업 선택하기', question: '가장 좋은 결정은?', options: ['흥미 우선', '돈 우선', '둘 다 고려'], correct: 2 }
+    { title: '논리 추론', stimulus: '모든 개는 동물이다.\n뽀삐는 개다.', question: '뽀삐는?', options: ['동물 아님', '동물', '식물'], correct: 1 },
+    { title: '문제 해결', stimulus: '우산이 없는데 비가 온다', question: '할 수 있는 일은?', options: ['그냥 맞기', '우산 빌리거나 우비 입기', '밖에 나가지 않기'], correct: 1 },
+    { title: '원인 찾기', stimulus: '천둥소리가 난다', question: '원인은?', options: ['바람', '벼락', '비'], correct: 1 },
+    { title: '위험 판단', stimulus: '불 · 물 · 얼음', question: '가장 위험한 것?', options: ['물', '얼음', '불'], correct: 2 },
+    { title: '우선순위', stimulus: '밥 먹기 · 공부하기 · 놀기', question: '먼저 할 일?', options: ['놀기', '밥 먹기', '공부하기'], correct: 1 },
+    { title: '도덕 판단', stimulus: '남의 물건을 가져가면?', question: '옳은가?', options: ['옳다', '틀렸다'], correct: 1 },
+    { title: '인과관계', stimulus: '열심히 공부한다 → 성적이 올라간다', question: '인과관계가 맞나?', options: ['아니오', '예'], correct: 1 },
+    { title: '선택 판단', stimulus: '직업: A(돈 많음, 힘듦) vs B(돈 적음, 재미)', question: '선택 기준?', options: ['돈만', '재미만', '둘 다 고려'], correct: 2 },
+    { title: '신뢰도', stimulus: '"유명인이 이 약이 좋다고 함" vs "의사가 이 약이 좋다고 함"', question: '더 믿을 수 있는 것?', options: ['유명인', '의사'], correct: 1 },
+    { title: '결정 내리기', stimulus: '중요한 결정을 해야 한다', question: '좋은 방법?', options: ['충동적으로', '깊이 생각한 후'], correct: 1 }
   ],
   실행력: [
-    { title: '순서 따르기', stimulus: '1. 손 씻기\n2. 밥 먹기\n3. 양치하기', question: '올바른 순서인가?', options: ['예', '아니오'], correct: 0 },
-    { title: '지시 이해', stimulus: '"빨간 버튼을 누르세요"', question: '지시를 이해했나?', options: ['예', '아니오'], correct: 0 },
-    { title: '계획 실행', stimulus: '계획: 1시간 공부하기', question: '실행했나?', options: ['성공', '실패', '부분'], correct: 0 },
-    { title: '목표 달성', stimulus: '목표: 책 읽기', question: '달성했나?', options: ['예', '아니오'], correct: 0 },
-    { title: '작업 완료', stimulus: '세 가지 할 일', question: '모두 끝냈나?', options: ['완벽', '대부분', '미완료'], correct: 0 },
-    { title: '자기 통제', stimulus: '유혹 앞에서도 견딜 수 있나?', question: '자기 통제 능력은?', options: ['매우', '보통', '어려움'], correct: 1 },
-    { title: '충동 억제', stimulus: '화날 때 참을 수 있나?', question: '충동을 억제할 수 있나?', options: ['가능', '불가능'], correct: 0 },
-    { title: '인내심', stimulus: '어려운 일을 계속하나?', question: '인내심이 있나?', options: ['많음', '보통', '적음'], correct: 0 },
-    { title: '동기 유지', stimulus: '장기 목표를 위해 노력하나?', question: '동기가 유지되나?', options: ['예', '아니오'], correct: 0 },
-    { title: '책임감', stimulus: '실수했을 때 책임지나?', question: '책임을 질 수 있나?', options: ['예', '아니오'], correct: 0 }
+    { title: '순서 따르기', stimulus: '1. 손 씻기\n2. 밥 먹기\n3. 양치하기', question: '올바른 순서인가?', options: ['아니오', '예'], correct: 1 },
+    { title: '지시 이해', stimulus: '"빨간 버튼을 누르세요"', question: '이해했나?', options: ['아니오', '예'], correct: 1 },
+    { title: '계획 실행', stimulus: '계획: 1시간 공부하기', question: '실행 가능한가?', options: ['불가능', '가능'], correct: 1 },
+    { title: '목표 달성', stimulus: '목표: 책 읽기', question: '끝낼 수 있나?', options: ['아니오', '예'], correct: 1 },
+    { title: '자기 통제', stimulus: '유혹 앞에서도 견딜 수 있나?', question: '자기 통제 가능?', options: ['불가능', '가능'], correct: 1 },
+    { title: '충동 억제', stimulus: '화날 때 참을 수 있나?', question: '충동 억제 가능?', options: ['불가능', '가능'], correct: 1 },
+    { title: '인내심', stimulus: '어려운 일을 계속할 수 있나?', question: '인내심이 있나?', options: ['없음', '있음'], correct: 1 },
+    { title: '동기 유지', stimulus: '장기 목표를 위해 노력하나?', question: '동기 유지 가능?', options: ['불가능', '가능'], correct: 1 },
+    { title: '책임감', stimulus: '실수했을 때 책임지나?', question: '책임감이 있나?', options: ['없음', '있음'], correct: 1 },
+    { title: '작업 완료', stimulus: '시작한 일을 끝낼 수 있나?', question: '완료할 수 있나?', options: ['불가능', '가능'], correct: 1 }
   ]
 };
 
