@@ -466,11 +466,23 @@
       }
     }
     
-    @print {
-      .print-hide { display: none; }
+    @media print {
+      .print-hide { display: none !important; }
       .page-break { page-break-after: always; }
-      body { background: white; }
-      .container { padding: 20px; }
+      body { 
+        background: white !important;
+        margin: 0;
+        padding: 0;
+      }
+      .container { 
+        padding: 20px;
+        background: white !important;
+        box-shadow: none;
+        max-width: 100%;
+      }
+      img { max-width: 100%; }
+      table { width: 100%; }
+      .btn { display: none; }
     }
   </style>
 </head>
@@ -746,24 +758,76 @@ function drawRadarChart() {
 }
 
 function savePDF() {
+  // 임시로 print-hide 요소 숨기기
+  const hiddenElements = document.querySelectorAll('.print-hide');
+  hiddenElements.forEach(el => {
+    el.style.display = 'none';
+  });
+  
   const element = document.querySelector('.container');
   const opt = {
-    margin: [8, 8, 8, 8],
+    margin: [10, 10, 10, 10],
     filename: '뇌건강체크_' + new Date().toISOString().slice(0,10) + '.pdf',
-    image: { type: 'jpeg', quality: 0.95 },
-    html2canvas: { scale: 2, useCORS: true },
-    jsPDF: { orientation: 'portrait', unit: 'mm', format: 'a4' }
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: { 
+      scale: 2, 
+      useCORS: true,
+      logging: false,
+      backgroundColor: '#ffffff'
+    },
+    jsPDF: { 
+      orientation: 'portrait', 
+      unit: 'mm', 
+      format: 'a4',
+      compress: true
+    },
+    pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
   };
-  html2pdf().set(opt).from(element).save();
+  
+  html2pdf()
+    .set(opt)
+    .from(element)
+    .save()
+    .finally(() => {
+      // PDF 생성 후 요소 다시 표시
+      hiddenElements.forEach(el => {
+        el.style.display = '';
+      });
+    });
 }
 
 function saveAsImage() {
+  // 임시로 print-hide 요소 숨기기
+  const hiddenElements = document.querySelectorAll('.print-hide');
+  hiddenElements.forEach(el => {
+    el.style.display = 'none';
+  });
+  
   const element = document.querySelector('.container');
-  html2canvas(element, { scale: 2 }).then(canvas => {
+  
+  html2canvas(element, { 
+    scale: 2,
+    useCORS: true,
+    backgroundColor: '#ffffff',
+    logging: false
+  }).then(canvas => {
     const link = document.createElement('a');
     link.href = canvas.toDataURL('image/png');
     link.download = '뇌건강체크_' + new Date().toISOString().slice(0,10) + '.png';
     link.click();
+    
+    // 이미지 저장 후 요소 다시 표시
+    hiddenElements.forEach(el => {
+      el.style.display = '';
+    });
+  }).catch(err => {
+    console.error('이미지 저장 실패:', err);
+    // 에러 발생 시에도 요소 다시 표시
+    hiddenElements.forEach(el => {
+      el.style.display = '';
+    });
+  });
+}
   });
 }
 </script>
