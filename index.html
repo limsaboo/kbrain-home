@@ -194,115 +194,27 @@
 
 
 <!-- 🧠 뇌건강체크 (BHC) 앱 다운로드 섹션 -->
-<section style="background: linear-gradient(135deg, #3498db 0%, #667eea 100%); padding: 60px 20px; position: relative; overflow: hidden;">
-  <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 1200 600%22><defs><pattern id=%22grid%22 width=%2240%22 height=%2240%22 patternUnits=%22userSpaceOnUse%22><path d=%22M 40 0 L 0 0 0 40%22 fill=%22none%22 stroke=%22rgba(255,255,255,.03)%22 stroke-width=%221%22/></pattern></defs><rect width=%221200%22 height=%22600%22 fill=%22url(%23grid)%22/></svg>'); pointer-events: none;"></div>
-  
-  <div class="wrap" style="position: relative; z-index: 1; max-width: 900px; text-align: center;">
-    <div style="margin-bottom: 16px;">
-      <span style="display: inline-block; background: rgba(255,255,255,.2); color: #fff; padding: 8px 20px; border-radius: 20px; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px;">
-        ⚡ 지금 바로 다운로드
-      </span>
-    </div>
-
-    <h2 style="font-size: 36px; font-weight: 900; color: #fff; margin-bottom: 16px; line-height: 1.3;">
-      🧠 뇌건강체크<br>
-      <span style="font-size: 24px; font-weight: 600; opacity: .95;">1분 안에 당신의 뇌 건강을 알아보세요!</span>
+<section style="background: linear-gradient(135deg, #3498db 0%, #667eea 100%); padding: 56px 20px; text-align: center;">
+  <div style="max-width: 720px; margin: 0 auto;">
+    <h2 style="color:#fff; font-size: clamp(22px,5.6vw,32px); font-weight: 900; line-height:1.4; word-break:keep-all; margin-bottom: 14px;">
+      🧠 뇌건강체크 (BHC)
     </h2>
-
-    <p style="font-size: 15px; color: rgba(255,255,255,.9); max-width: 600px; margin: 0 auto 32px; line-height: 1.7;">
-      🧠 기억력 · 집중력 · 감정조절 · 판단력 · 실행력<br>
-      5가지 뇌 영역을 측정하고 맞춤형 분석을 받아보세요.
+    <p style="color: rgba(255,255,255,.95); font-size: clamp(15px,4vw,18px); font-weight:700; line-height:1.8; word-break:keep-all; margin-bottom: 10px;">
+      기억력 · 집중력 · 감정력 · 판단력 · 실행력<br>5가지 뇌 영역을 스스로 점검해 보세요.
     </p>
-
-    <!-- 앱 다운로드 카드 -->
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 40px;">
-      
-      <!-- 앱 설치 -->
-      <div style="background: rgba(255,255,255,.1); backdrop-filter: blur(10px); padding: 28px; border-radius: 16px; border: 2px solid rgba(255,255,255,.2);">
-        <div style="font-size: 48px; margin-bottom: 16px;">📱</div>
-        <h3 style="font-size: 16px; font-weight: 900; color: #fff; margin-bottom: 10px;">앱 설치</h3>
-        <p style="font-size: 13px; color: rgba(255,255,255,.85); margin-bottom: 16px; line-height: 1.6;">
-          Chrome/Safari에서 앱 설치 후 바로 검사
-        </p>
-        <button onclick="installApp()" style="width: 100%; padding: 12px; background: #fff; color: #3498db; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 14px;">
-          📥 지금 설치
-        </button>
-      </div>
-
-      <!-- 웹으로 검사 -->
-      <div style="background: rgba(255,255,255,.1); backdrop-filter: blur(10px); padding: 28px; border-radius: 16px; border: 2px solid rgba(255,255,255,.2);">
-        <div style="font-size: 48px; margin-bottom: 16px;">🌐</div>
-        <h3 style="font-size: 16px; font-weight: 900; color: #fff; margin-bottom: 10px;">웹 검사</h3>
-        <p style="font-size: 13px; color: rgba(255,255,255,.85); margin-bottom: 16px; line-height: 1.6;">
-          설치 없이 바로 검사 시작
-        </p>
-        <a href="/bhc-app.html" style="display: block; padding: 12px; background: #fff; color: #3498db; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 14px; text-decoration: none;">
-          🚀 검사 시작
-        </a>
-      </div>
-
-      <!-- 결과 공유 -->
-      <div style="background: rgba(255,255,255,.1); backdrop-filter: blur(10px); padding: 28px; border-radius: 16px; border: 2px solid rgba(255,255,255,.2);">
-        <div style="font-size: 48px; margin-bottom: 16px;">📊</div>
-        <h3 style="font-size: 16px; font-weight: 900; color: #fff; margin-bottom: 10px;">결과 공유</h3>
-        <p style="font-size: 13px; color: rgba(255,255,255,.85); margin-bottom: 16px; line-height: 1.6;">
-          검사 결과를 카톡·SNS로 공유
-        </p>
-        <button onclick="window.location.href='/bhc-app.html'" style="width: 100%; padding: 12px; background: #fff; color: #3498db; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 14px;">
-          ➜ 공유하기
-        </button>
-      </div>
-    </div>
-
-    <!-- 특징 -->
-    <div style="background: rgba(255,255,255,.08); backdrop-filter: blur(10px); padding: 32px; border-radius: 12px; border: 1px solid rgba(255,255,255,.1);">
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 24px; text-align: center;">
-        <div>
-          <div style="font-size: 28px; margin-bottom: 8px;">⏱️</div>
-          <div style="font-size: 12px; font-weight: 700; color: rgba(255,255,255,.8); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 4px;">소요 시간</div>
-          <div style="font-size: 16px; font-weight: 900; color: #fff;">약 1분</div>
-        </div>
-        <div>
-          <div style="font-size: 28px; margin-bottom: 8px;">📈</div>
-          <div style="font-size: 12px; font-weight: 700; color: rgba(255,255,255,.8); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 4px;">분석 항목</div>
-          <div style="font-size: 16px; font-weight: 900; color: #fff;">5가지 영역</div>
-        </div>
-        <div>
-          <div style="font-size: 28px; margin-bottom: 8px;">🎯</div>
-          <div style="font-size: 12px; font-weight: 700; color: rgba(255,255,255,.8); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 4px;">과학적</div>
-          <div style="font-size: 16px; font-weight: 900; color: #fff;">뇌과학 기반</div>
-        </div>
-        <div>
-          <div style="font-size: 28px; margin-bottom: 8px;">💾</div>
-          <div style="font-size: 12px; font-weight: 700; color: rgba(255,255,255,.8); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 4px;">결과 저장</div>
-          <div style="font-size: 16px; font-weight: 900; color: #fff;">항상 접근</div>
-        </div>
-      </div>
-    </div>
-
-    <p style="margin-top: 24px; font-size: 12px; color: rgba(255,255,255,.7);">
-      ℹ️ 이 검사는 의료 진단이 아닙니다. 뇌 건강을 이해하기 위한 교육용 도구입니다.
+    <p style="color: rgba(255,255,255,.85); font-size: clamp(13px,3.4vw,15px); font-weight:600; line-height:1.7; word-break:keep-all; margin-bottom: 28px;">
+      설치 없이 웹에서 바로 이용할 수 있습니다.
+    </p>
+    <a href="/bhc.html" style="display:inline-flex; align-items:center; justify-content:center; min-height:56px; padding: 16px 40px; background:#fff; color:#2c6fbb; border-radius: 12px; font-weight: 900; font-size: clamp(15px,4.2vw,18px); text-decoration:none; box-shadow: 0 8px 20px -8px rgba(0,0,0,.35);">
+      ➜ 뇌건강체크 시작하기
+    </a>
+    <p style="margin-top: 26px; font-size: 12px; color: rgba(255,255,255,.75); line-height:1.7; word-break:keep-all;">
+      ℹ️ 이 체크는 의료 진단이 아닙니다. 뇌 건강을 이해하기 위한 교육용 도구입니다.
     </p>
   </div>
 </section>
 
-<script>
-function installApp() {
-  if (window.deferredPrompt) {
-    window.deferredPrompt.prompt();
-    window.deferredPrompt.userChoice.then(choice => {
-      if (choice.outcome === 'accepted') {
-        alert('앱이 설치되었습니다! 검사를 시작하세요.');
-        setTimeout(() => window.location.href = '/bhc-app.html', 1000);
-      }
-      window.deferredPrompt = null;
-    });
-  } else {
-    alert('이 브라우저에서는 설치 기능을 지원하지 않습니다.\n아래 "검사 시작" 버튼으로 바로 시작하세요.');
-    window.location.href = '/bhc-app.html';
-  }
-}
-</script>
+
 
 </section>
 
