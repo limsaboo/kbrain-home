@@ -1,14 +1,13 @@
 {
   "name": "한국뇌심리연구소 - 뇌건강체크",
   "short_name": "뇌건강체크",
-  "description": "간단한 1분 검사로 당신의 뇌 건강을 알아보세요! 기억력, 집중력, 감정조절, 판단력, 실행력 5가지 영역 분석.",
-  "start_url": "/bhc-app.html",
+  "description": "기억력·집중력·감정력·판단력·실행력 5가지 뇌 영역을 스스로 점검하는 교육용 뇌건강체크입니다.",
+  "start_url": "/bhc.html",
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait-primary",
   "theme_color": "#2c3e50",
   "background_color": "#ffffff",
-  
   "icons": [
     {
       "src": "/icon-192.png",
@@ -29,9 +28,10 @@
       "purpose": "maskable"
     }
   ],
-  
-  "categories": ["health", "education"],
-  
+  "categories": [
+    "health",
+    "education"
+  ],
   "screenshots": [
     {
       "src": "/icon-512.png",
@@ -40,7 +40,6 @@
       "type": "image/png"
     }
   ],
-  
   "shortcuts": [
     {
       "name": "뇌건강체크 시작",
@@ -79,6 +78,5 @@
       ]
     }
   ],
-  
   "prefer_related_applications": false
 }
