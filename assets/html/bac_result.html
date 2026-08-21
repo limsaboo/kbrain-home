@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>뇌건강 체크 | 한국뇌심리연구소</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { 
+      font-family: 'Noto Sans KR', sans-serif;
+      background: linear-gradient(180deg, #1a472a 0%, #2d5a3d 100%);
+      color: #333;
+      padding-bottom: 40px;
+    }
+    .container { max-width: 100%; background: white; padding: 20px; }
+    
+    /* 제목 */
+    .result-title { 
+      font-size: 32px; 
+      color: #00BCD4; 
+      text-align: center; 
+      font-weight: 900;
+      margin-bottom: 20px;
+    }
+    
+    /* 뇌 건강도 카드 */
+    .brain-score-card {
+      background: linear-gradient(135deg, #00BCD4 0%, #0097A7 100%);
+      color: white;
+      border-radius: 20px;
+      padding: 40px 20px;
+      text-align: center;
+      box-shadow: 0 8px 24px rgba(0, 188, 212, 0.4);
+      margin-bottom: 25px;
+    }
+    .brain-score-label { 
+      font-size: 14px; 
+      opacity: 0.9;
+      margin-bottom: 10px;
+    }
+    .brain-score-number {
+      font-size: 72px;
+      font-weight: 900;
+      margin-bottom: 10px;
+      text-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+    .brain-score-desc {
+      font-size: 13px;
+      opacity: 0.85;
+    }
+    
+    /* 프로필 섹션 */
+    .profile-section {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      background: #F5F5F5;
+      padding: 15px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+    }
+    .profile-image {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: white;
+      border: 3px solid #00BCD4;
+      overflow: hidden;
+    }
+    .profile-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .profile-text {
+      flex: 1;
+    }
+    .profile-text strong { color: #00BCD4; font-size: 14px; }
+    .profile-text p { font-size: 12px; color: #666; margin-top: 3px; }
+    
+    /* 레이더 차트 */
+    .chart-container {
+      position: relative;
+      width: 100%;
+      max-width: 400px;
+      margin: 25px auto;
+      height: 320px;
+      background: white;
+      border-radius: 15px;
+      padding: 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+    
+    /* 점수 박스 */
+    .scores-section {
+      background: white;
+      border-radius: 14px;
+      padding: 20px;
+      margin-bottom: 20px;
+      border: 2px solid #f0f0f0;
+    }
+    .scores-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: #00BCD4;
+      margin-bottom: 15px;
+    }
+    .score-box {
+      background: white;
+      padding: 16px;
+      border-radius: 12px;
+      margin-bottom: 12px;
+      border-left: 6px solid;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      position: relative;
+      overflow: hidden;
+    }
+    .score-box-1 { border-left-color: #00BCD4; }
+    .score-box-2 { border-left-color: #FF9800; }
+    .score-box-3 { border-left-color: #4CAF50; }
+    .score-box-4 { border-left-color: #E91E63; }
+    .score-box-5 { border-left-color: #9C27B0; }
+    
+    .score-bar-background {
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      background: rgba(0,188,212,0.1);
+      width: 0%;
+      z-index: 0;
+      transition: width 0.5s ease;
+    }
+    .score-box-content {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .score-info {
+      flex: 1;
+    }
+    .score-box-label {
+      font-size: 14px;
+      font-weight: 700;
+      color: #333;
+      margin-bottom: 8px;
+    }
+    .score-box-number {
+      font-size: 32px;
+      font-weight: 900;
+      color: #00BCD4;
+    }
+    .score-comparison {
+      text-align: right;
+      font-size: 12px;
+      color: #666;
+    }
+    .age-average {
+      font-size: 13px;
+      color: #999;
+      margin-top: 2px;
+    }
+    
+    /* 분석 섹션 */
+    .analysis-section {
+      background: white;
+      border-radius: 14px;
+      padding: 20px;
+      margin-bottom: 20px;
+      border: 2px solid #f0f0f0;
+    }
+    .section-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: #00BCD4;
+      margin-bottom: 15px;
+    }
+    .section-content {
+      line-height: 1.8;
+      font-size: 13px;
+      color: #555;
+    }
+    
+    /* BHC 안내 */
+    .bhc-section {
+      background: linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 100%);
+      border-left: 4px solid #4CAF50;
+      border-radius: 14px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    .bhc-title {
+      color: #2E7D32;
+      font-weight: 800;
+      margin-bottom: 12px;
+      font-size: 14px;
+    }
+    .bhc-content {
+      color: #388E3C;
+      line-height: 1.7;
+      font-size: 13px;
+    }
+    
+    /* 액션 버튼 */
+    .action-buttons {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+      margin: 20px 0;
+    }
+    .action-btn {
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 13px;
+      transition: all 0.2s ease;
+    }
+    .action-btn:active { transform: scale(0.96); }
+    .btn-pdf { background: #4CAF50; color: white; }
+    .btn-print { background: #2196F3; color: white; }
+    .btn-image { background: #FF9800; color: white; }
+    
+    .btn-primary {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #00BCD4 0%, #0097A7 100%);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    
+    .print-hide { display: block; }
+    @media print {
+      .print-hide { display: none; }
+      .container { background: white; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <!-- 제목 -->
+  <div style="text-align: center; margin-bottom: 20px; display: flex; align-items: center; justify-content: center; gap: 12px;">
+    <div style="width: 50px; height: 50px; background: linear-gradient(135deg, #00BCD4 0%, #0097A7 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+      <span style="font-size: 28px;">🧠</span>
+    </div>
+    <div style="text-align: left;">
+      <div style="font-size: 12px; color: #666;">한국뇌심리연구소</div>
+      <div class="result-title" style="margin: 0;">결과보고서</div>
+    </div>
+  </div>
+  
+  <!-- 뇌 건강도 점수 -->
+  <div class="brain-score-card">
+    <div class="brain-score-label">당신의 뇌 건강도</div>
+    <div class="brain-score-number" id="brainAge">--</div>
+    <div class="brain-score-desc">5개 영역 종합 분석</div>
+  </div>
+  
+  <!-- 프로필 -->
+  <div class="profile-section">
+    <div class="profile-image" style="border-radius: 50%; width: 100px; height: 100px; border: none; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+      <img src="https://raw.githubusercontent.com/limsaboo/kbrain-home/main/assets/img/profile_im_chanwoo.webp" alt="임찬우 소장" style="border-radius: 50%; width: 100%; height: 100%; object-fit: cover;">
+    </div>
+    <div class="profile-text">
+      <strong>한국뇌심리연구소</strong>
+      <p>소장 임찬우</p>
+      <p>010 4119 0031</p>
+    </div>
+  </div>
+  
+  <!-- 레이더 차트 -->
+  <div class="chart-container">
+    <canvas id="radarChart"></canvas>
+  </div>
+  
+  <!-- 5개 영역 점수 -->
+  <div class="scores-section">
+    <div class="scores-title">📊 5가지 뇌 영역 점수</div>
+    <div id="scoresDisplay"></div>
+  </div>
+  
+  <!-- 체크 결과 해석 -->
+  <div class="analysis-section">
+    <div class="section-title">💡 종합 분석</div>
+    <div id="interpretation" class="section-content"></div>
+  </div>
+  
+  <!-- BHC 훈련센터 안내 -->
+  <div class="bhc-section">
+    <div class="bhc-title">🏥 한국뇌심리연구소 BHC 무료 뇌헬스훈련센터</div>
+    <div class="bhc-content">
+      ✅ 1:1 맞춤형 뇌훈련 프로그램<br>
+      ✅ 전문 뇌심리 상담사 상시 운영<br>
+      ✅ 첫 방문 무료 뇌 건강 상담<br><br>
+      📞 문의: 010-4119-0031 / brain.saboo@gmail.com
+    </div>
+  </div>
+  
+  <!-- 액션 버튼 -->
+  <div class="action-buttons print-hide">
+    <button class="action-btn btn-pdf" onclick="savePDF()">📄 PDF</button>
+    <button class="action-btn btn-print" onclick="printResult()">🖨️ 인쇄</button>
+    <button class="action-btn btn-image" onclick="saveAsImage()">🖼️ 이미지</button>
+  </div>
+  
+  <!-- 홈페이지 버튼 -->
+  <button class="btn-primary print-hide" onclick="window.location='https://k-brain.co.kr/'">🏠 홈페이지로</button>
+</div>
+
+<script>
+// 테스트 데이터
+const scores = { 기억력: 70, 집중력: 80, 감정력: 75, 판단력: 65, 실행력: 85 };
+const DOMAIN_NAMES = ['기억력', '집중력', '감정력', '판단력', '실행력'];
+const averages = { 기억력: 65, 집중력: 70, 감정력: 75, 판단력: 60, 실행력: 65 };
+
+// 프로필 사진 (Base64 - 임찬우 소장 명함 이미지)
+// 실제 사진으로 변경 필요
+function setProfileImage(base64Image) {
+  document.getElementById('profileImage').src = base64Image;
+}
+
+// 초기화
+function initPage() {
+  const brainAge = Math.round(Object.values(scores).reduce((a, b) => a + b, 0) / 5);
+  document.getElementById("brainAge").textContent = brainAge;
+  
+  // 점수 표시
+  document.getElementById("scoresDisplay").innerHTML = DOMAIN_NAMES.map((domain, idx) => {
+    const userScore = scores[domain];
+    const avgScore = averages[domain];
+    const ageAverage = { 기억력: 65, 집중력: 70, 감정력: 75, 판단력: 60, 실행력: 65 }[domain];
+    const status = userScore >= avgScore ? '✅ 우수' : '⚠️ 개선필요';
+    const barPercentage = (userScore / 100) * 100;
+    const colors = ['#00BCD4', '#FF9800', '#4CAF50', '#E91E63', '#9C27B0'];
+    
+    return `
+      <div class="score-box score-box-${idx + 1}">
+        <div class="score-bar-background" style="background: ${colors[idx]}22; width: ${barPercentage}%;"></div>
+        <div class="score-box-content">
+          <div class="score-info">
+            <div class="score-box-label">${domain}</div>
+            <div class="score-box-number">${userScore}</div>
+          </div>
+          <div class="score-comparison">
+            평균: ${avgScore}점<br>
+            <span style="color: #ccc;">연령층: ${ageAverage}점</span><br>
+            ${status}
+          </div>
+        </div>
+      </div>
+    `;
+  }).join("");
+  
+  // 분석 내용
+  document.getElementById("interpretation").innerHTML = `
+    <strong>🧠 뇌 건강 상태 분석</strong><br><br>
+    당신의 평균 뇌 건강도는 <strong>${brainAge}점</strong>으로, 전반적으로 양호한 수준입니다.<br><br>
+    <strong>강점 영역:</strong> 실행력(85점), 집중력(80점)<br>
+    <strong>개선 영역:</strong> 판단력(65점)<br><br>
+    정기적인 뇌 훈련을 통해 전체 능력을 더욱 향상시킬 수 있습니다.
+  `;
+  
+  // 레이더 차트
+  drawRadarChart();
+}
+
+// 레이더 차트 - 좌뇌/우뇌 개념
+function drawRadarChart() {
+  const ctx = document.getElementById('radarChart').getContext('2d');
+  
+  // 좌뇌: 기억력, 판단력, 실행력
+  // 우뇌: 집중력, 감정력
+  const leftBrainScores = [scores['기억력'], scores['판단력'], scores['실행력'], 0, 0];
+  const rightBrainScores = [0, 0, scores['집중력'], scores['감정력'], 0];
+  const averageScores = [
+    (averages['기억력'] + averages['판단력'] + averages['실행력']) / 3,
+    (averages['판단력'] + averages['실행력']) / 2,
+    (averages['집중력'] + averages['감정력']) / 2,
+    averages['감정력'],
+    (averages['기억력'] + averages['집중력']) / 2
+  ];
+  
+  new Chart(ctx, {
+    type: 'radar',
+    data: {
+      labels: ['기억력', '판단력', '집중력', '감정력', '실행력'],
+      datasets: [
+        {
+          label: '당신의 능력 (좌뇌)',
+          data: [scores['기억력'], scores['판단력'], scores['집중력'], scores['감정력'], scores['실행력']],
+          borderColor: '#004B87',  // 진한 파랑
+          backgroundColor: 'rgba(0, 75, 135, 0.15)',
+          pointBackgroundColor: '#004B87',
+          pointBorderColor: '#fff',
+          pointRadius: 6,
+          pointHoverRadius: 8,
+          tension: 0.3,
+          fill: true
+        },
+        {
+          label: '연령층 평균',
+          data: [averages['기억력'], averages['판단력'], averages['집중력'], averages['감정력'], averages['실행력']],
+          borderColor: '#E67E22',  // 진한 주황
+          backgroundColor: 'rgba(230, 126, 34, 0.08)',
+          pointBackgroundColor: '#E67E22',
+          borderDash: [6, 3],
+          pointRadius: 5,
+          tension: 0.3,
+          fill: false
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: true,
+          position: 'top',
+          labels: {
+            font: { size: 12, weight: 'bold' },
+            padding: 15
+          }
+        }
+      },
+      scales: {
+        r: {
+          beginAtZero: true,
+          max: 100,
+          ticks: {
+            stepSize: 20,
+            font: { size: 11 }
+          },
+          grid: {
+            color: 'rgba(0,0,0,0.08)'
+          }
+        }
+      }
+    }
+  });
+}
+
+// PDF 저장
+function savePDF() {
+  const element = document.querySelector('.container');
+  const opt = {
+    margin: [8, 8, 8, 8],  // 위, 좌, 아래, 우
+    filename: '뇌건강체크_결과보고서_' + new Date().toISOString().slice(0,10) + '.pdf',
+    image: { type: 'jpeg', quality: 0.95 },
+    html2canvas: { scale: 2, useCORS: true },
+    jsPDF: { orientation: 'portrait', unit: 'mm', format: 'a4' }
+  };
+  html2pdf().set(opt).from(element).save();
+}
+
+// 인쇄
+function printResult() {
+  window.print();
+}
+
+// 이미지 저장
+function saveAsImage() {
+  const element = document.querySelector('.container');
+  html2canvas(element, { scale: 2 }).then(canvas => {
+    const link = document.createElement('a');
+    link.href = canvas.toDataURL('image/png');
+    link.download = '뇌건강체크_결과_' + new Date().toISOString().slice(0,10) + '.png';
+    link.click();
+  });
+}
+
+// 페이지 로드 시 초기화
+window.addEventListener('load', initPage);
+</script>
+
+</body>
+</html>
