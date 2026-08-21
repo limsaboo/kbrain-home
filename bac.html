@@ -341,10 +341,12 @@
     
     /* ===== 버튼 섹션 ===== */
     .button-section{
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
+      display: flex !important;
+      flex-direction: row;
+      flex-wrap: wrap;
       gap: 10px;
       margin: 25px 0;
+      width: 100%;
     }
     
     .button-full {
@@ -361,9 +363,14 @@
       transition: all 0.3s ease;
       box-shadow: 0 2px 6px rgba(0,0,0,0.1);
       min-height: 44px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      display: block;
+      width: auto;
+      flex: 1;
+    }
+    
+    .action-btn.button-full {
+      width: 100%;
+      flex: 1 1 100%;
     }
     
     .action-btn:active {
@@ -441,11 +448,21 @@
       }
       
       .button-section{
-        max-width: 500px;
+        max-width: 100%;
         margin-left: auto;
         margin-right: auto;
-        gap: 12px;
-        grid-template-columns: 1fr 1fr 1fr;
+        gap: 10px;
+        display: flex !important;
+        flex-direction: row !important;
+      }
+      
+      .button-section .action-btn {
+        flex: 1 1 auto;
+        min-width: 0;
+      }
+      
+      .button-section .action-btn.button-full {
+        flex: 1 1 100%;
       }
     }
     
