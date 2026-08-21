@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BHC 5.0 - 뇌 건강 체크 시스템</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(180deg, #1a472a 0%, #2d5a3d 100%);
+      color: #333;
+      min-height: 100vh;
+      padding: 16px;
+    }
+    .container {
+      max-width: 500px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 24px;
+      box-shadow: 0 20px 60px rgba(0, 188, 212, 0.15);
+      overflow: hidden;
+    }
+    .screen { display: none; padding: 32px 24px; min-height: 600px; animation: slideIn 0.3s ease-out; }
+    .screen.active { display: block; }
+    @keyframes slideIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+    .header-title { text-align: center; margin-bottom: 32px; }
+    .header-title h1 { font-size: 36px; font-weight: 900; color: #00BCD4; margin-bottom: 8px; }
+    .header-title p { font-size: 14px; color: #666; font-weight: 600; }
+
+    .input-group { margin-bottom: 20px; }
+    .input-group label { display: block; font-size: 14px; font-weight: 800; color: #00BCD4; margin-bottom: 8px; }
+    .input-group input, .input-group select {
+      width: 100%;
+      padding: 14px 16px;
+      border: 2px solid #00BCD4;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 700;
+      color: #333;
+    }
+
+    .info-box {
+      background: linear-gradient(135deg, #E0F7FA 0%, #B2EBF2 100%);
+      border-left: 6px solid #00BCD4;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 24px;
+      font-size: 13px;
+      color: #00695C;
+      font-weight: 600;
+      line-height: 1.6;
+    }
+
+    .progress-bar { width: 100%; height: 6px; background: #E0E0E0; border-radius: 3px; margin-bottom: 24px; overflow: hidden; }
+    .progress-fill { height: 100%; background: linear-gradient(90deg, #00BCD4 0%, #00897B 100%); transition: width 0.3s ease; }
+
+    .question-header { background: linear-gradient(135deg, #E0F7FA 0%, #B2EBF2 100%); border-radius: 16px; padding: 16px; margin-bottom: 16px; text-align: center; }
+    .question-num { font-size: 12px; font-weight: 800; color: #00695C; margin-bottom: 6px; }
+    .domain-tag { display: inline-block; background: #00BCD4; color: white; padding: 4px 10px; border-radius: 16px; font-size: 12px; font-weight: 800; }
+    .mechanism-label { font-size: 10px; font-weight: 700; color: #00897B; margin-top: 6px; }
+
+    .timer-section { display: flex; justify-content: center; margin-bottom: 16px; }
+    .timer-circle {
+      width: 80px; height: 80px; border-radius: 50%;
+      background: linear-gradient(135deg, #E0F7FA 0%, #B2EBF2 100%);
+      border: 4px solid #00BCD4;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 36px; font-weight: 900; color: #00BCD4;
+      box-shadow: 0 0 20px rgba(0, 188, 212, 0.3);
+    }
+    .timer-circle.warning { background: linear-gradient(135deg, #FFF9C4 0%, #FFEE58 100%); border-color: #FBC02D; color: #F57F17; }
+    .timer-circle.danger { background: linear-gradient(135deg, #FFCDD2 0%, #EF5350 100%); border-color: #D32F2F; color: #B71C1C; animation: pulse 0.5s infinite; }
+    @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
+
+    .stimulus-container { width: 100%; height: 250px; border: 3px solid #00BCD4; border-radius: 16px; overflow: hidden; margin-bottom: 16px; background: linear-gradient(135deg, #f5f5f5 0%, #eeeeee 100%); display: flex; align-items: center; justify-content: center; padding: 12px; }
+    .stimulus-svg { width: 100%; height: 100%; max-width: 240px; max-height: 240px; }
+
+    .question-text { font-size: 14px; font-weight: 800; color: #00695C; text-align: center; margin-bottom: 16px; line-height: 1.4; background: #f9f9f9; padding: 12px; border-radius: 12px; border-left: 4px solid #00BCD4; }
+    .choices { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+    .choice-btn {
+      padding: 12px 8px; border: 2px solid #DDD; border-radius: 12px; background: white; cursor: pointer; transition: all 0.2s;
+      font-size: 13px; font-weight: 700; color: #333; text-align: center; word-break: keep-all; min-height: 50px; display: flex; align-items: center; justify-content: center;
+    }
+    .choice-btn:hover { border-color: #00BCD4; transform: scale(1.05); }
+    .choice-btn.selected { border-color: #00BCD4; background: linear-gradient(135deg, #E0F7FA 0%, #B2EBF2 100%); box-shadow: 0 8px 16px rgba(0, 188, 212, 0.2); }
+
+    .btn { width: 100%; padding: 14px; border: none; border-radius: 12px; font-size: 15px; font-weight: 800; cursor: pointer; transition: all 0.2s; margin-bottom: 10px; }
+    .btn-primary { background: linear-gradient(135deg, #00BCD4 0%, #00897B 100%); color: white; }
+    .btn-primary:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 12px 24px rgba(0, 188, 212, 0.3); }
+    .btn-secondary { background: #f5f5f5; color: #333; border: 2px solid #E0E0E0; }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    /* 결과 화면 */
+    .result-container { padding: 0; }
+    .result-header { background: linear-gradient(135deg, #00BCD4 0%, #0097A7 100%); color: white; padding: 36px 24px; text-align: center; }
+    .result-title { font-size: 28px; font-weight: 900; margin-bottom: 6px; }
+    .result-content { padding: 28px 24px; max-height: 800px; overflow-y: auto; }
+
+    .brain-age-box {
+      background: linear-gradient(135deg, #E0F7FA 0%, #B2EBF2 100%);
+      border-radius: 16px; padding: 28px 20px; text-align: center; margin-bottom: 24px;
+      border: 3px solid #00BCD4; transition: all 0.3s ease;
+    }
+    .brain-age-box.normal { background: linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 100%); border-color: #4CAF50; }
+    .brain-age-box.caution { background: linear-gradient(135deg, #FFF9C4 0%, #FFEE58 100%); border-color: #FBC02D; }
+    .brain-age-box.warning { background: linear-gradient(135deg, #FFE0B2 0%, #FFB74D 100%); border-color: #F57C00; }
+    .brain-age-box.danger { background: linear-gradient(135deg, #FFCDD2 0%, #EF5350 100%); border-color: #D32F2F; }
+    .brain-age-box.severe { background: linear-gradient(135deg, #FFCDD2 0%, #C62828 100%); border-color: #B71C1C; }
+
+    .brain-age-label { font-size: 13px; font-weight: 800; margin-bottom: 8px; }
+    .brain-age-number { font-size: 56px; font-weight: 900; margin-bottom: 8px; }
+    .brain-age-desc { font-size: 12px; font-weight: 600; margin-bottom: 10px; }
+
+    .status-badge {
+      display: inline-block; padding: 6px 12px; border-radius: 16px; font-size: 12px; font-weight: 800; margin: 8px 0;
+    }
+    .status-badge.normal { background: #4CAF50; color: white; }
+    .status-badge.caution { background: #FBC02D; color: #333; }
+    .status-badge.warning { background: #F57C00; color: white; }
+    .status-badge.danger { background: #D32F2F; color: white; }
+    .status-badge.severe { background: #B71C1C; color: white; }
+
+    .section-title { font-size: 14px; font-weight: 900; color: #00BCD4; margin: 20px 0 12px 0; padding-bottom: 8px; border-bottom: 2px solid #00BCD4; }
+    .info-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #E0E0E0; font-size: 12px; font-weight: 700; }
+    .info-row:last-child { border-bottom: none; }
+    .info-label { color: #666; }
+    .info-value { color: #00BCD4; }
+
+    .radar-container { width: 100%; text-align: center; margin: 20px 0; }
+    .radar-svg { width: 100%; max-width: 280px; height: 280px; }
+
+    .domain-section {
+      background: linear-gradient(135deg, #E0F7FA 0%, #f9f9f9 100%); 
+      border-radius: 12px; padding: 14px; margin-bottom: 14px;
+      border-left: 6px solid #00BCD4; border-top: 3px solid #00BCD4;
+      font-size: 12px;
+    }
+    .domain-header { display: flex; align-items: center; margin-bottom: 8px; }
+    .domain-icon { font-size: 20px; margin-right: 8px; }
+    .domain-name { font-weight: 900; color: #00695C; flex: 1; font-size: 15px; }
+    .domain-score { font-weight: 900; color: #00BCD4; font-size: 18px; background: rgba(0, 188, 212, 0.1); padding: 4px 10px; border-radius: 8px; }
+    .domain-desc { color: #333; line-height: 1.5; margin-bottom: 6px; font-weight: 600; }
+    .domain-mechanism { font-size: 11px; color: #00897B; font-weight: 800; background: rgba(0, 137, 123, 0.08); padding: 4px 6px; border-radius: 4px; }
+
+    .insight-box { background: #f0f7ff; border-radius: 12px; padding: 12px; margin-bottom: 12px; border-left: 4px solid #4CAF50; }
+    .insight-item { padding: 6px 0; font-size: 11px; font-weight: 700; color: #333; }
+    .insight-item:last-child { border-bottom: none; }
+    .insight-item.strength:before { content: "✓ "; color: #4CAF50; margin-right: 4px; font-weight: 900; }
+    .insight-item.weakness:before { content: "⚠ "; color: #FF9800; margin-right: 4px; font-weight: 900; }
+
+    .roadmap-box { background: #f5f5f5; border-radius: 12px; padding: 12px; margin-bottom: 12px; }
+    .roadmap-item { padding: 6px 0; font-size: 11px; color: #333; }
+    .roadmap-time { font-weight: 800; color: #00BCD4; }
+    .roadmap-goal { color: #666; }
+
+    .neuroscience-box { background: #fff9e6; border-radius: 12px; padding: 12px; margin-bottom: 12px; border-left: 4px solid #FBC02D; }
+    .neuro-item { font-size: 10px; margin-bottom: 8px; line-height: 1.4; }
+    .neuro-term { font-weight: 800; color: #00695C; }
+    .neuro-desc { color: #666; }
+
+    .recommendation-box { background: #e8f5e9; border-radius: 12px; padding: 12px; margin-bottom: 12px; border-left: 4px solid #4CAF50; }
+    .rec-item { font-size: 11px; margin-bottom: 6px; color: #333; font-weight: 700; }
+
+    .button-group { display: flex; flex-direction: column; gap: 8px; margin-top: 20px; }
+    .button-group .btn { margin-bottom: 0; }
+
+    @media print {
+      * { margin: 0; padding: 0; }
+      
+      body { 
+        background: white !important; 
+        padding: 0 !important;
+        color: #333;
+      }
+
+      .container {
+        box-shadow: none !important;
+        max-width: 100% !important;
+        border-radius: 0 !important;
+        padding: 0 !important;
+      }
+
+      #resultScreen {
+        display: block !important;
+        padding: 20px !important;
+        min-height: auto !important;
+      }
+
+      .screen {
+        display: none !important;
+        padding: 0 !important;
+      }
+
+      .result-content {
+        max-height: none !important;
+        overflow: visible !important;
+      }
+
+      .btn {
+        display: none !important;
+      }
+
+      .button-group {
+        display: none !important;
+      }
+
+      .result-header {
+        page-break-after: avoid;
+        margin-bottom: 20px;
+        padding: 20px;
+        background: linear-gradient(135deg, #00BCD4 0%, #0097A7 100%);
+        color: white;
+        border-radius: 0;
+      }
+
+      .section-title {
+        page-break-after: avoid;
+        page-break-inside: avoid;
+        margin-top: 20px;
+        margin-bottom: 10px;
+        font-size: 14px;
+        font-weight: 900;
+        color: #00BCD4;
+        border-bottom: 2px solid #00BCD4;
+        padding-bottom: 6px;
+      }
+
+      .brain-age-box {
+        page-break-inside: avoid;
+        margin-bottom: 20px;
+        padding: 20px;
+        border: 2px solid #00BCD4;
+        border-radius: 8px;
+      }
+
+      .info-row {
+        page-break-inside: avoid;
+        border-bottom: 1px solid #E0E0E0;
+        padding: 8px 0;
+        display: flex;
+        justify-content: space-between;
+        font-size: 12px;
+        font-weight: 700;
+      }
+
+      .domain-section {
+        page-break-inside: avoid;
+        margin-bottom: 12px;
+        padding: 10px;
+        border: 1px solid #DDD;
+        border-radius: 8px;
+        font-size: 11px;
+      }
+
+      .insight-box {
+        page-break-inside: avoid;
+        margin-bottom: 12px;
+        padding: 10px;
+        border: 1px solid #DDD;
+        border-radius: 8px;
+        font-size: 11px;
+      }
+
+      .roadmap-box {
+        page-break-inside: avoid;
+        margin-bottom: 12px;
+        padding: 10px;
+        border: 1px solid #DDD;
+        border-radius: 8px;
+        font-size: 11px;
+      }
+
+      .neuroscience-box {
+        page-break-inside: avoid;
+        margin-bottom: 12px;
+        padding: 10px;
+        border: 1px solid #DDD;
+        border-radius: 8px;
+        font-size: 11px;
+      }
+
+      .recommendation-box {
+        page-break-inside: avoid;
+        margin-bottom: 12px;
+        padding: 10px;
+        border: 1px solid #DDD;
+        border-radius: 8px;
+        font-size: 11px;
+      }
+
+      .radar-container {
+        page-break-inside: avoid;
+        margin-bottom: 20px;
+      }
+
+      .radar-svg {
+        page-break-inside: avoid;
+        width: 100% !important;
+        max-width: 100% !important;
+      }
+
+      svg {
+        page-break-inside: avoid !important;
+      }
+    }
+
+    .print-section { display: none; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- 시작 화면 -->
+    <div id="startScreen" class="screen active">
+      <div class="header-title">
+        <h1>BHC 5.0</h1>
+        <p>뇌 건강 체크 시스템</p>
+      </div>
+      <div class="info-box">
+        <strong>🧪 검사 방법</strong><br>
+        • 총 51개 문항 (약 7~8분 소요)<br>
+        • 각 문항당 7~10초 시간 제한<br>
+        • 시간이 끝나면 자동으로 다음 문항으로 진행<br>
+        • 직관적으로 빠르게 응답해주세요<br>
+        • 깊게 생각하지 않고 첫 느낌으로 선택하세요
+      </div>
+      <div class="input-group">
+        <label>이름</label>
+        <input type="text" id="userName" placeholder="이름">
+      </div>
+      <div class="input-group">
+        <label>생년월일</label>
+        <input type="date" id="userBirth" required>
+      </div>
+      <div class="input-group">
+        <label>성별</label>
+        <select id="userGender">
+          <option value="">선택</option>
+          <option value="M">남성</option>
+          <option value="F">여성</option>
+        </select>
+      </div>
+      <button class="btn btn-primary" onclick="startTest()">시작</button>
+    </div>
+
+    <!-- 문제 화면 -->
+    <div id="questionScreen" class="screen">
+      <div class="progress-bar"><div class="progress-fill" id="progressBar"></div></div>
+      <div class="question-header">
+        <div class="question-num" id="questionNum">Q. 1/51</div>
+        <div class="domain-tag" id="domainTag">기억</div>
+        <div class="mechanism-label" id="mechanismLabel">DMN</div>
+        <div style="font-size: 11px; color: #00897B; margin-top: 6px; font-weight: 700;">💡 직관적으로 빠르게 선택하세요</div>
+      </div>
+      <div class="timer-section"><div class="timer-circle" id="timerCircle">3</div></div>
+      <div class="stimulus-container"><svg class="stimulus-svg" id="stimulusSvg" viewBox="0 0 240 240"></svg></div>
+      <div class="question-text" id="questionText">질문</div>
+      <div class="choices" id="choicesContainer"></div>
+      <button class="btn btn-primary" onclick="nextQuestion()" id="nextBtn" disabled>다음</button>
+    </div>
+
+    <!-- 결과 화면 -->
+    <div id="resultScreen" class="screen result-container">
+      <div class="result-header">
+        <div class="result-title">검사 완료</div>
+      </div>
+      <div class="result-content">
+        <div class="section-title">🧠 뇌 나이 분석</div>
+        <div class="brain-age-box" id="brainAgeBox">
+          <div class="brain-age-label">당신의 뇌 나이는</div>
+          <div class="brain-age-number" id="brainAge">00</div>
+          <div class="brain-age-desc">세</div>
+          <div class="status-badge" id="statusBadge">정상</div>
+          <div id="statusMessage" style="font-size: 11px; font-weight: 700; margin-top: 6px;"></div>
+        </div>
+
+        <div class="info-row">
+          <div class="info-label">실제 나이</div>
+          <div class="info-value" id="realAge">00</div>
+        </div>
+        <div class="info-row">
+          <div class="info-label">생년월일</div>
+          <div class="info-value" id="birthInfo">-</div>
+        </div>
+        <div class="info-row">
+          <div class="info-label">검사자</div>
+          <div class="info-value" id="userName2">-</div>
+        </div>
+
+        <div class="section-title">📊 인지 영역 분석</div>
+        <div id="domainsAnalysis"></div>
+
+        <div class="section-title">🎯 레이더 차트</div>
+        <div class="radar-container"><svg class="radar-svg" id="radarChart" viewBox="0 0 300 300"></svg></div>
+
+        <div class="section-title">🏆 강점 (TOP 3)</div>
+        <div class="insight-box" id="strengthAnalysis"></div>
+
+        <div class="section-title">⚠️ 개선 필요 (TOP 3)</div>
+        <div class="insight-box" id="weaknessAnalysis"></div>
+
+        <div class="section-title">📈 뇌나이 상세 분석</div>
+        <div id="brainAgeAnalysis"></div>
+
+        <div class="section-title">🗓️ 성장 로드맵</div>
+        <div class="roadmap-box" id="roadmap"></div>
+
+        <div class="section-title">🧬 신경과학 근거</div>
+        <div class="neuroscience-box" id="neuroscience"></div>
+
+        <div class="section-title">✅ 권고사항</div>
+        <div class="recommendation-box" id="recommendations"></div>
+
+        <div class="button-group">
+          <button class="btn btn-primary" onclick="printReport()">📄 인쇄/PDF</button>
+          <button class="btn btn-secondary" onclick="restartTest()">다시</button>
+          <button class="btn btn-secondary" onclick="goToStart()">처음</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let currentIdx = 0;
+    let answers = [];
+    let userData = {};
+    let timerInterval = null;
+
+    const DOMAINS = ['기억', '속도', '집중', '감정', '판단', '실행', '조절', '공간'];
+
+    // SVG 생성 함수들
+    function createCircles() {
+      return '<circle cx="60" cy="60" r="40" fill="#0D7A6B"/><circle cx="180" cy="60" r="40" fill="#0D7A6B"/><circle cx="120" cy="150" r="40" fill="#0D7A6B"/>';
+    }
+    function createSquares() {
+      return '<rect x="30" y="30" width="60" height="60" fill="#0D7A6B"/><rect x="150" y="30" width="60" height="60" fill="#0D7A6B"/><rect x="90" y="130" width="60" height="60" fill="#0D7A6B"/>';
+    }
+    function createDiamonds() {
+      return '<polygon points="120,40 160,120 120,200 80,120" fill="#0D7A6B"/><polygon points="120,80 140,120 120,160 100,120" fill="#0D7A6B"/>';
+    }
+    function createWaves() {
+      return '<path d="M 30 120 Q 60 80 90 120 T 150 120 T 210 120" stroke="#0D7A6B" stroke-width="8" fill="none"/><path d="M 30 160 Q 60 120 90 160 T 150 160 T 210 160" stroke="#0D7A6B" stroke-width="8" fill="none"/>';
+    }
+    function createGradient() {
+      return '<rect x="20" y="20" width="200" height="200" fill="none" stroke="#0D7A6B" stroke-width="3"/><line x1="40" y1="30" x2="160" y2="30" stroke="#0D7A6B" stroke-width="2"/><line x1="40" y1="60" x2="150" y2="60" stroke="#0D7A6B" stroke-width="2"/>';
+    }
+
+    const QUESTIONS_DATA = [
+      { svg: createCircles, q: '원의 개수는?', choices: ['2개', '3개', '4개', '5개'], ans: 1, domain: '기억', mechanism: 'DMN - 회상' },
+      { svg: createSquares, q: '사각형 개수는?', choices: ['2개', '3개', '4개', '5개'], ans: 1, domain: '기억', mechanism: 'DMN - 회상' },
+      { svg: createDiamonds, q: '마름모 개수는?', choices: ['1개', '2개', '3개', '4개'], ans: 1, domain: '기억', mechanism: 'DMN - 형태' },
+      { svg: createWaves, q: '파도선 개수는?', choices: ['1개', '2개', '3개', '4개'], ans: 1, domain: '기억', mechanism: 'DMN - 패턴' },
+      { svg: createGradient, q: '가로선 개수는?', choices: ['1개', '2개', '3개', '4개'], ans: 1, domain: '기억', mechanism: 'DMN - 세기' },
+      { svg: () => '<circle cx="120" cy="120" r="50" fill="none" stroke="#0D7A6B" stroke-width="3"/>', q: '원이 있나요?', choices: ['예', '아니오', '불명', '둘다'], ans: 0, domain: '기억', mechanism: 'DMN - 인식' },
+
+      // 속도 6개
+      { svg: () => '<text x="120" y="130" font-size="80" font-weight="bold" fill="#0D7A6B" text-anchor="middle">2+2=?</text>', q: '빠르게: 답은?', choices: ['3', '4', '5', '6'], ans: 1, domain: '속도', mechanism: 'DLPFC - 연산' },
+      { svg: () => '<circle cx="80" cy="80" r="35" fill="#0D7A6B"/><circle cx="160" cy="160" r="35" fill="#0D7A6B"/>', q: '원 위치 순서?', choices: ['좌상우하', '우상좌하', '중앙', '모서리'], ans: 0, domain: '속도', mechanism: 'DLPFC - 위치' },
+      { svg: () => '<text x="120" y="120" font-size="60" fill="#0D7A6B" text-anchor="middle">A B A C</text>', q: '반복된 문자?', choices: ['A', 'B', 'C', '없음'], ans: 0, domain: '속도', mechanism: 'DLPFC - 패턴' },
+      { svg: () => '<rect x="40" y="40" width="80" height="80" fill="#0D7A6B"/><rect x="120" y="120" width="80" height="80" fill="none" stroke="#0D7A6B" stroke-width="3"/>', q: '채워진 것?', choices: ['첫번째', '두번째', '같음', '없음'], ans: 0, domain: '속도', mechanism: 'DLPFC - 구분' },
+      { svg: () => '<line x1="40" y1="40" x2="200" y2="200" stroke="#0D7A6B" stroke-width="4"/><line x1="200" y1="40" x2="40" y2="200" stroke="#0D7A6B" stroke-width="4"/>', q: '교차점 개수?', choices: ['0개', '1개', '2개', '3개'], ans: 1, domain: '속도', mechanism: 'DLPFC - 교차' },
+      { svg: () => '<circle cx="60" cy="60" r="30" fill="#0D7A6B"/><circle cx="180" cy="180" r="30" fill="#0D7A6B"/><rect x="100" y="100" width="40" height="40" fill="#0D7A6B"/>', q: '모양 종류?', choices: ['1가지', '2가지', '3가지', '4가지'], ans: 2, domain: '속도', mechanism: 'DLPFC - 분류' },
+
+      // 집중 6개
+      { svg: () => '<line x1="30" y1="30" x2="210" y2="210" stroke="#0D7A6B" stroke-width="2"/><circle cx="120" cy="120" r="3" fill="#0D7A6B"/>', q: '선 위 점?', choices: ['예', '아니오', '불명', '여러개'], ans: 0, domain: '집중', mechanism: 'DLPFC - 세밀' },
+      { svg: () => '<rect x="50" y="50" width="140" height="140" fill="none" stroke="#0D7A6B" stroke-width="2"/><line x1="70" y1="100" x2="170" y2="100" stroke="#0D7A6B" stroke-width="1"/>', q: '가로선 중앙?', choices: ['예', '아니오', '불명', '여러개'], ans: 0, domain: '집중', mechanism: 'DLPFC - 위치' },
+      { svg: () => '<text x="120" y="120" font-size="50" fill="#0D7A6B" text-anchor="middle">●●○●</text>', q: '다른 것?', choices: ['1번', '2번', '3번', '4번'], ans: 2, domain: '집중', mechanism: 'DLPFC - 차이' },
+      { svg: () => '<circle cx="50" cy="50" r="20" fill="#0D7A6B"/><circle cx="120" cy="120" r="25" fill="#0D7A6B"/><circle cx="190" cy="190" r="22" fill="#0D7A6B"/>', q: '가장 큰 원?', choices: ['첫번째', '두번째', '세번째', '같음'], ans: 1, domain: '집중', mechanism: 'DLPFC - 크기' },
+      { svg: () => '<text x="120" y="120" font-size="70" font-weight="bold" fill="#0D7A6B" text-anchor="middle">9</text>', q: '보이는 숫자?', choices: ['6', '9', '3', 'P'], ans: 1, domain: '집중', mechanism: 'DLPFC - 인식' },
+      { svg: () => '<line x1="30" y1="60" x2="210" y2="60" stroke="#0D7A6B" stroke-width="3"/><line x1="30" y1="120" x2="210" y2="120" stroke="#0D7A6B" stroke-width="2"/><line x1="30" y1="180" x2="210" y2="180" stroke="#0D7A6B" stroke-width="1"/>', q: '가장 굵은 선?', choices: ['첫번째', '두번째', '세번째', '없음'], ans: 0, domain: '집중', mechanism: 'DLPFC - 굵기' },
+
+      // 감정 6개
+      { svg: () => '<circle cx="120" cy="80" r="40" fill="none" stroke="#0D7A6B" stroke-width="2"/><circle cx="100" cy="70" r="5" fill="#0D7A6B"/><circle cx="140" cy="70" r="5" fill="#0D7A6B"/><path d="M 100 95 Q 120 110 140 95" stroke="#0D7A6B" stroke-width="2" fill="none"/>', q: '표정은?', choices: ['행복', '슬픔', '불안', '중립'], ans: 0, domain: '감정', mechanism: 'MNS - 감정' },
+      { svg: () => '<circle cx="120" cy="80" r="40" fill="none" stroke="#0D7A6B" stroke-width="2"/><circle cx="100" cy="70" r="5" fill="#0D7A6B"/><circle cx="140" cy="70" r="5" fill="#0D7A6B"/><path d="M 100 100 Q 120 85 140 100" stroke="#0D7A6B" stroke-width="2" fill="none"/>', q: '인상은?', choices: ['즐거움', '슬픔', '무관심', '고민'], ans: 1, domain: '감정', mechanism: 'MNS - 감정' },
+      { svg: () => '<polygon points="120,30 210,210 30,210" fill="#0D7A6B"/>', q: '삼각형 느낌?', choices: ['따뜻함', '차가움', '활발함', '둔함'], ans: 2, domain: '감정', mechanism: '편도체 - 감정' },
+      { svg: () => '<rect x="40" y="40" width="160" height="160" fill="#0D7A6B"/>', q: '정사각형 느낌?', choices: ['안정', '불안', '움직임', '혼란'], ans: 0, domain: '감정', mechanism: '편도체 - 감정' },
+      { svg: () => '<line x1="30" y1="30" x2="210" y2="210" stroke="#0D7A6B" stroke-width="6" stroke-linecap="round"/>', q: '선 방향?', choices: ['상향', '하향', '수평', '수직'], ans: 0, domain: '감정', mechanism: 'MNS - 방향' },
+      { svg: () => '<circle cx="120" cy="120" r="80" fill="none" stroke="#0D7A6B" stroke-width="4" stroke-dasharray="5,5"/>', q: '원 모양?', choices: ['연속', '점선', '파선', '혼합'], ans: 1, domain: '감정', mechanism: '편도체 - 패턴' },
+
+      // 판단 6개
+      { svg: () => '<text x="120" y="130" font-size="70" font-weight="bold" fill="#0D7A6B" text-anchor="middle">A=B?</text>', q: '참인가?', choices: ['참', '거짓', '불명', '둘다'], ans: 1, domain: '판단', mechanism: 'DLPFC - 논리' },
+      { svg: () => '<rect x="30" y="30" width="180" height="180" fill="none" stroke="#0D7A6B" stroke-width="2"/><circle cx="120" cy="120" r="70" fill="#0D7A6B"/>', q: '원이 안에?', choices: ['예', '아니오', '일부만', '불명'], ans: 0, domain: '판단', mechanism: 'DLPFC - 위치' },
+      { svg: () => '<text x="120" y="120" font-size="60" font-weight="bold" fill="#0D7A6B" text-anchor="middle">1→3→5→?</text>', q: '다음 숫자?', choices: ['6', '7', '8', '9'], ans: 1, domain: '판단', mechanism: 'DLPFC - 규칙' },
+      { svg: () => '<circle cx="80" cy="120" r="40" fill="#0D7A6B"/><polygon points="180,80 210,120 180,160" fill="#0D7A6B"/>', q: '공통점?', choices: ['크기', '형태', '색상', '없음'], ans: 3, domain: '판단', mechanism: 'DLPFC - 비교' },
+      { svg: () => '<line x1="40" y1="40" x2="200" y2="200" stroke="#0D7A6B" stroke-width="3"/><text x="70" y="100" font-size="40" fill="#0D7A6B">A</text><text x="170" y="180" font-size="40" fill="#0D7A6B">B</text>', q: 'A-B 관계?', choices: ['일직선', '교차', '평행', '수직'], ans: 0, domain: '판단', mechanism: 'DLPFC - 공간' },
+      { svg: () => '<rect x="50" y="50" width="60" height="60" fill="#0D7A6B"/><rect x="130" y="130" width="60" height="60" fill="none" stroke="#0D7A6B" stroke-width="2"/>', q: '크기는?', choices: ['같음', '다름', '불명', '포함'], ans: 1, domain: '판단', mechanism: 'DLPFC - 비교' },
+
+      // 실행 6개
+      { svg: () => '<circle cx="60" cy="60" r="30" fill="#0D7A6B"/><circle cx="120" cy="120" r="30" fill="none" stroke="#0D7A6B" stroke-width="2"/><circle cx="180" cy="180" r="30" fill="#0D7A6B"/>', q: '진행 방향?', choices: ['좌상→우하', '우상→좌하', '중앙', '불규칙'], ans: 0, domain: '실행', mechanism: 'DLPFC - 진행' },
+      { svg: () => '<text x="120" y="120" font-size="80" font-weight="bold" fill="#0D7A6B" text-anchor="middle">↗</text>', q: '화살표 방향?', choices: ['우상향', '우하향', '좌상향', '좌하향'], ans: 0, domain: '실행', mechanism: 'DLPFC - 방향' },
+      { svg: () => '<polygon points="120,40 180,180 60,180" fill="#0D7A6B"/>', q: '꼭짓점?', choices: ['1개', '2개', '3개', '4개'], ans: 2, domain: '실행', mechanism: 'DLPFC - 구조' },
+      { svg: () => '<rect x="40" y="40" width="160" height="160" fill="none" stroke="#0D7A6B" stroke-width="3"/><line x1="120" y1="40" x2="120" y2="200" stroke="#0D7A6B" stroke-width="2"/><line x1="40" y1="120" x2="200" y2="120" stroke="#0D7A6B" stroke-width="2"/>', q: '나뉜 부분?', choices: ['2개', '3개', '4개', '5개'], ans: 2, domain: '실행', mechanism: 'DLPFC - 분할' },
+      { svg: () => '<circle cx="60" cy="120" r="30" fill="#0D7A6B"/><circle cx="180" cy="120" r="30" fill="none" stroke="#0D7A6B" stroke-width="2"/><line x1="90" y1="120" x2="150" y2="120" stroke="#0D7A6B" stroke-width="2"/>', q: '연결?', choices: ['예', '아니오', '일부만', '불명'], ans: 1, domain: '실행', mechanism: 'DLPFC - 연결' },
+      { svg: () => '<path d="M 40 120 L 100 60 L 160 100 L 200 40" stroke="#0D7A6B" stroke-width="3" fill="none"/>', q: '흐름?', choices: ['위↑', '아래↓', '평면→', '혼합'], ans: 2, domain: '실행', mechanism: 'DLPFC - 흐름' },
+
+      // 조절 6개
+      { svg: () => '<circle cx="60" cy="60" r="35" fill="#0D7A6B"/><circle cx="180" cy="60" r="35" fill="none" stroke="#0D7A6B" stroke-width="3"/><circle cx="120" cy="170" r="35" fill="#0D7A6B" opacity="0.5"/>', q: '강도 비교?', choices: ['강-약-중', '강-약-강', '약-강-중', '같음'], ans: 0, domain: '조절', mechanism: 'DLPFC - 조절' },
+      { svg: () => '<text x="120" y="130" font-size="70" fill="#0D7A6B" text-anchor="middle">⚡</text>', q: '자극 강도?', choices: ['강함', '약함', '중간', '없음'], ans: 0, domain: '조절', mechanism: '편도체 - 반응' },
+      { svg: () => '<rect x="50" y="50" width="50" height="50" fill="#0D7A6B"/><rect x="110" y="110" width="80" height="80" fill="none" stroke="#0D7A6B" stroke-width="2"/><rect x="160" y="160" width="30" height="30" fill="#0D7A6B"/>', q: '크기 순서?', choices: ['작→중→소', '소→중→대', '대→중→소', '불규칙'], ans: 2, domain: '조절', mechanism: 'DLPFC - 순서' },
+      { svg: () => '<circle cx="120" cy="120" r="80" fill="none" stroke="#0D7A6B" stroke-width="2"/><line x1="40" y1="120" x2="200" y2="120" stroke="#0D7A6B" stroke-width="1"/>', q: '대칭?', choices: ['예', '아니오', '불명', '부분만'], ans: 0, domain: '조절', mechanism: 'DLPFC - 대칭' },
+      { svg: () => '<polygon points="120,40 200,140 100,140" fill="#0D7A6B"/><polygon points="120,160 160,220 80,220" fill="none" stroke="#0D7A6B" stroke-width="2"/>', q: '관계?', choices: ['같음', '다름', '축소확대', '회전'], ans: 2, domain: '조절', mechanism: 'DLPFC - 변형' },
+      { svg: () => '<path d="M 60 180 Q 120 40 180 180" stroke="#0D7A6B" stroke-width="4" fill="none"/><line x1="60" y1="60" x2="180" y2="60" stroke="#0D7A6B" stroke-width="2" stroke-dasharray="5,5"/>', q: '관계?', choices: ['교차', '평행', '포함', '교집합'], ans: 0, domain: '조절', mechanism: 'DLPFC - 관계' },
+
+      // 공간 6개
+      { svg: () => '<rect x="30" y="30" width="180" height="180" fill="none" stroke="#0D7A6B" stroke-width="2"/><circle cx="120" cy="120" r="25" fill="#0D7A6B"/>', q: '위치?', choices: ['중앙', '좌상', '우하', '모서리'], ans: 0, domain: '공간', mechanism: '두정엽 - 중앙' },
+      { svg: () => '<circle cx="60" cy="60" r="30" fill="#0D7A6B"/><circle cx="180" cy="60" r="30" fill="#0D7A6B"/><circle cx="60" cy="180" r="30" fill="#0D7A6B"/><circle cx="180" cy="180" r="30" fill="#0D7A6B"/>', q: '배치?', choices: ['정사각형', '십자', '삼각형', '일렬'], ans: 0, domain: '공간', mechanism: '두정엽 - 배치' },
+      { svg: () => '<line x1="40" y1="40" x2="200" y2="200" stroke="#0D7A6B" stroke-width="3"/><line x1="200" y1="40" x2="40" y2="200" stroke="#0D7A6B" stroke-width="3"/>', q: '각도?', choices: ['90도', '45도', '60도', '120도'], ans: 0, domain: '공간', mechanism: '두정엽 - 각도' },
+      { svg: () => '<polygon points="120,40 200,160 40,160" fill="none" stroke="#0D7A6B" stroke-width="2"/><line x1="40" y1="160" x2="200" y2="160" stroke="#0D7A6B" stroke-width="2"/>', q: '방향?', choices: ['위↑', '아래↓', '좌←', '우→'], ans: 0, domain: '공간', mechanism: '두정엽 - 방향' },
+      { svg: () => '<rect x="50" y="50" width="140" height="140" fill="none" stroke="#0D7A6B" stroke-width="2"/><line x1="50" y1="50" x2="190" y2="190" stroke="#0D7A6B" stroke-width="1" stroke-dasharray="3,3"/>', q: '대각선?', choices: ['1개', '2개', '3개', '없음'], ans: 0, domain: '공간', mechanism: '두정엽 - 대각' },
+      { svg: () => '<circle cx="80" cy="80" r="30" fill="#0D7A6B"/><circle cx="160" cy="160" r="30" fill="none" stroke="#0D7A6B" stroke-width="2"/><rect x="100" y="100" width="40" height="40" fill="none" stroke="#0D7A6B" stroke-width="2"/>', q: '배치?', choices: ['규칙적', '대각선', '무작위', '일렬'], ans: 1, domain: '공간', mechanism: '두정엽 - 배치' }
+    ];
+
+    // 도메인별 상세 분석 텍스트
+    const DOMAIN_INFO = {
+      '기억': {
+        desc: '과거 경험과 정보를 저장하고 회상하는 능력입니다.',
+        mechanism: 'DMN(Default Mode Network) 중심',
+        strength: '단기 기억과 회상 능력이 우수합니다.',
+        improve: '새로운 정보 습득 속도 향상 필요합니다.'
+      },
+      '속도': {
+        desc: '정보를 빠르게 처리하고 반응하는 능력입니다.',
+        mechanism: 'DLPFC(전전두피질) 중심',
+        strength: '빠른 정보 처리 능력이 우수합니다.',
+        improve: '복잡한 정보 처리 능력 개발 필요합니다.'
+      },
+      '집중': {
+        desc: '한 가지 대상에 지속적으로 주의를 집중하는 능력입니다.',
+        mechanism: 'DLPFC 중심',
+        strength: '세부 정보에 주의를 기울이는 능력이 있습니다.',
+        improve: '장시간 집중 능력 강화가 필요합니다.'
+      },
+      '감정': {
+        desc: '다양한 감정을 인식하고 표현하는 능력입니다.',
+        mechanism: '편도체 및 MNS(거울신경세포) 중심',
+        strength: '감정 인식 능력이 우수합니다.',
+        improve: '감정 조절 능력 개발이 필요합니다.'
+      },
+      '판단': {
+        desc: '정보를 분석하여 올바른 결정을 내리는 능력입니다.',
+        mechanism: 'DLPFC 및 TPJ 중심',
+        strength: '논리적 추론 능력이 있습니다.',
+        improve: '복잡한 판단 능력 강화가 필요합니다.'
+      },
+      '실행': {
+        desc: '계획을 세우고 이를 실행에 옮기는 능력입니다.',
+        mechanism: 'DLPFC 및 운동영역 중심',
+        strength: '계획적 행동이 가능합니다.',
+        improve: '실행 능력 향상이 필요합니다.'
+      },
+      '조절': {
+        desc: '자신의 행동과 감정을 조절하는 능력입니다.',
+        mechanism: '전전두피질 및 편도체 중심',
+        strength: '자기조절 능력이 있습니다.',
+        improve: '자극 반응 제어 능력 개발이 필요합니다.'
+      },
+      '공간': {
+        desc: '공간 관계를 인식하고 이해하는 능력입니다.',
+        mechanism: '두정엽 중심',
+        strength: '공간 인식 능력이 있습니다.',
+        improve: '3차원 공간 사고 능력 강화가 필요합니다.'
+      }
+    };
+
+    function showScreen(screenName) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById(screenName + 'Screen').classList.add('active');
+    }
+
+    function renderSvg() {
+      const q = QUESTIONS_DATA[currentIdx];
+      const svg = document.getElementById('stimulusSvg');
+      svg.innerHTML = q.svg();
+    }
+
+    function startTest() {
+      const name = document.getElementById('userName').value.trim();
+      const birth = document.getElementById('userBirth').value;
+      const gender = document.getElementById('userGender').value;
+
+      if (!name || !birth || !gender) {
+        alert('모든 정보를 입력해주세요');
+        return;
+      }
+
+      const [year, month, day] = birth.split('-');
+      const birthDate = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+      const today = new Date();
+      let age = today.getFullYear() - birthDate.getFullYear();
+      if (today.getMonth() < birthDate.getMonth() || 
+          (today.getMonth() === birthDate.getMonth() && today.getDate() < birthDate.getDate())) {
+        age--;
+      }
+
+      userData = { name, birth, gender, age };
+      answers = [];
+      currentIdx = 0;
+      showScreen('question');
+      displayQuestion();
+    }
+
+    function displayQuestion() {
+      const q = QUESTIONS_DATA[currentIdx];
+      const progress = ((currentIdx + 1) / QUESTIONS_DATA.length) * 100;
+      
+      document.getElementById('progressBar').style.width = progress + '%';
+      document.getElementById('questionNum').textContent = `Q. ${currentIdx + 1}/51`;
+      document.getElementById('domainTag').textContent = q.domain;
+      document.getElementById('mechanismLabel').textContent = q.mechanism;
+      document.getElementById('questionText').textContent = q.q;
+
+      renderSvg();
+
+      const choicesHtml = q.choices.map((c, i) => `
+        <button class="choice-btn" onclick="selectChoice(${i})" id="choice-${i}">
+          ${c}
+        </button>
+      `).join('');
+      
+      document.getElementById('choicesContainer').innerHTML = choicesHtml;
+      document.getElementById('nextBtn').disabled = true;
+
+      startTimer();
+    }
+
+    function startTimer() {
+      clearInterval(timerInterval);
+      const randomTime = Math.random() < 0.5 ? 7 : 10; // 7~10초 (충분한 시간)
+      let remaining = randomTime;
+      
+      const update = () => {
+        document.getElementById('timerCircle').textContent = remaining;
+        const circle = document.getElementById('timerCircle');
+        circle.classList.remove('warning', 'danger');
+        if (remaining <= 1) circle.classList.add('danger');
+        else if (remaining <= 2) circle.classList.add('warning');
+        
+        remaining--;
+        if (remaining < 0) {
+          clearInterval(timerInterval);
+          if (answers[currentIdx] === undefined) {
+            // 시간 끝났을 때 첫 번째 선택 자동 선택
+            selectChoice(0);
+            // 500ms 후 다음 문항으로 진행 (사용자가 인식할 수 있도록)
+            setTimeout(() => {
+              console.log('자동으로 다음 문항으로 진행합니다');
+              nextQuestion();
+            }, 500);
+          }
+        }
+      };
+      
+      update();
+      timerInterval = setInterval(update, 1000);
+    }
+
+    function selectChoice(idx) {
+      clearInterval(timerInterval);
+      answers[currentIdx] = idx;
+      document.querySelectorAll('.choice-btn').forEach(b => b.classList.remove('selected'));
+      document.getElementById('choice-' + idx).classList.add('selected');
+      document.getElementById('nextBtn').disabled = false;
+    }
+
+    function nextQuestion() {
+      if (answers[currentIdx] === undefined) return;
+      clearInterval(timerInterval);
+      
+      if (currentIdx < QUESTIONS_DATA.length - 1) {
+        currentIdx++;
+        displayQuestion();
+      } else {
+        finishTest();
+      }
+    }
+
+    function drawRadarChart(scores) {
+      const svg = document.getElementById('radarChart');
+      const cx = 150, cy = 150, radius = 90;
+      const angleSlice = (Math.PI * 2) / 8;
+      
+      // 축별 컬러
+      const colors = ['#1976D2', '#D32F2F', '#FBC02D', '#388E3C', '#FF9800', '#7B1FA2', '#E91E63', '#00796B'];
+      
+      let points = [];
+      let pathData = '';
+      
+      // 데이터 포인트 계산
+      for (let i = 0; i < 8; i++) {
+        const angle = angleSlice * i - Math.PI / 2;
+        const r = (scores[i] / 100) * radius;
+        const x = cx + r * Math.cos(angle);
+        const y = cy + r * Math.sin(angle);
+        points.push({ x, y, color: colors[i] });
+        if (i === 0) pathData = `M ${x} ${y}`;
+        else pathData += ` L ${x} ${y}`;
+      }
+      pathData += ' Z';
+      
+      let html = '';
+      
+      // 그리드
+      for (let i = 1; i <= 5; i++) {
+        let gridPath = '';
+        for (let j = 0; j < 8; j++) {
+          const angle = angleSlice * j - Math.PI / 2;
+          const r = (i * 20) * radius / 100;
+          const x = cx + r * Math.cos(angle);
+          const y = cy + r * Math.sin(angle);
+          if (j === 0) gridPath = `M ${x} ${y}`;
+          else gridPath += ` L ${x} ${y}`;
+        }
+        gridPath += ' Z';
+        html += `<path d="${gridPath}" stroke="#DDD" stroke-width="1" fill="none"/>`;
+      }
+      
+      // 축선
+      for (let i = 0; i < 8; i++) {
+        const angle = angleSlice * i - Math.PI / 2;
+        const x = cx + radius * Math.cos(angle);
+        const y = cy + radius * Math.sin(angle);
+        html += `<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="#EEE" stroke-width="1"/>`;
+      }
+      
+      // 데이터 영역 (파랑 투명)
+      html += `<path d="${pathData}" fill="#1976D2" fill-opacity="0.15" stroke="#1976D2" stroke-width="2.5"/>`;
+      
+      // 데이터 포인트 (축별 컬러)
+      for (let p of points) {
+        html += `<circle cx="${p.x}" cy="${p.y}" r="4" fill="${p.color}" stroke="white" stroke-width="1.5"/>`;
+      }
+      
+      // 레이블 (큰 텍스트)
+      const labels = ['기억', '속도', '집중', '감정', '판단', '실행', '조절', '공간'];
+      for (let i = 0; i < 8; i++) {
+        const angle = angleSlice * i - Math.PI / 2;
+        const x = cx + (radius + 32) * Math.cos(angle);
+        const y = cy + (radius + 32) * Math.sin(angle);
+        html += `<text x="${x}" y="${y}" text-anchor="middle" font-size="14" font-weight="900" fill="${colors[i]}">${labels[i]}</text>`;
+      }
+      
+      svg.innerHTML = html;
+    }
+
+    function finishTest() {
+      clearInterval(timerInterval);
+      showScreen('result');
+
+      const scores = {};
+      const domainCounts = {};
+      DOMAINS.forEach(d => { scores[d] = 0; domainCounts[d] = 0; });
+
+      QUESTIONS_DATA.forEach((q, i) => {
+        if (q.domain) {
+          domainCounts[q.domain]++;
+          if (answers[i] === q.ans) {
+            scores[q.domain]++;
+          }
+        }
+      });
+
+      const avgScores = {};
+      DOMAINS.forEach(d => {
+        avgScores[d] = Math.round((scores[d] / domainCounts[d]) * 100);
+      });
+
+      const avg = Object.values(avgScores).reduce((a, b) => a + b) / DOMAINS.length;
+      // 뇌나이 환산: 기준 70점 = 실제 만나이. 1점당 0.2세, 실제나이 ±10세 이내
+      let brainAge = userData.age - Math.round((avg - 70) * 0.2);
+      brainAge = Math.max(userData.age - 10, Math.min(userData.age + 10, brainAge));
+      brainAge = Math.max(20, Math.min(99, brainAge));
+
+      const ageDifference = brainAge - userData.age;
+      let statusClass = 'normal';
+      let statusText = '✅ 정상';
+      let messageText = '';
+
+      // 판정은 나이 차이가 아니라 뇌건강도(정답률) 기준 — BAC 시스템과 동일
+      if (avg >= 90) {
+        statusClass = 'normal';
+        statusText = '✅ 우수';
+        messageText = '전반적인 인지 기능이 매우 우수한 상태입니다';
+      } else if (avg >= 80) {
+        statusClass = 'normal';
+        statusText = '✅ 양호';
+        messageText = '현재 수준을 유지해 주세요';
+      } else if (avg >= 70) {
+        statusClass = 'caution';
+        statusText = '⚠️ 보통';
+        messageText = '약한 영역 중심의 인지 활동을 권장합니다';
+      } else if (avg >= 60) {
+        statusClass = 'warning';
+        statusText = '⚠️ 주의';
+        messageText = '보완 훈련을 시작해 보세요';
+      } else {
+        statusClass = 'danger';
+        statusText = '🔴 관심 필요';
+        messageText = '전문기관 상담을 권장합니다';
+      }
+
+      // 헤더 업데이트
+      document.getElementById('brainAge').textContent = brainAge;
+      document.getElementById('brainAgeBox').className = 'brain-age-box ' + statusClass;
+      document.getElementById('statusBadge').className = 'status-badge ' + statusClass;
+      document.getElementById('statusBadge').textContent = statusText;
+      document.getElementById('statusMessage').textContent = messageText;
+      document.getElementById('realAge').textContent = '만 ' + userData.age + '세';
+      document.getElementById('birthInfo').textContent = userData.birth;
+      document.getElementById('userName2').textContent = userData.name;
+
+      // 인지 영역 분석 (8개)
+      let domainsHtml = '';
+      DOMAINS.forEach(d => {
+        const score = avgScores[d];
+        const info = DOMAIN_INFO[d];
+        domainsHtml += `
+          <div class="domain-section">
+            <div class="domain-header">
+              <span class="domain-icon">📊</span>
+              <span class="domain-name">${d}</span>
+              <span class="domain-score">${score}%</span>
+            </div>
+            <div class="domain-desc">${info.desc}</div>
+            <div class="domain-mechanism">${info.mechanism}</div>
+            <div style="font-size: 10px; color: #333; margin-top: 4px; line-height: 1.3;">
+              <strong>강점:</strong> ${info.strength}<br>
+              <strong>개선:</strong> ${info.improve}
+            </div>
+          </div>
+        `;
+      });
+      document.getElementById('domainsAnalysis').innerHTML = domainsHtml;
+
+      // 레이더 차트
+      drawRadarChart(Object.values(avgScores));
+
+      // 강점/약점
+      const sorted = DOMAINS.map(d => ({domain: d, score: avgScores[d]})).sort((a, b) => b.score - a.score);
+
+      let strengthHtml = sorted.slice(0, 3).map(s => 
+        `<div class="insight-item strength">${s.domain} (${s.score}%)</div>`
+      ).join('');
+      document.getElementById('strengthAnalysis').innerHTML = strengthHtml;
+
+      let weaknessHtml = sorted.slice(-3).reverse().map(s =>
+        `<div class="insight-item weakness">${s.domain} (${s.score}%)</div>`
+      ).join('');
+      document.getElementById('weaknessAnalysis').innerHTML = weaknessHtml;
+
+      // 뇌나이 상세 분석
+      const brainAgeAnalysis = `
+        <div style="font-size: 12px; line-height: 1.5; color: #333;">
+          <strong>실제 나이:</strong> 만 ${userData.age}세<br>
+          <strong>뇌 나이:</strong> ${brainAge}세<br>
+          <strong>차이:</strong> ${ageDifference > 0 ? '+' : ''}${ageDifference}세<br><br>
+          <strong>의미:</strong> 뇌 건강도 ${Math.round(avg)}점으로, 실제 나이 대비 ${ageDifference > 0 ? ageDifference + '세 높은' : (ageDifference < 0 ? (-ageDifference) + '세 낮은' : '동일한')} 수준입니다. (교육용 환산 지표이며 의학적 판정이 아닙니다.)<br><br>
+          <strong>신경가소성을 통한 개선:</strong><br>
+          • 현재 상태 유지 시: ${brainAge + 8}세 수준으로 진행<br>
+          • 인지 훈련 시작 시: 3개월 내 ${Math.max(brainAge - 5, brainAge - 7)}세 개선<br>
+          • 지속적 훈련 시: 6개월 내 정상 수준 회복 가능
+        </div>
+      `;
+      document.getElementById('brainAgeAnalysis').innerHTML = brainAgeAnalysis;
+
+      // 성장 로드맵
+      const roadmap = `
+        <div style="font-size: 11px; line-height: 1.6;">
+          <div class="roadmap-item">
+            <span class="roadmap-time">현재 (2026-08-19):</span><br>
+            <span class="roadmap-goal">뇌 나이 ${brainAge}세</span>
+          </div>
+          <div class="roadmap-item">
+            <span class="roadmap-time">3개월 후:</span><br>
+            <span class="roadmap-goal">목표: ${Math.max(brainAge - 5, userData.age + 2)}세 수준</span>
+          </div>
+          <div class="roadmap-item">
+            <span class="roadmap-time">6개월 후:</span><br>
+            <span class="roadmap-goal">목표: ${Math.max(brainAge - 10, userData.age + 1)}세 수준</span>
+          </div>
+          <div class="roadmap-item">
+            <span class="roadmap-time">12개월 후:</span><br>
+            <span class="roadmap-goal">목표: ${userData.age}세 수준 (정상화)</span>
+          </div>
+        </div>
+      `;
+      document.getElementById('roadmap').innerHTML = roadmap;
+
+      // 신경과학 근거
+      const neuroscience = `
+        <div style="font-size: 11px; line-height: 1.6;">
+          <div class="neuro-item">
+            <span class="neuro-term">DMN (Default Mode Network):</span>
+            <span class="neuro-desc">기억과 자기 참조적 사고를 담당하며, 휴식 중 활성화됩니다.</span>
+          </div>
+          <div class="neuro-item">
+            <span class="neuro-term">DLPFC (Dorsolateral Prefrontal Cortex):</span>
+            <span class="neuro-desc">집중, 판단, 계획을 담당하며, 나이와 함께 감소합니다.</span>
+          </div>
+          <div class="neuro-item">
+            <span class="neuro-term">편도체 (Amygdala):</span>
+            <span class="neuro-desc">감정 처리를 담당하며, 신경가소성으로 개선 가능합니다.</span>
+          </div>
+          <div class="neuro-item">
+            <span class="neuro-term">신경가소성 (Neuroplasticity):</span>
+            <span class="neuro-desc">뇌는 평생 학습 가능하며, 규칙적 훈련으로 개선됩니다.</span>
+          </div>
+        </div>
+      `;
+      document.getElementById('neuroscience').innerHTML = neuroscience;
+
+      // 권고사항
+      const recommendations = `
+        <div style="font-size: 11px; line-height: 1.6;">
+          <div style="margin-bottom: 8px;">
+            <strong>✅ 즉시 실행:</strong>
+            <div class="rec-item">1. 주 3회 이상 인지 훈련</div>
+            <div class="rec-item">2. 충분한 수면 (7-9시간/일)</div>
+            <div class="rec-item">3. 규칙적 유산소 운동 (30분/일)</div>
+          </div>
+          <div style="margin-bottom: 8px;">
+            <strong>⚡ 집중 개선 훈련:</strong>
+            <div class="rec-item">• ${sorted.slice(-1)[0].domain}: 퍼즐, 미로 찾기</div>
+            <div class="rec-item">• ${sorted.slice(-2, -1)[0].domain}: 논리 게임, 수학 문제</div>
+            <div class="rec-item">• ${sorted.slice(-3, -2)[0].domain}: 명상, 호흡 운동</div>
+          </div>
+          <div>
+            <strong>📅 추적:</strong>
+            <div class="rec-item">• 3개월 후 재검사 권장</div>
+            <div class="rec-item">• 진행 상황 모니터링</div>
+            <div class="rec-item">• 목표 달성 여부 확인</div>
+          </div>
+        </div>
+      `;
+      document.getElementById('recommendations').innerHTML = recommendations;
+    }
+
+    function printReport() {
+      window.print();
+    }
+
+    function restartTest() {
+      showScreen('question');
+      answers = [];
+      currentIdx = 0;
+      displayQuestion();
+    }
+
+    function goToStart() {
+      showScreen('start');
+      document.getElementById('userName').value = '';
+      document.getElementById('userBirth').value = '';
+      document.getElementById('userGender').value = '';
+    }
+  </script>
+</body>
+</html>
