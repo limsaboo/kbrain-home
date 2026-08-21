@@ -1,14 +1,13 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>뇌건강 체크 결과보고서 | 한국뇌심리연구소</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>BAC 뇌건강 체크 | 한국뇌심리연구소</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     
     html, body { 
@@ -473,300 +472,725 @@
       .container { padding: 20px; }
     }
   </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
 
 <div class="container">
-  <!-- PAGE 1: 표지 -->
-  <div class="header">
-    <div class="header-logo">🧠</div>
-    <div class="header-text">
-      <h1>결과보고서</h1>
-      <p>한국뇌심리연구소 뇌건강 체크</p>
+  <!-- 시작 화면 -->
+  <div id="startScreen" class="screen active">
+    <div class="logo-box">
+      <span class="logo-emoji">🧠</span>
+      <div class="logo-title">뇌건강 체크</div>
+      <div class="logo-subtitle">Brain Age Check (BAC) 시스템</div>
     </div>
+    <div class="info-box">
+      <p><strong>5가지 인지 영역</strong> 점검</p>
+      <p>기억력 · 집중력 · 감정력 · 판단력 · 실행력</p>
+      <p><strong>⏱️ 약 10분</strong> 소요 (50문항)</p>
+      <p>당신의 뇌 건강 상태를 체계적으로 점검하세요! 💡</p>
+    </div>
+    <button class="btn btn-primary" onclick="goToUserInfo()">🚀 체크 시작</button>
   </div>
-  
-  <div class="score-cards">
-    <div class="score-card health">
-      <div class="score-label">뇌 건강도</div>
-      <div class="score-number">75</div>
-      <div class="score-sub">연령층 평균: 70점</div>
+
+  <!-- 사용자 정보 입력 -->
+  <div id="userInfoScreen" class="screen">
+    <div class="info-title">📋 기본 정보 입력</div>
+    <div class="info-box">
+      <p>체크 결과를 안전하게 저장하기 위해 기본 정보를 입력해주세요.</p>
     </div>
-    <div class="score-card age">
-      <div class="score-label">뇌 나이</div>
-      <div class="score-number">50세</div>
-      <div class="score-sub">실제 나이: 48세</div>
+
+    <div class="form-group">
+      <label class="form-label">이름 (필수)</label>
+      <input type="text" id="userName" class="form-input" placeholder="예: 홍길동" maxlength="30">
     </div>
-  </div>
-  
-  <div class="profile-wrapper print-hide">
-    <div class="profile">
-      <div class="profile-image">
-        <img src="data:image/webp;base64,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" alt="임찬우 소장">
-      </div>
-      <div class="profile-info">
-        <h3>한국뇌심리연구소</h3>
-        <p><strong>소장 임찬우</strong></p>
-        <p>📞 010-4119-0031</p>
-        <p>✉️ brain.saboo@gmail.com</p>
-        <p style="font-size: 10px; color: #999; margin-top: 6px;">17년 이상 뇌심리 분야 전문가</p>
-      </div>
-    </div>
-    
-    <div class="social-links">
-      <a href="https://youtube.com/channel/UC8QlCKNj5qgBKBbkE7Qz4_Q?si=SwikWxfW2GwmpXE7" class="social-icon social-youtube" title="YouTube" target="_blank">
-        <i class="fab fa-youtube"></i>
-      </a>
-      <a href="https://www.instagram.com/brainsaboo?igsi=NGswYno2YTZjNjgx" class="social-icon social-instagram" title="Instagram" target="_blank">
-        <i class="fab fa-instagram"></i>
-      </a>
-      <a href="https://lite.tiktok.com/t/ZS9kW5HmEaK7m-NiUeE/" class="social-icon social-tiktok" title="TikTok" target="_blank">
-        <i class="fab fa-tiktok"></i>
-      </a>
-      <a href="https://m.blog.naver.com/brainsaboo" class="social-icon social-blog" title="Blog" target="_blank">
-        <i class="fas fa-blog"></i>
-      </a>
-    </div>
-  </div>
-  
-  <div class="section">
-    <div class="section-title">📊 검사 개요</div>
-    <div class="section-content">
-      이 검사는 5개 뇌 영역(기억력, 집중력, 감정력, 판단력, 실행력)에 대한 종합적 평가를 통해 당신의 뇌 건강 상태를 진단합니다. 각 영역별 점수는 연령층 평균값과 비교되어 상대적 강점과 개선 영역을 파악할 수 있도록 구성되었습니다.
-    </div>
-  </div>
-  
-  <!-- PAGE 2: 레이더 차트 & 분석 -->
-  <div class="page-break">
-    <div class="chart-section">
-      <div class="chart-wrapper">
-        <div class="chart-container">
-          <canvas id="radarChart"></canvas>
+
+    <div class="form-group">
+      <label class="form-label">생년월일 (필수)</label>
+      <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 12px;">
+        <div>
+          <input type="number" id="birthYear" class="form-input" placeholder="1960" min="1900" max="2024" onchange="calculateAge()" oninput="calculateAge()">
+          <div style="font-size: 11px; color: #666; margin-top: 5px; text-align: center; font-weight: 600;">년(Y)</div>
         </div>
-      </div>
-      
-      <div class="chart-legend">
-        <div class="legend-item">
-          <div class="legend-box solid"></div>
-          <span>당신의 능력</span>
+        <div>
+          <input type="number" id="birthMonth" class="form-input" placeholder="01" min="1" max="12" onchange="calculateAge()" oninput="calculateAge()">
+          <div style="font-size: 11px; color: #666; margin-top: 5px; text-align: center; font-weight: 600;">월(M)</div>
         </div>
-        <div class="legend-item">
-          <div class="legend-box dashed"></div>
-          <span>연령층 평균</span>
+        <div>
+          <input type="number" id="birthDay" class="form-input" placeholder="01" min="1" max="31" onchange="calculateAge()" oninput="calculateAge()">
+          <div style="font-size: 11px; color: #666; margin-top: 5px; text-align: center; font-weight: 600;">일(D)</div>
         </div>
       </div>
     </div>
-    
-    <div class="section">
-      <div class="section-title">💡 종합 분석</div>
-      <div class="section-content">
-        <p>당신의 평균 뇌 건강도는 <strong>75점</strong>으로 양호한 수준입니다.</p>
-        <p style="margin-top: 8px;"><strong>강점 영역:</strong> 실행력(85점), 집중력(80점)</p>
-        <p><strong>개선 영역:</strong> 판단력(65점)</p>
-        <p style="margin-top: 8px;">정기적인 뇌 훈련을 통해 전체 능력을 더욱 향상시킬 수 있습니다.</p>
+
+    <div class="form-group">
+      <div style="background: linear-gradient(135deg, #B2EBF2 0%, #80DEEA 100%); border-radius: 10px; padding: 16px; text-align: center; border: 2px solid #00BCD4;">
+        <div style="font-size: 13px; font-weight: 600; color: #00796B; margin-bottom: 8px;">만나이</div>
+        <div style="font-size: 32px; font-weight: 900; color: #00BCD4;" id="ageDisplay">--</div>
+        <div style="font-size: 12px; font-weight: 600; color: #00796B; margin-top: 5px;">세</div>
       </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">성별</label>
+      <select id="userGender" class="form-select">
+        <option value="">선택하기</option>
+        <option value="M">남성</option>
+        <option value="F">여성</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">지역 (선택)</label>
+      <input type="text" id="userRegion" class="form-input" placeholder="예: 서울시 강남구" maxlength="50">
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">기관명 (선택)</label>
+      <input type="text" id="userInstitution" class="form-input" placeholder="예: 종로노인복지관" maxlength="50">
+    </div>
+
+    <button class="btn btn-primary" onclick="startTest()">✅ 체크 시작</button>
+    <button class="btn btn-secondary" onclick="goToStart()">← 뒤로</button>
+  </div>
+
+  <!-- 테스트 화면 -->
+  <div id="testScreen" class="screen">
+    <div class="progress-bar-container">
+      <div class="progress-bar" id="progressBar"></div>
+    </div>
+    <div class="progress-text">
+      <span id="progressNum">0/50</span>
+      <span id="progressPct">0%</span>
+    </div>
+
+    <div class="question-info">
+      <span class="q-num" id="qNum">문항 1/50</span>
+      <span class="q-domain" id="qDomain">기억력</span>
+    </div>
+
+    <!-- 자극 섹션 -->
+    <div class="stimulus-section">
+      <div class="stimulus-title" id="stimulusTitle">화면을 잘 보세요</div>
+      <div class="stimulus-content" id="stimulusContent">자극 로딩 중...</div>
+      <div class="countdown" id="countdown">3</div>
+    </div>
+
+    <!-- 질문 섹션 -->
+    <div id="questionSection" style="display: none;">
+      <div class="question-note">이제 답하세요</div>
+      <div class="question-text" id="questionText">질문 로딩 중...</div>
+      <div class="options" id="choices"></div>
+    </div>
+
+    <div class="nav-buttons">
+      <button class="btn-nav" onclick="if(prevQ)prevQ();else alert('이전 버튼');" id="prevBtn">← 이전</button>
+      <button class="btn-nav" onclick="nextQ()" id="nextBtn">다음 →</button>
     </div>
   </div>
-  
-  <!-- PAGE 3: 상세 점수 -->
-  <div class="page-break">
-    <div class="section">
-      <div class="section-title">📈 5가지 뇌 영역 상세 점수</div>
-      
-      <div class="score-detail">
-        <div class="score-detail-label">🔷 기억력: 70점 (평균 65점)</div>
-        <div class="score-detail-value">✅ 우수 | 새로운 정보를 잘 습득하고 기억하는 능력이 뛰어납니다.</div>
-      </div>
-      
-      <div class="score-detail">
-        <div class="score-detail-label">🟠 집중력: 80점 (평균 70점)</div>
-        <div class="score-detail-value">✅ 우수 | 한 가지 일에 오래 집중할 수 있는 능력이 매우 좋습니다.</div>
-      </div>
-      
-      <div class="score-detail">
-        <div class="score-detail-label">🟢 감정력: 75점 (평균 75점)</div>
-        <div class="score-detail-value">✅ 우수 | 감정 인식과 조절 능력이 양호한 수준입니다.</div>
-      </div>
-      
-      <div class="score-detail">
-        <div class="score-detail-label">🔴 판단력: 65점 (평균 60점)</div>
-        <div class="score-detail-value">⚠️ 개선필요 | 논리적 사고와 의사결정 능력을 향상시킬 수 있습니다.</div>
-      </div>
-      
-      <div class="score-detail">
-        <div class="score-detail-label">🟣 실행력: 85점 (평균 65점)</div>
-        <div class="score-detail-value">✅ 우수 | 계획을 세우고 실행하는 능력이 뛰어납니다.</div>
-      </div>
-    </div>
-  </div>
-  
-  <!-- PAGE 4: 개선방안 & 안내 -->
-  <div class="page-break">
-    <div class="recommendation">
-      <h4>🎯 개선 권장사항</h4>
-      <p>
-        <strong>판단력 강화를 위해:</strong><br>
-        • 논리적 사고 훈련 (문제해결 게임, 체스 등)<br>
-        • 정보 분석 능력 개발 (독서, 토론)<br>
-        • 의사결정 시뮬레이션 훈련<br><br>
-        
-        <strong>지속적 뇌 건강 유지를 위해:</strong><br>
-        • 주 3-4회, 30분 이상 규칙적 운동<br>
-        • 충분한 수면 (7-8시간)<br>
-        • 균형잡힌 식단<br>
-        • 사회적 상호작용
-      </p>
-    </div>
+
+  <!-- 결과 화면 -->
+  <div id="resultScreen" class="screen">
+    <div class="result-title">🎉 체크 완료!</div>
     
-    <div class="recommendation" style="background: #E8F5E9; border-left-color: #4CAF50;">
-      <h4>🏥 한국뇌심리연구소 BHC 무료 뇌헬스훈련센터</h4>
-      <p>
-        ✅ <strong>1:1 맞춤형 뇌훈련 프로그램</strong><br>
-        ✅ <strong>전문 뇌심리 상담사 상시 운영</strong><br>
-        ✅ <strong>첫 방문 무료 뇌 건강 상담</strong><br><br>
-        
-        <strong>문의:</strong> 010-4119-0031
-      </p>
+    <div class="brain-age-card">
+      <div class="brain-age-label">당신의 뇌 건강도</div>
+      <div class="brain-age-number" id="brainAge">--</div>
+      <div class="brain-age-desc">5개 영역 상세 분석 결과 ↓</div>
     </div>
-    
-    <table>
-      <tr>
-        <th>뇌 건강도</th>
-        <th>평가</th>
-        <th>해석</th>
-      </tr>
-      <tr>
-        <td>90점 이상</td>
-        <td>우수</td>
-        <td>매우 우수</td>
-      </tr>
-      <tr>
-        <td>80-89점</td>
-        <td>양호</td>
-        <td>양호 상태</td>
-      </tr>
-      <tr>
-        <td>70-79점</td>
-        <td>보통</td>
-        <td>평균적 상태</td>
-      </tr>
-      <tr>
-        <td>60-69점</td>
-        <td>주의</td>
-        <td>개선 필요</td>
-      </tr>
-      <tr>
-        <td>60점 미만</td>
-        <td>경고</td>
-        <td>전문가 상담</td>
-      </tr>
-    </table>
-  </div>
-  
-  <div class="button-section print-hide">
-    <button class="action-btn btn-pdf" onclick="savePDF()">📄 PDF</button>
-    <button class="action-btn btn-print" onclick="window.print()">🖨️ 인쇄</button>
-    <button class="action-btn btn-image" onclick="saveAsImage()">🖼️ 이미지</button>
-    <button class="action-btn btn-home button-full" onclick="window.location='https://k-brain.co.kr/'">🏠 홈페이지</button>
+
+    <div id="saveStatus" class="save-status saving">
+      <div class="status-text">💾 결과를 안전하게 저장 중입니다...</div>
+    </div>
+
+    <div id="errorMessage"></div>
+
+    <div class="analysis-section">
+      <div class="section-title">📊 5가지 영역 점수</div>
+          <div style="position: relative; width: 100%; max-width: 400px; margin: 20px auto; height: 300px;">
+      <canvas id="radarChart"></canvas>
+    </div>
+    <div id="scoresDisplay"></div>
+    </div>
+
+    <div class="analysis-section">
+      <div class="section-title">💡 체크 결과 해석</div>
+      <div id="interpretation" style="line-height: 1.8; font-size: 13px; color: #555;"></div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 10px;">
+      <button class="btn btn-primary" onclick="window.location.href='/'">🏠 홈페이지로</button>
+      <button class="btn btn-secondary" onclick="restartTest()">🔄 다시 체크</button>
+    </div>
   </div>
 </div>
 
 <script>
-const scores = { 기억력: 70, 집중력: 80, 감정력: 75, 판단력: 65, 실행력: 85 };
-const averages = { 기억력: 65, 집중력: 70, 감정력: 75, 판단력: 60, 실행력: 65 };
+// ===== Supabase 초기화 =====
+const SUPABASE_URL = "https://grxqfaeznqqohnlltged.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdyeHFmYWV6bnFxb2hubGx0Z2VkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDY4MjQ3MzUsImV4cCI6MjAyMjQwMDczNX0.7sLJ-8VKTvGu9d7rC0q5HN4bQ0K1H5ZmQsQ3B5X0Y5M";
 
-window.addEventListener('load', function() {
-  drawRadarChart();
-});
-
-function drawRadarChart() {
-  const ctx = document.getElementById('radarChart').getContext('2d');
-  
-  new Chart(ctx, {
-    type: 'radar',
-    data: {
-      labels: ['기억력', '판단력', '집중력', '감정력', '실행력'],
-      datasets: [
-        {
-          label: '당신의 능력',
-          data: [scores['기억력'], scores['판단력'], scores['집중력'], scores['감정력'], scores['실행력']],
-          borderColor: '#00AA00',
-          backgroundColor: 'rgba(0, 170, 0, 0.15)',
-          pointBackgroundColor: '#00AA00',
-          pointBorderColor: '#fff',
-          pointRadius: 5,
-          pointHoverRadius: 7,
-          pointBorderWidth: 1,
-          borderWidth: 2,
-          tension: 0,
-          fill: true
-        },
-        {
-          label: '연령층 평균',
-          data: [averages['기억력'], averages['판단력'], averages['집중력'], averages['감정력'], averages['실행력']],
-          borderColor: '#FF0000',
-          backgroundColor: 'rgba(255, 0, 0, 0.05)',
-          pointBackgroundColor: '#FF0000',
-          pointBorderColor: '#fff',
-          pointRadius: 4,
-          pointBorderWidth: 1,
-          borderWidth: 1.5,
-          borderDash: [6, 3],
-          tension: 0,
-          fill: false
-        }
-      ]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: { display: false }
-      },
-      scales: {
-        r: {
-          beginAtZero: true,
-          max: 100,
-          ticks: {
-            stepSize: 20,
-            font: { size: 10, weight: 'bold' }
-          },
-          grid: {
-            color: 'rgba(0,0,0,0.08)',
-            lineWidth: 1
-          },
-          angleLines: {
-            color: 'rgba(0,0,0,0.08)',
-            lineWidth: 1
-          }
-        }
-      }
-    }
-  });
+let sbClient = null;
+try {
+  const { createClient } = window.supabase;
+  sbClient = createClient(SUPABASE_URL, SUPABASE_KEY);
+} catch (e) {
+  console.warn("Supabase 초기화 실패 (오프라인 모드)", e);
 }
 
+// ===== 문제 데이터 =====
+const BAC_DATA = {
+  기억력: [
+    { title: '숫자 기억하기', stimulus: '3, 7, 2, 9, 5', question: '방금 본 숫자들을 정확히 순서대로 말하세요', options: ['3,7,2,9,5', '3,7,5,2,9', '7,3,2,9,5'], correct: 0 },
+    { title: '물건 기억하기', stimulus: '책 · 컵 · 펜 · 시계', question: '방금 본 4개 물건을 모두 말하세요', options: ['책, 컵, 펜', '책, 컵, 펜, 시계', '책, 펜, 시계'], correct: 1 },
+    { title: '이름 기억하기', stimulus: '김철수 · 이영희 · 박민준', question: '세 사람의 이름을 모두 말하세요', options: ['김철수, 이영희, 박민준', '김철수, 박민준', '이영희, 박민준'], correct: 0 },
+    { title: '순서 기억하기', stimulus: '1번째: 가\n2번째: 나\n3번째: 다', question: '정확한 순서는?', options: ['가→나→다', '나→가→다', '다→나→가'], correct: 0 },
+    { title: '색상 기억하기', stimulus: '🔴 🔵 🟡 🟢', question: '본 색상의 개수는?', options: ['3개', '4개', '5개'], correct: 1 },
+    { title: '위치 기억하기', stimulus: '왼쪽: 책\n중앙: 펜\n오른쪽: 시계', question: '펜은 어디 위치에 있었나?', options: ['왼쪽', '중앙', '오른쪽'], correct: 1 },
+    { title: '이야기 기억하기', stimulus: '"철수가 공원에서 개를 만났다"', question: '철수가 어디서 개를 만났나?', options: ['공원', '집', '학교'], correct: 0 },
+    { title: '얼굴 기억하기', stimulus: '😊 😢 😡 😮 😴', question: '본 표정의 개수는?', options: ['3개', '4개', '5개'], correct: 2 },
+    { title: '음성 기억하기', stimulus: '"사과, 포도, 딸기"', question: '들은 과일은?', options: ['사과, 포도, 딸기', '포도, 딸기, 바나나', '사과, 딸기, 수박'], correct: 0 },
+    { title: '날짜 기억하기', stimulus: '2026년 8월 21일 금요일', question: '방금 본 날짜는?', options: ['2026년 8월 20일', '2026년 8월 21일', '2026년 7월 21일'], correct: 1 }
+  ],
+  집중력: [
+    { title: '숫자 찾기', stimulus: '3 5 7 5 2 9 5 6 3 2\n(5가 몇 개인가?)', question: '숫자 5는 몇 개?', options: ['2개', '3개', '4개'], correct: 1 },
+    { title: '글자 찾기', stimulus: 'A B C A D A E B A\n(A가 몇 개인가?)', question: '글자 A는 몇 개?', options: ['2개', '3개', '4개'], correct: 1 },
+    { title: '같은 그림 찾기', stimulus: '▲ ■ ● ▲ ◆ ▲ ◇ ■', question: '삼각형(▲)은 몇 개?', options: ['2개', '3개', '4개'], correct: 1 },
+    { title: '색상 구분', stimulus: '빨강 파랑 노랑 빨강 초록', question: '빨강은 몇 개?', options: ['1개', '2개', '3개'], correct: 1 },
+    { title: '빠진 것 찾기', stimulus: '1 2 3 ? 5 6', question: '빠진 숫자는?', options: ['3', '4', '5'], correct: 1 },
+    { title: '규칙 찾기', stimulus: '2 4 6 8 10 ?', question: '다음은?', options: ['11', '12', '14'], correct: 1 },
+    { title: '다른 것 찾기', stimulus: '빨강 파랑 노랑 하늘\n(다른 색은?)', question: '다른 색은?', options: ['빨강', '파랑', '하늘'], correct: 2 },
+    { title: '같은 소리 찾기', stimulus: '"바 파 바 마 바"\n(바가 몇 개?)', question: '같은 소리 "바"는 몇 개?', options: ['1개', '2개', '3개'], correct: 2 },
+    { title: '패턴 찾기', stimulus: '■ □ ■ □ ■ ?', question: '다음은?', options: ['■', '□', '◇'], correct: 1 },
+    { title: '집합 찾기', stimulus: '사과 포도 딸기 바나나\n(과일이 몇 개?)', question: '과일의 개수는?', options: ['3개', '4개', '5개'], correct: 1 }
+  ],
+  감정력: [
+    { title: '표정 읽기', stimulus: '😊', question: '이 표정은?', options: ['슬픔', '기쁨', '화남'], correct: 1 },
+    { title: '상황 이해', stimulus: '친구가 떨어졌다', question: '친구의 감정은?', options: ['기쁨', '슬픔', '놀람'], correct: 1 },
+    { title: '음성 감정', stimulus: '"안녕!"\n(밝은 톤)', question: '말하는 사람의 감정?', options: ['슬픔', '기쁨', '화남'], correct: 1 },
+    { title: '감정 표현', stimulus: '눈물을 흘렸다', question: '그 사람의 감정은?', options: ['행복', '슬픔', '놀람'], correct: 1 },
+    { title: '공감 능력', stimulus: '친구가 시험에 떨어졌다', question: '친구를 어떻게 도와줄까?', options: ['놀려주기', '위로하고 격려하기', '무시하기'], correct: 1 },
+    { title: '감정 강도', stimulus: '😢😢😢\n(3개의 우는 얼굴)', question: '슬픔의 정도는?', options: ['약함', '중간', '강함'], correct: 2 },
+    { title: '감정 변화', stimulus: '😊 → 😢', question: '감정이 변했나?', options: ['아니오', '예'], correct: 1 },
+    { title: '상황 감정', stimulus: '상 받았다', question: '감정은?', options: ['슬픔', '행복', '불안'], correct: 1 },
+    { title: '타인 감정', stimulus: '엄마가 피곤해 보인다', question: '엄마의 감정은?', options: ['행복', '지쳐있음', '화남'], correct: 1 },
+    { title: '감정 조절', stimulus: '화났을 때', question: '어떻게 할까?', options: ['소리 치기', '깊게 숨쉬고 진정하기', '때리기'], correct: 1 }
+  ],
+  판단력: [
+    { title: '논리 추론', stimulus: '모든 개는 동물이다.\n뽀삐는 개다.', question: '뽀삐는?', options: ['동물 아님', '동물', '식물'], correct: 1 },
+    { title: '문제 해결', stimulus: '우산이 없는데 비가 온다', question: '할 수 있는 일은?', options: ['그냥 맞기', '우산 빌리거나 우비 입기', '밖에 나가지 않기'], correct: 1 },
+    { title: '원인 찾기', stimulus: '천둥소리가 난다', question: '원인은?', options: ['바람', '벼락', '비'], correct: 1 },
+    { title: '위험 판단', stimulus: '불 · 물 · 얼음', question: '가장 위험한 것?', options: ['물', '얼음', '불'], correct: 2 },
+    { title: '우선순위', stimulus: '밥 먹기 · 공부하기 · 놀기', question: '먼저 할 일?', options: ['놀기', '밥 먹기', '공부하기'], correct: 1 },
+    { title: '도덕 판단', stimulus: '남의 물건을 가져가면?', question: '옳은가?', options: ['옳다', '틀렸다'], correct: 1 },
+    { title: '인과관계', stimulus: '열심히 공부한다 → 성적이 올라간다', question: '인과관계가 맞나?', options: ['아니오', '예'], correct: 1 },
+    { title: '선택 판단', stimulus: '직업: A(돈 많음, 힘듦) vs B(돈 적음, 재미)', question: '선택 기준?', options: ['돈만', '재미만', '둘 다 고려'], correct: 2 },
+    { title: '신뢰도', stimulus: '"유명인이 이 약이 좋다고 함" vs "의사가 이 약이 좋다고 함"', question: '더 믿을 수 있는 것?', options: ['유명인', '의사'], correct: 1 },
+    { title: '결정 내리기', stimulus: '중요한 결정을 해야 한다', question: '좋은 방법?', options: ['충동적으로', '깊이 생각한 후'], correct: 1 }
+  ],
+  실행력: [
+    { title: '순서 따르기', stimulus: '1. 손 씻기\n2. 밥 먹기\n3. 양치하기', question: '올바른 순서인가?', options: ['아니오', '예'], correct: 1 },
+    { title: '지시 이해', stimulus: '"빨간 버튼을 누르세요"', question: '이해했나?', options: ['아니오', '예'], correct: 1 },
+    { title: '계획 실행', stimulus: '계획: 1시간 공부하기', question: '실행 가능한가?', options: ['불가능', '가능'], correct: 1 },
+    { title: '목표 달성', stimulus: '목표: 책 읽기', question: '끝낼 수 있나?', options: ['아니오', '예'], correct: 1 },
+    { title: '자기 통제', stimulus: '유혹 앞에서도 견딜 수 있나?', question: '자기 통제 가능?', options: ['불가능', '가능'], correct: 1 },
+    { title: '충동 억제', stimulus: '화날 때 참을 수 있나?', question: '충동 억제 가능?', options: ['불가능', '가능'], correct: 1 },
+    { title: '인내심', stimulus: '어려운 일을 계속할 수 있나?', question: '인내심이 있나?', options: ['없음', '있음'], correct: 1 },
+    { title: '동기 유지', stimulus: '장기 목표를 위해 노력하나?', question: '동기 유지 가능?', options: ['불가능', '가능'], correct: 1 },
+    { title: '책임감', stimulus: '실수했을 때 책임지나?', question: '책임감이 있나?', options: ['없음', '있음'], correct: 1 },
+    { title: '작업 완료', stimulus: '시작한 일을 끝낼 수 있나?', question: '완료할 수 있나?', options: ['불가능', '가능'], correct: 1 }
+  ]
+};
+
+const DOMAIN_NAMES = ['기억력', '집중력', '감정력', '판단력', '실행력'];
+let currentIdx = 0;
+let domainIdx = 0;
+let answers = {};
+let scores = { '기억력': 0, '집중력': 0, '감정력': 0, '판단력': 0, '실행력': 0 };
+let userData = {};
+let testStartTime = null;
+let testId = null;
+let stimulusTimer = null;
+
+function showScreen(name) {
+  document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+  document.getElementById(name + "Screen").classList.add("active");
+  window.scrollTo(0, 0);
+}
+
+function goToStart() { showScreen("start"); }
+function goToUserInfo() { showScreen("userInfo"); }
+
+function calculateAge() {
+  const year = parseInt(document.getElementById("birthYear").value);
+  const month = parseInt(document.getElementById("birthMonth").value);
+  const day = parseInt(document.getElementById("birthDay").value);
+
+  if (!year || !month || !day) {
+    document.getElementById("ageDisplay").textContent = "--";
+    return;
+  }
+
+  if (year < 1900 || year > 2024 || month < 1 || month > 12 || day < 1 || day > 31) {
+    document.getElementById("ageDisplay").textContent = "--";
+    return;
+  }
+
+  const today = new Date();
+  const birthDate = new Date(year, month - 1, day);
+
+  if (birthDate > today) {
+    document.getElementById("ageDisplay").textContent = "--";
+    return;
+  }
+
+  let age = today.getFullYear() - birthDate.getFullYear();
+  const monthDiff = today.getMonth() - birthDate.getMonth();
+
+  if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+    age--;
+  }
+
+  document.getElementById("ageDisplay").textContent = age;
+}
+
+function startTest() {
+  const name = document.getElementById("userName").value.trim();
+  const year = parseInt(document.getElementById("birthYear").value);
+  const month = parseInt(document.getElementById("birthMonth").value);
+  const day = parseInt(document.getElementById("birthDay").value);
+  const gender = document.getElementById("userGender").value;
+  const region = document.getElementById("userRegion").value.trim();
+  const institution = document.getElementById("userInstitution").value.trim();
+  const ageText = document.getElementById("ageDisplay").textContent;
+
+  if (!name || !year || !month || !day) {
+    alert("모든 정보를 입력해주세요!");
+    return;
+  }
+
+  if (year < 1900 || year > 2024 || month < 1 || month > 12 || day < 1 || day > 31) {
+    alert("올바른 생년월일을 입력해주세요!");
+    return;
+  }
+
+  if (ageText === "--") {
+    alert("올바른 생년월일을 입력해주세요!");
+    return;
+  }
+
+  const age = parseInt(ageText);
+  userData = { name, year, month, day, age, gender, region, institution };
+  currentIdx = 0;
+  domainIdx = 0;
+  answers = {};
+  scores = { '기억력': 0, '집중력': 0, '감정력': 0, '판단력': 0, '실행력': 0 };
+  testStartTime = new Date();
+
+  showScreen("test");
+  showQuestion();
+}
+
+function showQuestion() {
+  const domain = DOMAIN_NAMES[domainIdx];
+  const questionIdx = currentIdx % 10;
+  const q = BAC_DATA[domain][questionIdx];
+  
+  const totalProgress = (domainIdx * 10 + questionIdx + 1) / 50;
+  const pct = Math.round(totalProgress * 100);
+
+  document.getElementById("progressBar").style.width = pct + "%";
+  document.getElementById("progressNum").textContent = `${domainIdx * 10 + questionIdx + 1}/50`;
+  document.getElementById("progressPct").textContent = pct + "%";
+  document.getElementById("qNum").textContent = `문항 ${domainIdx * 10 + questionIdx + 1}/50`;
+  document.getElementById("qDomain").textContent = domain;
+  document.getElementById("stimulusTitle").textContent = q.title;
+  document.getElementById("stimulusContent").textContent = q.stimulus;
+  document.getElementById("questionText").textContent = q.question;
+
+  // 선택지 생성
+  const choicesDiv = document.getElementById("choices");
+  choicesDiv.innerHTML = q.options.map((opt, i) => 
+    `<button class="option-btn" onclick="if(selectAnswer)selectAnswer(${i});else alert('클릭됨: ${i}');">${opt}</button>`
+  ).join("");
+
+  // 카운트다운
+  let count = 3;
+  document.getElementById("countdown").textContent = count;
+  document.getElementById("questionSection").style.display = "none";
+
+  stimulusTimer = setInterval(() => {
+    count--;
+    document.getElementById("countdown").textContent = count;
+    if (count <= 0) {
+      clearInterval(stimulusTimer);
+      // ✅ 카운트다운 종료 후 자극 섹션 숨기기
+      document.getElementById("stimulusContent").textContent = "";
+      document.getElementById("countdown").textContent = "✅";
+      document.getElementById("questionSection").style.display = "block";
+    }
+  }, 1000);
+
+  document.getElementById("prevBtn").disabled = (domainIdx === 0 && currentIdx === 0);
+  document.getElementById("nextBtn").disabled = true;
+  document.getElementById("nextBtn").textContent = "선택 후 다음";
+}
+
+function selectAnswer(idx) {
+  try {
+    clearInterval(stimulusTimer);
+    const domain = DOMAIN_NAMES[domainIdx];
+    const questionIdx = currentIdx % 10;
+    const q = BAC_DATA[domain][questionIdx];
+
+    if (idx === q.correct) {
+      scores[domain] += 10;
+    }
+
+    // 다음 질문으로 넘어가기
+    currentIdx++;
+    
+    // 현재 도메인이 끝났는지 확인
+    if (currentIdx >= 10) {
+      domainIdx++;
+      currentIdx = 0;
+    }
+
+    // 모든 질문 완료 확인
+    if (domainIdx >= DOMAIN_NAMES.length) {
+      showResults();
+      return;
+    }
+
+    // 다음 질문 표시
+    setTimeout(() => {
+      showQuestion();
+    }, 100);
+  } catch (e) {
+    console.error("selectAnswer error:", e);
+  }
+}
+
+function prevQ() {
+  if (currentIdx > 0) {
+    currentIdx--;
+  } else if (domainIdx > 0) {
+    domainIdx--;
+    currentIdx = 9;
+  }
+  showQuestion();
+}
+
+function showResults() {
+  const brainAge = calculateBrainAge();
+  
+  document.getElementById("testScreen").style.display = "none";
+  document.getElementById("resultScreen").style.display = "flex";
+  
+  document.getElementById("brainAge").textContent = brainAge;
+  
+  // 평균값 (연령층 기준)
+  const averages = {
+    기억력: 65,
+    집중력: 70,
+    감정력: 75,
+    판단력: 60,
+    실행력: 65
+  };
+  
+  // 점수 표시 + 비교
+  const scoresDisplay = document.getElementById("scoresDisplay");
+  scoresDisplay.innerHTML = DOMAIN_NAMES.map(domain => {
+    const userScore = scores[domain];
+    const avgScore = averages[domain];
+    const comparison = userScore >= avgScore ? '✅ 우수' : '⚠️ 개선필요';
+    return `
+      <div class="score-item">
+        <div class="score-label">${domain}</div>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <div class="score-number">${userScore}점</div>
+          <small style="color: #999;">평균: ${avgScore}점 ${comparison}</small>
+        </div>
+      </div>
+    `;
+  }).join("");
+  
+  // 상세 분석
+  const interpretation = document.getElementById("interpretation");
+  const analysisText = generateAnalysis(scores, brainAge);
+  
+  interpretation.innerHTML = `
+    <strong>🧠 당신의 뇌 건강 상태</strong><br><br>
+    ${analysisText}<br><br>
+    <strong>💡 추천 훈련</strong><br>
+    ${generateRecommendation(scores)}<br><br>
+    <strong>🎯 한국뇌심리연구소 BHC 무료 뇌헬스훈련센터</strong><br>
+    • 1:1 맞춤형 뇌훈련 프로그램<br>
+    • 전문 뇌심리 상담사 상시 운영<br>
+    • 첫 방문 무료 뇌 건강 상담<br>
+    📞 문의: 한국뇌심리연구소
+  `;
+  
+  // 데이터 저장 시도
+  saveToBDatabase(brainAge, scores);
+  
+  // 레이더 차트 그리기 (100ms 후)
+  setTimeout(() => {
+    try {
+      drawRadarChart();
+    } catch (e) {
+      console.log("레이더 차트 그리기 오류:", e);
+    }
+  }, 100);
+}
+
+function generateAnalysis(scores, brainAge) {
+  if (brainAge >= 80) {
+    return `평균 뇌 건강도: <strong>${brainAge}점 (우수)</strong><br>전반적인 인지 기능이 매우 우수합니다. 현재 수준을 유지하고 지속적인 훈련을 권장합니다.`;
+  } else if (brainAge >= 70) {
+    return `평균 뇌 건강도: <strong>${brainAge}점 (양호)</strong><br>대체로 양호한 상태입니다. 특히 약한 영역의 집중 훈련이 도움됩니다.`;
+  } else if (brainAge >= 60) {
+    return `평균 뇌 건강도: <strong>${brainAge}점 (보통)</strong><br>개선의 여지가 있습니다. 정기적인 뇌 훈련을 통해 개선 가능합니다.`;
+  } else {
+    return `평균 뇌 건강도: <strong>${brainAge}점 (관심필요)</strong><br>전문가와의 상담을 권장합니다. 맞춤형 훈련 프로그램이 효과적입니다.`;
+  }
+}
+
+function generateRecommendation(scores) {
+  const minDomain = Object.entries(scores).reduce((a, b) => 
+    a[1] < b[1] ? a : b
+  );
+  return `가장 개선이 필요한 영역: <strong>${minDomain[0]} (${minDomain[1]}점)</strong><br>이 영역 중심의 훈련을 권장합니다.`;
+}
+
+function calculateBrainAge() {
+  const total = Object.values(scores).reduce((a, b) => a + b, 0);
+  const average = Math.round(total / DOMAIN_NAMES.length);
+  return average;
+}
+
+function nextQ() {
+  if (document.getElementById("nextBtn").disabled) return;
+
+  currentIdx++;
+  if (currentIdx >= 10) {
+    currentIdx = 0;
+    domainIdx++;
+    if (domainIdx >= 5) {
+      finishTest();
+      return;
+    }
+  }
+  showQuestion();
+}
+
+async function finishTest() {
+  showScreen("result");
+
+  const avgScore = Math.round(Object.values(scores).reduce((a, b) => a + b) / 5);
+  const brainAge = Math.max(20, Math.min(100, Math.round(40 + (avgScore / 100) * 40)));
+
+  document.getElementById("brainAge").textContent = brainAge + "세";
+
+  const scoresHTML = DOMAIN_NAMES.map((d, i) => `
+    <div class="score-item">
+      <div class="score-label">${d}</div>
+      <div class="score-number">${scores[d]}</div>
+    </div>
+  `).join("");
+  document.getElementById("scoresDisplay").innerHTML = scoresHTML;
+
+  const interpretations = {
+    high: "✨ 우수합니다! 이 영역의 능력이 매우 뛰어납니다.",
+    normal: "⭐ 평균 수준입니다. 현재 상태를 유지하세요.",
+    low: "⚠️ 개선이 필요합니다. 규칙적인 훈련을 권장합니다."
+  };
+
+  let interText = `<strong>📊 평균 뇌 나이: ${brainAge}세</strong><br><br>`;
+  interText += DOMAIN_NAMES.map(d => {
+    const score = scores[d];
+    const level = score >= 80 ? 'high' : score >= 60 ? 'normal' : 'low';
+    return `<strong>${d}:</strong> ${score}점 - ${interpretations[level]}<br>`;
+  }).join("");
+
+  interText += `<br>${avgScore >= 80 ? '✨ 매우 우수한 인지 능력을 유지하고 있습니다!' : avgScore >= 60 ? '⭐ 전체적으로 좋은 상태입니다. 꾸준한 관리를 권장합니다.' : '⚠️ 주요 영역의 훈련이 필요합니다. 전문가 상담을 권장합니다.'}`;
+
+  document.getElementById("interpretation").innerHTML = interText;
+
+  await saveToBDatabase(brainAge, scores);
+}
+
+async function saveToBDatabase(brainAge, scores) {
+  try {
+    // Supabase 연결 확인
+    if (!sbClient) {
+      document.getElementById("saveStatus").className = "save-status";
+      document.getElementById("saveStatus").innerHTML = `
+        <div class="status-text">✅ 체크가 완료되었습니다!<br>
+        <small>(오프라인 모드: 데이터 저장은 인터넷 연결 시 가능합니다)</small></div>
+      `;
+      return;
+    }
+
+    // 1. 사용자 정보 저장
+    const birthDateStr = `${userData.year}-${String(userData.month).padStart(2, '0')}-${String(userData.day).padStart(2, '0')}`;
+    const { data: user_data, error: userError } = await sbClient.from("bac_users").insert([{
+      name: userData.name,
+      birth_year: userData.year,
+      birth_month: userData.month,
+      birth_day: userData.day,
+      age_at_test: userData.age,
+      gender: userData.gender || null,
+      region: userData.region || null,
+      institution: userData.institution || null
+    }]).select();
+
+    if (userError) throw userError;
+    const userId = user_data[0].user_id;
+
+    // 2. 검사 기록 저장
+    const testDuration = Math.round((new Date() - testStartTime) / 1000);
+    const avgScore = Math.round(Object.values(scores).reduce((a, b) => a + b) / 5);
+
+    const { data: test_data, error: testError } = await sbClient.from("bac_tests").insert([{
+      user_id: userId,
+      brain_age: brainAge,
+      total_score: avgScore,
+      duration_seconds: testDuration
+    }]).select();
+
+    if (testError) throw testError;
+    testId = test_data[0].test_id;
+
+    // 3. 점수 저장
+    const scoreData = DOMAIN_NAMES.map(domain => ({
+      test_id: testId,
+      domain: domain,
+      score: scores[domain]
+    }));
+
+    const { error: scoreError } = await sbClient.from("bac_scores").insert(scoreData);
+    if (scoreError) throw scoreError;
+
+    document.getElementById("saveStatus").className = "save-status";
+    document.getElementById("saveStatus").innerHTML = `
+      <div class="status-text">✅ 검사 결과가 안전하게 저장되었습니다!<br>
+      <small>체크 ID: ${testId.substring(0, 8)}...</small></div>
+    `;
+  } catch (error) {
+    console.error(error);
+    document.getElementById("saveStatus").className = "save-status error";
+    document.getElementById("saveStatus").innerHTML = '<div class="status-text">⚠️ 저장 중 오류. 관리자에게 문의하세요.</div>';
+    document.getElementById("errorMessage").innerHTML = `<div class="error-message">오류: ${error.message}</div>`;
+  }
+}
+
+function restartTest() { goToUserInfo(); }
+</script>
+
+</body>
+</html>
+
+<script>
+// PDF 저장 함수
 function savePDF() {
-  const element = document.querySelector('.container');
+  const element = document.getElementById('resultScreen');
   const opt = {
-    margin: [8, 8, 8, 8],
-    filename: '뇌건강체크_' + new Date().toISOString().slice(0,10) + '.pdf',
-    image: { type: 'jpeg', quality: 0.95 },
-    html2canvas: { scale: 2, useCORS: true },
+    margin: 10,
+    filename: '뇌건강체크_결과보고서_' + new Date().toISOString().slice(0,10) + '.pdf',
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: { scale: 2 },
     jsPDF: { orientation: 'portrait', unit: 'mm', format: 'a4' }
   };
   html2pdf().set(opt).from(element).save();
 }
 
+// 인쇄 함수
+function printResult() {
+  window.print();
+}
+
+// 이미지 저장 함수
 function saveAsImage() {
-  const element = document.querySelector('.container');
+  const element = document.getElementById('resultScreen');
   html2canvas(element, { scale: 2 }).then(canvas => {
     const link = document.createElement('a');
     link.href = canvas.toDataURL('image/png');
-    link.download = '뇌건강체크_' + new Date().toISOString().slice(0,10) + '.png';
+    link.download = '뇌건강체크_결과_' + new Date().toISOString().slice(0,10) + '.png';
     link.click();
   });
 }
-</script>
 
-</body>
-</html>
+// 레이더 차트 그리기
+function drawRadarChart() {
+  try {
+    // 기존 차트 제거
+    if (window.radarChartInstance) {
+      window.radarChartInstance.destroy();
+    }
+    
+    const ctx = document.getElementById('radarChart');
+    if (!ctx) return;
+    
+    const averages = {
+      기억력: 65,
+      집중력: 70,
+      감정력: 75,
+      판단력: 60,
+      실행력: 65
+    };
+    
+    window.radarChartInstance = new Chart(ctx.getContext('2d'), {
+      type: 'radar',
+      data: {
+        labels: DOMAIN_NAMES,
+        datasets: [
+          {
+            label: '당신의 점수',
+            data: DOMAIN_NAMES.map(d => scores[d]),
+            borderColor: '#00BCD4',
+            backgroundColor: 'rgba(0, 188, 212, 0.2)',
+            pointBackgroundColor: '#00BCD4',
+            pointBorderColor: '#fff',
+            pointHoverBackgroundColor: '#fff',
+            pointHoverBorderColor: '#00BCD4',
+            tension: 0.1
+          },
+          {
+            label: '평균값',
+            data: DOMAIN_NAMES.map(d => averages[d]),
+            borderColor: '#FF9800',
+            backgroundColor: 'rgba(255, 152, 0, 0.1)',
+            pointBackgroundColor: '#FF9800',
+            borderDash: [5, 5],
+            tension: 0.1
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        plugins: {
+          legend: {
+            display: true,
+            position: 'top'
+          }
+        },
+        scales: {
+          r: {
+            beginAtZero: true,
+            max: 100,
+            ticks: {
+              stepSize: 20
+            }
+          }
+        }
+      }
+    });
+  } catch (e) {
+    console.error("차트 그리기 오류:", e);
+  }
+}
+</script>
