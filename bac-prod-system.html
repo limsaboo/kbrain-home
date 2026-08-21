@@ -256,10 +256,10 @@ body { background: linear-gradient(180deg, #1a472a 0%, #2d5a3d 100%); font-famil
 const SUPABASE_URL = "https://grxqfaeznqqohnlltged.supabase.co";
 const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdyeHFmYWV6bnFxb2hubGx0Z2VkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDY4MjQ3MzUsImV4cCI6MjAyMjQwMDczNX0.7sLJ-8VKTvGu9d7rC0q5HN4bQ0K1H5ZmQsQ3B5X0Y5M";
 
-let supabase = null;
+let sbClient = null;
 try {
   const { createClient } = window.supabase;
-  supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+  sbClient = createClient(SUPABASE_URL, SUPABASE_KEY);
 } catch (e) {
   console.warn("Supabase 초기화 실패 (오프라인 모드)", e);
 }
@@ -543,7 +543,7 @@ async function finishTest() {
 async function saveToBDatabase(brainAge, scores) {
   try {
     // Supabase 연결 확인
-    if (!supabase) {
+    if (!sbClient) {
       document.getElementById("saveStatus").className = "save-status";
       document.getElementById("saveStatus").innerHTML = `
         <div class="status-text">✅ 체크가 완료되었습니다!<br>
@@ -554,7 +554,7 @@ async function saveToBDatabase(brainAge, scores) {
 
     // 1. 사용자 정보 저장
     const birthDateStr = `${userData.year}-${String(userData.month).padStart(2, '0')}-${String(userData.day).padStart(2, '0')}`;
-    const { data: user_data, error: userError } = await supabase.from("bac_users").insert([{
+    const { data: user_data, error: userError } = await sbClient.from("bac_users").insert([{
       name: userData.name,
       birth_year: userData.year,
       birth_month: userData.month,
@@ -572,7 +572,7 @@ async function saveToBDatabase(brainAge, scores) {
     const testDuration = Math.round((new Date() - testStartTime) / 1000);
     const avgScore = Math.round(Object.values(scores).reduce((a, b) => a + b) / 5);
 
-    const { data: test_data, error: testError } = await supabase.from("bac_tests").insert([{
+    const { data: test_data, error: testError } = await sbClient.from("bac_tests").insert([{
       user_id: userId,
       brain_age: brainAge,
       total_score: avgScore,
@@ -589,7 +589,7 @@ async function saveToBDatabase(brainAge, scores) {
       score: scores[domain]
     }));
 
-    const { error: scoreError } = await supabase.from("bac_scores").insert(scoreData);
+    const { error: scoreError } = await sbClient.from("bac_scores").insert(scoreData);
     if (scoreError) throw scoreError;
 
     document.getElementById("saveStatus").className = "save-status";
