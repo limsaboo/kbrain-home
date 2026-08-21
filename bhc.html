@@ -766,30 +766,37 @@
       });
 
       const avg = Object.values(avgScores).reduce((a, b) => a + b) / DOMAINS.length;
-      let brainAge = 100 - Math.round(avg * 0.35);
-      brainAge = Math.max(5, Math.min(100, brainAge));
+      // 뇌나이 환산: 기준 70점 = 실제 만나이. 1점당 0.2세, 실제나이 ±10세 이내
+      let brainAge = userData.age - Math.round((avg - 70) * 0.2);
+      brainAge = Math.max(userData.age - 10, Math.min(userData.age + 10, brainAge));
+      brainAge = Math.max(20, Math.min(99, brainAge));
 
       const ageDifference = brainAge - userData.age;
       let statusClass = 'normal';
       let statusText = '✅ 정상';
       let messageText = '';
 
-      if (ageDifference >= 20) {
-        statusClass = 'severe';
-        statusText = '🔴 매우 위험';
-        messageText = '전문의 진료를 권유합니다';
-      } else if (ageDifference >= 15) {
-        statusClass = 'danger';
-        statusText = '🔴 위험';
-        messageText = '인지 건강 관리가 필요합니다';
-      } else if (ageDifference >= 10) {
-        statusClass = 'warning';
-        statusText = '⚠️ 경고';
-        messageText = '정기적인 검사가 권장됩니다';
-      } else if (ageDifference >= 5) {
+      // 판정은 나이 차이가 아니라 뇌건강도(정답률) 기준 — BAC 시스템과 동일
+      if (avg >= 90) {
+        statusClass = 'normal';
+        statusText = '✅ 우수';
+        messageText = '전반적인 인지 기능이 매우 우수한 상태입니다';
+      } else if (avg >= 80) {
+        statusClass = 'normal';
+        statusText = '✅ 양호';
+        messageText = '현재 수준을 유지해 주세요';
+      } else if (avg >= 70) {
         statusClass = 'caution';
+        statusText = '⚠️ 보통';
+        messageText = '약한 영역 중심의 인지 활동을 권장합니다';
+      } else if (avg >= 60) {
+        statusClass = 'warning';
         statusText = '⚠️ 주의';
-        messageText = '인지 훈련을 시작하세요';
+        messageText = '보완 훈련을 시작해 보세요';
+      } else {
+        statusClass = 'danger';
+        statusText = '🔴 관심 필요';
+        messageText = '전문기관 상담을 권장합니다';
       }
 
       // 헤더 업데이트
@@ -846,8 +853,8 @@
         <div style="font-size: 12px; line-height: 1.5; color: #333;">
           <strong>실제 나이:</strong> 만 ${userData.age}세<br>
           <strong>뇌 나이:</strong> ${brainAge}세<br>
-          <strong>차이:</strong> +${ageDifference}세<br><br>
-          <strong>의미:</strong> 인지 기능이 ${ageDifference > 0 ? '실제 나이보다 ' + ageDifference + '세 더 노화됨' : '평균 수준'}을 나타냅니다.<br><br>
+          <strong>차이:</strong> ${ageDifference > 0 ? '+' : ''}${ageDifference}세<br><br>
+          <strong>의미:</strong> 뇌 건강도 ${Math.round(avg)}점으로, 실제 나이 대비 ${ageDifference > 0 ? ageDifference + '세 높은' : (ageDifference < 0 ? (-ageDifference) + '세 낮은' : '동일한')} 수준입니다. (교육용 환산 지표이며 의학적 판정이 아닙니다.)<br><br>
           <strong>신경가소성을 통한 개선:</strong><br>
           • 현재 상태 유지 시: ${brainAge + 8}세 수준으로 진행<br>
           • 인지 훈련 시작 시: 3개월 내 ${Math.max(brainAge - 5, brainAge - 7)}세 개선<br>
