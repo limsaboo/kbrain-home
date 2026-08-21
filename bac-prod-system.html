@@ -101,6 +101,88 @@ body { background: linear-gradient(180deg, #1a472a 0%, #2d5a3d 100%); font-famil
   .logo-title { font-size: 32px; }
   .brain-age-number { font-size: 42px; }
 }
+
+@media print {
+  * {
+    margin: 0 !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+  }
+  
+  .print-hide,
+  .navtoggle,
+  button:not(.hidden-for-print),
+  .action-btn {
+    display: none !important;
+    visibility: hidden !important;
+  }
+  
+  body { 
+    background: white !important;
+    margin: 0;
+    padding: 0;
+    font-size: 11pt;
+    line-height: 1.4;
+  }
+  
+  .container,
+  .result-container {
+    padding: 15mm;
+    background: white !important;
+    box-shadow: none;
+    max-width: 100%;
+    width: 100%;
+  }
+  
+  .screen {
+    page-break-inside: avoid;
+    padding-bottom: 10px;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    page-break-inside: avoid;
+  }
+  
+  table tr {
+    page-break-inside: avoid;
+  }
+  
+  th, td {
+    padding: 8px;
+    border: 1px solid #ccc;
+    text-align: center;
+  }
+  
+  img {
+    max-width: 100%;
+    height: auto;
+    page-break-inside: avoid;
+  }
+  
+  .chart-container,
+  canvas {
+    max-height: 250px;
+    page-break-inside: avoid;
+  }
+  
+  h1, h2, h3 {
+    page-break-after: avoid;
+    margin-top: 10px;
+    margin-bottom: 8px;
+  }
+  
+  p {
+    page-break-inside: avoid;
+    margin-bottom: 5px;
+  }
+  
+  * {
+    color: black !important;
+    background: white !important;
+  }
+}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
