@@ -308,6 +308,7 @@
 
     .print-section { display: none; }
   </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
   <div class="container">
@@ -799,6 +800,9 @@
         messageText = '전문기관 상담을 권장합니다';
       }
 
+      // 결과 저장 (실패해도 화면에 영향 없음)
+      try { saveBhcResult(avgScores, avg, brainAge, statusText); } catch (e) { console.warn(e); }
+
       // 헤더 업데이트
       document.getElementById('brainAge').textContent = brainAge;
       document.getElementById('brainAgeBox').className = 'brain-age-box ' + statusClass;
@@ -952,6 +956,41 @@
       document.getElementById('userBirth').value = '';
       document.getElementById('userGender').value = '';
     }
+  
+    /* ===== BHC 결과 저장 (bhc_results) ===== */
+    var _sbBhc = null;
+    try { _sbBhc = window.supabase.createClient(
+      "https://grxqfaeznqqohnlltged.supabase.co",
+      "sb_publishable_Sgv6BVPo1dOnVICcX1tfzA_gf7T5Z4I"); } catch (e) {}
+
+    function saveBhcResult(avgScores, avg, brainAge, statusText) {
+      if (!_sbBhc) return;
+      var email = null;
+      try { email = localStorage.getItem('kbpi_member_email') || localStorage.getItem('memberEmail'); } catch (e) {}
+      _sbBhc.from('bhc_results').insert([{
+        name: userData.name || null,
+        age_at_test: userData.age || null,
+        gender: userData.gender || null,
+        region: userData.region || null,
+        member_email: email,
+        score_memory:    avgScores['기억'],
+        score_speed:     avgScores['속도'],
+        score_focus:     avgScores['집중'],
+        score_emotion:   avgScores['감정'],
+        score_judgment:  avgScores['판단'],
+        score_execution: avgScores['실행'],
+        score_control:   avgScores['조절'],
+        score_space:     avgScores['공간'],
+        health_score: Math.round(avg),
+        brain_age: brainAge,
+        grade: (statusText || '').replace(/[^가-힣 ]/g, '').trim(),
+        duration_sec: null
+      }]).then(function (r) {
+        if (r.error) console.warn('결과 저장 실패:', r.error.message);
+      }, function (e) { console.warn(e); });
+    }
+
   </script>
+<script src="/assets/js/kbpi-track.js" defer></script>
 </body>
 </html>
