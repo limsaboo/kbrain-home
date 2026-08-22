@@ -66,19 +66,13 @@
       if (sent) return;
       sent = true;
       var body = payload(isFinal);
-      try {
-        /* sendBeacon 은 페이지가 닫혀도 전송을 보장합니다 */
-        if (navigator.sendBeacon) {
-          var blob = new Blob([body], { type: "application/json" });
-          var ok = navigator.sendBeacon(
-            ENDPOINT + "?apikey=" + encodeURIComponent(KEY), blob);
-          if (ok) return;
-        }
-      } catch (e) {}
+      /* fetch + keepalive 를 사용합니다.
+         sendBeacon 은 Content-Type 을 지정할 수 없어 CORS 사전확인에서 차단됩니다. */
       try {
         fetch(ENDPOINT, {
           method: "POST",
           keepalive: true,
+          mode: "cors",
           headers: {
             "apikey": KEY,
             "Authorization": "Bearer " + KEY,
