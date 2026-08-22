@@ -5,6 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex,nofollow">
 <title>관리자 대시보드 | 한국뇌심리연구소</title>
+<link rel="manifest" href="/admin-manifest.json">
+<meta name="theme-color" content="#161a3d">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="apple-touch-icon" href="/assets/img/admin-icon-192.png">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
 <style>
@@ -100,6 +106,7 @@ textarea.fi{min-height:110px;resize:vertical;line-height:1.7}
       <button class="mini" data-days="90" onclick="setDays(90)">90일</button>
       <button class="mini" onclick="loadAll()">새로고침</button>
       <button class="mini" onclick="downloadCsv()">CSV</button>
+      <button class="mini" id="btnInstall" style="display:none" onclick="installApp()">📲 앱 설치</button>
       <button class="mini" onclick="logout()">로그아웃</button>
     </div>
   </div>
@@ -109,7 +116,8 @@ textarea.fi{min-height:110px;resize:vertical;line-height:1.7}
     <button class="tab" onclick="showTab(1,this)">페이지·체류</button>
     <button class="tab" onclick="showTab(2,this)">검사 실적</button>
     <button class="tab" onclick="showTab(3,this)">회원</button>
-    <button class="tab" onclick="showTab(4,this)">소식·이벤트</button>
+    <button class="tab" onclick="showTab(4,this)">쿠폰</button>
+    <button class="tab" onclick="showTab(5,this)">소식·이벤트</button>
   </div>
 
   <!-- 0 방문 현황 -->
@@ -141,7 +149,31 @@ textarea.fi{min-height:110px;resize:vertical;line-height:1.7}
     </div>
   </div>
 
-  <!-- 4 소식 -->
+  <!-- 4 쿠폰 -->
+  <div class="panel">
+    <div class="box"><h2>시스템별 쿠폰 현황</h2><div class="scroll" id="tCpSum"></div></div>
+    <div class="box">
+      <h2>쿠폰 목록</h2>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">
+        <select id="cpSys" class="fi" style="flex:1;min-width:130px" onchange="loadCoupons()">
+          <option value="">전체 시스템</option>
+          <option value="senior">senior (시니어)</option>
+          <option value="goonghap">goonghap (뇌궁합)</option>
+          <option value="btpa">btpa (진로적성)</option>
+          <option value="bblat">bblat (뇌컨디션)</option>
+          <option value="bama">bama (뇌나이)</option>
+          <option value="all">all (공용)</option>
+        </select>
+        <button class="mini" id="cpOnly" onclick="toggleUnused()">미사용만 보기</button>
+        <button class="mini" onclick="downloadCoupons()">CSV 내려받기</button>
+      </div>
+      <div class="scroll" id="tCpList"></div>
+      <div class="note" id="cpNote"></div>
+    </div>
+    <div class="box"><h2>최근 사용 이력</h2><div class="scroll" id="tCpUse"></div></div>
+  </div>
+
+  <!-- 5 소식 -->
   <div class="panel">
     <div class="box">
       <h2>소식 · 이벤트 · 세미나 등록</h2>
@@ -179,6 +211,7 @@ function doLogin(){
   $("login").style.display="none"; $("app").style.display="block";
   try{ sb.from("admin_access_logs").insert([{action:"로그인",detail:navigator.userAgent.slice(0,120)}]).then(function(){},function(){}); }catch(e){}
   loadAll();
+  loadCoupons();
 }
 function logout(){ location.reload(); }
 function showTab(i, el){
@@ -360,6 +393,81 @@ function downloadCsv(){
   a.download="연구소통계_"+new Date().toISOString().slice(0,10)+".csv";
   a.click();
 }
+
+/* ===== 쿠폰 관리 ===== */
+var CP=null, CP_ONLY=false;
+function toggleUnused(){
+  CP_ONLY=!CP_ONLY;
+  document.getElementById("cpOnly").classList.toggle("on", CP_ONLY);
+  document.getElementById("cpOnly").textContent = CP_ONLY ? "전체 보기" : "미사용만 보기";
+  loadCoupons();
+}
+function loadCoupons(){
+  if(!sb) return;
+  var sys=$("cpSys").value || null;
+  $("tCpList").innerHTML='<div class="empty">불러오는 중...</div>';
+  sb.rpc("kbpi_coupons",{pw:ADMIN_PW, only_unused:CP_ONLY, sys:sys}).then(function(r){
+    if(r.error) throw r.error;
+    if(!r.data || r.data.ok===false) throw new Error("권한 오류");
+    CP=r.data;
+    $("tCpSum").innerHTML=tbl(CP.summary,[
+      ['시스템','시스템'],['발행','발행',true,fmt],['총가능','총가능',true,fmt],
+      ['사용','사용',true,fmt],['잔여','잔여',true,fmt],
+      ['미사용','미사용장수',true,fmt],['소진','소진장수',true,fmt]]);
+    var badge=function(v){
+      var c = v==='미사용' ? 'b-on' : (v==='소진' ? 'b-off' : 'b-on');
+      return '<span class="badge '+c+'">'+v+'</span>';
+    };
+    $("tCpList").innerHTML=tbl(CP.list,[
+      ['쿠폰코드','coupon_code'],['시스템','system_type'],
+      ['총','total_uses',true],['사용','used_count',true],['잔여','remain_count',true],
+      ['상태','상태',false,badge]],'조건에 맞는 쿠폰이 없습니다');
+    $("cpNote").innerHTML='표시 '+(CP.list?CP.list.length:0)+'건 (최대 500건). '+
+      '미사용 쿠폰을 어르신께 배부하시고, 사용되면 자동으로 상태가 바뀝니다.';
+    $("tCpUse").innerHTML=tbl(CP.recent_use,[
+      ['쿠폰코드','coupon_code'],['시스템','system_type'],['사용후 잔여','remain_after',true],
+      ['사용일시','used_at',false,function(v){return v? new Date(v).toLocaleString('ko-KR'):'-';}]],
+      '아직 사용 이력이 없습니다');
+  }).catch(function(e){
+    $("tCpList").innerHTML='<div class="empty">쿠폰 조회 실패: '+(e.message||e)+'</div>';
+  });
+}
+function downloadCoupons(){
+  if(!CP || !CP.list){ alert("먼저 쿠폰 목록을 불러와 주세요."); return; }
+  var rows=[["쿠폰코드","시스템","총사용가능","사용횟수","잔여횟수","상태","받으신 분","배부일"]];
+  CP.list.forEach(function(x){
+    rows.push([x.coupon_code,x.system_type,x.total_uses,x.used_count,x.remain_count,x["상태"],"",""]);
+  });
+  var csv="\uFEFF"+rows.map(function(r){
+    return r.map(function(c){ return '"'+String(c===null||c===undefined?'':c).replace(/"/g,'""')+'"'; }).join(",");
+  }).join("\n");
+  var a=document.createElement("a");
+  a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv;charset=utf-8"}));
+  a.download="쿠폰목록_"+new Date().toISOString().slice(0,10)+".csv";
+  a.click();
+}
+
+/* ===== 바탕화면 앱 설치 ===== */
+var deferredPrompt=null;
+window.addEventListener("beforeinstallprompt", function(e){
+  e.preventDefault(); deferredPrompt=e;
+  var b=document.getElementById("btnInstall"); if(b) b.style.display="inline-block";
+});
+function installApp(){
+  if(!deferredPrompt){
+    alert("이미 설치되었거나, 브라우저 메뉴(⋮) → '홈 화면에 추가'로 설치할 수 있습니다.");
+    return;
+  }
+  deferredPrompt.prompt();
+  deferredPrompt.userChoice.then(function(){
+    deferredPrompt=null;
+    var b=document.getElementById("btnInstall"); if(b) b.style.display="none";
+  });
+}
+window.addEventListener("appinstalled", function(){
+  var b=document.getElementById("btnInstall"); if(b) b.style.display="none";
+});
+
 </script>
 </body>
 </html>
