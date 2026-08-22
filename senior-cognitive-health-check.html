@@ -21,9 +21,9 @@ function verifyCouponForResult() {
   
   // Supabase에서 쿠폰 검증
   supabase
-    .from('scs_coupons')
+    .from('coupons')
     .select('*')
-    .eq('code', code)
+    .eq('coupon_code', code)
     .eq('is_active', true)
     .single()
     .then(function({ data: coupon, error }) {
@@ -55,9 +55,9 @@ function verifyCouponForResult() {
       
       // 쿠폰 사용 횟수 차감
       supabase
-        .from('scs_coupons')
-        .update({ remain_count: coupon.remain_count - 1 })
-        .eq('code', code)
+        .from('coupons')
+        .update({ remain_count: Math.max(0, coupon.remain_count - 1), used_count: (coupon.used_count || 0) + 1 })
+        .eq('coupon_code', code)
         .then(function() {
           console.log('쿠폰 사용 횟수 차감 완료');
         });
@@ -977,7 +977,7 @@ function renderResult(){
 
 /* ================= Supabase 초기화 ================= */
 const SUPABASE_URL = 'https://grxqfaeznqqohnlltged.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdyeHFmYWV6bnFxb2hubmx0Z2VkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTI3NDk5MDksImV4cCI6MjAyODMyNTkwOX0.N1r7lZk0BwVvNKWl5hv0-OLnLwvqXgQO8LfRKrVRKhQ';
+const SUPABASE_KEY = 'sb_publishable_Sgv6BVPo1dOnVICcX1tfzA_gf7T5Z4I';
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 /* ================= 글로벌 변수 ================= */
@@ -998,9 +998,9 @@ function checkCoupon(){
   messageEl.innerHTML = '<span style="color:#666;">쿠폰 확인 중...</span>';
   
   supabase
-    .from('scs_coupons')
+    .from('coupons')
     .select('*')
-    .eq('code', code)
+    .eq('coupon_code', code)
     .eq('is_active', true)
     .then(function({ data: rows, error }){
       if(error || !rows || rows.length === 0){
@@ -1091,9 +1091,9 @@ function verifyCouponForResult() {
   
   // Supabase에서 쿠폰 검증
   supabase
-    .from('scs_coupons')
+    .from('coupons')
     .select('*')
-    .eq('code', code)
+    .eq('coupon_code', code)
     .eq('is_active', true)
     .single()
     .then(function({ data: coupon, error }) {
@@ -1125,9 +1125,9 @@ function verifyCouponForResult() {
       
       // 쿠폰 사용 횟수 차감
       supabase
-        .from('scs_coupons')
-        .update({ remain_count: coupon.remain_count - 1 })
-        .eq('code', code)
+        .from('coupons')
+        .update({ remain_count: Math.max(0, coupon.remain_count - 1), used_count: (coupon.used_count || 0) + 1 })
+        .eq('coupon_code', code)
         .then(function() {
           console.log('쿠폰 사용 횟수 차감 완료');
         });
