@@ -380,7 +380,7 @@ footer{text-align:center;font-size:13px;color:#a3987e;margin-top:50px;}
         오늘 나의 뇌 건강을 함께 살펴봐요 😊
       </div>
       <button class="big-btn btn-primary" onclick="goPractice()">🖐️ 체크 연습부터 해볼게요</button>
-      <button class="big-btn btn-gold" onclick="startRealTest()">🌟 바로 정식 체크 시작하기</button>
+      <button class="big-btn btn-gold" onclick="openCouponGate()">🌟 바로 정식 체크 시작하기</button>
       <button class="big-btn btn-secondary" onclick="showScreen('screen-home')" style="display:none;"></button>
     </div>
 
@@ -415,7 +415,7 @@ footer{text-align:center;font-size:13px;color:#a3987e;margin-top:50px;}
       <div class="feedback-box" id="practice-feedback"></div>
     </div>
     <button class="big-btn btn-primary" style="margin-top:24px;" onclick="nextPractice()">다음 연습 문제 ▶</button>
-    <button class="big-btn btn-gold" onclick="startRealTest()">✅ 연습 끝, 정식 체크 시작하기</button>
+    <button class="big-btn btn-gold" onclick="openCouponGate()">✅ 연습 끝, 정식 체크 시작하기</button>
     <button class="big-btn btn-secondary" onclick="showScreen('screen-home')">◀ 처음으로</button>
   </div>
 
@@ -1021,14 +1021,26 @@ function checkCoupon(){
         messageEl.innerHTML = '<span style="color:#d32f2f;font-weight:700;">❌ 사용 횟수가 모두 소진된 쿠폰입니다</span>';
         return;
       }
-      
-      _coupon = c;
-      messageEl.innerHTML = '<span style="color:#388e3c;font-weight:700;">✅ 유효한 쿠폰입니다!</span>';
-      document.getElementById('coupon-input').disabled = true;
-      
-      setTimeout(() => {
-        showScreen('screen-practice');
-      }, 1500);
+          // 시니어 전용 쿠폰만 허용
+          if(c.system_type && ['senior','all'].indexOf(c.system_type) === -1){
+            messageEl.innerHTML = '<span style="color:#d32f2f;font-weight:700;">❌ 이 검사에서 사용할 수 없는 쿠폰입니다</span>';
+            return;
+          }
+          _coupon = c;
+          messageEl.innerHTML = '<span style="color:#388e3c;font-weight:700;">✅ 확인되었습니다. 시작합니다!</span>';
+          document.getElementById('coupon-input').disabled = true;
+          // 사용 횟수 차감
+          supabase.from('coupons')
+            .update({ remain_count: Math.max(0, c.remain_count - 1), used_count: (c.used_count || 0) + 1 })
+            .eq('coupon_code', c.coupon_code).then(function(){}, function(){});
+          supabase.from('coupon_usage')
+            .insert({ coupon_code: c.coupon_code, coupon_type: c.coupon_type,
+                      buyer_type: c.buyer_type, system_type: 'senior',
+                      remain_after: Math.max(0, c.remain_count - 1) }).then(function(){}, function(){});
+          setTimeout(function(){
+            closeCouponGate();
+            startRealTest();
+          }, 900);
     })
     .catch(function(e){
       messageEl.innerHTML = '<span style="color:#d32f2f;">오류: ' + e.message + '</span>';
@@ -1144,6 +1156,66 @@ function showResultScreen() {
   document.getElementById('result-content').style.display = 'none';
 }
 
-</script>
+
+    /* ===== 쿠폰 관문 (정식 체크 진입 전) ===== */
+    function openCouponGate(){
+      var g = document.getElementById('coupon-gate');
+      var i = document.getElementById('coupon-input');
+      var m = document.getElementById('coupon-message');
+      if(i){ i.value=''; i.disabled=false; }
+      if(m){ m.innerHTML=''; }
+      if(g){ g.style.display='block'; }
+      if(i){ setTimeout(function(){ i.focus(); }, 200); }
+    }
+    function closeCouponGate(){
+      var g=document.getElementById('coupon-gate');
+      if(g) g.style.display='none';
+    }
+    function adminEnter(){
+      var pw = prompt('관리자 비밀번호를 입력하세요');
+      if(pw === 'brain2025!'){
+        _coupon = { coupon_code:'ADMIN-FREE', remain_count:9999, used_count:0 };
+        closeCouponGate();
+        startRealTest();
+      } else if(pw !== null){
+        alert('비밀번호가 일치하지 않습니다.');
+      }
+    }
+
+  </script>
+
+<!-- ===== 쿠폰 관문 (정식 체크 시작 전) ===== -->
+<div id="coupon-gate" style="display:none; position:fixed; inset:0; z-index:9999;
+     background:rgba(0,0,0,.55); padding:20px; overflow-y:auto; -webkit-overflow-scrolling:touch;">
+  <div style="max-width:460px; margin:8vh auto 0; background:#FFFBEF; border:2px solid #E4CE8F;
+       border-radius:22px; padding:28px 22px; box-shadow:0 18px 44px -14px rgba(0,0,0,.45); text-align:center;">
+    <div style="font-size:21px; font-weight:900; color:#5A4A22; margin-bottom:14px; word-break:keep-all;">
+      🎫 쿠폰 번호를 입력해주세요
+    </div>
+    <div style="font-size:15px; font-weight:600; color:#6B5C34; line-height:1.8; margin-bottom:20px; word-break:keep-all;">
+      정식 체크를 시작하려면 발급받으신<br>쿠폰 코드가 필요합니다.<br>
+      <span style="font-size:13.5px; color:#8A7A4E;">(예: SR-260729-0002)</span>
+    </div>
+    <input type="text" id="coupon-input" autocomplete="off" autocapitalize="characters"
+      placeholder="쿠폰 번호만 입력"
+      style="width:100%; padding:18px 14px; border:2px solid #D9C48A; border-radius:14px;
+             background:#fff; font-size:19px; font-weight:800; text-align:center; color:#3A3118;">
+    <div id="coupon-message" style="min-height:26px; margin-top:12px; font-size:14.5px; font-weight:700; word-break:keep-all;"></div>
+    <div style="display:flex; gap:10px; margin-top:8px;">
+      <button onclick="closeCouponGate()"
+        style="flex:1; min-height:58px; border:none; border-radius:14px; background:#E7E1D2;
+               color:#5A4A22; font-size:17px; font-weight:800; cursor:pointer;">취소</button>
+      <button onclick="checkCoupon()"
+        style="flex:1.4; min-height:58px; border:none; border-radius:14px;
+               background:linear-gradient(135deg,#D4B45A,#C9A84C); color:#3A3118;
+               font-size:17px; font-weight:900; cursor:pointer;">확인하고 시작</button>
+    </div>
+    <button onclick="adminEnter()"
+      style="width:100%; min-height:52px; margin-top:10px; border:1px solid #E4CE8F; border-radius:14px;
+             background:#FFF6DF; color:#8A7A4E; font-size:15px; font-weight:800; cursor:pointer;">
+      🔐 관리자 입장
+    </button>
+  </div>
+</div>
 </body>
 </html>
