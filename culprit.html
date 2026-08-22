@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>내 뇌의 범인 찾기 | 한국뇌심리연구소</title>
+<meta name="description" content="8개의 그림 단서로 내 하루를 망치는 범인을 찾습니다. 글이 아닌 그림으로 고르는 뇌 반응 패턴 체크.">
+<meta property="og:title" content="내 뇌의 범인 찾기">
+<meta property="og:description" content="당신이 게으른 게 아닙니다. 범인이 따로 있습니다. 그림 8장으로 찾아보세요.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{-webkit-text-size-adjust:100%}
+body{background:#07070d;color:#ececf5;font-family:-apple-system,BlinkMacSystemFont,'Noto Sans KR',sans-serif;
+     line-height:1.7;min-height:100vh;overflow-x:hidden}
+.wrap{max-width:560px;margin:0 auto;padding:20px 18px 70px}
+.screen{display:none;animation:fade .35s ease}
+.screen.on{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+.hero{text-align:center;padding:34px 0 10px}
+.tag{display:inline-block;padding:7px 16px;border:1px solid rgba(255,90,90,.5);border-radius:999px;
+     color:#ff7a7a;font-size:12px;font-weight:800;letter-spacing:.12em;margin-bottom:26px}
+.hero h1{font-size:clamp(32px,9vw,52px);font-weight:900;line-height:1.2;letter-spacing:-.03em;margin-bottom:8px}
+.hero h1 .hit{background:linear-gradient(100deg,#ff4d4d,#ff8a3d);-webkit-background-clip:text;
+     background-clip:text;-webkit-text-fill-color:transparent}
+.hero .en{font-size:12.5px;color:#6f7390;font-weight:700;letter-spacing:.22em;margin-bottom:26px}
+.punch{font-size:clamp(17px,4.8vw,21px);font-weight:800;line-height:1.85;word-break:keep-all;margin-bottom:12px}
+.punch b{color:#ff7a7a}
+.sub{font-size:14px;color:#9096b5;line-height:1.9;word-break:keep-all;margin-bottom:30px}
+.chips{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-bottom:34px}
+.chip{padding:8px 15px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);
+      border-radius:999px;font-size:12.5px;font-weight:700;color:#b9bed8}
+.cta{width:100%;min-height:64px;border:none;border-radius:16px;cursor:pointer;
+     background:linear-gradient(100deg,#ff4d4d,#ff8a3d);color:#fff;font-size:19px;font-weight:900;
+     box-shadow:0 16px 40px -16px rgba(255,77,77,.9)}
+.cta:active{transform:scale(.98)}
+.ghost{width:100%;min-height:54px;margin-top:11px;border:1px solid rgba(255,255,255,.14);
+       border-radius:14px;background:transparent;color:#9096b5;font-size:15px;font-weight:700;cursor:pointer}
+
+.bar{height:5px;background:rgba(255,255,255,.08);border-radius:99px;overflow:hidden;margin:6px 0 12px}
+.bar i{display:block;height:100%;width:0;border-radius:99px;
+       background:linear-gradient(90deg,#ff4d4d,#ff8a3d);transition:width .4s}
+.meta{display:flex;justify-content:space-between;align-items:center;font-size:12.5px;font-weight:800;margin-bottom:18px}
+.meta .n{color:#6f7390}
+.meta .c{color:#ff8a3d}
+.stage{border-radius:20px;padding:26px 16px;margin-bottom:20px;text-align:center;
+       border:1px solid rgba(255,255,255,.07)}
+.stage svg{width:100%;max-width:230px;height:auto}
+.qtext{font-size:clamp(18px,5.1vw,23px);font-weight:900;line-height:1.5;word-break:keep-all;
+       text-align:center;margin-bottom:22px}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.opt{border:2px solid rgba(255,255,255,.1);border-radius:17px;background:rgba(255,255,255,.03);
+     padding:15px 9px 13px;cursor:pointer;transition:.15s;text-align:center;min-height:150px;
+     display:flex;flex-direction:column;align-items:center;justify-content:center;gap:11px}
+.opt:active{transform:scale(.96)}
+.opt.sel{border-color:#ff8a3d;background:rgba(255,138,61,.13);box-shadow:0 0 0 4px rgba(255,138,61,.1)}
+.opt svg{width:88px;height:88px}
+.opt span{font-size:13.5px;font-weight:800;color:#dfe3f5;line-height:1.45;word-break:keep-all}
+.back{width:100%;min-height:50px;margin-top:16px;border:1px solid rgba(255,255,255,.12);
+      border-radius:13px;background:transparent;color:#8085a5;font-size:14px;font-weight:700;cursor:pointer}
+
+.loading{text-align:center;padding:110px 0}
+.ring{width:76px;height:76px;margin:0 auto 26px;border:4px solid rgba(255,255,255,.09);
+      border-top-color:#ff6b4d;border-radius:50%;animation:spin .9s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading p{font-size:17px;font-weight:800}
+.loading small{display:block;margin-top:9px;color:#6f7390;font-size:12.5px;font-weight:700}
+
+.verdict{text-align:center;padding:16px 0 22px}
+.verdict .lead{font-size:12.5px;font-weight:800;letter-spacing:.16em;color:#6f7390;margin-bottom:12px}
+.verdict h2{font-size:clamp(30px,8.4vw,44px);font-weight:900;letter-spacing:-.03em;line-height:1.2}
+.verdict .en2{font-size:13px;color:#6f7390;font-weight:700;letter-spacing:.14em;margin-top:6px}
+.card{border-radius:24px;padding:30px 20px;margin:20px 0;text-align:center;border:1px solid rgba(255,255,255,.1)}
+.card .sym{width:112px;height:112px;margin:0 auto 16px}
+.card h3{font-size:29px;font-weight:900;margin-bottom:4px}
+.card .en3{font-size:12.5px;color:rgba(255,255,255,.5);font-weight:700;letter-spacing:.13em;margin-bottom:16px}
+.card p{font-size:14.5px;line-height:1.95;color:rgba(255,255,255,.9);word-break:keep-all;font-weight:600}
+.tags{display:flex;flex-wrap:wrap;justify-content:center;gap:7px;margin-top:18px}
+.tags span{padding:6px 13px;background:rgba(255,255,255,.1);border-radius:99px;font-size:11.5px;font-weight:800}
+.blk{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:16px;
+     padding:18px 16px;margin-bottom:13px}
+.blk h4{font-size:12.5px;font-weight:800;letter-spacing:.1em;color:#8b90b0;margin-bottom:10px}
+.blk p{font-size:14px;line-height:1.95;color:#d5d9ee;word-break:keep-all;font-weight:600}
+.row{display:flex;align-items:center;gap:11px;margin-bottom:11px}
+.row .lb{width:74px;font-size:12.5px;font-weight:800;color:#a0a5c4;flex-shrink:0}
+.row .tr{flex:1;height:9px;background:rgba(255,255,255,.08);border-radius:99px;overflow:hidden}
+.row .fl{height:100%;border-radius:99px;transition:width .8s}
+.row .pc{width:46px;text-align:right;font-size:13px;font-weight:900;flex-shrink:0}
+.acts{margin-top:24px;display:flex;flex-direction:column;gap:10px}
+.acts button{min-height:56px;border:none;border-radius:14px;font-size:15.5px;font-weight:900;cursor:pointer}
+.b1{background:linear-gradient(100deg,#ff4d4d,#ff8a3d);color:#fff}
+.b2{background:rgba(255,255,255,.08);color:#dfe3f5;border:1px solid rgba(255,255,255,.14)}
+.note{margin-top:22px;padding:15px;background:rgba(255,255,255,.03);border:1px dashed rgba(255,255,255,.14);
+      border-radius:13px;font-size:11.5px;color:#7a7f9d;line-height:1.85;word-break:keep-all;text-align:center}
+@media(max-width:340px){.opts{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="screen on" id="s-intro">
+  <div class="hero">
+    <div class="tag">CASE FILE · 8개의 단서</div>
+    <h1>내 뇌의<br><span class="hit">범인 찾기</span></h1>
+    <div class="en">BRAIN CULPRIT CHECK</div>
+    <div class="punch">당신이 게으른 게 아닙니다.<br><b>범인이 따로 있습니다.</b></div>
+    <div class="sub">글 대신 <b style="color:#dfe3f5">그림 8장</b>을 고르면<br>내 하루를 망치는 범인이 드러납니다.</div>
+    <div class="chips">
+      <span class="chip">2분이면 끝</span>
+      <span class="chip">그림만 고르면 됨</span>
+      <span class="chip">결과 카드 저장</span>
+    </div>
+    <button class="cta" onclick="start()">단서 수집 시작</button>
+    <button class="ghost" onclick="location.href='https://k-brain.co.kr/'">한국뇌심리연구소 홈</button>
+  </div>
+</div>
+
+<div class="screen" id="s-quiz">
+  <div class="bar"><i id="prog"></i></div>
+  <div class="meta"><span class="n" id="qn">단서 1 / 8</span><span class="c" id="qc"></span></div>
+  <div class="stage" id="stage"></div>
+  <div class="qtext" id="qtext"></div>
+  <div class="opts" id="opts"></div>
+  <button class="back" id="btnBack" onclick="prev()">← 앞 단서로</button>
+</div>
+
+<div class="screen" id="s-load">
+  <div class="loading">
+    <div class="ring"></div>
+    <p id="loadTxt">단서를 맞춰보는 중…</p>
+    <small>한국뇌심리연구소</small>
+  </div>
+</div>
+
+<div class="screen" id="s-result">
+  <div class="verdict">
+    <div class="lead">수사 종결 · 용의자 특정</div>
+    <h2 id="rName">-</h2>
+    <div class="en2" id="rEn">-</div>
+  </div>
+  <div class="card" id="rCard">
+    <div class="sym" id="rSym"></div>
+    <h3 id="rName2">-</h3>
+    <div class="en3" id="rEn2">-</div>
+    <p id="rDesc">-</p>
+    <div class="tags" id="rTags"></div>
+  </div>
+  <div class="blk"><h4>이 범인의 수법</h4><p id="rHow">-</p></div>
+  <div class="blk"><h4>현장에 남은 흔적</h4><p id="rSign">-</p></div>
+  <div class="blk"><h4>3인조 용의자 지분</h4><div id="rBars"></div></div>
+  <div class="blk"><h4>범인 잡는 법</h4><p id="rFix">-</p></div>
+  <div class="acts">
+    <button class="b1" onclick="saveCard()">결과 카드 저장</button>
+    <button class="b2" onclick="shareIt()">친구에게 보내기</button>
+    <button class="b2" onclick="restart()">다시 수사하기</button>
+    <button class="b2" onclick="location.href='https://k-brain.co.kr/'">한국뇌심리연구소 홈</button>
+  </div>
+  <div class="note">
+    본 결과는 재미와 자기이해를 위한 <b style="color:#9ba0bf">교육용 콘텐츠</b>이며,<br>
+    의료적 진단이나 검사가 아닙니다.
+  </div>
+</div>
+
+</div>
+
+<script>
+/* ===== 그림 생성: 이미지 파일 없이 코드로 그림 ===== */
+function art(kind, c1, c2, size){
+  var s = size || 88, h = s/2;
+  var uid = kind + Math.round(s) + '_' + Math.round(Math.random()*99999);
+  /* userSpaceOnUse 필수: 세로선은 폭이 0이라 기본 좌표계에서 그라데이션이 사라짐 */
+  var g = '<defs><linearGradient id="'+uid+'" gradientUnits="userSpaceOnUse" '+
+          'x1="0" y1="0" x2="'+s+'" y2="'+s+'">'+
+          '<stop offset="0" stop-color="'+c1+'"/><stop offset="1" stop-color="'+c2+'"/></linearGradient></defs>';
+  var f = 'url(#'+uid+')';
+  var body = '';
+  if (kind === 'A'){
+    for (var i=0;i<11;i++){
+      var x = s*0.12 + i*(s*0.076);
+      var top = s*0.16 + (i%3)*(s*0.05);
+      body += '<line x1="'+x+'" y1="'+top+'" x2="'+x+'" y2="'+(s*0.84)+'" stroke="'+f+
+              '" stroke-width="'+(s*0.032)+'" stroke-linecap="round" opacity="'+(0.55+0.045*(i%4))+'"/>';
+    }
+    body += '<path d="M'+(s*0.12)+' '+(s*0.13)+' L'+h+' '+(s*0.03)+' L'+(s*0.88)+' '+(s*0.13)+
+            '" fill="none" stroke="'+f+'" stroke-width="'+(s*0.045)+'" stroke-linecap="round"/>';
+  } else if (kind === 'B'){
+    for (var j=0;j<4;j++){
+      var y = s*0.34 + j*(s*0.15);
+      body += '<path d="M'+(s*0.08)+' '+y+' Q'+(s*0.3)+' '+(y+s*0.13)+' '+h+' '+y+
+              ' T'+(s*0.92)+' '+y+'" fill="none" stroke="'+f+'" stroke-width="'+(s*0.045)+
+              '" stroke-linecap="round" opacity="'+(0.75-j*0.16)+'"/>';
+    }
+    body += '<circle cx="'+h+'" cy="'+(s*0.2)+'" r="'+(s*0.075)+'" fill="'+f+'" opacity=".35"/>';
+  } else if (kind === 'C'){
+    body += '<circle cx="'+h+'" cy="'+h+'" r="'+(s*0.38)+'" fill="none" stroke="'+f+
+            '" stroke-width="'+(s*0.028)+'" stroke-dasharray="'+(s*0.07)+' '+(s*0.055)+'" opacity=".55"/>';
+    body += '<circle cx="'+h+'" cy="'+h+'" r="'+(s*0.24)+'" fill="none" stroke="'+f+
+            '" stroke-width="'+(s*0.022)+'" opacity=".3"/>';
+    body += '<circle cx="'+h+'" cy="'+h+'" r="'+(s*0.075)+'" fill="'+f+'"/>';
+  } else {
+    body += '<circle cx="'+h+'" cy="'+h+'" r="'+(s*0.4)+'" fill="none" stroke="'+f+
+            '" stroke-width="'+(s*0.03)+'" opacity=".4"/>';
+    body += '<circle cx="'+h+'" cy="'+h+'" r="'+(s*0.27)+'" fill="none" stroke="'+f+
+            '" stroke-width="'+(s*0.035)+'" opacity=".7"/>';
+    body += '<circle cx="'+h+'" cy="'+h+'" r="'+(s*0.13)+'" fill="'+f+'"/>';
+  }
+  return '<svg viewBox="0 0 '+s+' '+s+'" xmlns="http://www.w3.org/2000/svg">'+g+body+'</svg>';
+}
+
+/* ===== 8문항: 원본 채점 벡터 그대로 보존 ===== */
+var PAL = [['#ff5f6d','#ffa25f'],['#4ecdc4','#3fa9f5'],['#a78bfa','#7c5bff'],['#8ee6a0','#3fd1a0']];
+var Q = [
+ {c:'첫 반응', t:'아침에 눈을 떴을 때',
+  o:['할 일이 가득 찬다','일어나기 싫다','또 똑같은 하루','오늘도 괜찮다'],
+  s:[[3,0,0],[0,3,0],[0,0,3],[0,0,0]], bg:'linear-gradient(140deg,#1a0a0f,#3a1414)'},
+ {c:'첫 반응', t:'거울 앞에 섰을 때',
+  o:['아직 부족해','많이 지쳐 보여','이래서 될까','나답다'],
+  s:[[3,1,0],[1,3,0],[0,1,3],[0,0,0]], bg:'linear-gradient(140deg,#04101a,#0a2233)'},
+ {c:'행동', t:'중요한 일을 앞두고',
+  o:['완벽해야 시작','자꾸 미룬다','어차피 안 될 것','일단 시작'],
+  s:[[3,0,1],[0,3,0],[1,0,3],[0,0,0]], bg:'linear-gradient(140deg,#100a1c,#231238)'},
+ {c:'감정', t:'지적을 받았을 때',
+  o:['확 상처받는다','더 처진다','역시 내 탓','참고만 한다'],
+  s:[[3,0,0],[1,3,0],[0,0,3],[0,0,0]], bg:'linear-gradient(140deg,#1a0a0a,#331212)'},
+ {c:'관계', t:'모임에 초대받았을 때',
+  o:['준비가 부담','갈 힘이 없다','낄 자리가 아닌 듯','설렌다'],
+  s:[[3,0,0],[0,3,0],[1,0,3],[0,0,0]], bg:'linear-gradient(140deg,#04101a,#0a2233)'},
+ {c:'돈·성공', t:'돈 이야기가 나올 때',
+  o:['더 해내야 한다','뭘 해야 할지','나는 어렵다','나도 가능하다'],
+  s:[[3,0,0],[0,3,1],[0,1,3],[0,0,0]], bg:'linear-gradient(140deg,#1c1405,#33260a)'},
+ {c:'회복', t:'쉬는 날, 잘 쉬어지나요',
+  o:['쉬어도 일 생각','쉬어도 안 풀린다','쉬면 죄책감','개운하다'],
+  s:[[3,0,0],[0,3,0],[1,0,3],[0,0,0]], bg:'linear-gradient(140deg,#0a0a1c,#141438)'},
+ {c:'속마음', t:'지금 가장 바라는 것',
+  o:['긴장 좀 풀렸으면','열정 되찾고 싶다','자신감 갖고 싶다','지금이 좋다'],
+  s:[[3,0,0],[0,3,0],[0,0,3],[0,0,0]], bg:'linear-gradient(140deg,#100a1c,#231238)'}
+];
+var KIND = ['A','B','C','D'];
+
+var CULPRIT = {
+ 0:{n:'몰아붙이는 놈', en:'THE PUSHER', kind:'A', a:'#ff5f6d', b:'#ffa25f',
+    d:'쉬려고 하면 "이러고 있을 때가 아니야"라고 속삭입니다. 당신을 한 번도 가만두지 않는 놈입니다.',
+    tags:['완벽주의','만성 긴장','쉬어도 불안'],
+    how:'"더 잘해야 한다"는 기준을 계속 올려놓고, 다 해내도 만족을 주지 않습니다. 그래서 성과가 쌓여도 늘 부족하게 느껴집니다.',
+    sign:'할 일 목록이 머릿속에서 안 꺼짐 · 작은 실수가 오래 남음 · 도움 요청을 어려워함',
+    fix:'하루 한 가지를 <b>일부러 대충</b> 끝내보세요. 70%에서 손을 떼는 연습입니다. 숨을 4초 들이쉬고 7초 멈추고 8초 내쉬면 몸이 먼저 진정됩니다.'},
+ 1:{n:'배터리 빼가는 놈', en:'THE DRAINER', kind:'B', a:'#4ecdc4', b:'#3fa9f5',
+    d:'좋아하던 것마저 시들하게 만듭니다. 게으른 게 아니라, 충전기가 뽑혀 있는 겁니다.',
+    tags:['소진','무기력','시작이 무거움'],
+    how:'쉬어도 회복되지 않게 만듭니다. 잠은 잤는데 개운하지 않고, 하고 싶던 일도 막상 하면 재미가 없습니다.',
+    sign:'쉬어도 피로가 안 풀림 · 재밌던 게 시들함 · 사람 만나기가 점점 버거움',
+    fix:'큰 목표를 잠시 접고 <b>5분짜리 일</b>부터 시작하세요. 끝내면 바로 자신에게 보상을 주세요. 아침 햇빛 10분이 회복 스위치입니다.'},
+ 2:{n:'기죽이는 놈', en:'THE SHRINKER', kind:'C', a:'#a78bfa', b:'#7c5bff',
+    d:'"네가 무슨"이라며 시작 전에 김을 뺍니다. 능력이 없는 게 아니라, 이 놈이 먼저 말을 겁니다.',
+    tags:['자신감 저하','비교','시작 전 포기'],
+    how:'남과 비교하게 만들어 실제 실력보다 자신을 작게 보게 합니다. 그래서 할 수 있는 일도 시도조차 안 하게 됩니다.',
+    sign:'"나 같은 사람이"라는 말버릇 · 칭찬을 못 받아들임 · 기회 앞에서 먼저 물러섬',
+    fix:'오늘 <b>해낸 일 3가지</b>를 자기 전에 적어보세요. 작아도 됩니다. 이 놈은 기록 앞에서 힘을 잃습니다.'},
+ 3:{n:'무혐의', en:'NO SUSPECT', kind:'D', a:'#8ee6a0', b:'#3fd1a0',
+    d:'용의자를 찾지 못했습니다. 지금 당신의 뇌는 꽤 균형 잡힌 상태입니다. 흔한 일이 아닙니다.',
+    tags:['안정','회복력','좋은 리듬'],
+    how:'긴장과 이완이 번갈아 잘 돌고 있습니다. 스트레스가 와도 원래 자리로 돌아오는 힘이 있습니다.',
+    sign:'쉬면 실제로 회복됨 · 지적을 담아두지 않음 · 시작이 무겁지 않음',
+    fix:'지금 리듬을 <b>기록해 두세요.</b> 나중에 흔들릴 때 돌아올 좌표가 됩니다. 잘 지내고 계십니다.'}
+};
+
+var idx=0, ans=[], scores=[0,0,0], culprit=3;
+function $(id){ return document.getElementById(id); }
+function show(id){
+  var e=document.querySelectorAll('.screen');
+  for(var i=0;i<e.length;i++) e[i].classList.remove('on');
+  $(id).classList.add('on'); window.scrollTo(0,0);
+}
+function start(){ idx=0; ans=[]; show('s-quiz'); render(); }
+function prev(){ if(idx>0){ idx--; render(); } }
+
+function render(){
+  var q=Q[idx];
+  $('prog').style.width=(idx/Q.length*100)+'%';
+  $('qn').textContent='단서 '+(idx+1)+' / '+Q.length;
+  $('qc').textContent=q.c;
+  $('stage').style.background=q.bg;
+  $('stage').innerHTML=art(KIND[idx%4], PAL[idx%4][0], PAL[idx%4][1], 230);
+  $('qtext').textContent=q.t;
+  var h='';
+  for(var i=0;i<4;i++){
+    h+='<div class="opt'+(ans[idx]===i?' sel':'')+'" onclick="pick('+i+')">'+
+       art(KIND[i], PAL[i][0], PAL[i][1], 88)+'<span>'+q.o[i]+'</span></div>';
+  }
+  $('opts').innerHTML=h;
+  $('btnBack').style.display = idx===0 ? 'none' : 'block';
+}
+function pick(i){
+  ans[idx]=i;
+  var el=$('opts').children;
+  for(var k=0;k<el.length;k++) el[k].className='opt';
+  el[i].className='opt sel';
+  setTimeout(function(){
+    if(idx<Q.length-1){ idx++; render(); } else { finish(); }
+  }, 260);
+}
+
+function finish(){
+  scores=[0,0,0];
+  for(var i=0;i<Q.length;i++){
+    var v=Q[i].s[ans[i]];
+    scores[0]+=v[0]; scores[1]+=v[1]; scores[2]+=v[2];
+  }
+  $('prog').style.width='100%';
+  show('s-load');
+  var msgs=['단서를 맞춰보는 중…','반응 패턴을 대조하는 중…','용의자를 좁히는 중…'];
+  var k=0;
+  var t=setInterval(function(){ k++; $('loadTxt').textContent=msgs[k%3]; }, 850);
+  setTimeout(function(){ clearInterval(t); result(); }, 2600);
+}
+
+function result(){
+  var max=Math.max(scores[0],scores[1],scores[2]);
+  /* 모두 0이면 무작위 배정이 아니라 '무혐의' — 원본 결함 수정 */
+  culprit = (max===0) ? 3 : scores.indexOf(max);
+  var c=CULPRIT[culprit];
+  $('rName').textContent=c.n; $('rName2').textContent=c.n;
+  $('rEn').textContent=c.en;  $('rEn2').textContent=c.en;
+  $('rDesc').textContent=c.d;
+  $('rHow').textContent=c.how;
+  $('rSign').textContent=c.sign;
+  $('rFix').innerHTML=c.fix;
+  $('rSym').innerHTML=art(c.kind, c.a, c.b, 112);
+  $('rCard').style.background='linear-gradient(150deg,'+hexA(c.a,.16)+','+hexA(c.b,.07)+')';
+  $('rCard').style.borderColor=hexA(c.a,.4);
+  var th='';
+  for(var i=0;i<c.tags.length;i++) th+='<span>'+c.tags[i]+'</span>';
+  $('rTags').innerHTML=th;
+
+  var total=scores[0]+scores[1]+scores[2];
+  var names=['몰아붙이는','배터리 빼가는','기죽이는'];
+  var cols=['#ff5f6d','#4ecdc4','#a78bfa'];
+  if(total===0){
+    $('rBars').innerHTML='<p style="font-size:14px;color:#d5d9ee;font-weight:600">'+
+      '세 용의자 모두 흔적을 남기지 않았습니다.</p>';
+  } else {
+    var bh='';
+    for(var j=0;j<3;j++){
+      var p=Math.round(scores[j]/total*100);
+      bh+='<div class="row"><div class="lb">'+names[j]+'</div>'+
+          '<div class="tr"><div class="fl" style="width:'+p+'%;background:'+cols[j]+'"></div></div>'+
+          '<div class="pc" style="color:'+cols[j]+'">'+p+'%</div></div>';
+    }
+    $('rBars').innerHTML=bh;
+  }
+  show('s-result');
+}
+function hexA(hex,a){
+  var n=parseInt(hex.slice(1),16);
+  return 'rgba('+((n>>16)&255)+','+((n>>8)&255)+','+(n&255)+','+a+')';
+}
+
+function shareIt(){
+  var c=CULPRIT[culprit];
+  var txt='내 뇌의 범인은 「'+c.n+'」이었습니다.\n'+c.d+'\n\n당신의 범인도 찾아보세요 → https://k-brain.co.kr/culprit.html';
+  if(navigator.share){ navigator.share({title:'내 뇌의 범인 찾기', text:txt}).catch(function(){}); }
+  else if(navigator.clipboard){ navigator.clipboard.writeText(txt); alert('결과를 복사했습니다. 붙여넣기 하세요.'); }
+  else { alert(txt); }
+}
+function saveCard(){
+  var c=CULPRIT[culprit];
+  var W=1080,H=1350,cv=document.createElement('canvas');
+  cv.width=W; cv.height=H;
+  var x=cv.getContext('2d');
+  var g=x.createLinearGradient(0,0,W,H);
+  g.addColorStop(0,'#0a0a12'); g.addColorStop(1,'#16101f');
+  x.fillStyle=g; x.fillRect(0,0,W,H);
+  x.strokeStyle=hexA(c.a,.5); x.lineWidth=6; x.strokeRect(40,40,W-80,H-80);
+  x.textAlign='center';
+  x.fillStyle='#8b90b0'; x.font='700 30px sans-serif';
+  x.fillText('내 뇌의 범인 찾기 · 한국뇌심리연구소', W/2, 150);
+  x.fillStyle='#6f7390'; x.font='800 28px sans-serif';
+  x.fillText('수사 종결 · 용의자 특정', W/2, 300);
+  x.fillStyle=c.a; x.font='900 92px sans-serif';
+  x.fillText(c.n, W/2, 420);
+  x.fillStyle='#6f7390'; x.font='700 30px sans-serif';
+  x.fillText(c.en, W/2, 476);
+  x.fillStyle='#dfe3f5'; x.font='600 34px sans-serif';
+  wrapText(x, c.d, W/2, 610, W-200, 54);
+  var total=scores[0]+scores[1]+scores[2]||1;
+  var nm=['몰아붙이는','배터리 빼가는','기죽이는'], cl=['#ff5f6d','#4ecdc4','#a78bfa'];
+  for(var i=0;i<3;i++){
+    var y=920+i*90, p=Math.round(scores[i]/total*100);
+    x.textAlign='left'; x.fillStyle='#a0a5c4'; x.font='800 30px sans-serif';
+    x.fillText(nm[i], 130, y+8);
+    x.fillStyle='rgba(255,255,255,.1)'; x.fillRect(470,y-14,390,20);
+    x.fillStyle=cl[i]; x.fillRect(470,y-14,390*p/100,20);
+    x.textAlign='right'; x.fillStyle=cl[i]; x.font='900 30px sans-serif';
+    x.fillText(p+'%', 950, y+8);
+  }
+  x.textAlign='center'; x.fillStyle='#6f7390'; x.font='700 24px sans-serif';
+  x.fillText('k-brain.co.kr · 교육용 콘텐츠이며 의료 진단이 아닙니다', W/2, H-90);
+  var a=document.createElement('a');
+  a.href=cv.toDataURL('image/png'); a.download='내뇌의범인_'+c.n+'.png'; a.click();
+}
+function wrapText(x,t,cx,y,mw,lh){
+  var w=t.split(' '), line='', yy=y;
+  for(var i=0;i<w.length;i++){
+    var test=line+w[i]+' ';
+    if(x.measureText(test).width>mw && line){ x.fillText(line,cx,yy); line=w[i]+' '; yy+=lh; }
+    else line=test;
+  }
+  x.fillText(line,cx,yy);
+}
+function restart(){ idx=0; ans=[]; scores=[0,0,0]; show('s-intro'); }
+</script>
+<script src="/assets/js/kbpi-track.js" defer></script>
+</body>
+</html>
