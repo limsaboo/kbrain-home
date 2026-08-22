@@ -7,6 +7,12 @@
 <meta name="description" content="그림 8장으로 내 하루를 흔드는 가짜 마음을 찾습니다. 글 대신 그림으로 고르는 뇌 반응 패턴 체크.">
 <meta property="og:title" content="내 뇌의 가짜 마음 찾기">
 <meta property="og:description" content="당신이 게으른 게 아닙니다. 가짜 마음이 시킨 겁니다. 그림 8장으로 찾아보세요.">
+<meta property="og:image" content="https://k-brain.co.kr/assets/img/fm-icon-512.png">
+<link rel="manifest" href="/fakemind-manifest.json">
+<meta name="theme-color" content="#0b0810">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="apple-touch-icon" href="/assets/img/fm-icon-192.png">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html{-webkit-text-size-adjust:100%}
@@ -90,6 +96,18 @@ body{background:#07070d;color:#ececf5;font-family:-apple-system,BlinkMacSystemFo
 .acts button{min-height:56px;border:none;border-radius:14px;font-size:15.5px;font-weight:900;cursor:pointer}
 .b1{background:linear-gradient(100deg,#ff4d4d,#ff8a3d);color:#fff}
 .b2{background:rgba(255,255,255,.08);color:#dfe3f5;border:1px solid rgba(255,255,255,.14)}
+.nextstep{margin-top:26px;padding:20px 16px;border-radius:20px;
+     background:linear-gradient(150deg,rgba(167,139,250,.14),rgba(244,114,182,.07));
+     border:1px solid rgba(167,139,250,.3)}
+.ns-t{font-size:13px;font-weight:800;color:#c9b8ff;text-align:center;margin-bottom:16px;letter-spacing:.02em}
+.nextstep button{width:100%;min-height:70px;margin-bottom:10px;border:none;border-radius:14px;
+     cursor:pointer;text-align:left;padding:13px 17px;display:block}
+.nextstep button b{display:block;font-size:15.5px;font-weight:900;margin-bottom:3px}
+.nextstep button span{display:block;font-size:12px;font-weight:600;opacity:.82;line-height:1.55;word-break:keep-all}
+.ns-book{background:linear-gradient(100deg,#f59e0b,#fbbf24);color:#2a1a00}
+.ns-bhc{background:linear-gradient(100deg,#a78bfa,#f472b6);color:#fff}
+.ns-yt{background:rgba(255,255,255,.07);color:#dfe3f5;border:1px solid rgba(255,255,255,.15)!important}
+.nextstep button:active{transform:scale(.98)}
 .note{margin-top:22px;padding:15px;background:rgba(255,255,255,.03);border:1px dashed rgba(255,255,255,.14);
       border-radius:13px;font-size:11.5px;color:#7a7f9d;line-height:1.85;word-break:keep-all;text-align:center}
 @media(max-width:340px){.opts{grid-template-columns:1fr}}
@@ -111,6 +129,7 @@ body{background:#07070d;color:#ececf5;font-family:-apple-system,BlinkMacSystemFo
       <span class="chip">결과 카드 저장</span>
     </div>
     <button class="cta" onclick="start()">가짜 마음 찾기 시작</button>
+    <button class="ghost" id="btnInstall" style="display:none" onclick="installApp()">홈 화면에 앱으로 추가</button>
     <button class="ghost" onclick="location.href='https://k-brain.co.kr/'">한국뇌심리연구소 홈</button>
   </div>
 </div>
@@ -149,6 +168,21 @@ body{background:#07070d;color:#ececf5;font-family:-apple-system,BlinkMacSystemFo
   <div class="blk"><h4>일상에 남는 흔적</h4><p id="rSign">-</p></div>
   <div class="blk"><h4>세 가지 가짜 마음 비율</h4><div id="rBars"></div></div>
   <div class="blk"><h4>스위치 끄는 법</h4><p id="rFix">-</p></div>
+  <div class="nextstep">
+    <div class="ns-t">가짜 마음을 더 깊이 들여다보려면</div>
+    <button class="ns-book" onclick="goBook()">
+      <b>『뇌의 가짜 마음』 책 보기</b>
+      <span>이 8가지 반응이 왜 생기는지, 어떻게 꺼지는지</span>
+    </button>
+    <button class="ns-bhc" onclick="goBHC()">
+      <b>뇌건강체크 (BHC) 받아보기</b>
+      <span>8가지 뇌 영역을 그림 48문항으로 · 무료</span>
+    </button>
+    <button class="ns-yt" onclick="goYT()">
+      <b>뇌건강임사부TV</b>
+      <span>가짜 마음을 다루는 영상들</span>
+    </button>
+  </div>
   <div class="acts">
     <button class="b1" onclick="saveCard()">결과 카드 저장</button>
     <button class="b2" onclick="shareIt()">친구에게 보내기</button>
@@ -207,6 +241,55 @@ function art(kind, c1, c2, size){
   return '<svg viewBox="0 0 '+s+' '+s+'" xmlns="http://www.w3.org/2000/svg">'+g+body+'</svg>';
 }
 
+
+/* ===== 문항별 장면 그림 (전부 코드 생성 · 이모지/외부이미지 미사용) ===== */
+function scene(n, c1, c2){
+  var S=240, uid='sc'+n+'_'+Math.round(Math.random()*99999);
+  var g='<defs><linearGradient id="'+uid+'" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="'+S+'" y2="'+S+'">'+
+        '<stop offset="0" stop-color="'+c1+'"/><stop offset="1" stop-color="'+c2+'"/></linearGradient></defs>';
+  var f='url(#'+uid+')', L='fill="none" stroke="'+f+'" stroke-linecap="round" stroke-linejoin="round"', b='';
+  if(n===0){        /* 소용돌이 — 머리 위를 도는 생각 */
+    b+='<path d="M60 74 Q120 40 180 74 Q120 100 66 92 Q120 116 172 106 Q120 132 84 124" '+L+' stroke-width="7" opacity=".9"/>';
+    b+='<path d="M120 132 L120 158" '+L+' stroke-width="6" opacity=".6"/>';
+    b+='<path d="M84 196 Q120 168 156 196" '+L+' stroke-width="8"/>';
+    b+='<circle cx="120" cy="176" r="7" fill="'+f+'"/>';
+  } else if(n===1){ /* 거울 */
+    b+='<rect x="72" y="46" width="96" height="126" rx="46" '+L+' stroke-width="8"/>';
+    b+='<path d="M96 150 Q120 96 144 150" '+L+' stroke-width="6" opacity=".75"/>';
+    b+='<circle cx="120" cy="106" r="17" '+L+' stroke-width="6" opacity=".75"/>';
+    b+='<path d="M84 190 L156 190" '+L+' stroke-width="7" opacity=".5"/>';
+  } else if(n===2){ /* 서류 */
+    b+='<rect x="66" y="52" width="108" height="140" rx="12" '+L+' stroke-width="8"/>';
+    b+='<rect x="100" y="38" width="40" height="24" rx="8" '+L+' stroke-width="7"/>';
+    for(var i=0;i<4;i++) b+='<path d="M90 '+(96+i*24)+' L'+(150-i*10)+' '+(96+i*24)+'" '+L+' stroke-width="6" opacity="'+(0.8-i*0.15)+'"/>';
+  } else if(n===3){ /* 말풍선 */
+    b+='<path d="M48 66 h120 a14 14 0 0 1 14 14 v56 a14 14 0 0 1 -14 14 h-58 l-30 26 v-26 h-32 a14 14 0 0 1 -14 -14 v-56 a14 14 0 0 1 14 -14 z" '+L+' stroke-width="8"/>';
+    b+='<circle cx="86" cy="108" r="7" fill="'+f+'"/><circle cx="114" cy="108" r="7" fill="'+f+'"/><circle cx="142" cy="108" r="7" fill="'+f+'"/>';
+    b+='<path d="M186 176 a20 20 0 1 1 20 -20" '+L+' stroke-width="6" opacity=".45"/>';
+  } else if(n===4){ /* 사람들 */
+    b+='<circle cx="88" cy="88" r="24" '+L+' stroke-width="8"/>';
+    b+='<path d="M50 176 a38 38 0 0 1 76 0" '+L+' stroke-width="8"/>';
+    b+='<circle cx="156" cy="96" r="20" '+L+' stroke-width="7" opacity=".6"/>';
+    b+='<path d="M124 176 a32 32 0 0 1 64 0" '+L+' stroke-width="7" opacity=".6"/>';
+  } else if(n===5){ /* 동전 */
+    b+='<ellipse cx="120" cy="82" rx="52" ry="20" '+L+' stroke-width="8"/>';
+    b+='<path d="M68 82 v34 a52 20 0 0 0 104 0 v-34" '+L+' stroke-width="8"/>';
+    b+='<path d="M68 116 v34 a52 20 0 0 0 104 0 v-34" '+L+' stroke-width="7" opacity=".6"/>';
+    b+='<path d="M120 62 v40 M108 74 h24" '+L+' stroke-width="6" opacity=".8"/>';
+  } else if(n===6){ /* 침대 */
+    b+='<path d="M48 176 v-52 a12 12 0 0 1 12 -12 h120 a12 12 0 0 1 12 12 v52" '+L+' stroke-width="8"/>';
+    b+='<path d="M48 150 h144" '+L+' stroke-width="7" opacity=".55"/>';
+    b+='<rect x="70" y="86" width="46" height="28" rx="12" '+L+' stroke-width="7" opacity=".8"/>';
+    b+='<path d="M48 176 v18 M192 176 v18" '+L+' stroke-width="8"/>';
+  } else {          /* 빛 */
+    b+='<path d="M120 40 L134 100 L194 114 L134 128 L120 188 L106 128 L46 114 L106 100 Z" '+L+' stroke-width="8"/>';
+    b+='<circle cx="120" cy="114" r="12" fill="'+f+'" opacity=".85"/>';
+    b+='<circle cx="182" cy="62" r="8" '+L+' stroke-width="5" opacity=".55"/>';
+    b+='<circle cx="60" cy="168" r="6" '+L+' stroke-width="5" opacity=".45"/>';
+  }
+  return '<svg viewBox="0 0 '+S+' '+S+'" xmlns="http://www.w3.org/2000/svg">'+g+b+'</svg>';
+}
+
 /* ===== 8문항: 원본 채점 벡터 그대로 보존 ===== */
 var PAL = [['#ff5f6d','#ffa25f'],['#4ecdc4','#3fa9f5'],['#a78bfa','#7c5bff'],['#8ee6a0','#3fd1a0']];
 var Q = [
@@ -236,6 +319,9 @@ var Q = [
   s:[[3,0,0],[0,3,0],[0,0,3],[0,0,0]], bg:'linear-gradient(140deg,#100a1c,#231238)'}
 ];
 var KIND = ['A','B','C','D'];
+/* 문항별 장면 색 (표지 보라·핑크 톤) */
+var SPAL = [['#a78bfa','#f472b6'],['#8b7cf6','#ec4899'],['#a78bfa','#c084fc'],['#f472b6','#fb7185'],
+            ['#8b7cf6','#a78bfa'],['#c084fc','#f472b6'],['#7c6df2','#a78bfa'],['#f0abfc','#f472b6']];
 
 var MINDS = {
  0:{n:'몰아붙이는 마음', en:'THE PUSHER', kind:'A', a:'#ff5f6d', b:'#ffa25f',
@@ -280,7 +366,7 @@ function render(){
   $('qn').textContent=(idx+1)+' / '+Q.length;
   $('qc').textContent=q.c;
   $('stage').style.background=q.bg;
-  $('stage').innerHTML=art(KIND[idx%4], PAL[idx%4][0], PAL[idx%4][1], 230);
+  $('stage').innerHTML=scene(idx, SPAL[idx][0], SPAL[idx][1]);
   $('qtext').textContent=q.t;
   var h='';
   for(var i=0;i<4;i++){
@@ -408,6 +494,32 @@ function wrapText(x,t,cx,y,mw,lh){
   x.fillText(line,cx,yy);
 }
 function restart(){ idx=0; ans=[]; scores=[0,0,0]; show('s-intro'); }
+
+/* ===== 다음 단계 연결 ===== */
+function goBook(){ location.href='https://k-brain.co.kr/#books'; }
+function goBHC(){  location.href='https://k-brain.co.kr/bhc.html'; }
+function goYT(){   window.open('https://youtube.com/channel/UC8QlCKNj5qgBKBbkE7Qz4_Q','_blank'); }
+
+/* ===== 홈 화면 앱 설치 ===== */
+var deferredPrompt=null;
+window.addEventListener('beforeinstallprompt', function(e){
+  e.preventDefault(); deferredPrompt=e;
+  var b=$('btnInstall'); if(b) b.style.display='block';
+});
+function installApp(){
+  if(!deferredPrompt){
+    alert('브라우저 메뉴(⋮)에서 "홈 화면에 추가"를 눌러 설치할 수 있습니다.');
+    return;
+  }
+  deferredPrompt.prompt();
+  deferredPrompt.userChoice.then(function(){
+    deferredPrompt=null;
+    var b=$('btnInstall'); if(b) b.style.display='none';
+  });
+}
+window.addEventListener('appinstalled', function(){
+  var b=$('btnInstall'); if(b) b.style.display='none';
+});
 </script>
 <script src="/assets/js/kbpi-track.js" defer></script>
 </body>
