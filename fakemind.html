@@ -116,23 +116,43 @@ body{background:#07070d;color:#ececf5;font-family:-apple-system,BlinkMacSystemFo
 .note{margin-top:22px;padding:15px;background:rgba(255,255,255,.03);border:1px dashed rgba(255,255,255,.14);
       border-radius:13px;font-size:11.5px;color:#7a7f9d;line-height:1.85;word-break:keep-all;text-align:center}
 
-/* ===== 배경 장식 (좌우 여백) ===== */
-.deco{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
-.deco i{position:absolute;display:block;opacity:.30;animation:float 9s ease-in-out infinite}
-.deco i svg{width:100%;height:100%}
-@keyframes float{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-16px) rotate(4deg)}}
-.wrap{position:relative;z-index:1}
-/* 좁은 화면에서는 아주 옅게 (내용 가림 방지) */
-@media(max-width:620px){ .deco i{opacity:.10} .deco i.hide-s{display:none} }
-@media(max-width:340px){.opts{grid-template-columns:1fr}}
+
+/* ===== 표지 뇌 엠블럼 ===== */
+.emblem{width:132px;height:132px;margin:0 auto 22px;position:relative;
+        display:flex;align-items:center;justify-content:center}
+.emblem::before{content:'';position:absolute;inset:-16px;border-radius:50%;
+        background:radial-gradient(circle,rgba(167,139,250,.32),transparent 68%)}
+.emblem .ring{position:absolute;inset:0;border-radius:50%;
+        border:2.5px solid #c9a84c;box-shadow:0 0 22px -4px rgba(201,168,76,.75)}
+.emblem .ring2{position:absolute;inset:-9px;border-radius:50%;
+        border:1px solid rgba(201,168,76,.28)}
+.emblem .core{position:absolute;inset:9px;border-radius:50%;
+        background:radial-gradient(circle at 50% 38%,#241a4d,#0d0a1e 72%)}
+.emblem svg{position:relative;width:74px;height:74px}
+@media(max-width:400px){ .emblem{width:112px;height:112px} .emblem svg{width:62px;height:62px} }
+/* 화면을 크게 확대해도 2열을 유지해 한 화면에 담는다 */
+@media(max-width:400px){
+  .opt{min-height:118px;padding:11px 6px 10px;gap:7px}
+  .opt svg{width:62px;height:62px}
+  .opt span{font-size:12px}
+  .stage{padding:16px 12px;margin-bottom:14px}
+  .stage svg{max-width:150px}
+  .qtext{margin-bottom:14px}
+}
+@media(max-width:300px){
+  .opt{min-height:100px} .opt svg{width:52px;height:52px} .opt span{font-size:11px}
+  .stage svg{max-width:120px}
+}
 </style>
 </head>
 <body>
-<div class="deco" id="deco"></div>
 <div class="wrap">
 
 <div class="screen on" id="s-intro">
   <div class="hero">
+    <div class="emblem" id="emblem">
+      <span class="ring2"></span><span class="ring"></span><span class="core"></span>
+    </div>
     <div class="tag">그림 8장 · 2분</div>
     <h1>내 뇌의<br><span class="hit">가짜 마음</span> 찾기</h1>
     <div class="en">FALSE MIND CHECK</div>
@@ -516,54 +536,23 @@ function wrapText(x,t,cx,y,mw,lh){
 function restart(){ idx=0; ans=[]; scores=[0,0,0]; show('s-intro'); }
 
 
-/* ===== 배경 장식 심볼 (자체 제작 · 이모지 미사용) ===== */
-function brainMark(c1,c2,size){
-  var S=100, uid='bm'+Math.round(Math.random()*999999);
-  var g='<defs><linearGradient id="'+uid+'" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="'+S+'" y2="'+S+'">'+
-        '<stop offset="0" stop-color="'+c1+'"/><stop offset="1" stop-color="'+c2+'"/></linearGradient></defs>';
-  var f='url(#'+uid+')', L='fill="none" stroke="'+f+'" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"';
+
+/* ===== 표지 뇌 엠블럼 (자체 제작 · 이모지 미사용) ===== */
+(function(){
+  var e=document.getElementById('emblem'); if(!e) return;
+  var S=100, uid='emb'+Math.round(Math.random()*99999);
+  var g='<defs><linearGradient id="'+uid+'" gradientUnits="userSpaceOnUse" x1="14" y1="14" x2="86" y2="86">'+
+        '<stop offset="0" stop-color="#c4b5fd"/><stop offset=".55" stop-color="#f472b6"/>'+
+        '<stop offset="1" stop-color="#fb7185"/></linearGradient></defs>';
+  var f='url(#'+uid+')', L='fill="none" stroke="'+f+'" stroke-width="5.4" stroke-linecap="round" stroke-linejoin="round"';
   var b='';
-  /* 좌우 반구 + 주름 */
-  b+='<path d="M50 20 C34 20 24 30 24 42 C14 46 14 62 24 68 C24 80 36 86 50 84" '+L+'/>';
-  b+='<path d="M50 20 C66 20 76 30 76 42 C86 46 86 62 76 68 C76 80 64 86 50 84" '+L+'/>';
-  b+='<path d="M50 20 L50 84" '+L+' opacity=".55"/>';
-  b+='<path d="M36 38 q10 6 0 12 M64 38 q-10 6 0 12" '+L+' opacity=".7"/>';
-  b+='<path d="M34 62 q8 5 16 0 M50 62 q8 5 16 0" '+L+' opacity=".5"/>';
-  return '<svg viewBox="0 0 '+S+' '+S+'" xmlns="http://www.w3.org/2000/svg">'+g+b+'</svg>';
-}
-function ringMark(c1,c2){
-  var S=100, uid='rm'+Math.round(Math.random()*999999);
-  var g='<defs><linearGradient id="'+uid+'" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="'+S+'" y2="'+S+'">'+
-        '<stop offset="0" stop-color="'+c1+'"/><stop offset="1" stop-color="'+c2+'"/></linearGradient></defs>';
-  var f='url(#'+uid+')';
-  var b='<circle cx="50" cy="50" r="34" fill="none" stroke="'+f+'" stroke-width="5" opacity=".8"/>'+
-        '<circle cx="50" cy="50" r="20" fill="none" stroke="'+f+'" stroke-width="5" opacity=".55"/>'+
-        '<circle cx="50" cy="50" r="7" fill="'+f+'"/>';
-  return '<svg viewBox="0 0 '+S+' '+S+'" xmlns="http://www.w3.org/2000/svg">'+g+b+'</svg>';
-}
-(function buildDeco(){
-  var d=document.getElementById('deco');
-  if(!d) return;
-  var items=[
-    /* 왼쪽 */
-    {t:'12%', l:'6%',  s:118, c:['#a78bfa','#7c5bff'], k:'brain', dl:'0s'},
-    {t:'34%', l:'3%',  s:74,  c:['#f472b6','#fb7185'], k:'ring',  dl:'1.4s'},
-    {t:'56%', l:'8%',  s:92,  c:['#4ecdc4','#3fa9f5'], k:'brain', dl:'2.6s', hs:1},
-    {t:'76%', l:'4%',  s:62,  c:['#ffa25f','#ff5f6d'], k:'ring',  dl:'0.8s', hs:1},
-    /* 오른쪽 */
-    {t:'16%', r:'5%',  s:104, c:['#f0abfc','#f472b6'], k:'brain', dl:'0.5s'},
-    {t:'40%', r:'8%',  s:66,  c:['#8ee6a0','#3fd1a0'], k:'ring',  dl:'2.1s'},
-    {t:'62%', r:'3%',  s:110, c:['#ffa25f','#f472b6'], k:'brain', dl:'1.1s', hs:1},
-    {t:'82%', r:'9%',  s:58,  c:['#a78bfa','#4ecdc4'], k:'ring',  dl:'3.2s', hs:1}
-  ];
-  var h='';
-  for(var i=0;i<items.length;i++){
-    var x=items[i];
-    var pos = 'top:'+x.t+';'+(x.l?('left:'+x.l+';'):('right:'+x.r+';'));
-    h+='<i class="'+(x.hs?'hide-s':'')+'" style="'+pos+'width:'+x.s+'px;height:'+x.s+'px;animation-delay:'+x.dl+'">'+
-       (x.k==='brain'? brainMark(x.c[0],x.c[1]) : ringMark(x.c[0],x.c[1]))+'</i>';
-  }
-  d.innerHTML=h;
+  b+='<path d="M50 17 C33 17 22 28 22 41 C11 46 11 63 22 69 C22 82 35 89 50 87" '+L+'/>';
+  b+='<path d="M50 17 C67 17 78 28 78 41 C89 46 89 63 78 69 C78 82 65 89 50 87" '+L+'/>';
+  b+='<path d="M50 17 L50 87" '+L+' opacity=".5"/>';
+  b+='<path d="M35 36 q11 7 0 14 M65 36 q-11 7 0 14" '+L+' opacity=".78"/>';
+  b+='<path d="M32 62 q9 6 18 0 M50 62 q9 6 18 0" '+L+' opacity=".6"/>';
+  e.insertAdjacentHTML('beforeend',
+    '<svg viewBox="0 0 '+S+' '+S+'" xmlns="http://www.w3.org/2000/svg">'+g+b+'</svg>');
 })();
 
 /* ===== 홈 화면 설치 (앱처럼 사용) ===== */
