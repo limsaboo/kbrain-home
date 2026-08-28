@@ -143,7 +143,7 @@
 </header>
 
 <!-- ============================================================
-     HERO — 그림으로 묻는 뇌심리 시스템 소개
+     TORCH HERO — 촛불에서 횃불로, 빛의 길이 되는 브랜드 경험
      ============================================================ -->
 <section class="torch-hero" id="torch-hero" aria-label="한국뇌심리연구소 브랜드 필름">
   <div class="torch-video-wrap">
@@ -154,11 +154,12 @@
       loop
       playsinline
       preload="auto"
-      poster="/assets/video/hero-systems-poster.jpg"
+      poster="/assets/video/hero-poster.jpg"
       data-text-in="12"
       data-sub-in="15"
       aria-hidden="true">
-      <source src="/assets/video/hero-systems.mp4" type="video/mp4">
+      <source src="/assets/video/hero.webm" type="video/webm">
+      <source src="/assets/video/hero.mp4" type="video/mp4">
     </video>
     <!-- 영상 로드 실패/구형 브라우저용 정지 배경 (영상과 동일 톤의 다크 네이비+골드 그라디언트) -->
     <div class="torch-video-fallback" aria-hidden="true"></div>
@@ -168,12 +169,12 @@
   <div class="torch-copy">
     <p class="torch-eyebrow">KOREA BRAIN PSYCHOLOGY INSTITUTE</p>
     <h1 class="torch-headline">
-      글이 아니라<br>
-      <span class="torch-gold-text">그림</span>으로 묻습니다.
+      우리는 촛불을 만드는 연구소가 아닙니다.<br>
+      우리는 <span class="torch-gold-text">횃불</span>을 만드는 연구소입니다.
     </h1>
     <p class="torch-sub">
-      17년 현장에서 만든<br class="torch-sub-br">
-      11개의 뇌심리 시스템
+      사람을 이해하여<br class="torch-sub-br">
+      사람을 성장시킨다.
     </p>
     <div class="torch-cta">
       <a href="#systems" class="torch-btn torch-btn-primary">사람 이해 여정을 시작합니다 →</a>
@@ -242,12 +243,12 @@
     <div class="creed-divider"><span></span></div>
 
     <div class="creed-statement">
-      <span class="creed-eyebrow">WHAT WE BUILD</span>
-      <p class="creed-line">우리는 사람을 평가하지 않습니다.<br>스스로를 이해하도록 돕는 도구를 만듭니다.</p>
-      <p class="creed-line creed-line-muted">검사지 앞에서 사람은 긴장합니다.<br>틀릴까 걱정하는 순간, 결과는 실제보다 낮게 나옵니다.</p>
-      <p class="creed-line creed-line-muted">그래서 우리는 글 대신 그림으로 묻는 방식을 택했습니다.<br>
-      읽는 부담을 덜어내면 유아부터 시니어까지 같은 도구를 쓸 수 있습니다.<br>
-      17년 현장 경험을 11개의 시스템으로 옮긴 이유가 여기 있습니다.</p>
+      <span class="creed-eyebrow">FOUNDING CREED</span>
+      <p class="creed-line">우리는 촛불을 만드는 연구소가 아니라<br>횃불을 만드는 연구소가 되고자 합니다.</p>
+      <p class="creed-line creed-line-muted">촛불은 자신을 밝힙니다.<br>그러나 횃불은 길을 밝히고, 또 다른 횃불을 만들어 냅니다.</p>
+      <p class="creed-line creed-line-muted">한국뇌심리연구소는 한 사람의 변화에서 멈추지 않습니다.<br>
+      한 사람이 또 다른 사람의 희망이 되고, 그 희망이 다시 또 다른 사람에게 이어지는<br>
+      횃불의 선순환을 만드는 것을 존재 이유로 삼습니다.</p>
     </div>
 
     <div class="creed-divider"><span></span></div>
@@ -272,8 +273,8 @@
           <p>지식은 행동으로 이어질 때 의미가 있다.</p>
         </div>
         <div class="creed-value creed-value-torch">
-          <span class="creed-value-kr">도구</span><span class="creed-value-en">Tools</span>
-          <p>철학은 손에 잡히는 도구가 될 때 비로소 현장에서 쓰인다.</p>
+          <span class="creed-value-kr">횃불</span><span class="creed-value-en">Torch</span>
+          <p>우리는 자신만을 밝히는 사람이 아니라, 다른 사람의 길을 밝히는 사람이 된다.</p>
         </div>
       </div>
     </div>
@@ -289,7 +290,7 @@
   <span class="blob blob2"></span>
   <span class="blob blob3"></span>
   <div class="wrap hero-inner">
-    <h1 class="hero-title">17년 상담·교육 현장과 뇌과학이 만나, 관계와 성향을 그림으로 살펴봅니다.</h1>
+    <h1 class="hero-title">17년 상담·교육 노하우와 뇌과학의 만남, 관계와 성향을 완벽하게 분석합니다.</h1>
     <p class="hero-sub">이미지 기반 인지기능 체험으로 나와 가족의 뇌 특성을 이해하고, 더 나은 소통과 성장을 시작해 보세요.</p>
     <div class="hero-badge" style="display:inline-flex;align-items:center;gap:8px;background:rgba(201,168,76,.12);border:1px solid var(--gold);color:var(--gold);font-weight:700;font-size:13px;padding:8px 16px;border-radius:999px;margin:6px 0 18px;">
       <span>🧠</span><span>부설 시니어인지건강센터 운영 · Senior Cognitive Health Center</span>
@@ -714,7 +715,7 @@
           <span class="sys-badge live">운영중</span>
         </div>
         <h3 class="sys-name">뇌적성시스템</h3>
-        <div class="sys-brand">Brain Aptitude Test (BAT)</div>
+        <div class="sys-brand">Brain Aptitude System (BAT)</div>
         <p class="sys-desc">타고난 뇌 특성과 조절력을 바탕으로 최적의 진로 및 직무 적합성을 분석합니다. 23개 지표, 69장의 카드로 추천 직업군과 신중 접근이 필요한 직업군을 함께 제시합니다.</p>
         <div class="sys-target-row"><span class="sys-target-label">추천 대상</span><span class="sys-target-val">진로를 고민하는 청소년 · 취업준비생</span></div>
         <div class="sys-meta"></div>
@@ -1151,9 +1152,7 @@
           <div class="field"><label>기관 / 상담소 / 단체 / 학교 / 복지관 / 기업명</label><input type="text" id="fOrg" placeholder="예: OO심리상담센터, OO초등학교, OO복지관 등"></div>
           <div class="field"><label>성함 / 직함</label><input type="text" id="fName" placeholder="예: 홍길동 원장"></div>
           <div class="field"><label>연락처</label><input type="text" id="fPhone" placeholder="010-0000-0000"></div>
-          <div class="field"><label>이메일 (회신받으실 주소)</label><input type="email" id="fEmail" placeholder="예: abc@school.go.kr"></div>
           <div class="field"><label>문의 내용</label><textarea id="fMsg" placeholder="도입 희망 시스템, 제휴 형태 등을 남겨주세요."></textarea></div>
-          <input type="text" id="fWebsite" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;">
           <label class="field-check"><input type="checkbox" id="fAgree" required>개인정보 수집·이용에 동의합니다. (필수)</label>
           <button type="submit" class="form-submit">문의 보내기</button>
         </form>
@@ -1302,90 +1301,22 @@
     modal.classList.remove('show');
   });
   document.getElementById('inquiryForm').addEventListener('submit', function(e){
-        e.preventDefault();
-
-        var btn   = document.querySelector('#inquiryForm .form-submit');
-        var type  = document.getElementById('fType').value;
-        var org   = document.getElementById('fOrg').value.trim();
-        var name  = document.getElementById('fName').value.trim();
-        var phone = document.getElementById('fPhone').value.trim();
-        var email = document.getElementById('fEmail') ? document.getElementById('fEmail').value.trim() : '';
-        var msg   = document.getElementById('fMsg').value.trim();
-        var agree = document.getElementById('fAgree').checked;
-        var trap  = document.getElementById('fWebsite') ? document.getElementById('fWebsite').value : '';
-
-        /* 스팸 봇이 채우는 숨김칸이 채워졌으면 조용히 중단 */
-        if (trap) { return; }
-
-        if (!agree) { alert('개인정보 수집·이용에 동의해 주세요.'); return; }
-        if (!name)  { alert('성함을 입력해 주세요.'); document.getElementById('fName').focus(); return; }
-        if (!phone && !email) {
-          alert('연락처 또는 이메일 중 하나는 입력해 주세요.');
-          document.getElementById('fPhone').focus(); return;
-        }
-        if (!msg)   { alert('문의 내용을 입력해 주세요.'); document.getElementById('fMsg').focus(); return; }
-
-        var origLabel = btn ? btn.textContent : '';
-        if (btn) { btn.disabled = true; btn.textContent = '보내는 중...'; }
-
-        var KBPI_SB_URL = 'https://grxqfaeznqqohnlltged.supabase.co';
-        var KBPI_SB_KEY = 'sb_publishable_Sgv6BVPo1dOnVICcX1tfzA_gf7T5Z4I';
-
-        var row = {
-          inquiry_type: type,
-          org_name:     org   || null,
-          person_name:  name,
-          phone:        phone || null,
-          email:        email || null,
-          message:      msg,
-          agreed:       true,
-          agreed_at:    new Date().toISOString(),
-          source_page:  location.pathname || '/',
-          device:       /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent) ? 'mobile' : 'desktop',
-          referrer:     document.referrer || null
-        };
-
-        function restoreBtn(){
-          if (btn) { btn.disabled = false; btn.textContent = origLabel || '문의 보내기'; }
-        }
-
-        /* 접수 실패 시에만 기존 메일 방식으로 우회 */
-        function fallbackMail(){
-          var body = '문의유형: ' + type
-                   + '%0D%0A기관/상담소명: ' + org
-                   + '%0D%0A성함/직함: ' + name
-                   + '%0D%0A연락처: ' + phone
-                   + '%0D%0A이메일: ' + email
-                   + '%0D%0A%0D%0A문의내용:%0D%0A' + msg;
-          var mailto = 'mailto:brain.saboo@gmail.com?subject='
-                     + encodeURIComponent('[' + type + '] ' + org) + '&body=' + body;
-          alert('접수 서버에 연결하지 못했습니다.\n메일 앱으로 보내드리겠습니다.\n\n메일이 열리지 않으면 010-4119-0031 로 연락 주십시오.');
-          window.location.href = mailto;
-        }
-
-        fetch(KBPI_SB_URL + '/rest/v1/inquiries', {
-          method: 'POST',
-          mode: 'cors',
-          headers: {
-            'apikey':        KBPI_SB_KEY,
-            'Authorization': 'Bearer ' + KBPI_SB_KEY,
-            'Content-Type':  'application/json',
-            'Prefer':        'return=minimal'
-          },
-          body: JSON.stringify([row])
-        })
-        .then(function(res){
-          if (!res.ok) { throw new Error('HTTP ' + res.status); }
-          /* 접수 성공 — 이때만 완료 안내를 띄웁니다 */
-          restoreBtn();
-          document.getElementById('inquiryForm').reset();
-          modal.classList.add('show');
-        })
-        .catch(function(err){
-          restoreBtn();
-          fallbackMail();
-        });
-      });
+    e.preventDefault();
+    var type = document.getElementById('fType').value;
+    var org = document.getElementById('fOrg').value;
+    var name = document.getElementById('fName').value;
+    var phone = document.getElementById('fPhone').value;
+    var msg = document.getElementById('fMsg').value;
+    var agree = document.getElementById('fAgree').checked;
+    if(!agree){
+      alert('개인정보 수집·이용에 동의해 주세요.');
+      return;
+    }
+    var body = '문의유형: ' + type + '%0D%0A기관/상담소명: ' + org + '%0D%0A성함/직함: ' + name + '%0D%0A연락처: ' + phone + '%0D%0A%0D%0A문의내용:%0D%0A' + msg;
+    var mailto = 'mailto:brain.saboo@gmail.com?subject=' + encodeURIComponent('[' + type + '] ' + org) + '&body=' + body;
+    modal.classList.add('show');
+    setTimeout(function(){ window.location.href = mailto; }, 900);
+  });
 
   // Force key titles to fit on ONE line on any screen size (PC/mobile)
   function fitOneLine(selector, minPx){
