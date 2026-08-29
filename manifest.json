@@ -1,13 +1,14 @@
 {
-  "name": "한국뇌심리연구소 - 뇌건강체크",
-  "short_name": "뇌건강체크",
-  "description": "기억력·집중력·감정력·판단력·실행력 5가지 뇌 영역을 스스로 점검하는 교육용 뇌건강체크입니다.",
-  "start_url": "/bhc.html",
+  "name": "한국뇌심리연구소",
+  "short_name": "뇌심리연구소",
+  "description": "이미지 기반 뇌심리 검사와 시니어 인지건강 프로그램을 제공하는 한국뇌심리연구소 공식 홈페이지입니다.",
+  "start_url": "/?src=pwa",
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait-primary",
-  "theme_color": "#2c3e50",
+  "theme_color": "#14162c",
   "background_color": "#ffffff",
+  "lang": "ko-KR",
   "icons": [
     {
       "src": "/icon-192.png",
@@ -22,8 +23,8 @@
       "purpose": "any"
     },
     {
-      "src": "/icon-192.png",
-      "sizes": "192x192",
+      "src": "/icon-maskable-512.png",
+      "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
     }
@@ -32,20 +33,12 @@
     "health",
     "education"
   ],
-  "screenshots": [
-    {
-      "src": "/icon-512.png",
-      "sizes": "512x512",
-      "form_factor": "narrow",
-      "type": "image/png"
-    }
-  ],
   "shortcuts": [
     {
-      "name": "뇌건강체크 시작",
-      "short_name": "검사",
-      "description": "1분 안에 뇌 건강 진단",
-      "url": "/bhc-app.html",
+      "name": "뇌건강체크",
+      "short_name": "뇌건강체크",
+      "description": "그림으로 답하는 뇌건강 자가점검",
+      "url": "/bhc.html",
       "icons": [
         {
           "src": "/icon-192.png",
@@ -54,10 +47,10 @@
       ]
     },
     {
-      "name": "홈페이지",
-      "short_name": "홈",
-      "description": "한국뇌심리연구소 홈페이지",
-      "url": "/",
+      "name": "시니어 인지건강",
+      "short_name": "시니어",
+      "description": "시니어 인지건강 체크",
+      "url": "/senior-cognitive-health-check.html",
       "icons": [
         {
           "src": "/icon-192.png",
