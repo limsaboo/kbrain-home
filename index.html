@@ -109,6 +109,24 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/main.css?v=20260731torch">
 <link rel="stylesheet" href="assets/css/mobile-fix.css?v=20260822">
+<style id="torch-hero-clean">
+/* 히어로: 영상만 표시 — 첫 페인트부터 적용되어 로딩 중 글자 깜빡임 없음 */
+.torch-sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}
+.torch-copy-clean{display:none!important;}
+.torch-scroll-cue,.torch-skip-btn{display:none!important;}
+/* 히어로 하단 CTA 바 */
+.hero-cta-bar{background:linear-gradient(180deg,#0e1230 0%,#161a3d 100%);padding:26px 20px 30px;}
+.hero-cta-inner{max-width:520px;margin:0 auto;display:flex;flex-direction:column;gap:12px;}
+.hcb-btn{display:flex;align-items:center;justify-content:center;gap:8px;min-height:60px;
+  padding:16px 24px;border-radius:14px;text-decoration:none;font-weight:900;
+  font-size:clamp(15px,4.2vw,18px);letter-spacing:-.01em;word-break:keep-all;line-height:1.4;
+  transition:transform .15s ease;}
+.hcb-primary{background:linear-gradient(135deg,#d4b45a 0%,#c9a84c 100%);color:#161a3d;
+  box-shadow:0 14px 30px -14px rgba(201,168,76,.7);}
+.hcb-ghost{background:rgba(255,255,255,.06);color:#fff;border:1px solid rgba(255,255,255,.28);}
+.hcb-btn:active{transform:translateY(1px);}
+@media(min-width:640px){.hero-cta-inner{flex-direction:row;max-width:640px;}.hcb-btn{flex:1;}}
+</style>
 </head>
 <body>
 <a href="#main" class="skip-link">본문 바로가기</a>
@@ -165,20 +183,8 @@
     <div class="torch-overlay" aria-hidden="true"></div>
   </div>
 
-  <div class="torch-copy">
-    <p class="torch-eyebrow">KOREA BRAIN PSYCHOLOGY INSTITUTE</p>
-    <h1 class="torch-headline">
-      글이 아니라<br>
-      <span class="torch-gold-text">그림</span>으로 묻습니다.
-    </h1>
-    <p class="torch-sub">
-      17년 현장에서 만든<br class="torch-sub-br">
-      11개의 뇌심리 시스템
-    </p>
-    <div class="torch-cta">
-      <a href="#systems" class="torch-btn torch-btn-primary">사람 이해 여정을 시작합니다 →</a>
-      <a href="#creed" class="torch-btn torch-btn-ghost">한국뇌심리연구소 철학 보기</a>
-    </div>
+  <div class="torch-copy torch-copy-clean">
+    <p class="torch-sr-only">한국뇌심리연구소 — 글이 아니라 그림으로 묻습니다. 17년 현장에서 만든 11개의 뇌심리 시스템</p>
   </div>
 
   <button class="torch-mute-toggle" id="torchMuteToggle" type="button" aria-pressed="true">
@@ -187,8 +193,14 @@
     <span class="torch-mute-label">음소거</span>
   </button>
 
-  <div class="torch-scroll-cue" aria-hidden="true"><span></span>Scroll</div>
-  <a href="#systems" class="torch-skip-btn">이야기 건너뛰기 →</a>
+</section>
+
+<!-- 히어로 하단 CTA 바 -->
+<section class="hero-cta-bar" aria-label="바로가기">
+  <div class="hero-cta-inner">
+    <a href="#systems" class="hcb-btn hcb-primary">사람 이해 여정을 시작합니다 <span aria-hidden="true">&rarr;</span></a>
+    <a href="#creed" class="hcb-btn hcb-ghost">한국뇌심리연구소 철학 보기</a>
+  </div>
 </section>
 
 
@@ -1210,7 +1222,7 @@
       <a href="terms.html">이용약관</a>
       <a href="member-terms.html">회원약관</a>
     </div>
-    <div style="opacity:.4;font-size:10.5px;">build 2026-08-29-v1 | 누적방문자: <span id="visitor-count">로딩중</span>명</div>
+    <div style="opacity:.4;font-size:10.5px;">build 2026-08-30-v1 | 누적방문자: <span id="visitor-count">로딩중</span>명</div>
   </div>
 </footer>
 
