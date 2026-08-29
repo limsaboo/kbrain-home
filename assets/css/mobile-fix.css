@@ -132,50 +132,93 @@ html {
 }
 
 /* ==========================================================
-   10. 헤더 모바일 최적화 (2026-08-30 추가)
-   원인: main.css의 .iconbtn 72px / .dotmark 70x63px / .brand-text b 36px가
-        데스크톱 고정값이라 폰 화면(360px)에서 넘침
+   10. 헤더 모바일 최적화 (2026-08-30 재작성)
+
+   [이전 실패 원인]
+   .dotmark 바깥 상자만 줄이고, 안의 4색 점(.d1~.d4)이
+   고정 px로 절대배치된 것을 그대로 두어 점들이 상자 밖으로
+   삐져나와 햄버거 버튼을 덮고 상호명을 밀어냈음.
+
+   [해결]
+   4색 점의 크기와 좌표를 원본 비율(70x63 기준) 그대로
+   50%로 축소하여 하나씩 다시 지정.
    ========================================================== */
 @media (max-width: 820px) {
+
+  :root { --header-h: 72px; }
+  header { height: 72px !important; }
+
   header .wrap.nav {
-    padding-top: 10px !important;
-    padding-bottom: 10px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
     gap: 10px !important;
     flex-wrap: nowrap !important;
+    padding-left: 14px !important;
+    padding-right: 14px !important;
   }
-  .brand { gap: 8px !important; min-width: 0 !important; }
-  .dotmark {
-    width: 38px !important;
-    height: 34px !important;
-    transform: scale(.54);
-    transform-origin: left center;
-    margin-right: -18px !important;
-  }
-  .brand-text b     { font-size: clamp(14px, 4.2vw, 19px) !important; }
-  .brand-text small { font-size: clamp(8px, 2.3vw, 10px) !important; letter-spacing: .02em !important; }
 
-  .navactions { gap: 6px !important; }
+  /* ----- 로고: 컨테이너와 점 4개를 함께 50% 축소 ----- */
+  .brand { gap: 9px !important; min-width: 0 !important; flex: 1 1 auto !important; }
+  .dotmark {
+    width: 35px !important;
+    height: 32px !important;
+    flex: 0 0 35px !important;
+  }
+  .dotmark::before { inset: -5px !important; filter: blur(2px) !important; }
+  .dotmark .d1 { width: 15px !important;  height: 15px !important;  left: 0 !important;    top: 8px !important; }
+  .dotmark .d2 { width: 9px  !important;  height: 9px  !important;  left: 14.5px !important; top: 0 !important; }
+  .dotmark .d3 { width: 8px  !important;  height: 8px  !important;  left: 24px !important;  top: 14.5px !important; }
+  .dotmark .d4 { width: 6px  !important;  height: 6px  !important;  left: 5.5px !important; top: 22.5px !important; }
+
+  /* ----- 상호명: 반드시 보이게 ----- */
+  .brand-text {
+    display: flex !important;
+    flex-direction: column !important;
+    min-width: 0 !important;
+    overflow: visible !important;
+    line-height: 1.15 !important;
+  }
+  .brand-text b {
+    font-size: clamp(15px, 4.4vw, 20px) !important;
+    line-height: 1.15 !important;
+    white-space: nowrap !important;
+    /* 그라디언트 글자 애니메이션이 투명 처리되는 문제 차단 */
+    background: none !important;
+    -webkit-text-fill-color: var(--navy) !important;
+    color: var(--navy) !important;
+    animation: none !important;
+  }
+  .brand-text small {
+    font-size: clamp(7px, 2.1vw, 9.5px) !important;
+    letter-spacing: .01em !important;
+    white-space: nowrap !important;
+  }
+
+  /* ----- 우측 버튼: 터치 44px 확보 ----- */
+  .navactions { gap: 6px !important; flex: 0 0 auto !important; }
   .iconbtn {
-    width: 44px !important;
-    height: 44px !important;
-    min-height: 44px !important;
-    box-shadow: none !important;
+    width: 42px !important; height: 42px !important;
+    min-height: 42px !important; box-shadow: none !important;
   }
-  .iconbtn svg { width: 20px !important; height: 20px !important; }
+  .iconbtn svg { width: 19px !important; height: 19px !important; }
   .navtoggle {
-    width: 44px !important;
-    height: 44px !important;
-    min-height: 44px !important;
-    font-size: 20px !important;
-    padding: 0 !important;
+    width: 42px !important; height: 42px !important;
+    min-height: 42px !important; font-size: 19px !important;
+    padding: 0 !important; border-radius: 10px !important;
   }
+  .navlinks { top: 72px !important; }
 }
 
-@media (max-width: 420px) {
-  .dotmark { transform: scale(.46); margin-right: -21px !important; }
-  .iconbtn, .navtoggle { width: 40px !important; height: 40px !important; min-height: 40px !important; }
-  .iconbtn svg { width: 18px !important; height: 18px !important; }
-  .brand-text b { font-size: clamp(13px, 4vw, 17px) !important; }
+/* ----- 좁은 폰(≤400px) ----- */
+@media (max-width: 400px) {
+  .brand { gap: 7px !important; }
+  .brand-text b { font-size: clamp(13px, 4.1vw, 17px) !important; }
+  .brand-text small { display: none !important; }
+  .navactions { gap: 4px !important; }
+  .iconbtn, .navtoggle { width: 38px !important; height: 38px !important; min-height: 38px !important; }
+  .iconbtn svg { width: 17px !important; height: 17px !important; }
+  .navtoggle { font-size: 17px !important; }
 }
 
 /* 11. 가로 넘침 최종 차단 */
@@ -201,7 +244,7 @@ html, body { overflow-x: hidden !important; max-width: 100% !important; }
     height: auto !important;
     min-height: 0 !important;
     aspect-ratio: 810 / 1440;
-    max-height: 78vh !important;
+    max-height: calc(100vh - 72px) !important;
     display: block !important;
     background: #0a0c1f !important;
     overflow: hidden !important;
