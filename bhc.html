@@ -320,7 +320,7 @@
       </div>
       <div class="info-box">
         <strong>🧪 검사 방법</strong><br>
-        • 총 51개 문항 (약 7~8분 소요)<br>
+        • 총 48개 문항 (약 7~8분 소요)<br>
         • 각 문항당 7~10초 시간 제한<br>
         • 시간이 끝나면 자동으로 다음 문항으로 진행<br>
         • 직관적으로 빠르게 응답해주세요<br>
@@ -349,7 +349,7 @@
     <div id="questionScreen" class="screen">
       <div class="progress-bar"><div class="progress-fill" id="progressBar"></div></div>
       <div class="question-header">
-        <div class="question-num" id="questionNum">Q. 1/51</div>
+        <div class="question-num" id="questionNum">Q. 1/48</div>
         <div class="domain-tag" id="domainTag">기억</div>
         <div class="mechanism-label" id="mechanismLabel">DMN</div>
         <div style="font-size: 11px; color: #00897B; margin-top: 6px; font-weight: 700;">💡 직관적으로 빠르게 선택하세요</div>
@@ -607,7 +607,7 @@
       const progress = ((currentIdx + 1) / QUESTIONS_DATA.length) * 100;
       
       document.getElementById('progressBar').style.width = progress + '%';
-      document.getElementById('questionNum').textContent = `Q. ${currentIdx + 1}/51`;
+      document.getElementById('questionNum').textContent = `Q. ${currentIdx + 1}/48`;
       document.getElementById('domainTag').textContent = q.domain;
       document.getElementById('mechanismLabel').textContent = q.mechanism;
       document.getElementById('questionText').textContent = q.q;
