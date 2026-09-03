@@ -1,0 +1,585 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>BRAIN-FIT BF-002 통합 운영 시스템</title>
+<style>
+*{box-sizing:border-box}
+:root{--navy:#073f80;--blue:#0072B2;--cyan:#56B4E9;--green:#009E73;--orange:#E69F00;--red:#D55E00;--purple:#7B61A8;--bg:#f3f6fa;--line:#d9e2ef;--text:#172033}
+html,body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,BlinkMacSystemFont,"Noto Sans KR",sans-serif}
+body{overflow-x:hidden}.app{max-width:1120px;margin:auto;padding:14px}
+header{background:linear-gradient(135deg,#063d7c,#1676c8);color:#fff;border-radius:18px;padding:20px}
+.brand{font-weight:800}.title{font-size:29px;font-weight:900;line-height:1.15;margin-top:4px}.sub{font-size:14px;opacity:.92;margin-top:7px}
+nav{display:grid;grid-template-columns:repeat(5,1fr);gap:7px;margin:12px 0}
+nav button{padding:11px 5px;background:#fff;border:1px solid var(--line);border-radius:10px;font-weight:800;color:#25344a}
+nav button.active{background:var(--navy);color:#fff}
+.card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:19px;margin:12px 0;box-shadow:0 8px 24px rgba(20,50,80,.07)}
+.hidden{display:none!important}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+label{display:block;font-size:13px;color:#667085}.field input,.field select{width:100%;padding:11px;border:1px solid var(--line);border-radius:9px;margin-top:5px;font-size:15px}
+button{cursor:pointer;border-radius:10px;padding:11px 16px;font-weight:800;border:0}.primary{background:var(--navy);color:#fff}.secondary{background:#edf4fb;color:var(--navy);border:1px solid #c9d9ea}.danger{background:#fff0ed;color:#a63b20;border:1px solid #efc5b9}
+.note{padding:12px 14px;border-radius:10px;background:#f6faff;border:1px solid #d6e7f6;line-height:1.55}.warn{background:#fff8e8;border-color:#efd69a}
+.progress{height:8px;background:#e8edf4;border-radius:99px;overflow:hidden}.progress>div{height:100%;background:var(--blue);width:0}
+.stage{width:100%;max-width:980px;margin:12px auto;background:#05090f;border-radius:18px;overflow:hidden;position:relative}.stage canvas{display:block;width:100%;height:auto;aspect-ratio:16/9}.hud{position:absolute;top:8px;left:10px;right:10px;display:flex;justify-content:space-between;color:#e7eff8;font-size:12px;font-weight:800}
+.answers{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;max-width:980px;margin:10px auto;padding:0 4px}.answer{background:#fff;border:2px solid #9fc1df;color:#0067b9;font-size:27px;min-height:72px;border-radius:14px}.answer:hover{border-color:var(--blue)}
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}.metric{background:#f8fbff;border:1px solid var(--line);padding:13px;border-radius:11px}.metric span{font-size:12px;color:#667085}.metric b{font-size:25px;display:block}
+.reportgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.chart{border:1px solid var(--line);border-radius:13px;padding:12px;background:#fff}.chart canvas{width:100%;height:310px;display:block}
+.bars{display:grid;gap:11px}.barrow{display:grid;grid-template-columns:125px 1fr 42px;gap:8px;align-items:center;font-size:13px}.track{height:17px;background:#edf1f5;border-radius:99px;overflow:hidden}.fill{height:100%;border-radius:99px}
+table{width:100%;border-collapse:collapse}th,td{padding:8px;border-bottom:1px solid #e7ebf0;font-size:12px;text-align:left;white-space:nowrap}th{background:#f7f9fc}
+.pill{display:inline-block;padding:4px 8px;border-radius:99px;background:#eef5fa;color:var(--navy);font-size:11px;font-weight:800}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+footer{text-align:center;color:#778195;font-size:12px;padding:18px}
+.coaster-legend{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;font-size:11px;color:#667085;margin-top:5px}.coaster-legend span{padding:4px 8px;border-radius:999px;background:#f3f6fa}.ride-badge{font-weight:900;color:#fff;background:#073f80;border-radius:999px;padding:4px 9px;font-size:11px}.ride-note{background:#eef7ff;border-color:#cfe6f7}
+@media(max-width:700px){
+ .app{padding:9px}header{padding:17px 15px;border-radius:14px}.title{font-size:23px}.sub{font-size:13px}
+ nav{grid-template-columns:repeat(5,1fr);gap:5px}nav button{font-size:12px;padding:10px 2px}
+ .card{padding:15px;border-radius:13px}.grid2,.reportgrid{grid-template-columns:1fr}.metrics{grid-template-columns:1fr 1fr}
+ .answers{grid-template-columns:1fr 1fr}.answer{font-size:17px}
+ .barrow{grid-template-columns:105px 1fr 35px}
+}
+body.test-active{height:100dvh;overflow:hidden}
+body.test-active footer{display:none}
+body.test-active .app{min-height:100dvh}
+@media(max-width:700px){
+ body.test-active .app{height:100dvh;padding:0;display:flex;flex-direction:column}
+ body.test-active header,body.test-active nav{display:none}
+ body.test-active #screen-test{
+  flex:1;
+  min-height:0;
+  margin:0;
+  padding:8px 10px 12px;
+  border:0;
+  border-radius:0;
+  box-shadow:none;
+  display:flex;
+  flex-direction:column;
+  overflow-y:auto;
+  overflow-x:hidden;
+}
+ body.test-active #testtop{flex:0 0 auto}
+ body.test-active #testnote{
+  flex:0 0 auto;
+  min-height:36px;
+  max-height:48px;
+  overflow:hidden;
+  padding:6px 8px;
+  font-size:13px;
+  text-align:center;
+}
+ body.test-active .stage{
+  flex:1 1 auto;
+  width:100%;
+  max-width:none;
+  height:auto;
+  min-height:220px;
+  margin:7px auto;
+}
+ body.test-active .stage canvas{
+  width:100%;
+  height:100%;
+  aspect-ratio:auto;
+  object-fit:fill;
+}
+ body.test-active #answerBox{
+  flex:0 0 auto;
+  width:100%;
+  padding:2px 0 8px;
+  background:#fff;
+  position:relative;
+  z-index:5;
+}
+ body.test-active #answerBox h3{font-size:15px;line-height:1.25;margin:3px 0 5px;text-align:center}
+ body.test-active .answer{
+  min-height:58px;
+  height:58px;
+  padding:5px;
+  font-size:21px;
+  border-radius:12px;
+}
+ body.test-active .answers{margin:5px auto 0;gap:8px}
+body.test-active.answers-active .stage{
+  flex:0 0 auto;
+  height:clamp(235px,34dvh,330px);
+  min-height:235px;
+}
+body.test-active.answers-active 
+.direction-badge{
+  position:absolute;top:12px;left:14px;z-index:6;
+  padding:6px 11px;border-radius:999px;
+  background:#009E73;color:#fff;font-weight:900;font-size:13px;
+  box-shadow:0 3px 10px rgba(0,0,0,.25);
+  pointer-events:none;
+}
+.direction-arrow{
+  position:absolute;top:48px;left:18px;z-index:6;
+  color:#7CFF72;font-size:27px;font-weight:900;
+  text-shadow:0 2px 5px rgba(0,0,0,.5);
+  pointer-events:none;
+}
+.coaster-instruction{
+  max-height:54px;
+  padding:6px 10px;
+  font-size:11px;
+}
+body.test-active.answers-active #testnote{
+  max-height:42px;
+  min-height:32px;
+}
+}
+@media(max-width:380px){
+ body.test-active #testnote{font-size:12px}
+ .stage{border-radius:10px}
+ body.test-active #answerBox h3{font-size:14px}
+ body.test-active .answer{min-height:52px;height:52px;font-size:19px}
+ body.test-active.answers-active .stage{height:220px;min-height:220px}
+}
+</style>
+
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#073f80">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="icon" href="icon-192.png" sizes="192x192" type="image/png">
+<link rel="apple-touch-icon" href="icon-192.png">
+
+</head>
+<body>
+<div class="app">
+<header><div class="brand">한국뇌심리연구소</div><div class="title">BRAIN-FIT · BF-002</div><div class="sub">검사 → 분석 → 맞춤훈련 → 재검사 → 변화보고서</div></header>
+
+<nav>
+<button class="active" data-screen="home">시작</button>
+<button data-screen="test">검사</button>
+<button data-screen="report">분석</button>
+<button data-screen="training">훈련</button>
+<button data-screen="history">이력</button>
+</nav>
+
+<section id="screen-home">
+<div class="card">
+<h2>BF-002 통합 운영 시스템</h2>
+<p>현재 개발된 BF-002을 실제 운영 흐름에 맞춰 하나로 묶은 프로토타입입니다.</p>
+<div class="grid2">
+<div class="field"><label>피검사자 코드</label><input id="subject" placeholder="예: BF-002-0001"></div>
+<div class="field"><label>검사자 코드</label><input id="operator" placeholder="예: KBR-01"></div>
+</div>
+<div class="note" style="margin-top:12px"><b>검사판</b> 10문항 수행 후 결과보고서가 생성됩니다. 검사 중에는 점수를 보여주지 않습니다.</div>
+<div class="note" style="margin-top:8px"><b>훈련판</b> 검사 결과와 분리된 세션으로 저장하고 난이도를 자동 조정합니다.</div>
+<div class="note warn" style="margin-top:8px"><b>현재 상태:</b> 연구·개발용 프로토타입. 표준화 전에는 진단 또는 임상 판정에 사용하지 않습니다.</div>
+<div class="actions" style="margin-top:14px"><button class="primary" onclick="goTest()">10문항 검사 시작</button><button class="secondary" onclick="goTraining()">훈련 시작</button></div>
+</div>
+<div class="card"><h3>BF-002 롤러코스터 주의과제</h3><ul><li>목표점이 고정되어 있지 않고 롤러코스터 선로를 따라 이동</li><li>오르막 → 정상 → 급강하 → 상승 → 회복 구간의 속도 변화</li><li>목표점은 파란색, 방해점은 회색으로 주행</li><li>목표점은 서로 겹치지 않도록 일정 간격으로 배치하고 함께 주행</li><li>주행이 끝난 뒤 기억한 목표점 개수를 응답</li><li>정답·반응시간·문항별 수행 저장</li><li>검사와 훈련을 별도 세션으로 기록</li></ul><div class="coaster-legend"><span>🔵 목표점</span><span>⚪ 방해점</span><span>🎢 롤러코스터 주행</span></div></div>
+</section>
+
+<section id="screen-test" class="card hidden">
+<div id="testtop" style="display:flex;justify-content:space-between;align-items:center"><b id="qlabel">문항 1 / 10</b><span id="areapill" class="pill">오른쪽 확산</span></div>
+<div class="progress" style="margin:8px 0"><div id="pbar"></div></div>
+<div id="testnote" class="note">파란색 목표점의 개수를 기억하세요.</div>
+<div class="stage">
+<canvas id="cv" width="1280" height="720"></canvas>
+<div class="hud"><span id="phase">출발 준비</span><span id="time"></span></div>
+<div id="directionBadge" class="direction-badge">이번 문항 진행 방향</div>
+<div id="directionArrow" class="direction-arrow">→</div>
+<div class="coaster-start-label">출발<br><b>START</b></div>
+<div class="coaster-finish-label">종착<br><b>FINISH</b></div>
+</div>
+<div class="coaster-instruction"><b>💡 주의사항</b><br>• <b>출발(START)</b>에서 <b>종착(FINISH)</b>까지 주행하는 동안<br>• <b>파란색 목표점 🔵의 개수만</b> 기억하세요.</div>
+<div id="answerBox" class="hidden"><div class="coaster-answer-title">파란색 목표점의 개수는?</div><div id="answers" class="answers"></div></div>
+</section>
+
+<section id="screen-report" class="hidden">
+<div class="card"><div style="display:flex;justify-content:space-between;gap:10px;align-items:end"><div><span class="brand" style="color:var(--navy)">한국뇌심리연구소</span><h1 style="margin:3px 0">BF-002 분석결과보고서</h1><div id="meta" style="font-size:12px;color:#667085"></div></div><span class="pill">상담자료</span></div></div>
+<div class="card"><h2>핵심 결과</h2><div class="metrics"><div class="metric"><span>전체 평균</span><b id="mOverall">-</b></div><div class="metric"><span>정확도</span><b id="mAcc">-</b></div><div class="metric"><span>평균 반응시간</span><b id="mRt">-</b></div><div class="metric"><span>지구력 변화</span><b id="mEnd">-</b></div></div></div>
+<div class="reportgrid"><div class="chart"><h3>인지기능 프로파일</h3><canvas id="radar" width="600" height="430"></canvas></div><div class="chart"><h3>기능별 점수</h3><div id="bars" class="bars"></div></div></div>
+<div class="card"><h2>문항별 수행</h2><div style="overflow:auto"><table><thead><tr><th>문항</th><th>영역</th><th>목표</th><th>응답</th><th>점수</th><th>반응</th></tr></thead><tbody id="resultRows"></tbody></table></div></div>
+<div class="card"><h2>상담용 종합 해석</h2><div id="interpret"></div><div id="recommend" class="note" style="margin-top:10px"></div></div>
+<div class="card"><h3>평균점수에 대한 설명</h3><p>현재 버전의 평균은 <b>피검사자의 BF-002 10문항 수행 평균</b>입니다. 연령별 인구집단 평균이나 임상적 기준점수는 아닙니다. 표준화 연구 후 연령·성별·교육수준 등에 따른 비교기준을 별도로 연결할 수 있습니다.</p></div>
+<div class="card actions"><button class="primary" onclick="window.print()">결과보고서 인쇄 / PDF</button><button class="secondary" onclick="downloadJSON()">응답 JSON</button></div>
+</section>
+
+<section id="screen-training" class="card hidden">
+<h2>BF-002 롤러코스터 맞춤 훈련판</h2>
+<p>검사판과 별도 세션으로 운영합니다. 초록색 START에서 출발해 주황색 FINISH에서 종착합니다. 목표점은 서로 겹치지 않는 일정 간격으로 START에서 FINISH까지 함께 주행하며, 주행이 끝나면 응답합니다. 목표점 크기는 이전 버전보다 약 2.2배 크게 조정했습니다. 2회 연속 정답이면 레벨 상승, 오답이면 레벨 하향합니다.</p>
+<div class="grid2"><div class="field"><label>훈련자 코드</label><input id="trainSubject" placeholder="검사 피검사자 코드와 동일하게 사용 가능"></div><div><span class="pill">현재 레벨</span><div id="level" style="font-size:36px;font-weight:900;color:var(--green)">1</div></div></div>
+<div class="actions" style="margin-top:12px"><button class="primary" onclick="startTraining()">훈련 시작</button></div>
+<div id="trainingSummary"></div>
+</section>
+
+<section id="screen-history" class="card hidden"><h2>검사·훈련 이력</h2><p style="font-size:13px;color:#667085">이 브라우저의 localStorage에 저장된 연구·개발용 기록입니다.</p><div class="actions"><button class="secondary" onclick="downloadAll()">전체 JSON</button><button class="danger" onclick="clearAll()">전체 삭제</button></div><div id="historyTable" style="margin-top:12px"></div></section>
+
+<footer>한국뇌심리연구소 · BRAIN-FIT BF-002 · 연구·개발용 프로토타입</footer>
+</div>
+
+<script>
+const ITEMS=[
+["오른쪽 확산","right",4],["오른쪽 확산","right",6],["오른쪽 확산","right",5],
+["왼쪽 확산","left",5],["왼쪽 확산","left",7],["왼쪽 확산","left",6],
+["좌우 동시","both",6],["좌우 동시","both",8],["좌우 동시","both",7],["좌우 동시","both",9]
+];
+const DOMAIN=["시각적 주의","집중력","지속적 주의","작업기억","시공간 처리","억제통제"];
+const COLORS=["#0072B2","#009E73","#7B61A8","#E69F00","#56B4E9","#D55E00"];
+const KEY="BFIT_BF002_DB_V1";
+let DB=JSON.parse(localStorage.getItem(KEY)||"[]"), S=null, T=null, raf=0;
+const $=id=>document.getElementById(id);
+
+function save(){localStorage.setItem(KEY,JSON.stringify(DB))}
+function nav(name){
+ document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("active",b.dataset.screen===name));
+ ["home","test","report","training","history"].forEach(x=>$("screen-"+x).classList.toggle("hidden",x!==name));
+ if(name==="history")renderHistory();
+}
+document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>nav(b.dataset.screen));
+function goTest(){nav("test");startTest()}
+function goTraining(){nav("training");$("trainSubject").value=$("subject").value}
+function rng(seed){return function(){let t=seed+=0x6D2B79F5;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return((t^t>>>14)>>>0)/4294967296}}
+function coasterPath(t,side){
+ let x=t*2-1;
+ let y=0.10*Math.sin(t*Math.PI*2)+0.30*Math.sin(t*Math.PI*2.6);
+ if(t<0.22)y-=0.20*(t/0.22); else if(t<0.43)y-=0.20+0.38*((t-0.22)/0.21); else if(t<0.62)y=0.18-0.72*((t-0.43)/0.19); else if(t<0.80)y=-0.54+0.54*((t-0.62)/0.18); else y=0.02+0.18*Math.sin((t-0.80)/0.20*Math.PI);
+ if(side==='right') x=Math.max(-0.05,x); if(side==='left') x=Math.min(0.05,x);
+ if(side==='both') x=x*1.05;
+ return {x,y};
+}
+function coasterSpeed(t){
+ // 오르막은 느리게, 정상은 빠르게, 급강하는 가장 빠르게, 마지막은 감속
+ if(t<0.22)return 0.55+0.35*t/0.22;
+ if(t<0.43)return 0.90+0.45*(t-0.22)/0.21;
+ if(t<0.62)return 1.35;
+ if(t<0.80)return 1.10-0.45*(t-0.62)/0.18;
+ return 0.65;
+}
+function makeCoasterPoints(seed,n,side,countAll=22){
+  // 모든 포인트는 같은 속도로 움직이고 일정한 간격을 유지한다.
+  // 기존 버전의 속도 차이로 인한 겹침을 제거한다.
+  let r=rng(seed), pts=[];
+  let candidates=[...Array(countAll).keys()];
+
+  // 목표점은 최소 2칸 이상 간격을 두어 서로 붙지 않게 배치한다.
+  let targetIdx=[];
+  let shuffled=candidates.slice().sort(()=>r()-.5);
+  for(let idx of shuffled){
+    if(targetIdx.every(k=>Math.abs(k-idx)>=2) && targetIdx.length<n) targetIdx.push(idx);
+  }
+  // 혹시 목표 수가 부족하면 간격 조건을 완화하되 바로 인접한 위치는 피한다.
+  if(targetIdx.length<n){
+    for(let idx of candidates){
+      if(!targetIdx.includes(idx) && targetIdx.every(k=>Math.abs(k-idx)>=1)){
+        targetIdx.push(idx);
+        if(targetIdx.length===n) break;
+      }
+    }
+  }
+  let targetSet=new Set(targetIdx);
+
+  for(let i=0;i<countAll;i++){
+    pts.push({
+      // 출발점부터 종착점까지 일정 간격으로 배치
+      phase:i/(countAll+1),
+      target:targetSet.has(i),
+      // 이전보다 약 2.2배 수준을 유지하되, 모바일에서도 충분히 분리되도록 제한
+      size:17+r()*5
+    });
+  }
+  return pts;
+}
+function drawCoaster(c,pts,progress,side,direction=1){
+  let ctx=c.getContext('2d'),w=c.width,h=c.height;
+  ctx.clearRect(0,0,w,h);
+
+  let bg=ctx.createLinearGradient(0,0,0,h);
+  bg.addColorStop(0,'#07182a'); bg.addColorStop(1,'#02050a');
+  ctx.fillStyle=bg; ctx.fillRect(0,0,w,h);
+
+  let cx=w/2, cy=h*.54, sx=w*.455, sy=h*.32;
+  function tr(t){
+    t=Math.max(0,Math.min(1,t));
+    let y =
+      -0.05
+      -0.47*Math.exp(-Math.pow((t-.20)/.12,2))
+      +0.37*Math.exp(-Math.pow((t-.39)/.085,2))
+      -0.54*Math.exp(-Math.pow((t-.56)/.10,2))
+      +0.40*Math.exp(-Math.pow((t-.77)/.12,2));
+    if(t<.08) y=0.22-(t/.08)*0.12;
+    if(t>.92) y=-0.02+((t-.92)/.08)*0.18;
+    let x=t*2-1;
+    if(side==='right') x=-0.02+x*.94;
+    if(side==='left') x=0.02+x*.94;
+    return {x:cx+x*sx,y:cy+y*sy};
+  }
+
+  // 선로는 항상 동일하게 보이고, 실제 이동 방향만 문항별로 반전된다.
+  ctx.lineCap='round'; ctx.lineJoin='round';
+  ctx.lineWidth=24; ctx.strokeStyle='#152536'; ctx.beginPath();
+  for(let i=0;i<=300;i++){let q=tr(i/300);i?ctx.lineTo(q.x,q.y):ctx.moveTo(q.x,q.y)} ctx.stroke();
+
+  ctx.lineWidth=9; ctx.strokeStyle='#aab5c0'; ctx.beginPath();
+  for(let i=0;i<=300;i++){let q=tr(i/300);i?ctx.lineTo(q.x,q.y):ctx.moveTo(q.x,q.y)} ctx.stroke();
+
+  ctx.strokeStyle='#465566'; ctx.lineWidth=4;
+  for(let i=0;i<=95;i++){
+    let t=i/95,q=tr(t),e=.002,a=tr(Math.min(1,t+e)),b=tr(Math.max(0,t-e));
+    let dx=a.x-b.x,dy=a.y-b.y,L=Math.hypot(dx,dy)||1,nx=-dy/L,ny=dx/L;
+    ctx.beginPath();ctx.moveTo(q.x-nx*17,q.y-ny*17);ctx.lineTo(q.x+nx*17,q.y+ny*17);ctx.stroke();
+  }
+
+  // 실제 출발/종착 위치는 진행 방향에 따라 좌우가 바뀐다.
+  let startT=direction===1?0:1, finishT=direction===1?1:0;
+  let s=tr(startT), f=tr(finishT);
+
+  function drawGate(q,color,label,dir){
+    ctx.save();
+    ctx.strokeStyle=color;ctx.lineWidth=12;
+    ctx.beginPath();ctx.moveTo(q.x,q.y-48);ctx.lineTo(q.x,q.y+48);ctx.stroke();
+    ctx.lineWidth=7;ctx.strokeStyle=color;
+    ctx.beginPath();ctx.moveTo(q.x,q.y-48);ctx.lineTo(q.x+dir*48,q.y-48);
+    ctx.lineTo(q.x+dir*48,q.y+48);ctx.lineTo(q.x,q.y+48);ctx.stroke();
+    ctx.fillStyle=color;ctx.font='900 24px system-ui';ctx.textAlign=dir>0?'left':'right';
+    ctx.fillText(label,q.x+dir*58,q.y+8);
+    ctx.restore();
+  }
+  drawGate(s,'#009E73','START',direction===1?1:-1);
+  drawGate(f,'#D55E00','FINISH',direction===1?-1:1);
+
+  // 포인트는 동일 속도와 동일 간격. direction만 반전.
+  pts.forEach(pt=>{
+    let raw=Math.max(0,Math.min(1,progress*1.12-pt.phase));
+    let pathT=direction===1?raw:1-raw;
+    let q=tr(pathT),ss=pt.size;
+
+    ctx.save();
+    ctx.shadowBlur=pt.target?24:8;
+    ctx.shadowColor=pt.target?'#0072B2':'#9da8b4';
+    ctx.fillStyle=pt.target?'#0072B2':'#c3ccd5';
+    ctx.beginPath();ctx.arc(q.x,q.y,ss,0,Math.PI*2);ctx.fill();
+    ctx.shadowBlur=0;
+    ctx.strokeStyle='#fff';ctx.lineWidth=4;
+    ctx.beginPath();ctx.arc(q.x,q.y,ss+3,0,Math.PI*2);ctx.stroke();
+    if(pt.target){
+      ctx.strokeStyle='rgba(255,255,255,.42)';ctx.lineWidth=2;
+      ctx.beginPath();ctx.arc(q.x,q.y,ss+7,0,Math.PI*2);ctx.stroke();
+    }
+    ctx.restore();
+  });
+
+  let label=progress<.03?'출발 준비':progress<.18?'출발':progress<.78?'주행 중':progress<.96?'종착 접근':'종착';
+  ctx.fillStyle='rgba(0,0,0,.68)';ctx.fillRect(cx-90,h-62,180,34);
+  ctx.fillStyle='#fff';ctx.font='900 16px system-ui';ctx.textAlign='center';
+  ctx.fillText(label,cx,h-39);
+}
+function animate(item,done){
+ let pts=makeCoasterPoints(S.seed+S.q*99991,item[2],item[1]),st=performance.now(),dur=5600;
+ cancelAnimationFrame(raf);
+ function f(t){let z=Math.min(1,(t-st)/dur), ride=z;
+   drawCoaster($('cv'),pts,ride,item[1],S.direction);
+   $('phase').textContent=z<.18?'출발':z<.40?'정상 주행':z<.62?'급강하':z<.80?'재상승':z<.94?'종착 접근':'종착';
+   $('time').textContent=z<1?Math.max(0,(dur-(t-st))/1000).toFixed(1)+'초':'도착';
+   if(z<1)raf=requestAnimationFrame(f);else { $('phase').textContent='종착'; $('time').textContent='도착'; setTimeout(done,350); }
+ }
+ raf=requestAnimationFrame(f);
+}
+function startTest(){
+ document.body.classList.add("test-active");
+ let subject=$("subject").value.trim()||"ANON-"+Date.now().toString().slice(-6);
+ S={record_id:"BF002-"+Date.now(),subject_id:subject,operator_id:$("operator").value.trim(),started_at:new Date().toISOString(),q:0,rows:[],seed:Math.floor(Math.random()*1e9)};
+ question()
+}
+function question(){
+ document.body.classList.remove("answers-active");
+ let item=ITEMS[S.q];
+ S.direction = rng(S.seed + S.q*104729)() < 0.5 ? 1 : -1;
+ $("directionBadge").textContent = S.direction===1 ? "이번 문항 진행 방향 · 좌 → 우" : "이번 문항 진행 방향 · 우 → 좌";
+ $("directionArrow").textContent = S.direction===1 ? "→" : "←";
+ $("directionArrow").style.left = S.direction===1 ? "18px" : "auto";
+ $("directionArrow").style.right = S.direction===1 ? "auto" : "18px";
+ $("qlabel").textContent=`문항 ${S.q+1} / 10`;$("areapill").textContent=item[0];$("pbar").style.width=(S.q/10*100)+"%";$("answerBox").classList.add("hidden");$("testnote").textContent="파란색 목표점의 개수를 기억하세요.";
+ animate(item,()=>{let shown=performance.now();$("testnote").textContent="기억한 파란색 목표점의 개수를 선택하세요.";
+  $("answerBox").classList.remove("hidden");
+  document.body.classList.add("answers-active");
+  $("answerBox").scrollIntoView({block:"nearest"});
+  let v=[item[2]-2,item[2]-1,item[2],item[2]+1].map(x=>Math.max(1,x)).sort(()=>Math.random()-.5);$("answers").innerHTML="";v.forEach(n=>{let b=document.createElement("button");b.className="answer";b.textContent=n+"개";b.onclick=()=>answer(n,item[2],shown);$("answers").appendChild(b)})})
+}
+function answer(v,target,shown){
+ S.rows.push({item:S.q+1,area:ITEMS[S.q][0],side:ITEMS[S.q][1],target_count:target,response_count:v,correct:v===target,score:v===target?100:Math.max(0,100-Math.abs(v-target)*25),response_time_ms:Math.round(performance.now()-shown)});
+ S.q++;if(S.q<10)question();else finishTest()
+}
+function mean(a){return a.reduce((x,y)=>x+y,0)/a.length}
+function scores(){
+ let r=S.rows,overall=mean(r.map(x=>x.score)),acc=mean(r.map(x=>x.correct?100:0)),rt=mean(r.map(x=>x.response_time_ms)),first=mean(r.slice(0,5).map(x=>x.score)),last=mean(r.slice(5).map(x=>x.score)),sd=Math.sqrt(mean(r.map(x=>(x.response_time_ms-rt)**2))),speed=Math.max(0,Math.min(100,100-(rt-700)/18)),cons=Math.max(0,Math.min(100,100-sd/20));
+ let both=mean(r.slice(6).map(x=>x.score));
+ return {"시각적 주의":Math.round(overall*.65+speed*.35),"집중력":Math.round(overall*.7+cons*.3),"지속적 주의":Math.round(Math.max(0,Math.min(100,70+(last-first)*.8))),"작업기억":Math.round(acc*.75+overall*.25),"시공간 처리":Math.round(both*.7+mean(r.slice(0,6).map(x=>x.score))*.3),"억제통제":Math.round(acc*.75+speed*.25),overall:Math.round(overall),acc:Math.round(acc),rt:Math.round(rt),first:Math.round(first),last:Math.round(last)}
+}
+function finishTest(){
+ document.body.classList.remove("test-active","answers-active");S.completed_at=new Date().toISOString();S.scores=scores();DB.push({type:"assessment",...S});save();renderReport();nav("report")
+}
+function renderReport(){
+ let s=S.scores;$("meta").textContent=`피검사자 ${S.subject_id} · 검사자 ${S.operator_id||"-"} · ${new Date(S.completed_at).toLocaleString("ko-KR")}`;
+ $("mOverall").textContent=s.overall+"점";$("mAcc").textContent=s.acc+"%";$("mRt").textContent=(s.rt/1000).toFixed(2)+"초";$("mEnd").textContent=(s.last-s.first>=0?"+":"")+Math.round(s.last-s.first)+"점";
+ drawRadar(DOMAIN.map(x=>s[x]));
+ $("bars").innerHTML=DOMAIN.map((d,i)=>`<div class="barrow"><b>${d}</b><div class="track"><div class="fill" style="width:${s[d]}%;background:${COLORS[i]}"></div></div><strong>${s[d]}</strong></div>`).join("");
+ $("resultRows").innerHTML=S.rows.map(r=>`<tr><td>${r.item}</td><td>${r.area}</td><td>${r.target_count}</td><td>${r.response_count}</td><td>${r.score}</td><td>${(r.response_time_ms/1000).toFixed(2)}초</td></tr>`).join("");
+ let sorted=DOMAIN.map(d=>[d,s[d]]).sort((a,b)=>b[1]-a[1]),top=sorted.slice(0,2),low=sorted.slice(-2).reverse();
+ $("interpret").innerHTML=`<p><span class="pill">상대적 강점</span> ${top.map(x=>`<b>${x[0]}</b>(${x[1]}점)`).join(" · ")}</p><p><span class="pill">보완 관찰영역</span> ${low.map(x=>`<b>${x[0]}</b>(${x[1]}점)`).join(" · ")}</p><p>전반부 평균 ${s.first}점에서 후반부 ${s.last}점으로 ${s.last-s.first>=0?"상승":"하락"}했습니다. 이 차이는 BF-002에서의 지속적 수행 변화를 관찰하는 지표로 활용합니다.</p>`;
+ $("recommend").innerHTML=`<b>상담·훈련 제안</b><ul><li>${low[0][0]} 중심 과제를 우선 배치합니다.</li><li>집중력과 지속적 주의는 후반부 수행 변화를 함께 확인합니다.</li><li>작업기억은 개수 기억에서 위치·순서 기억으로 단계화할 수 있습니다.</li><li>시공간 처리는 좌·우 및 양측 동시 자극으로 확장할 수 있습니다.</li></ul><small>※ 본 해석은 연구·개발용이며 단일 검사만으로 진단하거나 임상적 결론을 내리지 않습니다.</small>`;
+}
+function drawRadar(vals){
+ let c=$("radar"),x=c.getContext("2d"),w=c.width,h=c.height,cx=w/2,cy=h/2+8,R=Math.min(w,h)*.31,n=vals.length;x.clearRect(0,0,w,h);
+ for(let q=20;q<=100;q+=20){x.beginPath();for(let i=0;i<n;i++){let a=-Math.PI/2+i*2*Math.PI/n,px=cx+Math.cos(a)*R*q/100,py=cy+Math.sin(a)*R*q/100;i?x.lineTo(px,py):x.moveTo(px,py)}x.closePath();x.strokeStyle="#dce4ec";x.stroke()}
+ for(let i=0;i<n;i++){let a=-Math.PI/2+i*2*Math.PI/n;x.beginPath();x.moveTo(cx,cy);x.lineTo(cx+Math.cos(a)*R,cy+Math.sin(a)*R);x.strokeStyle="#e5eaf0";x.stroke()}
+ x.beginPath();vals.forEach((v,i)=>{let a=-Math.PI/2+i*2*Math.PI/n,px=cx+Math.cos(a)*R*v/100,py=cy+Math.sin(a)*R*v/100;i?x.lineTo(px,py):x.moveTo(px,py)});x.closePath();x.fillStyle="rgba(0,114,178,.18)";x.fill();x.strokeStyle="#0072B2";x.lineWidth=4;x.stroke();
+ DOMAIN.forEach((d,i)=>{let a=-Math.PI/2+i*2*Math.PI/n,px=cx+Math.cos(a)*R*vals[i]/100,py=cy+Math.sin(a)*R*vals[i]/100;x.fillStyle=COLORS[i];x.beginPath();x.arc(px,py,5,0,7);x.fill();x.fillStyle="#344054";x.font="14px system-ui";x.textAlign="center";x.fillText(d,cx+Math.cos(a)*(R+58),cy+Math.sin(a)*(R+58))})
+}
+let trStats={level:1,a:0,c:0,streak:0},TR=null;
+
+function trainingItem(){
+ let q=TR.q, side=q%3===0?"right":q%3===1?"left":"both";
+ let ranges={1:[3,5],2:[4,6],3:[5,7],4:[6,8],5:[7,10]};
+ let [lo,hi]=ranges[trStats.level], target=lo+Math.floor(rng(TR.seed+q*7919)()*(hi-lo+1));
+ return [side==="right"?"오른쪽 확산":side==="left"?"왼쪽 확산":"좌우 동시",side,target];
+}
+
+function startTraining(){
+ TR={
+  record_id:"BF002T-"+Date.now(),
+  subject_id:$("trainSubject").value.trim()||$("subject").value.trim()||"TRAIN",
+  started_at:new Date().toISOString(),rows:[],q:0,
+  seed:Math.floor(Math.random()*1e9),active:true
+ };
+ trStats={level:1,a:0,c:0,streak:0};
+ TR.direction=1;
+ $("directionBadge").textContent="이번 훈련 진행 방향";
+ $("directionArrow").textContent="→";
+ $("directionArrow").style.left="18px"; $("directionArrow").style.right="auto";
+ $("level").textContent=1;
+ document.body.classList.add("test-active");
+ document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("active",b.dataset.screen==="training"));
+ ["home","test","report","training","history"].forEach(x=>$("screen-"+x).classList.toggle("hidden",x!=="test"));
+ $("answerBox").classList.add("hidden");
+ trainingQuestion();
+}
+
+function trainingQuestion(){
+ document.body.classList.remove("answers-active");
+ let item=trainingItem();
+ TR.direction = rng(TR.seed + TR.q*104729)() < 0.5 ? 1 : -1;
+ $("directionBadge").textContent = TR.direction===1 ? "이번 훈련 진행 방향 · 좌 → 우" : "이번 훈련 진행 방향 · 우 → 좌";
+ $("directionArrow").textContent = TR.direction===1 ? "→" : "←";
+ $("directionArrow").style.left = TR.direction===1 ? "18px" : "auto";
+ $("directionArrow").style.right = TR.direction===1 ? "auto" : "18px";
+ $("qlabel").textContent=`훈련 ${TR.q+1} / 10 · Lv.${trStats.level}`;
+ $("areapill").textContent=item[0];
+ $("pbar").style.width=(TR.q/10*100)+"%";
+ $("testnote").textContent=`현재 레벨 ${trStats.level} · 파란색 목표점의 개수를 기억하세요.`;
+ animateTraining(item,()=>{
+  let shown=performance.now();
+  $("testnote").textContent="기억한 파란색 목표점의 개수를 선택하세요.";
+  $("answerBox").classList.remove("hidden");
+  document.body.classList.add("answers-active");
+  $("answerBox").scrollIntoView({block:"nearest"});
+  let v=[item[2]-2,item[2]-1,item[2],item[2]+1]
+   .map(x=>Math.max(1,x)).sort(()=>Math.random()-.5);
+  $("answers").innerHTML="";
+  v.forEach(n=>{
+   let b=document.createElement("button");
+   b.className="answer";b.textContent=n+"개";
+   b.onclick=()=>answerTraining(n,item[2],shown,item);
+   $("answers").appendChild(b);
+  });
+ });
+}
+
+function animateTraining(item,done){
+ let pts=makeCoasterPoints(TR.seed+TR.q*99991,item[2],item[1]);
+ let st=performance.now(),dur=Math.max(4400,6000-(trStats.level-1)*220);
+ cancelAnimationFrame(raf);
+ function f(t){
+   let z=Math.min(1,(t-st)/dur);
+   drawCoaster($('cv'),pts,z,item[1],TR.direction);
+   $('phase').textContent=z<.18?'출발':z<.40?'정상 주행':z<.62?'급강하':z<.80?'재상승':z<.94?'종착 접근':'종착';
+   $('time').textContent=z<1?Math.max(0,(dur-(t-st))/1000).toFixed(1)+'초':'도착';
+   if(z<1)raf=requestAnimationFrame(f);else { $('phase').textContent='종착'; $('time').textContent='도착'; setTimeout(done,350); }
+ }
+ raf=requestAnimationFrame(f);
+}
+
+function answerTraining(v,target,shown,item){
+ let correct=v===target;
+ TR.rows.push({
+  item:TR.q+1,level:trStats.level,area:item[0],side:item[1],
+  target_count:target,response_count:v,correct,
+  score:correct?100:Math.max(0,100-Math.abs(v-target)*25),
+  response_time_ms:Math.round(performance.now()-shown)
+ });
+ trStats.a++;
+ if(correct){
+  trStats.c++;trStats.streak++;
+  if(trStats.streak>=2){trStats.level=Math.min(5,trStats.level+1);trStats.streak=0;}
+ }else{
+  trStats.level=Math.max(1,trStats.level-1);trStats.streak=0;
+ }
+ $("level").textContent=trStats.level;
+ TR.q++;
+ if(TR.q<10)trainingQuestion();else finishTraining();
+}
+
+function finishTraining(){
+ document.body.classList.remove("answers-active");
+ cancelAnimationFrame(raf);
+ TR.active=false;
+ TR.completed_at=new Date().toISOString();
+ TR.level_end=trStats.level;
+ TR.accuracy=Math.round(mean(TR.rows.map(r=>r.correct?100:0)));
+ TR.average_score=Math.round(mean(TR.rows.map(r=>r.score)));
+ DB.push({type:"training",...TR});
+ save();
+ document.body.classList.remove("test-active");
+ nav("training");
+ $("level").textContent=trStats.level;
+ let summary=$("trainingSummary");
+ if(summary){
+  summary.innerHTML=`<div class="note" style="margin-top:12px"><b>최근 훈련 완료</b><br>10문항 · 정확도 ${TR.accuracy}% · 평균점수 ${TR.average_score}점 · 종료 레벨 ${TR.level_end}</div>`;
+ }
+}
+function renderHistory(){
+ let a=DB.slice().reverse();$("historyTable").innerHTML=a.length?`<table><tr><th>일시</th><th>유형</th><th>피검사자</th><th>문항/세션</th><th>결과</th></tr>${a.map(r=>`<tr><td>${new Date(r.completed_at).toLocaleString("ko-KR")}</td><td>${r.type==="assessment"?"검사":"훈련"}</td><td>${r.subject_id}</td><td>${r.rows.length}</td><td>${r.type==="assessment"?r.scores.overall+"점":"-"}</td></tr>`).join("")}</table>`:"<p>저장된 기록이 없습니다.</p>"
+}
+function downloadJSON(){let a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(S,null,2)],{type:"application/json"}));a.download=`BF002_${S.subject_id}_result.json`;a.click()}
+function downloadAll(){let a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(DB,null,2)],{type:"application/json"}));a.download="BRAIN-FIT_BF002_all_data.json";a.click()}
+function clearAll(){if(confirm("이 브라우저의 BRAIN-FIT 데이터를 모두 삭제할까요?")){DB=[];save();renderHistory()}}
+</script>
+
+<div id="pwaInstall" style="display:none;position:fixed;left:12px;right:12px;bottom:12px;z-index:9999;
+background:#073f80;color:#fff;border-radius:14px;padding:12px 14px;box-shadow:0 8px 28px rgba(0,0,0,.25);
+font-family:system-ui,-apple-system,BlinkMacSystemFont,'Noto Sans KR',sans-serif;">
+  <div style="display:flex;gap:10px;align-items:center;justify-content:space-between">
+    <div><b>📱 BRAIN-FIT 앱 설치</b><div style="font-size:12px;opacity:.9;margin-top:3px">휴대폰 바탕화면에서 바로 사용할 수 있습니다.</div></div>
+    <button id="pwaInstallBtn" type="button" style="background:#fff;color:#073f80;border:0;border-radius:9px;padding:9px 12px;font-weight:800">설치</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  if (!('serviceWorker' in navigator)) return;
+  navigator.serviceWorker.register('./sw.js').catch(function(){});
+  var deferredPrompt = null;
+  var box = document.getElementById('pwaInstall');
+  var btn = document.getElementById('pwaInstallBtn');
+  window.addEventListener('beforeinstallprompt', function(e){
+    e.preventDefault();
+    deferredPrompt = e;
+    if(box) box.style.display='block';
+  });
+  if(btn) btn.addEventListener('click', async function(){
+    if(!deferredPrompt) return;
+    deferredPrompt.prompt();
+    try { await deferredPrompt.userChoice; } catch(e) {}
+    deferredPrompt = null;
+    if(box) box.style.display='none';
+  });
+  window.addEventListener('appinstalled', function(){
+    if(box) box.style.display='none';
+  });
+})();
+</script>
+</body>
+</html>
