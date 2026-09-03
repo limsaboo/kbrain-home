@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BrainMind 무료 감상실 | 한국뇌심리연구소</title>
+<meta name="description" content="책 『사람을 이해하는 것』과 함께 듣는 뇌음악. 한국뇌심리연구소 BrainMind 무료 감상실.">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://www.k-brain.co.kr/brainmind.html">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<meta name="theme-color" content="#161a3d">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="한국뇌심리연구소">
+<meta property="og:title" content="BrainMind 무료 감상실">
+<meta property="og:description" content="책을 읽으며 듣는 뇌음악. 한국뇌심리연구소 BrainMind 무료 감상실.">
+<meta property="og:url" content="https://www.k-brain.co.kr/brainmind.html">
+<meta property="og:locale" content="ko_KR">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+<style>
+*{box-sizing:border-box;}
+body{
+  margin:0; background:#0E1230; color:#EAF1F6;
+  font-family:'Noto Sans KR',-apple-system,BlinkMacSystemFont,sans-serif;
+  -webkit-text-size-adjust:100%;
+}
+a{color:inherit;}
+.wrap{max-width:560px; margin:0 auto; padding:0 18px;}
+
+/* ---------- 상단 ---------- */
+.bm-top{
+  background:linear-gradient(168deg,#0E1230 0%,#161a3d 45%,#2A1E3F 100%);
+  padding:20px 0 44px; position:relative; overflow:hidden;
+}
+.bm-top::before{
+  content:""; position:absolute; inset:0; pointer-events:none;
+  background:radial-gradient(ellipse 80% 55% at 50% 0%, rgba(201,168,76,.20), transparent 70%);
+}
+.bm-back{
+  display:inline-flex; align-items:center; gap:7px;
+  padding:10px 16px; margin-bottom:26px;
+  border:2px solid rgba(255,255,255,.30); border-radius:999px;
+  color:#FFFFFF; font-size:14px; font-weight:800; text-decoration:none; line-height:1.5;
+  position:relative;
+}
+.bm-eyebrow{
+  display:inline-block; margin:0 0 16px; padding:7px 16px;
+  border:2px solid rgba(201,168,76,.55); border-radius:999px;
+  color:#E5C868; font-size:13px; font-weight:800; line-height:1.6; letter-spacing:-.01em;
+  position:relative;
+}
+.bm-title{
+  margin:0 0 14px; font-size:clamp(28px,7.6vw,42px); font-weight:900;
+  line-height:1.42; letter-spacing:-.025em; color:#FFFFFF; word-break:keep-all;
+  position:relative;
+}
+.bm-lead{
+  margin:0; color:#D7E1EA; font-size:clamp(16px,4.4vw,19px); font-weight:600;
+  line-height:1.95; word-break:keep-all; position:relative;
+}
+
+/* ---------- 안내 박스 ---------- */
+.bm-notice{
+  margin:26px 0 0; padding:18px 18px 16px;
+  background:rgba(217,119,6,.14); border:2px solid #D97706; border-radius:14px;
+  position:relative;
+}
+.bm-notice b{ display:block; color:#FFC46B; font-size:16px; font-weight:900; line-height:1.7; margin-bottom:8px; }
+.bm-notice p{ margin:0; color:#F0E2CE; font-size:14.5px; font-weight:600; line-height:1.95; word-break:keep-all; }
+
+/* ---------- 곡 목록 ---------- */
+.bm-list{ padding:36px 0 12px; }
+.bm-list-head{
+  margin:0 0 20px; font-size:clamp(20px,5.4vw,25px); font-weight:900;
+  line-height:1.6; letter-spacing:-.02em; color:#FFFFFF;
+}
+.bm-track{
+  display:flex; gap:14px; align-items:flex-start;
+  background:#FFFFFF; color:#101828;
+  border:2px solid #FFFFFF; border-radius:16px;
+  padding:20px 18px; margin-bottom:14px;
+  box-shadow:0 16px 32px -20px rgba(0,0,0,.8);
+}
+.bm-track.is-pending{ background:#EDF1F5; border-color:#CBD5DF; }
+.bm-idx{
+  flex:none; width:58px; padding-top:2px;
+  color:#0B6E7A; font-size:13px; font-weight:900; line-height:1.6; letter-spacing:.02em;
+}
+.is-pending .bm-idx{ color:#5A6B7C; }
+.bm-body{ flex:1 1 auto; min-width:0; }
+.bm-name{
+  margin:0 0 8px; font-size:clamp(18px,4.9vw,21px); font-weight:900;
+  line-height:1.55; letter-spacing:-.02em; color:#101828; word-break:keep-all;
+}
+.bm-desc{
+  margin:0 0 12px; color:#33414F; font-size:14.5px; font-weight:600;
+  line-height:1.95; word-break:keep-all;
+}
+.bm-facts{
+  margin:0 0 14px; padding-top:12px; border-top:2px solid #E2E8F0;
+  color:#44525F; font-size:13.5px; font-weight:700; line-height:1.9;
+}
+.bm-facts span{ display:block; }
+.bm-play{
+  display:flex; align-items:center; justify-content:center; gap:9px;
+  width:100%; min-height:56px; padding:14px 18px;
+  border:none; border-radius:12px; background:#00A5BC; color:#FFFFFF;
+  font-family:inherit; font-size:17px; font-weight:900; line-height:1.5; letter-spacing:-.01em;
+  cursor:pointer;
+}
+.bm-play:focus-visible{ outline:3px solid #FFD400; outline-offset:3px; }
+.bm-play.is-playing{ background:#161a3d; }
+.bm-play[disabled]{ background:#98A6B4; cursor:not-allowed; }
+.bm-tag{
+  display:inline-block; margin-bottom:12px; padding:6px 13px; border-radius:8px;
+  font-size:13px; font-weight:900; line-height:1.5;
+}
+.bm-tag--ready{ background:#0B8A3D; color:#FFFFFF; }
+.bm-tag--pending{ background:#5A6B7C; color:#FFFFFF; }
+
+/* ---------- 하단 ---------- */
+.bm-foot{ padding:10px 0 56px; }
+.bm-next{
+  display:flex; align-items:center; justify-content:center;
+  min-height:60px; padding:16px 20px; margin-bottom:12px;
+  background:#C9A84C; color:#161a3d; border-radius:14px;
+  font-size:clamp(16px,4.4vw,18px); font-weight:900; line-height:1.5;
+  text-decoration:none; letter-spacing:-.01em; text-align:center; word-break:keep-all;
+}
+.bm-next--ghost{ background:rgba(255,255,255,.07); color:#FFFFFF; border:2px solid rgba(255,255,255,.30); }
+.bm-copy{
+  margin:24px 0 0; padding-top:20px; border-top:1px solid rgba(255,255,255,.16);
+  color:#AFBDC9; font-size:13px; font-weight:600; line-height:1.9; word-break:keep-all;
+}
+@media (min-width:720px){ .wrap{max-width:760px;} }
+</style>
+<style>
+#bmGate{position:fixed;inset:0;background:#0E1230;color:#fff;z-index:99999;display:flex;align-items:center;justify-content:center;padding:24px;text-align:center}
+#bmGate .gatebox{max-width:520px;background:#161a3d;border:2px solid rgba(201,168,76,.55);border-radius:20px;padding:28px 22px;box-shadow:0 20px 60px rgba(0,0,0,.35)}
+#bmGate h2{margin:0 0 12px;font-size:26px}
+#bmGate p{margin:0 0 20px;line-height:1.8;color:#d7e1ea}
+#bmGate a{display:flex;align-items:center;justify-content:center;min-height:52px;border-radius:12px;background:#c9a84c;color:#161a3d;font-weight:900;text-decoration:none}
+</style></head>
+<body><div id="bmGate" aria-live="polite">
+  <div class="gatebox">
+    <h2>🧠 먼저 뇌건강 무료측정을 완료해 주세요</h2>
+    <p>BrainMind 무료 감상실은 BHC 뇌건강센터의 필수 검사 완료 후 이용할 수 있습니다.</p>
+    <a href="/bhc.html">뇌나이 + 뇌건강 무료측정하기</a>
+  </div>
+</div>
+
+
+<!-- ============================================================
+     ★★★ 음원 등록은 아래 TRACKS 표 한 곳만 고치면 됩니다 ★★★
+     src 를 채우면 그 곡은 자동으로 재생 버튼이 살아납니다.
+     src 가 비어 있으면 "음원 준비 중"으로 정직하게 표시됩니다.
+     실제 파일이나 실제 URL이 확인되기 전에는 절대 임의로 채우지 마십시오.
+     ============================================================ -->
+
+<header class="bm-top">
+  <div class="wrap">
+    <a class="bm-back" href="/#bhc">← BHC 뇌건강센터로 돌아가기</a>
+    <p class="bm-eyebrow">BrainMind · 무료 감상실</p>
+    <h1 class="bm-title">책을 읽으며<br>듣는 뇌음악</h1>
+    <p class="bm-lead">
+      『사람을 이해하는 것』을 읽는 동안<br>
+      곁에 두고 들으시라고 만든 곡들입니다.
+    </p>
+
+    <div class="bm-notice" id="bmNotice">
+      <b>지금은 곡 목록만 공개되어 있습니다</b>
+      <p>
+        음원 파일 등록이 끝나는 대로 이 자리에서 바로 재생됩니다.
+        아직 올라오지 않은 곡을 미리 안내드리는 것이니, 재생 버튼이 회색이면 준비 중이라는 뜻입니다.
+      </p>
+    </div>
+  </div>
+</header>
+
+<main class="wrap bm-list">
+  <h2 class="bm-list-head">임박사 창작음악</h2>
+  <div id="bmTracks"></div>
+</main>
+
+<main class="wrap bm-list">
+  <h2 class="bm-list-head">뇌·정서·수면 음악</h2>
+  <div id="bmTracksBinaural"></div>
+</main>
+
+<audio id="bmAudio" preload="none"></audio>
+
+<footer class="wrap bm-foot">
+  <a class="bm-next" href="/bhc.html">내 뇌나이 무료로 측정하기</a>
+  <a class="bm-next bm-next--ghost" href="/#bhc">BHC 뇌건강센터 처음으로</a>
+  <p class="bm-copy">
+    수록 곡은 한국뇌심리연구소가 자체 제작한 음원입니다.
+    개인 감상 목적으로 자유롭게 들으실 수 있으며, 무단 복제·재배포·상업적 이용은 하실 수 없습니다.
+  </p>
+</footer>
+
+<script>
+/* ============================================================
+   음원 등록표
+   ------------------------------------------------------------
+   id    : 홈페이지 내부 관리번호 (Suno 공식 ID 아님)
+   title : 곡 제목
+   style : Suno 스타일 표기 (화면에서 확인된 값 그대로)
+   made  : Suno 제작 화면 표기일
+   len   : 재생시간
+   desc  : 감상 안내 문구
+   src   : ★ 실제 음원 경로 또는 실제 공개 URL. 확인 전에는 반드시 "" 로 둘 것.
+           예) src: "/assets/audio/BM-001_너에게편지를써.mp3"
+   ============================================================ */
+(function(){
+  try{
+    if(localStorage.getItem('bhc_test_completed') === 'true'){
+      var g=document.getElementById('bmGate'); if(g) g.remove();
+    }
+  }catch(e){}
+})();
+
+var TRACKS = [
+  {
+    id: "BM-001",
+    title: "너에게 편지를 써",
+    style: "ballad, K-pop, singer-songwriter",
+    made: "2025-09-28",
+    len: "2분 15초",
+    desc: "말로 다 못한 마음을 편지처럼 눌러 담은 곡입니다. 조용히 혼자 있을 때 들어보세요.",
+    src: "/assets/audio/BM-001.mp3"
+  },
+  {
+    id: "BM-002",
+    title: "나의 사랑, 그대여",
+    style: "korean trot, emo, husky male vocals",
+    made: "2025-09-27",
+    len: "2분 47초",
+    desc: "오래 함께한 사람을 떠올리며 듣기 좋은 곡입니다.",
+    src: "/assets/audio/BM-002.mp3"
+  },
+  {
+    id: "BM-003",
+    title: "늘 내 곁에 너",
+    len: "2분 50초",
+    desc: "곁에 있는 사람의 소중함을 담은 곡입니다.",
+    src: "/assets/audio/BM-003.mp3"
+  },
+  {
+    id: "BM-004",
+    title: "시니어의 하루",
+    len: "2분 31초",
+    desc: "평범한 하루를 따뜻하게 그린 곡입니다.",
+    src: "/assets/audio/BM-004.mp3"
+  },
+  {
+    id: "BM-005",
+    title: "인생은 차차차",
+    len: "1분 27초",
+    desc: "가볍고 경쾌하게 들으시기 좋은 곡입니다.",
+    src: "/assets/audio/BM-005.mp3"
+  },
+  {
+    id: "BM-006",
+    title: "브라보 내 인생",
+    len: "3분 16초",
+    desc: "지나온 삶을 응원하는 마음을 담은 곡입니다.",
+    src: "/assets/audio/BM-006.mp3"
+  },
+  {
+    id: "BM-007",
+    title: "돌아와",
+    len: "1분 55초",
+    desc: "그리운 마음을 담은 곡입니다.",
+    src: "/assets/audio/BM-007.mp3"
+  },
+  {
+    id: "BM-008",
+    title: "품바아리랑",
+    len: "2분 51초",
+    desc: "흥과 해학이 담긴 곡입니다.",
+    src: "/assets/audio/BM-008.mp3"
+  },
+  {
+    id: "BM-009",
+    title: "아그들아 담배 좀 끊어라",
+    len: "3분 30초",
+    desc: "정겨운 잔소리를 노래로 담은 곡입니다.",
+    src: "/assets/audio/BM-009.mp3"
+  },
+  {
+    id: "BM-010",
+    title: "우린 지금 짬뽕을 먹으러 간다",
+    len: "1분 50초",
+    desc: "일상의 소소한 즐거움을 담은 곡입니다.",
+    src: "/assets/audio/BM-010.mp3"
+  },
+  {
+    id: "BM-011",
+    title: "요들 크리스마스 캐롤",
+    len: "1분 13초",
+    desc: "연말 분위기를 위한 계절 한정곡입니다.",
+    src: "/assets/audio/BM-011.mp3"
+  },
+  {
+    id: "BM-012",
+    title: "내 청춘, 다시 한번",
+    style: "trot, Korean traditional pop",
+    made: "2025-09-27",
+    len: "약 3분 04초 (Suno 화면 표시값, 실측 전)",
+    desc: "지나온 시간을 원망이 아니라 반가움으로 바라보게 하는 곡입니다.",
+    src: ""
+  },
+  {
+    id: "BM-013",
+    title: "인생은 지금부터야",
+    style: "trot, retro pop",
+    made: "2025-09-27",
+    len: "약 2분 48초 (Suno 화면 표시값, 실측 전)",
+    desc: "기운이 필요한 아침에 한 번 틀어두시면 좋은 곡입니다.",
+    src: ""
+  },
+  {
+    id: "BM-014",
+    title: "나야나",
+    style: "deep husky male vocals, korean trot",
+    made: "2025-12-07",
+    len: "2분 20초",
+    desc: "흥겹고 힘찬 리듬으로 기분을 북돋우는 곡입니다.",
+    src: "/assets/audio/BM-014.mp3"
+  },
+  {
+    id: "BM-015",
+    title: "추억의 크리스마스 카드",
+    style: "acoustic, holiday, K-pop ballad",
+    made: "2025-09-29",
+    len: "1분 29초",
+    desc: "연말 분위기 속 그리운 추억을 담은 곡입니다.",
+    src: "/assets/audio/BM-015.mp3"
+  }
+];
+
+var BINAURAL = [
+  { id: "BN-08", title: "8Hz 알파 대역",  len: "10분 00초", desc: "8Hz 알파 대역이 담긴 음악입니다.", src: "/assets/audio/8Hz_alpha_binaural_beat.mp3" },
+  { id: "BN-09", title: "9Hz 알파 대역",  len: "10분 00초", desc: "9Hz 알파 대역이 담긴 음악입니다.", src: "/assets/audio/9Hz_alpha_binaural_beat.mp3" },
+  { id: "BN-10", title: "10Hz 알파 대역", len: "10분 00초", desc: "10Hz 알파 대역이 담긴 음악입니다.", src: "/assets/audio/10Hz_alpha_binaural_beat.mp3" },
+  { id: "BN-11", title: "11Hz 알파 대역", len: "10분 00초", desc: "11Hz 알파 대역이 담긴 음악입니다.", src: "/assets/audio/11Hz_alpha_binaural_beat.mp3" },
+  { id: "BN-12", title: "12Hz SMR 대역",  len: "10분 00초", desc: "12Hz SMR 대역이 담긴 음악입니다.", src: "/assets/audio/12Hz_smr_binaural_beat.mp3" },
+  { id: "BN-13", title: "13Hz SMR 대역",  len: "10분 00초", desc: "13Hz SMR 대역이 담긴 음악입니다.", src: "/assets/audio/13Hz_smr_binaural_beat.mp3" },
+  { id: "BN-14", title: "14Hz SMR 대역",  len: "10분 00초", desc: "14Hz SMR 대역이 담긴 음악입니다.", src: "/assets/audio/14Hz_smr_binaural_beat.mp3" },
+  { id: "BN-15", title: "15Hz SMR 대역",  len: "10분 00초", desc: "15Hz SMR 대역이 담긴 음악입니다.", src: "/assets/audio/15Hz_smr_binaural_beat.mp3" }
+];
+
+(function () {
+  var audio = document.getElementById('bmAudio');
+  var current = null;
+  var allLists = [
+    { data: TRACKS,   boxId: 'bmTracks' },
+    { data: BINAURAL, boxId: 'bmTracksBinaural' }
+  ];
+
+  function esc(t) {
+    return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
+  function renderList(list, boxId) {
+    var box = document.getElementById(boxId);
+    if (!box) return 0;
+    var readyCount = 0;
+    var html = '';
+
+    for (var i = 0; i < list.length; i++) {
+      var t = list[i];
+      var ready = typeof t.src === 'string' && t.src.replace(/\s/g, '') !== '';
+      if (ready) { readyCount++; }
+
+      html +=
+        '<article class="bm-track' + (ready ? '' : ' is-pending') + '">' +
+          '<div class="bm-idx">' + esc(t.id) + '</div>' +
+          '<div class="bm-body">' +
+            '<span class="bm-tag ' + (ready ? 'bm-tag--ready">지금 들을 수 있습니다' : 'bm-tag--pending">음원 준비 중') + '</span>' +
+            '<h3 class="bm-name">' + esc(t.title) + '</h3>' +
+            '<p class="bm-desc">' + esc(t.desc) + '</p>' +
+            '<div class="bm-facts">' +
+              '<span>재생시간 ' + esc(t.len) + '</span>' +
+              (t.style ? '<span>분위기 ' + esc(t.style) + '</span>' : '') +
+            '</div>' +
+            '<button class="bm-play" type="button" data-box="' + boxId + '" data-i="' + i + '"' + (ready ? '' : ' disabled') + '>' +
+              (ready ? '▶ 재생' : '준비 중입니다') +
+            '</button>' +
+          '</div>' +
+        '</article>';
+    }
+
+    box.innerHTML = html;
+
+    box.addEventListener('click', function (e) {
+      var btn = e.target.closest ? e.target.closest('.bm-play') : null;
+      if (!btn || btn.disabled) { return; }
+      var t = list[Number(btn.getAttribute('data-i'))];
+
+      if (current === btn && !audio.paused) {
+        audio.pause();
+        btn.textContent = '▶ 재생';
+        btn.classList.remove('is-playing');
+        return;
+      }
+
+      var allBtns = document.querySelectorAll('.bm-play');
+      for (var k = 0; k < allBtns.length; k++) {
+        if (!allBtns[k].disabled) { allBtns[k].textContent = '▶ 재생'; allBtns[k].classList.remove('is-playing'); }
+      }
+
+      if (current !== btn) { audio.src = t.src; }
+      current = btn;
+
+      audio.play().then(function () {
+        btn.textContent = '❚❚ 일시정지';
+        btn.classList.add('is-playing');
+      }).catch(function () {
+        btn.textContent = '재생할 수 없습니다';
+      });
+    });
+
+    return readyCount;
+  }
+
+  var readyOriginal = renderList(TRACKS, 'bmTracks');
+  renderList(BINAURAL, 'bmTracksBinaural');
+
+  if (readyOriginal === TRACKS.length && TRACKS.length > 0) {
+    var n = document.getElementById('bmNotice');
+    if (n) { n.style.display = 'none'; }
+  }
+
+  audio.addEventListener('ended', function () {
+    if (current) { current.textContent = '▶ 재생'; current.classList.remove('is-playing'); }
+  });
+})();
+</script>
+
+</body>
+</html>
