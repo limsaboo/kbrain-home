@@ -817,17 +817,24 @@
       document.getElementById('birthInfo').textContent = userData.birth;
       document.getElementById('userName2').textContent = userData.name;
 
-      // 인지 영역 분석 (8개)
+      // 인지 영역 분석 (8개) — 기준 참고값(70점) 대비 편차 포함
+      const REF_BASELINE = 70; // 본 검사의 기준 참고값(뇌나이 환산 기준과 동일). 실측 또래 평균 데이터가 아님.
       let domainsHtml = '';
       DOMAINS.forEach(d => {
         const score = avgScores[d];
         const info = DOMAIN_INFO[d];
+        const dev = score - REF_BASELINE;
+        const devText = dev > 0 ? `기준 대비 +${dev}점` : (dev < 0 ? `기준 대비 ${dev}점` : '기준과 동일');
+        const devColor = dev > 0 ? '#0E8F86' : (dev < 0 ? '#D6820A' : '#666');
         domainsHtml += `
           <div class="domain-section">
             <div class="domain-header">
               <span class="domain-icon">📊</span>
               <span class="domain-name">${d}</span>
               <span class="domain-score">${score}%</span>
+            </div>
+            <div style="font-size:10px; color:${devColor}; font-weight:700; margin:2px 0 4px;">
+              기준 참고값 ${REF_BASELINE}점 대비: ${devText}
             </div>
             <div class="domain-desc">${info.desc}</div>
             <div class="domain-mechanism">${info.mechanism}</div>
@@ -857,11 +864,15 @@
       document.getElementById('weaknessAnalysis').innerHTML = weaknessHtml;
 
       // 뇌나이 상세 분석
+      const overallDev = Math.round(avg) - REF_BASELINE;
+      const overallDevText = overallDev > 0 ? `+${overallDev}점 높음` : (overallDev < 0 ? `${overallDev}점 낮음` : '동일');
       const brainAgeAnalysis = `
         <div style="font-size: 12px; line-height: 1.5; color: #333;">
           <strong>실제 나이:</strong> 만 ${userData.age}세<br>
           <strong>뇌 나이:</strong> ${brainAge}세<br>
           <strong>차이:</strong> ${ageDifference > 0 ? '+' : ''}${ageDifference}세<br><br>
+          <strong>기준 참고값 비교:</strong> 나의 점수 ${Math.round(avg)}점 / 기준 참고값 ${REF_BASELINE}점 → <span style="color:${overallDev>=0?'#0E8F86':'#D6820A'};font-weight:800;">${overallDevText}</span><br>
+          <span style="font-size:10px;color:#888;">※ 위 기준 참고값은 본 검사(BHC)의 자체 환산 기준이며, 통계적으로 조사된 또래 실측 평균이 아닙니다. BHC는 자체 개발한 자기이해 교육 도구로, 표준화된 규준 데이터가 존재하지 않습니다.</span><br><br>
           <strong>의미:</strong> 뇌 건강도 ${Math.round(avg)}점으로, 실제 나이 대비 ${ageDifference > 0 ? ageDifference + '세 높은' : (ageDifference < 0 ? (-ageDifference) + '세 낮은' : '동일한')} 수준입니다. (교육용 환산 지표이며 의학적 판정이 아닙니다.)<br><br>
           <strong>신경가소성을 통한 개선:</strong><br>
           • 현재 상태 유지 시: ${brainAge + 8}세 수준으로 진행<br>
