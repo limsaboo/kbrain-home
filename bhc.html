@@ -866,6 +866,17 @@
       // 뇌나이 상세 분석
       const overallDev = Math.round(avg) - REF_BASELINE;
       const overallDevText = overallDev > 0 ? `+${overallDev}점 높음` : (overallDev < 0 ? `${overallDev}점 낮음` : '동일');
+
+      // 성장 로드맵과 개선 문구, 배지 판정 기준을 모두 동일하게 통일 (±2세 이내 = 정상/우수)
+      const isNormalOrBetter = ageDifference <= 2;
+      const roadmapGap = isNormalOrBetter ? 0 : Math.max(brainAge - userData.age, 0);
+      const neuroplasticityText = roadmapGap === 0
+        ? `• 이미 정상 범위 내에 있습니다. 꾸준한 인지 활동으로 현재 상태를 유지해보세요.<br>
+           • 활동을 중단하면 시간이 지나며 서서히 저하될 수 있으니, 가벼운 훈련을 계속하시는 것을 권장합니다.`
+        : `• 현재 상태 유지 시: ${brainAge + 8}세 수준으로 진행<br>
+           • 인지 훈련 시작 시: 3개월 내 ${Math.max(brainAge - 5, brainAge - 7)}세 개선<br>
+           • 지속적 훈련 시: 6개월 내 정상 수준 회복 가능`;
+
       const brainAgeAnalysis = `
         <div style="font-size: 12px; line-height: 1.5; color: #333;">
           <strong>실제 나이:</strong> 만 ${userData.age}세<br>
@@ -875,16 +886,12 @@
           <span style="font-size:10px;color:#888;">※ 위 기준 참고값은 본 검사(BHC)의 자체 환산 기준이며, 통계적으로 조사된 또래 실측 평균이 아닙니다. BHC는 자체 개발한 자기이해 교육 도구로, 표준화된 규준 데이터가 존재하지 않습니다.</span><br><br>
           <strong>의미:</strong> 뇌 건강도 ${Math.round(avg)}점으로, 실제 나이 대비 ${ageDifference > 0 ? ageDifference + '세 높은' : (ageDifference < 0 ? (-ageDifference) + '세 낮은' : '동일한')} 수준입니다. (교육용 환산 지표이며 의학적 판정이 아닙니다.)<br><br>
           <strong>신경가소성을 통한 개선:</strong><br>
-          • 현재 상태 유지 시: ${brainAge + 8}세 수준으로 진행<br>
-          • 인지 훈련 시작 시: 3개월 내 ${Math.max(brainAge - 5, brainAge - 7)}세 개선<br>
-          • 지속적 훈련 시: 6개월 내 정상 수준 회복 가능
+          ${neuroplasticityText}
         </div>
       `;
       document.getElementById('brainAgeAnalysis').innerHTML = brainAgeAnalysis;
 
       // 성장 로드맵
-      // gap = 뇌나이가 실제나이보다 많은 정도(개선이 필요한 만큼). 이미 정상/우수하면 0으로 처리.
-      const roadmapGap = Math.max(brainAge - userData.age, 0);
       let t3, t6, t12, label12;
       if (roadmapGap === 0) {
         t3 = t6 = t12 = brainAge;
