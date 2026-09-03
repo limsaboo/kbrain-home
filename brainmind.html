@@ -8,7 +8,15 @@
 <meta name="robots" content="index,follow">
 <link rel="canonical" href="https://www.k-brain.co.kr/brainmind.html">
 <link rel="icon" href="/favicon.ico" sizes="any">
-<meta name="theme-color" content="#161a3d">
+<meta name="theme-color" content="#0E1230">
+
+<!-- PWA 설치 설정 (BrainMind 전용) -->
+<link rel="manifest" href="/manifest-brainmind.json">
+<link rel="apple-touch-icon" href="/icon-brainmind-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="BrainMind">
+<meta name="mobile-web-app-capable" content="yes">
 
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="한국뇌심리연구소">
@@ -593,6 +601,12 @@ var BINAURAL = [
     if (current) { current.textContent = '▶ 재생'; current.classList.remove('is-playing'); }
   });
 })();
+</script>
+
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js?v=20260830').catch(function () {});
+  }
 </script>
 
 </body>
