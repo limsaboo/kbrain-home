@@ -414,6 +414,7 @@
         <div class="recommendation-box" id="recommendations"></div>
 
         <div class="button-group">
+          <a href="brainmind.html" class="btn btn-primary" style="display:block;text-align:center;text-decoration:none;background:linear-gradient(135deg,#0E8F86,#0a6e67);">🎵 BrainMind 무료 감상실 가기</a>
           <button class="btn btn-primary" onclick="printReport()">📄 인쇄/PDF</button>
           <button class="btn btn-secondary" onclick="restartTest()">다시</button>
           <button class="btn btn-secondary" onclick="goToStart()">처음</button>
@@ -777,20 +778,21 @@
       let statusText = '✅ 정상';
       let messageText = '';
 
-      // 판정은 나이 차이가 아니라 뇌건강도(정답률) 기준 — BAC 시스템과 동일
-      if (avg >= 90) {
+      // 판정 기준을 화면에 표시되는 '나이 차이(ageDifference)'로 통일
+      // (이전 버전은 avg 기준으로 별도 판정하여, 차이가 0세인데도 '주의'가 뜨는 모순이 있었음 — 수정함)
+      if (ageDifference <= -3) {
         statusClass = 'normal';
         statusText = '✅ 우수';
         messageText = '전반적인 인지 기능이 매우 우수한 상태입니다';
-      } else if (avg >= 80) {
+      } else if (ageDifference <= 2) {
         statusClass = 'normal';
-        statusText = '✅ 양호';
+        statusText = '✅ 정상';
         messageText = '현재 수준을 유지해 주세요';
-      } else if (avg >= 70) {
+      } else if (ageDifference <= 5) {
         statusClass = 'caution';
         statusText = '⚠️ 보통';
         messageText = '약한 영역 중심의 인지 활동을 권장합니다';
-      } else if (avg >= 60) {
+      } else if (ageDifference <= 8) {
         statusClass = 'warning';
         statusText = '⚠️ 주의';
         messageText = '보완 훈련을 시작해 보세요';
@@ -802,6 +804,8 @@
 
       // 결과 저장 (실패해도 화면에 영향 없음)
       try { saveBhcResult(avgScores, avg, brainAge, statusText); } catch (e) { console.warn(e); }
+      // BrainMind 감상실 게이트 해제 — 검사를 실제로 완료했다는 표시
+      try { localStorage.setItem('bhc_test_completed', 'true'); } catch (e) { console.warn(e); }
 
       // 헤더 업데이트
       document.getElementById('brainAge').textContent = brainAge;
