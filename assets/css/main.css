@@ -233,6 +233,7 @@
   .bi-logo-desc{font-size:14.5px;font-weight:600;color:var(--ink);line-height:1.8;margin-bottom:20px;word-break:keep-all;}
   .bi-logo-legend{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;}
   @media(max-width:700px){.bi-logo-legend{grid-template-columns:repeat(2,minmax(0,1fr));}}
+  @media(max-width:480px){.bi-logo-legend{grid-template-columns:1fr;}}
   .bi-legend-item{background:var(--bg2);border:1.5px solid var(--line);border-radius:12px;padding:14px 14px 12px;display:flex;flex-direction:column;gap:4px;}
   .bi-legend-item b{font-size:15.5px;font-weight:900;color:var(--ink);display:flex;align-items:center;gap:8px;}
   .bi-legend-item span:not(.bi-legend-dot){font-size:12.5px;font-weight:600;color:var(--body);}
@@ -317,7 +318,7 @@
   }
   .form-submit:hover{background:#232855;}
 
-  .senior-info-grid{grid-template-columns:repeat(2,1fr) !important;}
+  @media(min-width:641px){.senior-info-grid{grid-template-columns:repeat(2,1fr) !important;}}
   .senior-photo-wrap{margin:32px 0 0;border-radius:18px;overflow:hidden;width:100%;box-shadow:0 10px 22px -16px rgba(20,22,44,.28);}
   .senior-photo-wrap img.senior-photo{width:100% !important;max-width:100% !important;height:auto !important;aspect-ratio:1419/1248 !important;object-fit:cover !important;object-position:center top !important;display:block !important;}
   @media(max-width:480px){
@@ -829,3 +830,116 @@
   }
 }
 
+
+/* ==========================================================
+   BrainMind 네온 간판 배너
+   ========================================================== */
+.bm-neon-sign{
+  position:relative;
+  overflow:hidden;
+  padding:44px 20px;
+  background:linear-gradient(180deg,#0a0c22 0%,#161129 55%,#0a0c22 100%);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.bm-snowfall{position:absolute;inset:0;pointer-events:none;overflow:hidden;}
+.bm-flake{
+  position:absolute;
+  top:-10px;
+  width:6px;height:6px;
+  border-radius:50%;
+  background:#fff;
+  opacity:.85;
+  box-shadow:0 0 6px 1px rgba(255,255,255,.7);
+  animation-name:bmFall;
+  animation-timing-function:linear;
+  animation-iteration-count:infinite;
+}
+@keyframes bmFall{
+  0%{transform:translateY(-10px) translateX(0);opacity:0;}
+  10%{opacity:.9;}
+  90%{opacity:.9;}
+  100%{transform:translateY(340px) translateX(18px);opacity:0;}
+}
+
+.bm-neon-link{display:block;text-decoration:none;position:relative;z-index:1;width:100%;max-width:460px;}
+.bm-neon-board{
+  position:relative;
+  border:3px solid #14b8ad;
+  border-radius:22px;
+  padding:34px 24px 30px;
+  text-align:center;
+  background:radial-gradient(ellipse 90% 80% at 50% 20%, rgba(20,184,173,.14), transparent 65%);
+  box-shadow:
+    0 0 8px 2px rgba(20,184,173,.55),
+    0 0 26px 6px rgba(20,184,173,.35),
+    inset 0 0 18px rgba(20,184,173,.25);
+  animation:bmBoardFlicker 3.6s ease-in-out infinite;
+}
+@keyframes bmBoardFlicker{
+  0%,100%{box-shadow:0 0 8px 2px rgba(20,184,173,.55),0 0 26px 6px rgba(20,184,173,.35),inset 0 0 18px rgba(20,184,173,.25);}
+  48%{box-shadow:0 0 8px 2px rgba(20,184,173,.55),0 0 26px 6px rgba(20,184,173,.35),inset 0 0 18px rgba(20,184,173,.25);}
+  50%{box-shadow:0 0 3px 1px rgba(20,184,173,.25),0 0 10px 2px rgba(20,184,173,.15),inset 0 0 8px rgba(20,184,173,.1);}
+  52%{box-shadow:0 0 8px 2px rgba(20,184,173,.55),0 0 26px 6px rgba(20,184,173,.35),inset 0 0 18px rgba(20,184,173,.25);}
+}
+.bm-neon-title{
+  font-size:clamp(32px,9vw,46px);
+  font-weight:900;
+  color:#fff;
+  letter-spacing:.02em;
+  text-shadow:
+    0 0 6px #14b8ad,
+    0 0 14px #14b8ad,
+    0 0 28px rgba(20,184,173,.8),
+    0 0 46px rgba(20,184,173,.5);
+  animation:bmTextFlicker 3.6s ease-in-out infinite;
+}
+@keyframes bmTextFlicker{
+  0%,100%{opacity:1;}
+  48%{opacity:1;}
+  50%{opacity:.55;}
+  52%{opacity:1;}
+}
+.bm-neon-sub{
+  margin-top:6px;
+  font-size:clamp(15px,4.2vw,19px);
+  font-weight:800;
+  color:#f5a524;
+  text-shadow:0 0 6px rgba(245,165,36,.8), 0 0 16px rgba(245,165,36,.5);
+  letter-spacing:.06em;
+}
+.bm-neon-cta{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  margin-top:20px;
+  padding:12px 22px;
+  border-radius:999px;
+  background:linear-gradient(135deg,#c9a84c,#f5a524);
+  color:#161a3d;
+  font-weight:900;
+  font-size:14.5px;
+  box-shadow:0 8px 20px -8px rgba(245,165,36,.7);
+}
+.bm-neon-note{
+  position:absolute;
+  color:#7c5cff;
+  font-size:22px;
+  text-shadow:0 0 8px rgba(124,92,255,.9), 0 0 18px rgba(124,92,255,.6);
+  animation:bmNoteFloat 3.2s ease-in-out infinite;
+}
+.bm-note1{top:8px;left:14px;animation-delay:0s;}
+.bm-note2{top:14px;right:18px;font-size:26px;animation-delay:.7s;}
+.bm-note3{bottom:10px;left:26px;animation-delay:1.4s;}
+@keyframes bmNoteFloat{
+  0%,100%{transform:translateY(0) rotate(0deg);opacity:.85;}
+  50%{transform:translateY(-8px) rotate(-8deg);opacity:1;}
+}
+
+@media(max-width:480px){
+  .bm-neon-sign{padding:32px 16px;}
+  .bm-neon-board{padding:28px 18px 24px;border-radius:18px;}
+  .bm-neon-note{font-size:18px;}
+  .bm-note2{font-size:20px;}
+}
