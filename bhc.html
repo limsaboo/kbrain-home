@@ -872,23 +872,37 @@
       document.getElementById('brainAgeAnalysis').innerHTML = brainAgeAnalysis;
 
       // 성장 로드맵
+      // gap = 뇌나이가 실제나이보다 많은 정도(개선이 필요한 만큼). 이미 정상/우수하면 0으로 처리.
+      const roadmapGap = Math.max(brainAge - userData.age, 0);
+      let t3, t6, t12, label12;
+      if (roadmapGap === 0) {
+        t3 = t6 = t12 = brainAge;
+        label12 = brainAge + '세 수준 유지 (이미 정상 범위)';
+      } else {
+        t3 = brainAge - Math.max(1, Math.round(roadmapGap * 0.3));
+        t6 = brainAge - Math.max(1, Math.round(roadmapGap * 0.6));
+        t12 = userData.age;
+        label12 = t12 + '세 수준 (정상화)';
+      }
+      const todayStr = new Date().toISOString().slice(0, 10);
+
       const roadmap = `
         <div style="font-size: 11px; line-height: 1.6;">
           <div class="roadmap-item">
-            <span class="roadmap-time">현재 (2026-08-19):</span><br>
+            <span class="roadmap-time">현재 (${todayStr}):</span><br>
             <span class="roadmap-goal">뇌 나이 ${brainAge}세</span>
           </div>
           <div class="roadmap-item">
             <span class="roadmap-time">3개월 후:</span><br>
-            <span class="roadmap-goal">목표: ${Math.max(brainAge - 5, userData.age + 2)}세 수준</span>
+            <span class="roadmap-goal">목표: ${t3}세 수준</span>
           </div>
           <div class="roadmap-item">
             <span class="roadmap-time">6개월 후:</span><br>
-            <span class="roadmap-goal">목표: ${Math.max(brainAge - 10, userData.age + 1)}세 수준</span>
+            <span class="roadmap-goal">목표: ${t6}세 수준</span>
           </div>
           <div class="roadmap-item">
             <span class="roadmap-time">12개월 후:</span><br>
-            <span class="roadmap-goal">목표: ${userData.age}세 수준 (정상화)</span>
+            <span class="roadmap-goal">목표: ${label12}</span>
           </div>
         </div>
       `;
