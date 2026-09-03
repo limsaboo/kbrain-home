@@ -119,6 +119,16 @@
   .hl-target{font-size:13.5px;color:var(--body);line-height:1.6;word-break:keep-all;font-weight:600;}
   .hl-item a{font-size:14px;font-weight:800;color:var(--teal);margin-top:6px;}
 
+  /* Education ecosystem flow */
+  .eco-flow{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:10px 8px;}
+  .eco-pill{background:rgba(255,255,255,.2);padding:10px 20px;border-radius:20px;white-space:nowrap;font-size:13.5px;font-weight:700;line-height:1.5;}
+  .eco-arrow{font-size:16px;flex-shrink:0;}
+  @media(max-width:640px){
+    .eco-flow{flex-direction:column;gap:0;}
+    .eco-pill{width:100%;max-width:280px;text-align:center;box-sizing:border-box;}
+    .eco-arrow{transform:rotate(90deg);padding:2px 0;}
+  }
+
   /* ---------- Section shared ---------- */
   section{padding:96px 0;}
   .sec-head{margin-bottom:44px;max-width:680px;}
@@ -569,7 +579,8 @@
   .senior-card{display:flex;flex-direction:column;background:#fff;border:2px solid #D4A520;border-radius:16px;padding:28px;transition:.2s;box-shadow:0 8px 20px -8px rgba(212,165,32,.25);}
   .senior-card:hover{box-shadow:0 12px 28px -8px rgba(212,165,32,.4);transform:translateY(-3px);}
   .senior-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px;}
-  .senior-icon{font-size:42px;}
+  .senior-icon{font-size:42px;width:58px;height:58px;display:flex;align-items:center;justify-content:center;}
+  .senior-icon img{width:100%;height:100%;object-fit:contain;}
   .senior-badge{font-size:11px;font-weight:700;padding:6px 14px;border-radius:20px;white-space:nowrap;}
   .senior-badge.live{background:#E8F5E9;color:#2E7D32;}
   .senior-badge.soon{background:#FFF3E0;color:#E65100;}
