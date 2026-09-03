@@ -139,20 +139,8 @@ a{color:inherit;}
 @media (min-width:720px){ .wrap{max-width:760px;} }
 </style>
 <style>
-#bmGate{position:fixed;inset:0;background:#0E1230;color:#fff;z-index:99999;display:flex;align-items:center;justify-content:center;padding:24px;text-align:center}
-#bmGate .gatebox{max-width:520px;background:#161a3d;border:2px solid rgba(201,168,76,.55);border-radius:20px;padding:28px 22px;box-shadow:0 20px 60px rgba(0,0,0,.35)}
-#bmGate h2{margin:0 0 12px;font-size:26px}
-#bmGate p{margin:0 0 20px;line-height:1.8;color:#d7e1ea}
-#bmGate a{display:flex;align-items:center;justify-content:center;min-height:52px;border-radius:12px;background:#c9a84c;color:#161a3d;font-weight:900;text-decoration:none}
 </style></head>
-<body><div id="bmGate" aria-live="polite">
-  <div class="gatebox">
-    <h2>🧠 먼저 뇌건강 무료측정을 완료해 주세요</h2>
-    <p>BrainMind 무료 감상실은 BHC 뇌건강센터의 필수 검사 완료 후 이용할 수 있습니다.</p>
-    <a href="/bhc.html">뇌나이 + 뇌건강 무료측정하기</a>
-  </div>
-</div>
-
+<body>
 
 <!-- ============================================================
      ★★★ 음원 등록은 아래 TRACKS 표 한 곳만 고치면 됩니다 ★★★
@@ -215,13 +203,6 @@ a{color:inherit;}
    src   : ★ 실제 음원 경로 또는 실제 공개 URL. 확인 전에는 반드시 "" 로 둘 것.
            예) src: "/assets/audio/BM-001_너에게편지를써.mp3"
    ============================================================ */
-(function(){
-  try{
-    if(localStorage.getItem('bhc_test_completed') === 'true'){
-      var g=document.getElementById('bmGate'); if(g) g.remove();
-    }
-  }catch(e){}
-})();
 
 var TRACKS = [
   {
