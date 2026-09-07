@@ -1,6 +1,6 @@
 {
-  "name": "BHC뇌건강헬스클럽",
-  "short_name": "뇌헬스클럽",
+  "name": "BHC 뇌훈련센터",
+  "short_name": "뇌훈련센터",
   "description": "한국뇌심리연구소 BHC 뇌건강 무료훈련실 - 회원, 방문자, 피검사자 누구나 무료로 이용하는 뇌건강 훈련 공간입니다.",
   "start_url": "/bhtc.html?app=1",
   "scope": "/bhtc.html",
