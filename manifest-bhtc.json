@@ -1,0 +1,19 @@
+{
+  "name": "BHC뇌건강헬스클럽",
+  "short_name": "뇌헬스클럽",
+  "description": "한국뇌심리연구소 BHC 뇌건강 무료훈련실 - 회원, 방문자, 피검사자 누구나 무료로 이용하는 뇌건강 훈련 공간입니다.",
+  "start_url": "/bhtc.html?app=1",
+  "scope": "/bhtc.html",
+  "id": "/bhtc.html",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "theme_color": "#0a0c22",
+  "background_color": "#0a0c22",
+  "lang": "ko-KR",
+  "icons": [
+    { "src": "/assets/img/icon-bhtc-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/assets/img/icon-bhtc-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/assets/img/icon-bhtc-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "categories": ["health", "fitness"]
+}

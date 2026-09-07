@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>BHC뇌건강헬스클럽 | 한국뇌심리연구소</title>
+<meta name="description" content="한국뇌심리연구소 BHC 뇌건강 무료훈련실 - 회원, 방문자, 피검사자 누구나 무료로 이용하는 뇌건강 훈련 공간입니다.">
+
+<link rel="manifest" href="/manifest-bhtc.json">
+<link rel="apple-touch-icon" href="/assets/img/icon-bhtc-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="뇌헬스클럽">
+<meta name="theme-color" content="#0a0c22">
+<meta name="mobile-web-app-capable" content="yes">
+
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;}
+body{
+  font-family:'Noto Sans KR',-apple-system,BlinkMacSystemFont,sans-serif;
+  background:#0a0c22;
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+}
+@keyframes bhtcShimmer{0%{background-position:0% 50%;}100%{background-position:200% 50%;}}
+@keyframes bhtcGlow{
+  0%,100%{box-shadow:0 0 0 1px rgba(201,168,76,.25) inset,0 18px 40px -18px rgba(0,0,0,.7),0 0 30px -6px rgba(201,168,76,.35);}
+  50%{box-shadow:0 0 0 1px rgba(201,168,76,.42) inset,0 18px 40px -18px rgba(0,0,0,.7),0 0 46px -4px rgba(201,168,76,.6);}
+}
+@keyframes bhtcSparkle{0%,100%{opacity:.55;transform:scale(1);}50%{opacity:1;transform:scale(1.25);}}
+.bhtc-title{background-size:200% auto;animation:bhtcShimmer 3.4s linear infinite;}
+.bhtc-plaque{animation:bhtcGlow 3.2s ease-in-out infinite;}
+.bhtc-spark{animation:bhtcSparkle 2.6s ease-in-out infinite;}
+.bhtc-installbtn{
+  display:none;
+  align-items:center;justify-content:center;gap:8px;
+  width:100%;min-height:52px;margin-top:14px;
+  padding:14px 20px;border-radius:999px;border:1.5px solid rgba(201,168,76,.55);
+  background:rgba(201,168,76,.08);color:#f5d98a;font-weight:800;font-size:15px;
+  font-family:inherit;cursor:pointer;
+}
+.bhtc-installbtn:active{background:rgba(201,168,76,.16);}
+</style>
+</head>
+<body>
+
+<div style="max-width:440px;width:100%;position:relative;">
+  <div style="position:absolute;inset:-40px -20px;background:radial-gradient(ellipse 80% 60% at 50% 8%, rgba(201,168,76,.22), transparent 70%);pointer-events:none;"></div>
+
+  <div class="bhtc-plaque" style="position:relative;border:3px solid #c9a84c;border-radius:22px;padding:34px 22px 30px;background:linear-gradient(160deg,#181c42 0%,#101332 100%);">
+
+    <span class="bhtc-spark" aria-hidden="true" style="position:absolute;top:12px;left:16px;color:#f5d98a;font-size:15px;animation-delay:0s;">✦</span>
+    <span class="bhtc-spark" aria-hidden="true" style="position:absolute;top:12px;right:16px;color:#f5d98a;font-size:15px;animation-delay:.6s;">✦</span>
+    <span class="bhtc-spark" aria-hidden="true" style="position:absolute;bottom:12px;left:16px;color:#f5d98a;font-size:15px;animation-delay:1.2s;">✦</span>
+    <span class="bhtc-spark" aria-hidden="true" style="position:absolute;bottom:12px;right:16px;color:#f5d98a;font-size:15px;animation-delay:1.8s;">✦</span>
+
+    <div style="text-align:center;">
+      <img src="/assets/img/icon-bhtc-192.png" width="72" height="72" alt="BHC뇌건강헬스클럽" style="border-radius:18px;margin-bottom:16px;box-shadow:0 10px 24px -10px rgba(0,0,0,.6);">
+
+      <div style="display:inline-flex;align-items:center;gap:7px;padding:6px 16px;border:1px solid rgba(201,168,76,.55);border-radius:999px;margin-bottom:18px;">
+        <span style="width:5px;height:5px;border-radius:50%;background:#f5d98a;display:inline-block;"></span>
+        <span style="color:#f5d98a;font-size:10.5px;font-weight:800;letter-spacing:.18em;">BRAIN HEALTH CLUB</span>
+      </div>
+
+      <h1 class="bhtc-title" style="font-size:clamp(27px,7.8vw,37px);font-weight:900;letter-spacing:.01em;line-height:1.3;margin-bottom:8px;background:linear-gradient(90deg,#f5d98a 0%,#c9a84c 25%,#f5a524 50%,#c9a84c 75%,#f5d98a 100%);-webkit-background-clip:text;background-clip:text;color:transparent;">
+        뇌건강헬스클럽
+      </h1>
+      <p style="color:#fff;font-size:15px;font-weight:800;letter-spacing:.05em;margin-bottom:20px;">
+        BHC 뇌건강 무료훈련실
+      </p>
+
+      <p style="color:rgba(255,255,255,.78);font-size:14.5px;font-weight:600;line-height:1.95;word-break:keep-all;margin-bottom:22px;">
+        회원, 방문자, 피검사자 누구나<br><strong style="color:#f5d98a;font-weight:900;">무료로 입장</strong>할 수 있는 훈련 공간입니다.
+      </p>
+
+      <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-bottom:26px;">
+        <span style="padding:7px 14px;border:1px solid rgba(255,255,255,.22);border-radius:999px;color:#fff;font-size:12.5px;font-weight:800;background:rgba(255,255,255,.06);">능력다중검사</span>
+        <span style="padding:7px 14px;border:1px solid rgba(255,255,255,.22);border-radius:999px;color:#fff;font-size:12.5px;font-weight:800;background:rgba(255,255,255,.06);">뇌기능시스템</span>
+        <span style="padding:7px 14px;border:1px solid rgba(255,255,255,.22);border-radius:999px;color:#fff;font-size:12.5px;font-weight:800;background:rgba(255,255,255,.06);">뇌컨디션체크</span>
+      </div>
+
+      <a href="/index.html#systems" style="display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:58px;width:100%;padding:17px 20px;background:linear-gradient(135deg,#f5d98a 0%,#c9a84c 50%,#f5a524 100%);color:#161a3d;border-radius:999px;font-weight:900;font-size:17.5px;text-decoration:none;letter-spacing:-.01em;box-shadow:0 16px 34px -12px rgba(201,168,76,.85);">
+        입장하기 <span style="font-size:18px;">&rarr;</span>
+      </a>
+
+      <button id="bhtcInstallBtn" class="bhtc-installbtn" type="button">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 3v13"/><path d="M7 11l5 5 5-5"/><path d="M4 20h16"/></svg>
+        홈 화면에 앱 설치하기
+      </button>
+
+      <p id="bhtcManualHint" style="margin-top:14px;font-size:11.5px;color:rgba(255,255,255,.45);line-height:1.85;word-break:keep-all;">
+        설치 버튼이 보이지 않으면 우측 상단 메뉴(⋮) → <strong style="color:rgba(255,255,255,.65);">"홈 화면에 추가"</strong>를 눌러주세요.
+      </p>
+    </div>
+  </div>
+</div>
+
+<script>
+// PWA 설치 프롬프트 (BHC뇌건강헬스클럽 전용)
+let bhtcDeferredPrompt;
+var installBtn = document.getElementById('bhtcInstallBtn');
+var manualHint = document.getElementById('bhtcManualHint');
+
+window.addEventListener('beforeinstallprompt', function(e){
+  e.preventDefault();
+  bhtcDeferredPrompt = e;
+  if (installBtn) installBtn.style.display = 'inline-flex';
+});
+
+if (installBtn) {
+  installBtn.addEventListener('click', function () {
+    if (!bhtcDeferredPrompt) return;
+    bhtcDeferredPrompt.prompt();
+    bhtcDeferredPrompt.userChoice.then(function(choice){
+      bhtcDeferredPrompt = null;
+      installBtn.style.display = 'none';
+    });
+  });
+}
+
+window.addEventListener('appinstalled', function(){
+  if (installBtn) installBtn.style.display = 'none';
+  if (manualHint) manualHint.textContent = '설치가 완료되었습니다. 홈 화면에서 뇌헬스클럽 아이콘을 확인하세요.';
+});
+
+// 이미 standalone(설치된 앱)으로 실행 중이면 안내 문구 숨김
+if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) {
+  if (manualHint) manualHint.style.display = 'none';
+}
+</script>
+
+</body>
+</html>
