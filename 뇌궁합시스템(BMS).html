@@ -558,6 +558,24 @@ padding:12px 14px;margin-bottom:8px;cursor:pointer;transition:all .2s;}
 </div>
 
 
+<!-- 관리자 로그인 모달 (prompt() 대신 인앱 모달 사용 - 인앱브라우저 차단 회피) -->
+<div class="search-modal" id="adminLoginModal">
+  <div class="search-box">
+    <h3>🔐 관리자 입장</h3>
+    <div style="margin-bottom:14px;">
+      <label class="fl">관리자 비밀번호</label>
+      <div style="position:relative;">
+        <input type="password" class="fi" id="adminLoginPw" placeholder="비밀번호 입력" autocomplete="off" style="padding-right:48px;">
+        <button type="button" id="adminPwToggle" aria-label="비밀번호 표시" style="position:absolute; right:6px; top:50%; transform:translateY(-50%); width:36px; height:36px; background:transparent; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; color:var(--tx2);">
+          <svg id="adminPwEyeIcon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8Z"/><circle cx="12" cy="12" r="3"/></svg>
+        </button>
+      </div>
+    </div>
+    <button class="btn-primary" id="btnAdminLoginSubmit" style="margin-bottom:10px;">확인</button>
+    <button class="modal-close" id="adminLoginClose">취소</button>
+  </div>
+</div>
+
 <!-- 검색 모달 -->
 <div class="search-modal" id="searchModal">
   <div class="search-box">
@@ -744,6 +762,23 @@ document.addEventListener("DOMContentLoaded", function() {
   document.getElementById("btnRestart").addEventListener("click", restart);
   document.getElementById("btnIssueCoupon").addEventListener("click", issueCoupon);
   document.getElementById("btnAdminLogin").addEventListener("click", adminLogin);
+  document.getElementById("btnAdminLoginSubmit").addEventListener("click", submitAdminLogin);
+  document.getElementById("adminLoginClose").addEventListener("click", closeAdminLoginModal);
+  document.getElementById("adminLoginPw").addEventListener("keydown", function(e){
+    if(e.key === "Enter") { e.preventDefault(); submitAdminLogin(); }
+  });
+  document.getElementById("adminPwToggle").addEventListener("click", function(){
+    var pwInput = document.getElementById("adminLoginPw");
+    var eyeIcon = document.getElementById("adminPwEyeIcon");
+    if(pwInput.type === "password"){
+      pwInput.type = "text";
+      eyeIcon.innerHTML = '<path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a18.5 18.5 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>';
+    } else {
+      pwInput.type = "password";
+      eyeIcon.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8Z"/><circle cx="12" cy="12" r="3"/>';
+    }
+    pwInput.focus();
+  });
   // 관리자 도구: 저작권 텍스트 5번 연속 클릭
   var _adminTap = 0, _adminTimer;
   document.querySelectorAll(".cp5").forEach(function(el){
@@ -1968,36 +2003,60 @@ function loadAndShowResult(r) {
 // ── 관리자 쿠폰 발행 ──
 var _adminPass = "brain2025!"; // 관리자 비밀번호
 var _adminUnlocked = false;
+var _adminLoginPurpose = "login"; // "login" 또는 "tool"
 
 function adminLogin() {
-  var pw = prompt("관리자 비밀번호:");
+  _adminLoginPurpose = "login";
+  openAdminLoginModal();
+}
+
+function openAdminLoginModal() {
+  var modal = document.getElementById("adminLoginModal");
+  var pwInput = document.getElementById("adminLoginPw");
+  pwInput.value = "";
+  modal.classList.add("open");
+  setTimeout(function(){ pwInput.focus(); }, 50);
+}
+
+function closeAdminLoginModal() {
+  document.getElementById("adminLoginModal").classList.remove("open");
+}
+
+function submitAdminLogin() {
+  var pw = document.getElementById("adminLoginPw").value;
   if(!pw) return;
-  if(pw === _adminPass) {
-    _adminUnlocked = true;
-    // 쿠폰 없이 바로 검사 시작
-    _coupon = {
-      coupon_code: "ADMIN-FREE",
-      coupon_type: "admin",
-      buyer_name: "임찬우소장",
-      buyer_type: "admin",
-      total_uses: 9999,
-      used_count: 0,
-      remain_count: 9999,
-      system_type: "all",
-      is_active: true
-    };
-    showToast("✅ 소장님 입장! 쿠폰 무제한 사용");
-    go("s1");
-  } else {
+  if(pw !== _adminPass) {
     showToast("❌ 비밀번호가 틀렸습니다");
+    return;
   }
+  _adminUnlocked = true;
+  closeAdminLoginModal();
+  if(_adminLoginPurpose === "tool") {
+    document.getElementById("adminModal").style.display = "flex";
+    document.getElementById("issuedCouponResult").style.display = "none";
+    return;
+  }
+  // 쿠폰 없이 바로 검사 시작
+  _coupon = {
+    coupon_code: "ADMIN-FREE",
+    coupon_type: "admin",
+    buyer_name: "임찬우소장",
+    buyer_type: "admin",
+    total_uses: 9999,
+    used_count: 0,
+    remain_count: 9999,
+    system_type: "all",
+    is_active: true
+  };
+  showToast("✅ 소장님 입장! 쿠폰 무제한 사용");
+  go("s1");
 }
 
 function openAdminTool() {
   if(!_adminUnlocked) {
-    var pw = prompt("관리자 비밀번호를 입력하세요:");
-    if(pw !== _adminPass) { showToast("비밀번호가 틀렸습니다"); return; }
-    _adminUnlocked = true;
+    _adminLoginPurpose = "tool";
+    openAdminLoginModal();
+    return;
   }
   document.getElementById("adminModal").style.display = "flex";
   document.getElementById("issuedCouponResult").style.display = "none";

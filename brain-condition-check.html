@@ -244,6 +244,25 @@ html,body{min-height:100%;background:var(--bg);font-family:'Apple SD Gothic Neo'
 </head>
 <body>
 
+<!-- 관리자 비밀번호 모달 (prompt() 대신 인앱 모달 - 인앱브라우저 차단 회피) -->
+<div class="coupon-overlay" id="admin-pw-overlay">
+  <div class="coupon-box">
+    <h3>🔐 관리자 입장</h3>
+    <p>관리자 비밀번호를 입력해주세요.</p>
+    <div style="position:relative;margin-bottom:12px;">
+      <input type="password" id="admin-pw-input" class="coupon-input" placeholder="비밀번호 입력" autocomplete="off" style="margin-bottom:0;padding-right:46px;" onkeydown="if(event.key==='Enter'){submitAdminPw();}">
+      <button type="button" onclick="toggleAdminPwVisible()" aria-label="비밀번호 표시" style="position:absolute;right:4px;top:50%;transform:translateY(-50%);width:36px;height:36px;background:transparent;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#9aa0c0;">
+        <svg id="admin-pw-eye" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8Z"/><circle cx="12" cy="12" r="3"/></svg>
+      </button>
+    </div>
+    <div class="coupon-msg" id="admin-pw-msg"></div>
+    <div class="coupon-btns">
+      <button class="coupon-cancel-btn" onclick="closeAdminPwModal()">취소</button>
+      <button class="coupon-verify-btn" onclick="submitAdminPw()">확인</button>
+    </div>
+  </div>
+</div>
+
 <!-- 쿠폰 인증 모달 -->
 <div class="coupon-overlay" id="coupon-overlay">
   <div class="coupon-box">
@@ -610,15 +629,44 @@ function closeCouponModal(){
 const ADMIN_PASS = "brain2025!";
 
 function adminLogin(){
-  const pw = prompt("관리자 비밀번호:");
+  closeCouponModal();
+  document.getElementById('admin-pw-input').value = '';
+  document.getElementById('admin-pw-msg').textContent = '';
+  document.getElementById('admin-pw-msg').className = 'coupon-msg';
+  document.getElementById('admin-pw-overlay').classList.add('active');
+  setTimeout(()=>document.getElementById('admin-pw-input').focus(), 100);
+}
+
+function closeAdminPwModal(){
+  document.getElementById('admin-pw-overlay').classList.remove('active');
+}
+
+function toggleAdminPwVisible(){
+  const input = document.getElementById('admin-pw-input');
+  const eye = document.getElementById('admin-pw-eye');
+  if(input.type === 'password'){
+    input.type = 'text';
+    eye.innerHTML = '<path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a18.5 18.5 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>';
+  } else {
+    input.type = 'password';
+    eye.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8Z"/><circle cx="12" cy="12" r="3"/>';
+  }
+  input.focus();
+}
+
+function submitAdminPw(){
+  const pw = document.getElementById('admin-pw-input').value;
   if(!pw) return;
+  const msg = document.getElementById('admin-pw-msg');
   if(pw === ADMIN_PASS){
+    closeAdminPwModal();
     couponVerified = true;
     verifiedCouponCode = "ADMIN-FREE";
     closeCouponModal();
     realStartShutter();
   } else {
-    alert("비밀번호가 틀렸습니다.");
+    msg.textContent = '비밀번호가 틀렸습니다.';
+    msg.className = 'coupon-msg err';
   }
 }
 

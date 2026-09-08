@@ -1172,14 +1172,13 @@ function showResultScreen() {
       if(g) g.style.display='none';
     }
     function adminEnter(){
-      var pw = prompt('관리자 비밀번호를 입력하세요');
-      if(pw === 'brain2025!'){
-        _coupon = { coupon_code:'ADMIN-FREE', remain_count:9999, used_count:0 };
-        closeCouponGate();
-        startRealTest();
-      } else if(pw !== null){
-        alert('비밀번호가 일치하지 않습니다.');
-      }
+      var input = document.getElementById('admin-pw-input');
+      var msg = document.getElementById('admin-pw-msg');
+      if(input){ input.value=''; input.type='password'; }
+      if(msg){ msg.textContent=''; }
+      var overlay = document.getElementById('admin-pw-overlay');
+      overlay.style.display = 'flex';
+      if(input){ setTimeout(function(){ input.focus(); }, 150); }
     }
 
   </script>
@@ -1217,5 +1216,69 @@ function showResultScreen() {
     </button>
   </div>
 </div>
+
+<!-- ===== 관리자 비밀번호 모달 (prompt() 대신 인앱 모달 - 인앱브라우저 차단 회피) ===== -->
+<div id="admin-pw-overlay" style="display:none; position:fixed; inset:0; z-index:10000;
+     background:rgba(0,0,0,.6); padding:20px; align-items:center; justify-content:center;">
+  <div style="max-width:400px; width:100%; background:#FFFBEF; border:2px solid #E4CE8F;
+       border-radius:22px; padding:26px 22px; box-shadow:0 18px 44px -14px rgba(0,0,0,.45); text-align:center;">
+    <div style="font-size:19px; font-weight:900; color:#5A4A22; margin-bottom:16px;">
+      🔐 관리자 입장
+    </div>
+    <div style="position:relative;">
+      <input type="password" id="admin-pw-input" autocomplete="off" placeholder="비밀번호 입력"
+        style="width:100%; padding:16px 48px 16px 14px; border:2px solid #D9C48A; border-radius:14px;
+               background:#fff; font-size:17px; font-weight:700; text-align:center; color:#3A3118;">
+      <button type="button" onclick="toggleAdminPwVisible()" aria-label="비밀번호 표시"
+        style="position:absolute; right:6px; top:50%; transform:translateY(-50%); width:36px; height:36px;
+               background:transparent; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#8A7A4E;">
+        <svg id="admin-pw-eye" width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8Z"/><circle cx="12" cy="12" r="3"/></svg>
+      </button>
+    </div>
+    <div id="admin-pw-msg" style="min-height:22px; margin-top:8px; font-size:13.5px; font-weight:700; color:#c0392b;"></div>
+    <div style="display:flex; gap:10px; margin-top:10px;">
+      <button onclick="closeAdminPwModal()"
+        style="flex:1; min-height:52px; border:none; border-radius:14px; background:#E7E1D2;
+               color:#5A4A22; font-size:15px; font-weight:800; cursor:pointer;">취소</button>
+      <button onclick="submitAdminEnter()"
+        style="flex:1.4; min-height:52px; border:none; border-radius:14px;
+               background:linear-gradient(135deg,#D4B45A,#C9A84C); color:#3A3118;
+               font-size:15px; font-weight:900; cursor:pointer;">확인</button>
+    </div>
+  </div>
+</div>
+<script>
+  function toggleAdminPwVisible(){
+    var input = document.getElementById('admin-pw-input');
+    var eye = document.getElementById('admin-pw-eye');
+    if(input.type === 'password'){
+      input.type = 'text';
+      eye.innerHTML = '<path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a18.5 18.5 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>';
+    } else {
+      input.type = 'password';
+      eye.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8Z"/><circle cx="12" cy="12" r="3"/>';
+    }
+    input.focus();
+  }
+  function closeAdminPwModal(){
+    document.getElementById('admin-pw-overlay').style.display = 'none';
+  }
+  function submitAdminEnter(){
+    var pw = document.getElementById('admin-pw-input').value;
+    var msg = document.getElementById('admin-pw-msg');
+    if(!pw) return;
+    if(pw === 'brain2025!'){
+      closeAdminPwModal();
+      _coupon = { coupon_code:'ADMIN-FREE', remain_count:9999, used_count:0 };
+      closeCouponGate();
+      startRealTest();
+    } else {
+      msg.textContent = '비밀번호가 일치하지 않습니다.';
+    }
+  }
+  document.getElementById('admin-pw-input').addEventListener('keydown', function(e){
+    if(e.key === 'Enter'){ e.preventDefault(); submitAdminEnter(); }
+  });
+</script>
 </body>
 </html>
