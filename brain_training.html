@@ -767,6 +767,13 @@ let trainingStartTime = null;
 // 초기화
 // ============================================
 
+// 서비스워커 등록 (PWA 설치 가능하게 하려면 필수)
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function () {
+    navigator.serviceWorker.register('/sw.js?v=20260830').catch(function () {});
+  });
+}
+
 // PWA 설치 프롬프트
 let btDeferredPrompt = null;
 window.addEventListener('beforeinstallprompt', (e) => {
