@@ -531,14 +531,33 @@ html, body {
     </div>
 
     <button id="btInstallBtn" onclick="installBtApp()"
-      style="display:none; align-items:center; justify-content:center; gap:7px; width:100%; margin-top:14px;
-             padding:12px; border:none; border-radius:10px; background:linear-gradient(135deg,var(--primary),var(--secondary));
-             color:#fff; font-size:13.5px; font-weight:700; cursor:pointer;">
+      style="display:flex; align-items:center; justify-content:center; gap:7px; width:100%; margin-top:14px;
+             padding:14px; border:none; border-radius:10px; background:linear-gradient(135deg,var(--primary),var(--secondary));
+             color:#fff; font-size:15px; font-weight:800; cursor:pointer;">
       📲 홈 화면에 앱으로 설치하기
     </button>
-    <p id="btInstallHint" style="display:none; margin-top:8px; font-size:11.5px; color:#999;">
-      설치 버튼이 안 보이면 우측 상단 메뉴(⋮) → "홈 화면에 추가"를 눌러주세요.
+    <p id="btInstallHint" style="display:block; margin-top:10px; font-size:13.5px; color:#D6336C; font-weight:700; line-height:1.6;">
+      ※ 버튼을 눌러도 설치가 안 되면: 우측 상단 <span style="color:#2563EB;">⋮ 메뉴</span> → <span style="color:#2563EB;">"설치 및 바로가기 만들기"</span>를 눌러주세요.
     </p>
+  </div>
+
+  <div id="btManualGuide" style="display:none; position:fixed; inset:0; z-index:9999; background:rgba(0,0,0,.75);
+       align-items:center; justify-content:center; padding:20px;">
+    <div style="background:#fff; border-radius:16px; padding:24px 20px; max-width:340px; width:100%; text-align:center;">
+      <div style="font-size:40px; margin-bottom:8px;">📲</div>
+      <div style="font-size:18px; font-weight:800; color:#1a1a2e; margin-bottom:14px; line-height:1.5;">
+        자동 설치가 지원되지 않는 브라우저입니다
+      </div>
+      <div style="font-size:15px; font-weight:700; color:#2563EB; line-height:2; text-align:left; background:#F0F5FF; border-radius:10px; padding:14px; margin-bottom:16px;">
+        1. 화면 우측 상단 <span style="color:#D6336C;">⋮</span> 를 눌러주세요<br>
+        2. 메뉴 아래쪽 <span style="color:#D6336C;">"설치 및 바로가기 만들기"</span>를 찾아 눌러주세요<br>
+        3. (읽기 모드 표시 아래, 데스크톱 사이트 위에 있습니다)
+      </div>
+      <button onclick="document.getElementById('btManualGuide').style.display='none';"
+        style="width:100%; padding:12px; border:none; border-radius:10px; background:linear-gradient(135deg,var(--primary),var(--secondary)); color:#fff; font-size:15px; font-weight:800;">
+        확인했습니다
+      </button>
+    </div>
   </div>
 
   <div class="content">
@@ -783,24 +802,28 @@ window.addEventListener('beforeinstallprompt', (e) => {
   if (btn) btn.style.display = 'flex';
 });
 function installBtApp() {
-  if (!btDeferredPrompt) return;
+  if (!btDeferredPrompt) {
+    const guide = document.getElementById('btManualGuide');
+    if (guide) guide.style.display = 'flex';
+    return;
+  }
   btDeferredPrompt.prompt();
   btDeferredPrompt.userChoice.then(() => {
     btDeferredPrompt = null;
     document.getElementById('btInstallBtn').style.display = 'none';
+    document.getElementById('btInstallHint').style.display = 'none';
   });
 }
 window.addEventListener('appinstalled', () => {
   const btn = document.getElementById('btInstallBtn');
   if (btn) btn.style.display = 'none';
 });
-if (!(window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true)) {
-  setTimeout(() => {
-    const hint = document.getElementById('btInstallHint');
-    if (hint && document.getElementById('btInstallBtn').style.display === 'none') {
-      hint.style.display = 'block';
-    }
-  }, 1500);
+// 이미 설치되어 standalone(앱) 모드로 실행 중이면 설치 버튼/안내를 숨김
+if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) {
+  const btn = document.getElementById('btInstallBtn');
+  const hint = document.getElementById('btInstallHint');
+  if (btn) btn.style.display = 'none';
+  if (hint) hint.style.display = 'none';
 }
 
 window.addEventListener('load', async () => {
