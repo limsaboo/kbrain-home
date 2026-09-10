@@ -501,6 +501,48 @@ html, body {
     font-size: 24px;
   }
 }
+
+/* ===== 훈련 화면 공용 반응형 그리드 (모바일/데스크톱 양방향 대응) =====
+   기존 코드는 셀을 고정 px(예: 32px×9=288px)로 계산해 부모 여백까지 합쳐지면
+   좁은 화면(작은 스마트폰, 인앱 브라우저 축소폭)에서 실제로 넘쳐흘렀음(오목판 실측 확인).
+   아래 클래스는 셀 폭을 grid의 1fr + aspect-ratio로 처리해 가로폭이 얼마든
+   컨테이너 안에서 항상 정사각형을 유지한 채 자동으로 줄어들거나(모바일)
+   지정한 최대폭까지만 커지도록(데스크톱) 만든다. */
+.resp-grid {
+  display: grid;
+  gap: 6px;
+  margin: 20px auto;
+  box-sizing: border-box;
+}
+.resp-grid > div {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  height: auto;
+  box-sizing: border-box;
+}
+.resp-grid-3 { grid-template-columns: repeat(3, 1fr); width: min(260px, 100%); }
+.resp-gomoku-board {
+  display: grid;
+  gap: 0;
+  margin: 0 auto;
+  border: 2px solid #b8934a;
+  box-sizing: border-box;
+  width: min(320px, 100%);
+}
+.resp-gomoku-board > div {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  height: auto;
+  background: #dcb35c;
+  border: 1px solid #b8934a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+/* 반응속도/호흡 원형 — 아주 좁은 화면(280px대 폴더블 등)에서도 안전하도록 clamp 적용 */
+.resp-circle-react { width: clamp(140px, 45vw, 220px); height: clamp(140px, 45vw, 220px); }
+.resp-circle-breath { width: clamp(90px, 30vw, 120px); height: clamp(90px, 30vw, 120px); }
 </style>
 </head>
 <body>
@@ -854,7 +896,7 @@ function renderDomains() {
   grid.innerHTML = '';
 
   TRAINING_PROGRAMS.forEach((program, idx) => {
-    const isReady = idx === 0; // 숫자/산수만 실제 작동, 나머지는 준비중
+    const isReady = READY_DOMAINS.includes(idx);
     const card = document.createElement('div');
     card.className = 'domain-card' + (isReady ? '' : ' locked');
     card.onclick = () => {
@@ -924,6 +966,8 @@ let exTotal = 0;
 let exFeedbackTimer = null;
 let exMemoryTimer = null;
 let exCurrentAnswer = null;
+let exReplayFn = null;
+function replayAudio() { if (exReplayFn) exReplayFn(); }
 
 const PROBABILITY_BANK = [
   { q: '동전을 1번 던졌을 때 앞면이 나올 확률은?', choices: ['1/2','1/3','1/4','2/3'], answer: '1/2' },
@@ -938,7 +982,360 @@ const PROBABILITY_BANK = [
 
 function rand(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
 
-function generateQuestion(type) {
+const READY_DOMAINS = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]; // 전체 10개 도메인 모두 오픈
+const REACTION_DOMAIN = 8;   // 반응속도
+const BREATH_DOMAIN = 7;     // 호흡/명상
+const GOMOKU_DOMAIN = 6;     // 오목게임/전략
+const MUSIC_DOMAIN = 4;      // 음악/리듬
+
+// ---- 시각/공간 (id 25~32) ----
+const ROTATION_BANK = [
+  { q: '"L" 모양을 시계방향으로 90도 돌리면 어떤 모양에 가까울까요?', choices: ['⌐ (뒤집힌 L)','L (그대로)','⌐를 상하반전','ㅗ 모양'], answer: '⌐ (뒤집힌 L)' },
+  { q: '삼각형(▲)을 180도 돌리면?', choices: ['▼','▲','◀','▶'], answer: '▼' },
+  { q: '화살표(→)를 시계방향 90도 돌리면?', choices: ['↓','↑','←','→'], answer: '↓' }
+];
+const VISUALIZE_BANK = [
+  { q: '정사각형 6개를 십자(+) 모양으로 펼친 전개도를 접으면 어떤 입체가 될까요?', choices: ['정육면체','원기둥','구','삼각뿔'], answer: '정육면체' },
+  { q: '원을 여러 방향에서 보면 항상 같은 모양으로 보이는 입체는?', choices: ['구(공)','정육면체','원기둥','삼각뿔'], answer: '구(공)' },
+  { q: '삼각형 4개로 이루어진 입체 도형은?', choices: ['삼각뿔','정육면체','원뿔','원기둥'], answer: '삼각뿔' }
+];
+const SPATIAL_PUZZLE_BANK = [
+  { q: '가로 3칸, 세로 3칸 격자에서 대각선 칸의 개수는?', choices: ['3개','2개','4개','6개'], answer: '3개' },
+  { q: '정사각형 안에 대각선을 그으면 몇 개의 삼각형이 생기나요?', choices: ['2개','1개','3개','4개'], answer: '2개' }
+];
+const DIRECTION_BANK = [
+  { q: '북쪽을 보고 있다가 오른쪽으로 90도 돌면 어느 방향을 보게 될까요?', choices: ['동쪽','서쪽','남쪽','북쪽'], answer: '동쪽' },
+  { q: '동쪽을 보고 있다가 왼쪽으로 90도 돌면?', choices: ['북쪽','남쪽','서쪽','동쪽'], answer: '북쪽' },
+  { q: '남쪽을 보고 있다가 뒤로 돌면?', choices: ['북쪽','동쪽','서쪽','남쪽'], answer: '북쪽' }
+];
+const PATTERN2_BANK = [
+  { q: '🔵🔴🔵🔴🔵 다음에 올 도형은?', choices: ['🔴','🔵','🟡','🟢'], answer: '🔴' },
+  { q: '⬆️⬆️➡️⬆️⬆️➡️ 다음에 올 것은?', choices: ['⬆️','➡️','⬇️','⬅️'], answer: '⬆️' },
+  { q: '🔺🔺🔻🔺🔺🔻 다음에 올 것은?', choices: ['🔺','🔻','🔵','🔶'], answer: '🔺' }
+];
+const SPATIAL_REASON_BANK = [
+  { q: '지도에서 A가 B의 왼쪽에 있고, B가 C의 왼쪽에 있다면 순서는?', choices: ['A-B-C','C-B-A','B-A-C','A-C-B'], answer: 'A-B-C' },
+  { q: '상자 안에 상자가 있고, 그 안에 또 상자가 있다면 가장 작은 상자는?', choices: ['맨 안쪽 상자','맨 바깥 상자','가운데 상자','알 수 없다'], answer: '맨 안쪽 상자' }
+];
+const GRID_SIZE = 3;
+function generateGridQuestion() {
+  const total = GRID_SIZE * GRID_SIZE;
+  const target = rand(0, total - 1);
+  return { mode: 'gridmemory', prompt: '빛나는 칸의 위치를 기억하세요', target, answer: String(target) };
+}
+function generateOddColorQuestion() {
+  const base = rand(0, 359);
+  const total = 9;
+  const oddIdx = rand(0, total - 1);
+  return { mode: 'oddcolor', prompt: '주변과 미세하게 다른 색 칸을 찾아 누르세요', base, oddIdx, answer: String(oddIdx) };
+}
+
+// ---- 음악/리듬 (id 33~40, Web Audio API) ----
+let audioCtx = null;
+function getAudioCtx() { if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); return audioCtx; }
+function beep(freq, duration, delay, type) {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      try {
+        const ctx = getAudioCtx();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = type || 'sine';
+        osc.frequency.value = freq;
+        gain.gain.setValueAtTime(0.18, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration / 1000);
+        osc.connect(gain); gain.connect(ctx.destination);
+        osc.start(); osc.stop(ctx.currentTime + duration / 1000);
+        setTimeout(resolve, duration);
+      } catch (e) { resolve(); }
+    }, delay);
+  });
+}
+const MUSIC_EMOTION_BANK = [
+  { q: '느리고 낮은 음으로 구성된 음악은 보통 어떤 느낌을 줄까요?', choices: ['슬프고 차분한 느낌','밝고 신나는 느낌','긴장되는 느낌','공포스러운 느낌'], answer: '슬프고 차분한 느낌' },
+  { q: '빠르고 높은 음으로 구성된 음악은 보통 어떤 느낌을 줄까요?', choices: ['밝고 경쾌한 느낌','슬픈 느낌','졸린 느낌','무거운 느낌'], answer: '밝고 경쾌한 느낌' }
+];
+const MUSIC_ANALYSIS_BANK = [
+  { q: '음악에서 일정하게 반복되는 시간 단위를 무엇이라 할까요?', choices: ['박자','음색','화성','가사'], answer: '박자' },
+  { q: '여러 음이 동시에 울려 만드는 소리의 조합을 무엇이라 할까요?', choices: ['화음','리듬','속도','음역'], answer: '화음' }
+];
+
+// ---- 오목/전략 (id 49~56) 공통 게임 엔진은 아래 initGomoku 참고 ----
+// ---- 호흡/명상 (id 57~64) 공통 페이서는 아래 initBreathing 참고 ----
+// ---- 반응속도 (id 65~72) 공통 엔진은 아래 initReaction 참고 ----
+
+// ---- 언어/단어 (id 9~16) ----
+const VOCAB_BANK = [
+  { q: "'유려하다'의 뜻으로 가장 알맞은 것은?", choices: ['글이나 말이 매끄럽고 아름답다', '성격이 급하다', '값이 비싸다', '몸이 튼튼하다'], answer: '글이나 말이 매끄럽고 아름답다' },
+  { q: "'각별하다'의 뜻으로 가장 알맞은 것은?", choices: ['특별히 다르다', '흔하고 평범하다', '차갑고 냉정하다', '느리고 둔하다'], answer: '특별히 다르다' },
+  { q: "'완곡하다'의 뜻으로 가장 알맞은 것은?", choices: ['말을 부드럽게 돌려서 하다', '매우 직설적이다', '소리가 크다', '움직임이 빠르다'], answer: '말을 부드럽게 돌려서 하다' },
+  { q: "'간과하다'의 뜻으로 가장 알맞은 것은?", choices: ['대수롭지 않게 넘기다', '자세히 살피다', '크게 칭찬하다', '깊이 후회하다'], answer: '대수롭지 않게 넘기다' },
+  { q: "'미덥다'의 뜻으로 가장 알맞은 것은?", choices: ['믿음성이 있다', '의심스럽다', '지저분하다', '화려하다'], answer: '믿음성이 있다' },
+  { q: "'수긍하다'의 뜻으로 가장 알맞은 것은?", choices: ['옳다고 인정하다', '강하게 반대하다', '잊어버리다', '숨기다'], answer: '옳다고 인정하다' }
+];
+const SENTENCE_BANK = [
+  { q: '오랜 가뭄 끝에 단비가 ( )처럼 반가웠다.', choices: ['단비','장마','폭염','한파'], answer: '단비' },
+  { q: '그는 어려운 상황에서도 ( )을 잃지 않았다.', choices: ['희망','절망','포기','방황'], answer: '희망' },
+  { q: '오래된 우정은 ( )처럼 은은하게 깊어진다.', choices: ['묵은 술','새 옷','소나기','불꽃'], answer: '묵은 술' },
+  { q: '그녀는 매사에 ( )한 태도로 일을 처리했다.', choices: ['신중','경솔','태만','산만'], answer: '신중' },
+  { q: '회의는 예상보다 ( )하게 끝났다.', choices: ['순조롭','험악','지루','혼란'], answer: '순조롭' }
+];
+const SYNONYM_BANK = [
+  { q: "'기쁘다'와 뜻이 가장 비슷한 말은?", choices: ['즐겁다','슬프다','두렵다','지치다'], answer: '즐겁다' },
+  { q: "'신속하다'와 뜻이 가장 비슷한 말은?", choices: ['빠르다','느리다','조용하다','무겁다'], answer: '빠르다' },
+  { q: "'소중하다'와 뜻이 가장 비슷한 말은?", choices: ['귀하다','흔하다','값싸다','작다'], answer: '귀하다' },
+  { q: "'견고하다'와 뜻이 가장 비슷한 말은?", choices: ['튼튼하다','약하다','가볍다','부드럽다'], answer: '튼튼하다' },
+  { q: "'명료하다'와 뜻이 가장 비슷한 말은?", choices: ['분명하다','흐릿하다','복잡하다','어둡다'], answer: '분명하다' }
+];
+const ANTONYM_BANK = [
+  { q: "'확장하다'의 반대말은?", choices: ['축소하다','늘리다','넓히다','키우다'], answer: '축소하다' },
+  { q: "'용감하다'의 반대말은?", choices: ['비겁하다','씩씩하다','대담하다','강인하다'], answer: '비겁하다' },
+  { q: "'풍요롭다'의 반대말은?", choices: ['빈곤하다','넉넉하다','부유하다','충분하다'], answer: '빈곤하다' },
+  { q: "'단결하다'의 반대말은?", choices: ['분열하다','뭉치다','협력하다','화합하다'], answer: '분열하다' },
+  { q: "'긴장하다'의 반대말은?", choices: ['이완하다','불안하다','초조하다','조급하다'], answer: '이완하다' }
+];
+const READING_BANK = [
+  { p: '봄이 되면 나무마다 새싹이 돋고, 겨우내 움츠렸던 사람들도 기지개를 켠다. 봄은 시작과 희망의 계절이다.', q: '윗글에서 봄을 무엇의 계절이라 했나요?', choices: ['시작과 희망','끝과 절망','휴식과 정지','더위와 갈증'], answer: '시작과 희망' },
+  { p: '규칙적인 운동은 체력을 기를 뿐 아니라 스트레스를 줄이고 기분을 좋게 만든다.', q: '규칙적인 운동의 효과가 아닌 것은?', choices: ['시력 회복','체력 향상','스트레스 감소','기분 개선'], answer: '시력 회복' },
+  { p: '책을 읽는 습관은 어휘력과 사고력을 함께 키워준다. 특히 다양한 분야의 책을 읽으면 시야가 넓어진다.', q: '다양한 분야의 책을 읽으면 어떻게 되나요?', choices: ['시야가 넓어진다','시력이 나빠진다','잠이 잘 온다','체중이 준다'], answer: '시야가 넓어진다' }
+];
+const ASSOC_BANK = [
+  { q: "'바다'와 가장 관련 있는 단어는?", choices: ['파도','사막','산','들판'], answer: '파도' },
+  { q: "'도서관'과 가장 관련 있는 단어는?", choices: ['책','축구공','냄비','자동차'], answer: '책' },
+  { q: "'겨울'과 가장 관련 있는 단어는?", choices: ['눈','매미','벚꽃','단풍'], answer: '눈' },
+  { q: "'병원'과 가장 관련 있는 단어는?", choices: ['의사','농부','화가','요리사'], answer: '의사' }
+];
+const SPELLING_BANK = [
+  { q: '올바르게 표기된 것은?', choices: ['며칠','몇일','멫일','며칟'], answer: '며칠' },
+  { q: '올바르게 표기된 것은?', choices: ['왠지','웬지','웨지','왠 지'], answer: '왠지' },
+  { q: '올바르게 표기된 것은?', choices: ['설거지','설겆이','설것이','설걷이'], answer: '설거지' },
+  { q: '올바르게 표기된 것은?', choices: ['오랜만','오랫만','오랜 만','오랫 만'], answer: '오랜만' },
+  { q: '올바르게 표기된 것은?', choices: ['십상이다','쉽상이다','십쌍이다','쉽쌍이다'], answer: '십상이다' }
+];
+const SPEED_WORDS = ['사랑','이해','가족','행복','노력','성장','지혜','용기','배려','희망','신뢰','성실'];
+
+// ---- 논리/추론 (id 17~24) ----
+const PUZZLE_BANK = [
+  { q: '사과가 사탕보다 비싸고, 사탕이 껌보다 비쌉니다. 가장 저렴한 것은?', choices: ['껌','사탕','사과','알 수 없다'], answer: '껌' },
+  { q: '철수는 영희보다 나이가 많고, 민수는 철수보다 나이가 많습니다. 가장 어린 사람은?', choices: ['영희','철수','민수','알 수 없다'], answer: '영희' },
+  { q: '빨강 다음에 파랑, 파랑 다음에 노랑이 반복됩니다. 6번째 색은?', choices: ['노랑','빨강','파랑','초록'], answer: '노랑' }
+];
+const INFERENCE_BANK = [
+  { q: '"비가 오면 땅이 젖는다"가 참일 때, 땅이 젖지 않았다면?', choices: ['비가 오지 않았다','비가 왔다','알 수 없다','땅이 말랐다'], answer: '비가 오지 않았다' },
+  { q: '"모든 새는 날개가 있다"가 참일 때, 날개가 없다면?', choices: ['새가 아니다','새다','알 수 없다','포유류다'], answer: '새가 아니다' },
+  { q: '"운동을 하면 건강해진다"가 참일 때, 건강하지 않다면 가장 타당한 추론은?', choices: ['운동을 안 했을 가능성이 크다','반드시 운동을 했다','전혀 상관없다','병에 걸린 것이다'], answer: '운동을 안 했을 가능성이 크다' }
+];
+const RELATION_BANK = [
+  { q: '의사 : 병원 = 교사 : ?', choices: ['학교','자동차','음식점','공원'], answer: '학교' },
+  { q: '물고기 : 물 = 새 : ?', choices: ['하늘','땅속','바다','사막'], answer: '하늘' },
+  { q: '손 : 장갑 = 발 : ?', choices: ['양말','모자','목도리','안경'], answer: '양말' },
+  { q: '작가 : 책 = 화가 : ?', choices: ['그림','악보','건물','옷'], answer: '그림' }
+];
+const JUDGMENT_BANK = [
+  { q: '"모든 사각형은 네 변을 가진다" — 이 문장은?', choices: ['참','거짓'], answer: '참' },
+  { q: '"1은 2보다 크다" — 이 문장은?', choices: ['거짓','참'], answer: '거짓' },
+  { q: '"봄 다음에는 여름이 온다" — 이 문장은?', choices: ['참','거짓'], answer: '참' },
+  { q: '"모든 새는 날 수 있다" — 이 문장은?', choices: ['거짓','참'], answer: '거짓' }
+];
+const CAUSALITY_BANK = [
+  { q: '길이 젖어 있었다. 가장 타당한 원인은?', choices: ['비가 왔다','바람이 불었다','해가 떴다','추웠다'], answer: '비가 왔다' },
+  { q: '방이 갑자기 어두워졌다. 가장 타당한 원인은?', choices: ['전구가 나갔다','문이 열렸다','시계가 멈췄다','창문을 닦았다'], answer: '전구가 나갔다' },
+  { q: '나무 잎이 노랗게 변했다. 가장 타당한 원인은?', choices: ['가을이 왔다','비가 많이 왔다','바람이 없다','해가 안 떴다'], answer: '가을이 왔다' }
+];
+const SYSTEMATIC_BANK = [
+  { q: '요리를 만드는 순서로 가장 알맞은 것은?', choices: ['재료 준비→조리→plating','조리→재료 준비→plating','plating→조리→재료 준비','조리→plating→재료 준비'], answer: '재료 준비→조리→plating' },
+  { q: '집을 짓는 순서로 가장 알맞은 것은?', choices: ['기초→골조→마감','마감→기초→골조','골조→마감→기초','기초→마감→골조'], answer: '기초→골조→마감' }
+];
+const ARGUMENT_BANK = [
+  { q: '"모두가 그렇게 말하니 그건 사실이다" — 이 주장의 약점은?', choices: ['다수의 의견이 항상 사실은 아니다','논리가 완벽하다','증거가 충분하다','결론이 타당하다'], answer: '다수의 의견이 항상 사실은 아니다' },
+  { q: '"어제 운동했더니 오늘 시험을 잘 봤다, 운동이 시험 점수를 높인다" — 이 주장의 문제는?', choices: ['단순한 우연을 인과관계로 착각했다','근거가 충분하다','논리가 타당하다','반박할 수 없다'], answer: '단순한 우연을 인과관계로 착각했다' }
+];
+const COMPLEX_BANK = [
+  { q: 'A는 B보다 빠르고, B는 C보다 느립니다. C가 가장 느리지 않다면 순위는?', choices: ['A>C>B','A>B>C','C>A>B','B>A>C'], answer: 'A>C>B' },
+  { q: '세 사람 중 한 명만 진실을 말합니다. "나는 범인이 아니다"를 모두 말했다면?', choices: ['알 수 없다','모두 범인이다','모두 무죄다','한 명만 범인이다'], answer: '알 수 없다' }
+];
+
+// ---- 미술/색상 (id 41~48) ----
+const COLOR_PAIRS = [
+  { colors: ['#2563eb','#f97316'], label: '파랑-주황 (보색 조화)' },
+  { colors: ['#16a34a','#dc2626'], label: '초록-빨강 (보색 조화)' },
+  { colors: ['#eab308','#7c3aed'], label: '노랑-보라 (보색 조화)' },
+  { colors: ['#0ea5e9','#0369a1'], label: '파랑 계열 (유사 조화)' }
+];
+const HARMONY_BANK = [
+  { q: '따뜻한 느낌을 주는 색은?', choices: ['빨강','파랑','청록','남색'], answer: '빨강' },
+  { q: '차가운 느낌을 주는 색은?', choices: ['파랑','주황','빨강','노랑'], answer: '파랑' },
+  { q: '보색 관계가 아닌 색 조합은?', choices: ['빨강-빨강','빨강-초록','노랑-보라','파랑-주황'], answer: '빨강-빨강' }
+];
+const ART_ANALYSIS_BANK = [
+  { q: '어두운 색을 많이 쓴 그림은 보통 어떤 느낌을 줄까요?', choices: ['무겁고 진지한 느낌','밝고 경쾌한 느낌','시원한 느낌','가벼운 느낌'], answer: '무겁고 진지한 느낌' },
+  { q: '밝고 파스텔톤인 그림은 보통 어떤 느낌을 줄까요?', choices: ['부드럽고 포근한 느낌','무섭고 어두운 느낌','딱딱한 느낌','차가운 느낌'], answer: '부드럽고 포근한 느낌' }
+];
+const STYLE_BANK = [
+  { q: '사실적인 형태보다 감정과 색채를 강조하는 화풍은?', choices: ['표현주의','극사실주의','정물화','캘리그래피'], answer: '표현주의' },
+  { q: '실제와 똑같이 정밀하게 그리는 화풍은?', choices: ['극사실주의','추상화','표현주의','인상주의'], answer: '극사실주의' }
+];
+const COLOR_PSYCH_BANK = [
+  { q: '빨간색이 주는 심리적 느낌은?', choices: ['열정, 흥분','차분함, 평화','신뢰, 안정','신비로움'], answer: '열정, 흥분' },
+  { q: '파란색이 주는 심리적 느낌은?', choices: ['차분함, 신뢰','흥분, 열정','따뜻함','경고'], answer: '차분함, 신뢰' },
+  { q: '초록색이 주는 심리적 느낌은?', choices: ['안정, 편안함','위험, 경고','슬픔','화려함'], answer: '안정, 편안함' }
+];
+const AESTHETICS_BANK = [
+  { q: '일반적으로 균형 잡힌 좌우 대칭 구도는 어떤 느낌을 줄까요?', choices: ['안정적이다','불안정하다','혼란스럽다','산만하다'], answer: '안정적이다' }
+];
+
+// ---- 기억력 (id 73~80) ----
+const IMAGE_MEMORY_SETS = ['🍎🚗🌙⭐️','🐶🎈📚🔔','🌸🍇🚀🎵','🍉🧩🌈🦋'];
+const WORD_MEMORY_SETS = [['나무','구름','창문','연필'], ['바다','편지','우산','시계'], ['커피','정원','기차','달빛']];
+const PATH_BANK = [
+  { q: '집→학교→도서관→집 순서로 이동했습니다. 두 번째로 간 곳은?', choices: ['도서관','학교','집','알 수 없다'], answer: '도서관' },
+  { q: '역→공원→카페→역 순서로 이동했습니다. 세 번째로 간 곳은?', choices: ['카페','공원','역','알 수 없다'], answer: '카페' }
+];
+const INFO_MEMORY_BANK = [
+  { info: '오늘의 약속: 오후 3시, 서울역 2번 출구', q: '약속 장소는 어디였나요?', choices: ['서울역 2번 출구','서울역 1번 출구','시청역','강남역'], answer: '서울역 2번 출구' },
+  { info: '주문 내역: 커피 2잔, 케이크 1개, 총 15,000원', q: '주문한 케이크는 몇 개였나요?', choices: ['1개','2개','3개','0개'], answer: '1개' }
+];
+const TEMPORAL_BANK = [
+  { q: '방금 3초가 지났습니다. 다음 중 3초에 가장 가까운 것은?', choices: ['숨을 한 번 크게 쉬는 시간','밥 한 끼 먹는 시간','잠을 자는 시간','영화 한 편 보는 시간'], answer: '숨을 한 번 크게 쉬는 시간' }
+];
+const PAIR_MEMORY_SETS = [
+  [['사과','빨강'], ['바나나','노랑'], ['하늘','파랑']],
+  [['개','멍멍'], ['고양이','야옹'], ['소','음메']]
+];
+const EVENT_BANK = [
+  { q: '기상 → 아침식사 → 출근 → 퇴근 순서에서 세 번째 일어난 일은?', choices: ['출근','기상','아침식사','퇴근'], answer: '출근' },
+  { q: '씨앗 → 새싹 → 꽃 → 열매 순서에서 두 번째 단계는?', choices: ['새싹','씨앗','꽃','열매'], answer: '새싹' }
+];
+
+function pick(bank) { return bank[rand(0, bank.length - 1)]; }
+function shuffled(arr) { return [...arr].sort(() => Math.random() - 0.5); }
+
+function generateQuestion(t) {
+  const type = t.type, id = t.id;
+
+  // ===== 언어/단어 9~16 =====
+  if (id === 9) { const x = pick(VOCAB_BANK); return { mode: 'choice', prompt: x.q, choices: shuffled(x.choices), answer: x.answer }; }
+  if (id === 10) { const x = pick(SENTENCE_BANK); return { mode: 'choice', prompt: x.q, choices: shuffled(x.choices), answer: x.answer }; }
+  if (id === 11) { const x = pick(SYNONYM_BANK); return { mode: 'choice', prompt: x.q, choices: shuffled(x.choices), answer: x.answer }; }
+  if (id === 12) { const x = pick(ANTONYM_BANK); return { mode: 'choice', prompt: x.q, choices: shuffled(x.choices), answer: x.answer }; }
+  if (id === 13) { const x = pick(READING_BANK); return { mode: 'choice', prompt: `${x.p}<br><br>${x.q}`, choices: shuffled(x.choices), answer: x.answer }; }
+  if (id === 14) { const x = pick(ASSOC_BANK); return { mode: 'choice', prompt: x.q, choices: shuffled(x.choices), answer: x.answer }; }
+  if (id === 15) { const x = pick(SPELLING_BANK); return { mode: 'choice', prompt: x.q, choices: shuffled(x.choices), answer: x.answer }; }
+  if (id === 16) { const w = pick(SPEED_WORDS.map(w=>({w}))).w; return { mode: 'wordmemory', prompt: '아래 단어를 빠르게 기억하세요', digits: w, answer: w, delay: 1200 }; }
+
+  // ===== 논리/추론 17~24 =====
+  if (id === 17) { const x = pick(PUZZLE_BANK); return { mode: 'choice', prompt: x.q, choices: shuffled(x.choices), answer: x.answer }; }
+  if (id === 18) { const x = pick(INFERENCE_BANK); return { mode: 'choice', prompt: x.q, choices: shuffled(x.choices), answer: x.answer }; }
+  if (id === 19) { const x = pick(RELATION_BANK); return { mode: 'choice', prompt: x.q, choices: shuffled(x.choices), answer: x.answer }; }
+  if (id === 20) { const x = pick(JUDGMENT_BANK); return { mode: 'choice', prompt: x.q, choices: x.choices, answer: x.answer }; }
+  if (id === 21) { const x = pick(CAUSALITY_BANK); return { mode: 'choice', prompt: x.q, choices: shuffled(x.choices), answer: x.answer }; }
+  if (id === 22) { const x = pick(SYSTEMATIC_BANK); return { mode: 'choice', prompt: x.q, choices: shuffled(x.choices), answer: x.answer }; }
+  if (id === 23) { const x = pick(ARGUMENT_BANK); return { mode: 'choice', prompt: x.q, choices: shuffled(x.choices), answer: x.answer }; }
+  if (id === 24) { const x = pick(COMPLEX_BANK); return { mode: 'choice', prompt: x.q, choices: shuffled(x.choices), answer: x.answer }; }
+
+  // ===== 시각/공간 25~32 =====
+  if (id === 25) { const x = pick(ROTATION_BANK); return { mode: 'choice', prompt: x.q, choices: shuffled(x.choices), answer: x.answer }; }
+  if (id === 26) { const x = pick(VISUALIZE_BANK); return { mode: 'choice', prompt: x.q, choices: shuffled(x.choices), answer: x.answer }; }
+  if (id === 27) { const x = pick(SPATIAL_PUZZLE_BANK); return { mode: 'choice', prompt: x.q, choices: shuffled(x.choices), answer: x.answer }; }
+  if (id === 28) { const x = pick(DIRECTION_BANK); return { mode: 'choice', prompt: x.q, choices: shuffled(x.choices), answer: x.answer }; }
+  if (id === 29) { return generateGridQuestion(); }
+  if (id === 30) { return generateOddColorQuestion(); }
+  if (id === 31) { const x = pick(PATTERN2_BANK); return { mode: 'choice', prompt: x.q, choices: shuffled(x.choices), answer: x.answer }; }
+  if (id === 32) { const x = pick(SPATIAL_REASON_BANK); return { mode: 'choice', prompt: x.q, choices: shuffled(x.choices), answer: x.answer }; }
+
+  // ===== 미술/색상 41~48 =====
+  if (id === 41) { const x = pick(HARMONY_BANK); return { mode: 'choice', prompt: x.q, choices: shuffled(x.choices), answer: x.answer }; }
+  if (id === 42) { const x = pick(ART_ANALYSIS_BANK); return { mode: 'choice', prompt: x.q, choices: shuffled(x.choices), answer: x.answer }; }
+  if (id === 43) { const set = pick(COLOR_PAIRS); return { mode: 'colormemory', prompt: '아래 색 조합을 기억하세요', colors: set.colors, answer: set.label, choices: shuffled(COLOR_PAIRS.map(c=>c.label)) }; }
+  if (id === 44) { return { mode: 'choice', prompt: '빨강, 주황, 노랑 다음에 올 색은? (무지개 순서)', choices: shuffled(['초록','보라','검정','회색']), answer: '초록' }; }
+  if (id === 45) { const x = pick(STYLE_BANK); return { mode: 'choice', prompt: x.q, choices: shuffled(x.choices), answer: x.answer }; }
+  if (id === 46) { const x = pick(COLOR_PSYCH_BANK); return { mode: 'choice', prompt: x.q, choices: shuffled(x.choices), answer: x.answer }; }
+  if (id === 47) { const x = pick(AESTHETICS_BANK); return { mode: 'choice', prompt: x.q, choices: shuffled(x.choices), answer: x.answer }; }
+  if (id === 48) { return { mode: 'choice', prompt: '창작에서 가장 중요한 것은?', choices: shuffled(['자유로운 표현','정해진 규칙 준수','빠른 속도','정답 맞추기']), answer: '자유로운 표현' }; }
+
+  // ===== 기억력 73~80 =====
+  if (id === 73) { const len = rand(5,7); let d=''; for(let i=0;i<len;i++) d+=rand(0,9); return { mode: 'memory', prompt: '아래 숫자를 기억하세요', digits: d, answer: d }; }
+  if (id === 74) { const s = pick(IMAGE_MEMORY_SETS.map(s=>({s}))).s; return { mode: 'wordmemory', prompt: '아래 그림들을 순서대로 기억하세요', digits: s, answer: s, delay: 2500 }; }
+  if (id === 75) { const set = pick(WORD_MEMORY_SETS.map(s=>({s}))).s; const joined = set.join(' '); return { mode: 'wordmemory', prompt: '아래 단어들을 순서대로 기억하세요', digits: joined, answer: joined, delay: 3000 }; }
+  if (id === 76) { const x = pick(PATH_BANK); return { mode: 'choice', prompt: x.q, choices: shuffled(x.choices), answer: x.answer }; }
+  if (id === 77) { const x = pick(INFO_MEMORY_BANK); return { mode: 'wordmemory', prompt: x.info, digits: '', answer: x.answer, followupQ: x.q, followupChoices: x.choices, delay: 2500 }; }
+  if (id === 78) { const x = pick(TEMPORAL_BANK); return { mode: 'choice', prompt: x.q, choices: shuffled(x.choices), answer: x.answer }; }
+  if (id === 79) { const pairs = pick(PAIR_MEMORY_SETS.map(s=>({s}))).s; const target = pick(pairs.map(p=>({p}))).p; const shown = pairs.map(p=>p.join(' - ')).join(', '); return { mode: 'wordmemory', prompt: `아래 짝을 기억하세요: ${shown}`, digits: '', answer: target[1], followupQ: `'${target[0]}'의 짝은 무엇이었나요?`, followupChoices: shuffled(pairs.map(p=>p[1])), delay: 3500 }; }
+  if (id === 80) { const x = pick(EVENT_BANK); return { mode: 'choice', prompt: x.q, choices: shuffled(x.choices), answer: x.answer }; }
+
+  // ===== 음악/리듬 33~40 (Web Audio) =====
+  if (id === 33) {
+    const low = rand(220, 300), high = rand(400, 520);
+    const firstHigh = Math.random() < 0.5;
+    const f1 = firstHigh ? high : low, f2 = firstHigh ? low : high;
+    const answer = firstHigh ? '첫 번째' : '두 번째';
+    return { mode: 'audio', prompt: '두 음을 듣고 어느 음이 더 높았는지 맞춰보세요', choices: ['첫 번째','두 번째'], answer,
+      playFn: async () => { await beep(f1, 500, 0); await beep(f2, 500, 200); } };
+  }
+  if (id === 34) {
+    const steady = Math.random() < 0.5;
+    const answer = steady ? '일정했다' : '불규칙했다';
+    return { mode: 'audio', prompt: '박자 소리를 듣고 간격이 일정했는지 맞춰보세요', choices: ['일정했다','불규칙했다'], answer,
+      playFn: async () => {
+        const gaps = steady ? [400,400,400,400] : [300,600,250,500];
+        for (let i=0;i<4;i++) await beep(500, 120, i===0?0:gaps[i-1]);
+      } };
+  }
+  if (id === 35) {
+    const notes = [rand(300,340), rand(380,420), rand(440,480)];
+    const same = Math.random() < 0.5;
+    const notes2 = same ? notes : [notes[0], notes[2], notes[1]];
+    const answer = same ? '같다' : '다르다';
+    return { mode: 'audio', prompt: '두 멜로디를 듣고 같은지 다른지 맞춰보세요', choices: ['같다','다르다'], answer,
+      playFn: async () => {
+        for (let i=0;i<notes.length;i++) await beep(notes[i], 300, i===0?0:60);
+        await beep(0,1,500);
+        for (let i=0;i<notes2.length;i++) await beep(notes2[i], 300, i===0?0:60);
+      } };
+  }
+  if (id === 36) {
+    const n = rand(4, 8);
+    const opts = shuffled([n, n+1, n-1, n+2].filter((v,i,a)=>a.indexOf(v)===i)).slice(0,4);
+    return { mode: 'audio', prompt: '몇 번의 소리가 울렸는지 세어보세요', choices: opts.map(String), answer: String(n),
+      playFn: async () => { for (let i=0;i<n;i++) await beep(440, 150, i===0?0:250); } };
+  }
+  if (id === 37) {
+    const firstFast = Math.random() < 0.5;
+    const answer = firstFast ? '첫 번째' : '두 번째';
+    return { mode: 'audio', prompt: '두 박자 중 어느 쪽이 더 빨랐는지 맞춰보세요', choices: ['첫 번째','두 번째'], answer,
+      playFn: async () => {
+        const fastGap = 180, slowGap = 450;
+        const g1 = firstFast ? fastGap : slowGap, g2 = firstFast ? slowGap : fastGap;
+        for (let i=0;i<3;i++) await beep(500,100,i===0?0:g1);
+        await beep(0,1,400);
+        for (let i=0;i<3;i++) await beep(500,100,i===0?0:g2);
+      } };
+  }
+  if (id === 38) {
+    const consonant = Math.random() < 0.5;
+    const base = rand(260, 320);
+    const second = consonant ? base * 1.25 : base * 1.06;
+    const answer = consonant ? '어울린다' : '안 어울린다';
+    return { mode: 'audio', prompt: '두 음을 동시에 듣고 잘 어울리는지 맞춰보세요', choices: ['어울린다','안 어울린다'], answer,
+      playFn: async () => {
+        const ctx = getAudioCtx();
+        [base, second].forEach(f => {
+          const osc = ctx.createOscillator(), gain = ctx.createGain();
+          osc.frequency.value = f; gain.gain.setValueAtTime(0.15, ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.2);
+          osc.connect(gain); gain.connect(ctx.destination);
+          osc.start(); osc.stop(ctx.currentTime + 1.2);
+        });
+        await new Promise(r => setTimeout(r, 1300));
+      } };
+  }
+  if (id === 39) { const x = pick(MUSIC_EMOTION_BANK); return { mode: 'choice', prompt: x.q, choices: shuffled(x.choices), answer: x.answer }; }
+  if (id === 40) { const x = pick(MUSIC_ANALYSIS_BANK); return { mode: 'choice', prompt: x.q, choices: shuffled(x.choices), answer: x.answer }; }
+
+  return generateQuestionLegacy(type);
+}
+
+function generateQuestionLegacy(type) {
   if (type === 'calculation' || type === 'speed') {
     const a = rand(type === 'speed' ? 1 : 10, type === 'speed' ? 9 : 50);
     const b = rand(type === 'speed' ? 1 : 10, type === 'speed' ? 9 : 50);
@@ -996,7 +1393,7 @@ function initExercise() {
 function nextQuestion() {
   clearTimeout(exFeedbackTimer);
   clearTimeout(exMemoryTimer);
-  const q = generateQuestion(currentTraining.type);
+  const q = generateQuestion(currentTraining);
   exCurrentAnswer = q.answer;
   renderQuestion(q);
 }
@@ -1032,6 +1429,148 @@ function renderQuestion(q) {
         inputEl.addEventListener('keydown', (e) => { if (e.key === 'Enter') submitAnswer(); });
       }
     }, 2500);
+    return;
+  }
+
+  if (q.mode === 'wordmemory') {
+    canvas.innerHTML = `
+      <div class="ex-wrap">
+        ${scoreHtml}
+        <div class="ex-prompt">${q.prompt}</div>
+        ${q.digits ? `<div class="ex-memory-digits" id="memDigits" style="font-size:15px;letter-spacing:0;">${q.digits}</div>` : ''}
+        <div class="ex-feedback" id="exFeedback"></div>
+      </div>`;
+    exMemoryTimer = setTimeout(() => {
+      const canvas2 = document.getElementById('trainingCanvas');
+      if (!canvas2) return;
+      if (q.followupQ) {
+        canvas2.innerHTML = `
+          <div class="ex-wrap">
+            ${scoreHtml}
+            <div class="ex-prompt">${q.followupQ}</div>
+            <div class="ex-choices">
+              ${q.followupChoices.map(c => `<button class="ex-choice-btn" onclick="submitAnswer('${c}')">${c}</button>`).join('')}
+            </div>
+            <div class="ex-feedback" id="exFeedback"></div>
+          </div>`;
+      } else {
+        canvas2.innerHTML = `
+          <div class="ex-wrap">
+            ${scoreHtml}
+            <div class="ex-prompt">방금 본 내용을 입력하세요</div>
+            <div class="ex-input-row">
+              <input type="text" class="ex-input" id="exInput" autocomplete="off" placeholder="입력">
+              <button class="ex-submit" onclick="submitAnswer()">확인</button>
+            </div>
+            <div class="ex-feedback" id="exFeedback"></div>
+          </div>`;
+        const inputEl = document.getElementById('exInput');
+        if (inputEl) {
+          inputEl.focus();
+          inputEl.addEventListener('keydown', (e) => { if (e.key === 'Enter') submitAnswer(); });
+        }
+      }
+    }, q.delay || 2500);
+    return;
+  }
+
+  if (q.mode === 'colormemory') {
+    canvas.innerHTML = `
+      <div class="ex-wrap">
+        ${scoreHtml}
+        <div class="ex-prompt">${q.prompt}</div>
+        <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:20px 0;">
+          ${q.colors.map(c => `<div style="width:56px;height:56px;flex-shrink:0;border-radius:12px;background:${c};box-shadow:0 2px 8px rgba(0,0,0,.15);"></div>`).join('')}
+        </div>
+        <div class="ex-feedback" id="exFeedback"></div>
+      </div>`;
+    exMemoryTimer = setTimeout(() => {
+      const canvas2 = document.getElementById('trainingCanvas');
+      if (!canvas2) return;
+      canvas2.innerHTML = `
+        <div class="ex-wrap">
+          ${scoreHtml}
+          <div class="ex-prompt">방금 본 색 조합의 이름은?</div>
+          <div class="ex-choices">
+            ${q.choices.map(c => `<button class="ex-choice-btn" onclick="submitAnswer('${c}')">${c}</button>`).join('')}
+          </div>
+          <div class="ex-feedback" id="exFeedback"></div>
+        </div>`;
+    }, 2200);
+    return;
+  }
+
+  if (q.mode === 'audio') {
+    canvas.innerHTML = `
+      <div class="ex-wrap">
+        ${scoreHtml}
+        <div class="ex-prompt">${q.prompt}</div>
+        <div style="text-align:center;font-size:40px;margin:30px 0;" id="audioIcon">🔊</div>
+        <div class="ex-feedback" id="exFeedback">재생 중입니다...</div>
+      </div>`;
+    q.playFn().then(() => {
+      const canvas2 = document.getElementById('trainingCanvas');
+      if (!canvas2) return;
+      canvas2.innerHTML = `
+        <div class="ex-wrap">
+          ${scoreHtml}
+          <div class="ex-prompt">${q.prompt}</div>
+          <div class="ex-choices">
+            ${q.choices.map(c => `<button class="ex-choice-btn" onclick="submitAnswer('${c}')">${c}</button>`).join('')}
+          </div>
+          <button class="ex-choice-btn" style="margin-top:10px;background:#eee;color:#333;" onclick="replayAudio()">🔁 다시 듣기</button>
+          <div class="ex-feedback" id="exFeedback"></div>
+        </div>`;
+    });
+    exReplayFn = q.playFn;
+    return;
+  }
+
+  if (q.mode === 'gridmemory') {
+    const total = GRID_SIZE * GRID_SIZE;
+    let cellsHtml = '';
+    for (let i=0;i<total;i++) {
+      cellsHtml += `<div class="grid-cell" id="gc${i}" style="border-radius:10px;background:${i===q.target?'#4f46e5':'#e5e7eb'};"></div>`;
+    }
+    canvas.innerHTML = `
+      <div class="ex-wrap">
+        ${scoreHtml}
+        <div class="ex-prompt">${q.prompt}</div>
+        <div class="resp-grid resp-grid-3">${cellsHtml}</div>
+        <div class="ex-feedback" id="exFeedback"></div>
+      </div>`;
+    exMemoryTimer = setTimeout(() => {
+      const canvas2 = document.getElementById('trainingCanvas');
+      if (!canvas2) return;
+      let btns = '';
+      for (let i=0;i<total;i++) {
+        btns += `<div class="grid-cell" onclick="submitAnswer('${i}')" style="border-radius:10px;background:#e5e7eb;cursor:pointer;"></div>`;
+      }
+      canvas2.innerHTML = `
+        <div class="ex-wrap">
+          ${scoreHtml}
+          <div class="ex-prompt">빛났던 칸을 눌러주세요</div>
+          <div class="resp-grid resp-grid-3">${btns}</div>
+          <div class="ex-feedback" id="exFeedback"></div>
+        </div>`;
+    }, 1800);
+    return;
+  }
+
+  if (q.mode === 'oddcolor') {
+    const total = 9;
+    let cellsHtml = '';
+    for (let i=0;i<total;i++) {
+      const light = (i === q.oddIdx) ? 8 : 0;
+      cellsHtml += `<div onclick="submitAnswer('${i}')" style="border-radius:10px;background:hsl(${q.base},55%,${55+light}%);cursor:pointer;"></div>`;
+    }
+    canvas.innerHTML = `
+      <div class="ex-wrap">
+        ${scoreHtml}
+        <div class="ex-prompt">${q.prompt}</div>
+        <div class="resp-grid resp-grid-3">${cellsHtml}</div>
+        <div class="ex-feedback" id="exFeedback"></div>
+      </div>`;
     return;
   }
 
@@ -1114,7 +1653,13 @@ function startTraining(idx) {
 
   document.getElementById('completeBtn').dataset.timerInterval = timerInterval;
 
-  if (currentDomain === 0) {
+  if (currentDomain === REACTION_DOMAIN) {
+    initReaction();
+  } else if (currentDomain === BREATH_DOMAIN) {
+    initBreathing();
+  } else if (currentDomain === GOMOKU_DOMAIN) {
+    initGomoku();
+  } else if (READY_DOMAINS.includes(currentDomain)) {
     initExercise();
   } else {
     document.getElementById('trainingCanvas').innerHTML = `
@@ -1125,6 +1670,189 @@ function startTraining(idx) {
   }
 
   showScreen('trainingScreen');
+}
+
+// ============================================
+// 반응속도 게임 엔진
+// ============================================
+let reactionTimes = [];
+let reactionWaitTimer = null;
+let reactionShownAt = 0;
+let reactionState = 'idle';
+
+function initReaction() {
+  reactionTimes = [];
+  reactionRound();
+}
+
+function reactionRound() {
+  reactionState = 'waiting';
+  const canvas = document.getElementById('trainingCanvas');
+  const avg = reactionTimes.length ? Math.round(reactionTimes.reduce((a,b)=>a+b,0)/reactionTimes.length) : null;
+  canvas.innerHTML = `
+    <div class="ex-wrap">
+      <div class="ex-score">시도 ${reactionTimes.length}회${avg ? ` · 평균 ${avg}ms` : ''}</div>
+      <div id="reactBox" class="resp-circle-react" onclick="reactionTap()" style="cursor:pointer;margin:30px auto;border-radius:20px;background:#94a3b8;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:#fff;transition:background .15s;">
+        준비하세요...
+      </div>
+      <div class="ex-feedback" id="exFeedback"></div>
+    </div>`;
+  const delay = rand(1200, 3200);
+  reactionWaitTimer = setTimeout(() => {
+    const box = document.getElementById('reactBox');
+    if (!box) return;
+    reactionState = 'ready';
+    reactionShownAt = Date.now();
+    box.style.background = '#16a34a';
+    box.textContent = '지금 누르세요!';
+  }, delay);
+}
+
+function reactionTap() {
+  const box = document.getElementById('reactBox');
+  const feedback = document.getElementById('exFeedback');
+  if (reactionState === 'waiting') {
+    clearTimeout(reactionWaitTimer);
+    if (feedback) { feedback.textContent = '⚠️ 너무 빨랐어요! 초록색이 될 때까지 기다려주세요.'; feedback.className = 'ex-feedback wrong'; }
+    setTimeout(() => { if (document.getElementById('trainingScreen').classList.contains('active')) reactionRound(); }, 1000);
+    return;
+  }
+  if (reactionState !== 'ready') return;
+  const ms = Date.now() - reactionShownAt;
+  reactionTimes.push(ms);
+  reactionState = 'idle';
+  if (box) { box.style.background = '#4f46e5'; box.textContent = `${ms}ms`; }
+  if (feedback) { feedback.textContent = ms < 300 ? '⚡ 아주 빠릅니다!' : ms < 500 ? '✅ 좋은 반응속도입니다.' : '🙂 조금 더 집중해볼까요?'; feedback.className = 'ex-feedback correct'; }
+  setTimeout(() => { if (document.getElementById('trainingScreen').classList.contains('active')) reactionRound(); }, 900);
+}
+
+// ============================================
+// 호흡/명상 페이서 엔진
+// ============================================
+let breathTimer = null;
+let breathStep = 0;
+const BREATH_PATTERN = [
+  { label: '들이쉬기', sec: 4, scale: 1.5 },
+  { label: '멈추기', sec: 2, scale: 1.5 },
+  { label: '내쉬기', sec: 6, scale: 1.0 },
+  { label: '멈추기', sec: 2, scale: 1.0 }
+];
+
+function initBreathing() {
+  breathStep = 0;
+  const canvas = document.getElementById('trainingCanvas');
+  canvas.innerHTML = `
+    <div class="ex-wrap" style="padding-top:10px;">
+      <div class="ex-prompt" style="margin-bottom:30px;">${currentTraining.description}</div>
+      <div style="display:flex;align-items:center;justify-content:center;height:220px;">
+        <div id="breathCircle" class="resp-circle-breath" style="border-radius:50%;background:linear-gradient(135deg,#6366f1,#818cf8);transition:transform 3.8s ease-in-out;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:16px;margin:0 auto;">
+          준비
+        </div>
+      </div>
+      <div style="text-align:center;color:#666;font-size:13px;margin-top:10px;">편안하게 앉아 화면의 원을 따라 호흡하세요</div>
+    </div>`;
+  breathNextStep();
+}
+
+function breathNextStep() {
+  const circle = document.getElementById('breathCircle');
+  if (!circle) return;
+  const step = BREATH_PATTERN[breathStep % BREATH_PATTERN.length];
+  circle.style.transform = `scale(${step.scale})`;
+  circle.textContent = step.label;
+  breathTimer = setTimeout(() => {
+    breathStep++;
+    if (document.getElementById('trainingScreen') && document.getElementById('trainingScreen').classList.contains('active')) {
+      breathNextStep();
+    }
+  }, step.sec * 1000);
+}
+
+// ============================================
+// 오목(五目) 게임 엔진 — 9x9 보드, 기본 AI
+// ============================================
+const GOMOKU_SIZE = 9;
+let gomokuBoard = [];
+let gomokuTurn = 'player'; // player: 흑, ai: 백
+let gomokuOver = false;
+
+function initGomoku() {
+  gomokuBoard = Array.from({length: GOMOKU_SIZE}, () => Array(GOMOKU_SIZE).fill(null));
+  gomokuTurn = 'player';
+  gomokuOver = false;
+  renderGomoku('먼저 두세요 (흑돌)');
+}
+
+function renderGomoku(msg) {
+  const canvas = document.getElementById('trainingCanvas');
+  let cells = '';
+  for (let r = 0; r < GOMOKU_SIZE; r++) {
+    for (let c = 0; c < GOMOKU_SIZE; c++) {
+      const v = gomokuBoard[r][c];
+      const stone = v === 'player' ? '<div style="width:80%;height:80%;border-radius:50%;background:#1f2937;margin:auto;"></div>'
+                  : v === 'ai' ? '<div style="width:80%;height:80%;border-radius:50%;background:#f8fafc;border:2px solid #94a3b8;margin:auto;"></div>' : '';
+      cells += `<div onclick="gomokuMove(${r},${c})">${stone}</div>`;
+    }
+  }
+  canvas.innerHTML = `
+    <div class="ex-wrap">
+      <div class="ex-feedback" style="margin-bottom:10px;color:#333;font-weight:700;">${msg}</div>
+      <div class="resp-gomoku-board" style="grid-template-columns:repeat(${GOMOKU_SIZE},1fr);">${cells}</div>
+      <div style="text-align:center;margin-top:14px;">
+        <button class="ex-choice-btn" style="max-width:160px;" onclick="initGomoku()">🔄 새 게임</button>
+      </div>
+    </div>`;
+}
+
+function gomokuMove(r, c) {
+  if (gomokuOver || gomokuTurn !== 'player' || gomokuBoard[r][c]) return;
+  gomokuBoard[r][c] = 'player';
+  if (gomokuCheckWin(r, c, 'player')) { gomokuOver = true; renderGomoku('🎉 승리하셨습니다!'); return; }
+  gomokuTurn = 'ai';
+  renderGomoku('상대가 생각 중...');
+  setTimeout(gomokuAiMove, 500);
+}
+
+function gomokuAiMove() {
+  if (gomokuOver) return;
+  let best = null, bestScore = -1;
+  for (let r = 0; r < GOMOKU_SIZE; r++) {
+    for (let c = 0; c < GOMOKU_SIZE; c++) {
+      if (gomokuBoard[r][c]) continue;
+      let score = gomokuScoreAt(r, c, 'ai') + gomokuScoreAt(r, c, 'player') * 0.9;
+      const centerDist = Math.abs(r - 4) + Math.abs(c - 4);
+      score += (8 - centerDist) * 0.1;
+      if (score > bestScore) { bestScore = score; best = [r, c]; }
+    }
+  }
+  if (!best) { renderGomoku('무승부입니다.'); gomokuOver = true; return; }
+  const [r, c] = best;
+  gomokuBoard[r][c] = 'ai';
+  if (gomokuCheckWin(r, c, 'ai')) { gomokuOver = true; renderGomoku('상대가 승리했습니다. 다시 도전해보세요!'); return; }
+  gomokuTurn = 'player';
+  renderGomoku('두세요 (흑돌)');
+}
+
+function gomokuScoreAt(r, c, who) {
+  const dirs = [[0,1],[1,0],[1,1],[1,-1]];
+  let maxLen = 0;
+  dirs.forEach(([dr,dc]) => {
+    let len = 1;
+    for (let s = 1; s < 5; s++) { const rr=r+dr*s, cc=c+dc*s; if (rr<0||cc<0||rr>=GOMOKU_SIZE||cc>=GOMOKU_SIZE||gomokuBoard[rr][cc]!==who) break; len++; }
+    for (let s = 1; s < 5; s++) { const rr=r-dr*s, cc=c-dc*s; if (rr<0||cc<0||rr>=GOMOKU_SIZE||cc>=GOMOKU_SIZE||gomokuBoard[rr][cc]!==who) break; len++; }
+    if (len > maxLen) maxLen = len;
+  });
+  return maxLen * maxLen;
+}
+
+function gomokuCheckWin(r, c, who) {
+  const dirs = [[0,1],[1,0],[1,1],[1,-1]];
+  return dirs.some(([dr,dc]) => {
+    let len = 1;
+    for (let s = 1; s < 5; s++) { const rr=r+dr*s, cc=c+dc*s; if (rr<0||cc<0||rr>=GOMOKU_SIZE||cc>=GOMOKU_SIZE||gomokuBoard[rr][cc]!==who) break; len++; }
+    for (let s = 1; s < 5; s++) { const rr=r-dr*s, cc=c-dc*s; if (rr<0||cc<0||rr>=GOMOKU_SIZE||cc>=GOMOKU_SIZE||gomokuBoard[rr][cc]!==who) break; len++; }
+    return len >= 5;
+  });
 }
 
 function updateTimer(seconds) {
@@ -1143,6 +1871,8 @@ function completeTraining() {
   if (timerInterval) clearInterval(timerInterval);
   clearTimeout(exFeedbackTimer);
   clearTimeout(exMemoryTimer);
+  clearTimeout(reactionWaitTimer);
+  clearTimeout(breathTimer);
 
   const duration = currentTraining.duration;
   totalMinutes += duration;
@@ -1153,8 +1883,11 @@ function completeTraining() {
   }
 
   // 결과 화면 표시
-  const scoreLine = (currentDomain === 0 && exTotal > 0)
+  const QUIZ_DOMAINS = [0,1,2,3,4,5,9];
+  const scoreLine = (QUIZ_DOMAINS.includes(currentDomain) && exTotal > 0)
     ? `\n정답 ${exCorrect} / 시도 ${exTotal} (정답률 ${Math.round(exCorrect / exTotal * 100)}%)`
+    : (currentDomain === REACTION_DOMAIN && reactionTimes.length > 0)
+    ? `\n평균 반응속도 ${Math.round(reactionTimes.reduce((a,b)=>a+b,0)/reactionTimes.length)}ms (${reactionTimes.length}회 측정)`
     : '';
   document.getElementById('resultMessage').textContent =
     `${currentTraining.name} 완료!\n${duration}분이 누적되었습니다.${scoreLine}`;
