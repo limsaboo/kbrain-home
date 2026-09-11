@@ -992,30 +992,44 @@ const MUSIC_DOMAIN = 4;      // 음악/리듬
 const ROTATION_BANK = [
   { q: '"L" 모양을 시계방향으로 90도 돌리면 어떤 모양에 가까울까요?', choices: ['⌐ (뒤집힌 L)','L (그대로)','⌐를 상하반전','ㅗ 모양'], answer: '⌐ (뒤집힌 L)' },
   { q: '삼각형(▲)을 180도 돌리면?', choices: ['▼','▲','◀','▶'], answer: '▼' },
-  { q: '화살표(→)를 시계방향 90도 돌리면?', choices: ['↓','↑','←','→'], answer: '↓' }
+  { q: '화살표(→)를 시계방향 90도 돌리면?', choices: ['↓','↑','←','→'], answer: '↓' },
+  { q: '"b"를 좌우로 뒤집으면 어떤 글자에 가까울까요?', choices: ['d','p','q','b'], answer: 'd' },
+  { q: '정사각형을 45도 돌리면 어떤 모양처럼 보일까요?', choices: ['마름모(◇)','원','직사각형','오각형'], answer: '마름모(◇)' }
 ];
 const VISUALIZE_BANK = [
   { q: '정사각형 6개를 십자(+) 모양으로 펼친 전개도를 접으면 어떤 입체가 될까요?', choices: ['정육면체','원기둥','구','삼각뿔'], answer: '정육면체' },
   { q: '원을 여러 방향에서 보면 항상 같은 모양으로 보이는 입체는?', choices: ['구(공)','정육면체','원기둥','삼각뿔'], answer: '구(공)' },
-  { q: '삼각형 4개로 이루어진 입체 도형은?', choices: ['삼각뿔','정육면체','원뿔','원기둥'], answer: '삼각뿔' }
+  { q: '삼각형 4개로 이루어진 입체 도형은?', choices: ['삼각뿔','정육면체','원뿔','원기둥'], answer: '삼각뿔' },
+  { q: '원기둥을 위에서 내려다보면 어떤 모양으로 보일까요?', choices: ['원','직사각형','삼각형','정사각형'], answer: '원' },
+  { q: '정육면체를 정면에서 보면 어떤 모양으로 보일까요?', choices: ['정사각형','원','삼각형','오각형'], answer: '정사각형' }
 ];
 const SPATIAL_PUZZLE_BANK = [
   { q: '가로 3칸, 세로 3칸 격자에서 대각선 칸의 개수는?', choices: ['3개','2개','4개','6개'], answer: '3개' },
-  { q: '정사각형 안에 대각선을 그으면 몇 개의 삼각형이 생기나요?', choices: ['2개','1개','3개','4개'], answer: '2개' }
+  { q: '정사각형 안에 대각선을 그으면 몇 개의 삼각형이 생기나요?', choices: ['2개','1개','3개','4개'], answer: '2개' },
+  { q: '직사각형을 반으로 접으면 어떤 모양이 될까요?', choices: ['더 작은 직사각형','삼각형','원','오각형'], answer: '더 작은 직사각형' },
+  { q: '정사각형 4개를 이어 붙여 만들 수 없는 모양은?', choices: ['원','일자형','정사각형','ㄱ자형'], answer: '원' },
+  { q: '퍼즐 조각 3개로 정사각형을 완성하려면 최소 몇 개가 더 필요한가요? (이미 3개가 정사각형의 일부)', choices: ['조각 배치에 따라 다르다','항상 1개','항상 2개','항상 3개'], answer: '조각 배치에 따라 다르다' }
 ];
 const DIRECTION_BANK = [
   { q: '북쪽을 보고 있다가 오른쪽으로 90도 돌면 어느 방향을 보게 될까요?', choices: ['동쪽','서쪽','남쪽','북쪽'], answer: '동쪽' },
   { q: '동쪽을 보고 있다가 왼쪽으로 90도 돌면?', choices: ['북쪽','남쪽','서쪽','동쪽'], answer: '북쪽' },
-  { q: '남쪽을 보고 있다가 뒤로 돌면?', choices: ['북쪽','동쪽','서쪽','남쪽'], answer: '북쪽' }
+  { q: '남쪽을 보고 있다가 뒤로 돌면?', choices: ['북쪽','동쪽','서쪽','남쪽'], answer: '북쪽' },
+  { q: '서쪽을 보고 있다가 오른쪽으로 90도 돌면?', choices: ['북쪽','남쪽','동쪽','서쪽'], answer: '북쪽' },
+  { q: '북쪽을 보고 왼쪽으로 두 번(180도) 돌면?', choices: ['남쪽','북쪽','동쪽','서쪽'], answer: '남쪽' }
 ];
 const PATTERN2_BANK = [
   { q: '🔵🔴🔵🔴🔵 다음에 올 도형은?', choices: ['🔴','🔵','🟡','🟢'], answer: '🔴' },
   { q: '⬆️⬆️➡️⬆️⬆️➡️ 다음에 올 것은?', choices: ['⬆️','➡️','⬇️','⬅️'], answer: '⬆️' },
-  { q: '🔺🔺🔻🔺🔺🔻 다음에 올 것은?', choices: ['🔺','🔻','🔵','🔶'], answer: '🔺' }
+  { q: '🔺🔺🔻🔺🔺🔻 다음에 올 것은?', choices: ['🔺','🔻','🔵','🔶'], answer: '🔺' },
+  { q: '⭐️⭐️🌙⭐️⭐️🌙⭐️⭐️ 다음에 올 것은?', choices: ['🌙','⭐️','☀️','🌈'], answer: '🌙' },
+  { q: '🟩🟨🟩🟨🟩🟨 다음에 올 색은?', choices: ['🟩','🟨','🟥','🟦'], answer: '🟩' }
 ];
 const SPATIAL_REASON_BANK = [
   { q: '지도에서 A가 B의 왼쪽에 있고, B가 C의 왼쪽에 있다면 순서는?', choices: ['A-B-C','C-B-A','B-A-C','A-C-B'], answer: 'A-B-C' },
-  { q: '상자 안에 상자가 있고, 그 안에 또 상자가 있다면 가장 작은 상자는?', choices: ['맨 안쪽 상자','맨 바깥 상자','가운데 상자','알 수 없다'], answer: '맨 안쪽 상자' }
+  { q: '상자 안에 상자가 있고, 그 안에 또 상자가 있다면 가장 작은 상자는?', choices: ['맨 안쪽 상자','맨 바깥 상자','가운데 상자','알 수 없다'], answer: '맨 안쪽 상자' },
+  { q: '책상 위에 컵이 있고, 컵 위에 책이 있다면 가장 아래에 있는 것은?', choices: ['책상','컵','책','알 수 없다'], answer: '책상' },
+  { q: 'A건물이 B건물보다 높고, B건물이 C건물보다 낮다면 가장 높은 건물은?', choices: ['A','B','C','알 수 없다'], answer: 'A' },
+  { q: '원 안에 사각형이 있고, 사각형 안에 삼각형이 있다면 가장 바깥쪽 도형은?', choices: ['원','사각형','삼각형','알 수 없다'], answer: '원' }
 ];
 const GRID_SIZE = 3;
 function generateGridQuestion() {
@@ -1053,11 +1067,17 @@ function beep(freq, duration, delay, type) {
 }
 const MUSIC_EMOTION_BANK = [
   { q: '느리고 낮은 음으로 구성된 음악은 보통 어떤 느낌을 줄까요?', choices: ['슬프고 차분한 느낌','밝고 신나는 느낌','긴장되는 느낌','공포스러운 느낌'], answer: '슬프고 차분한 느낌' },
-  { q: '빠르고 높은 음으로 구성된 음악은 보통 어떤 느낌을 줄까요?', choices: ['밝고 경쾌한 느낌','슬픈 느낌','졸린 느낌','무거운 느낌'], answer: '밝고 경쾌한 느낌' }
+  { q: '빠르고 높은 음으로 구성된 음악은 보통 어떤 느낌을 줄까요?', choices: ['밝고 경쾌한 느낌','슬픈 느낌','졸린 느낌','무거운 느낌'], answer: '밝고 경쾌한 느낌' },
+  { q: '단조(minor key) 음악은 보통 어떤 느낌을 줄까요?', choices: ['애잔하고 쓸쓸한 느낌','밝고 명랑한 느낌','씩씩한 느낌','장엄한 느낌'], answer: '애잔하고 쓸쓸한 느낌' },
+  { q: '갑자기 커지는 음량(크레센도)은 보통 어떤 느낌을 줄까요?', choices: ['긴장감이 고조되는 느낌','편안하고 나른한 느낌','조용히 가라앉는 느낌','아무 변화 없는 느낌'], answer: '긴장감이 고조되는 느낌' },
+  { q: '일정하고 규칙적인 박자는 보통 어떤 느낌을 줄까요?', choices: ['안정되고 편안한 느낌','불안하고 초조한 느낌','혼란스러운 느낌','슬픈 느낌'], answer: '안정되고 편안한 느낌' }
 ];
 const MUSIC_ANALYSIS_BANK = [
   { q: '음악에서 일정하게 반복되는 시간 단위를 무엇이라 할까요?', choices: ['박자','음색','화성','가사'], answer: '박자' },
-  { q: '여러 음이 동시에 울려 만드는 소리의 조합을 무엇이라 할까요?', choices: ['화음','리듬','속도','음역'], answer: '화음' }
+  { q: '여러 음이 동시에 울려 만드는 소리의 조합을 무엇이라 할까요?', choices: ['화음','리듬','속도','음역'], answer: '화음' },
+  { q: '음악의 빠르기를 나타내는 용어는?', choices: ['템포','음정','가사','화성'], answer: '템포' },
+  { q: '음의 길고 짧음, 강약이 만드는 시간적 패턴을 무엇이라 할까요?', choices: ['리듬','음색','화음','음역'], answer: '리듬' },
+  { q: '같은 멜로디가 악곡에서 반복되는 부분을 무엇이라 할까요?', choices: ['후렴(코러스)','전주','간주','엔딩'], answer: '후렴(코러스)' }
 ];
 
 // ---- 오목/전략 (id 49~56) 공통 게임 엔진은 아래 initGomoku 참고 ----
@@ -1097,13 +1117,16 @@ const ANTONYM_BANK = [
 const READING_BANK = [
   { p: '봄이 되면 나무마다 새싹이 돋고, 겨우내 움츠렸던 사람들도 기지개를 켠다. 봄은 시작과 희망의 계절이다.', q: '윗글에서 봄을 무엇의 계절이라 했나요?', choices: ['시작과 희망','끝과 절망','휴식과 정지','더위와 갈증'], answer: '시작과 희망' },
   { p: '규칙적인 운동은 체력을 기를 뿐 아니라 스트레스를 줄이고 기분을 좋게 만든다.', q: '규칙적인 운동의 효과가 아닌 것은?', choices: ['시력 회복','체력 향상','스트레스 감소','기분 개선'], answer: '시력 회복' },
-  { p: '책을 읽는 습관은 어휘력과 사고력을 함께 키워준다. 특히 다양한 분야의 책을 읽으면 시야가 넓어진다.', q: '다양한 분야의 책을 읽으면 어떻게 되나요?', choices: ['시야가 넓어진다','시력이 나빠진다','잠이 잘 온다','체중이 준다'], answer: '시야가 넓어진다' }
+  { p: '책을 읽는 습관은 어휘력과 사고력을 함께 키워준다. 특히 다양한 분야의 책을 읽으면 시야가 넓어진다.', q: '다양한 분야의 책을 읽으면 어떻게 되나요?', choices: ['시야가 넓어진다','시력이 나빠진다','잠이 잘 온다','체중이 준다'], answer: '시야가 넓어진다' },
+  { p: '숙면은 뇌를 쉬게 하고 기억을 정리해주는 중요한 과정이다. 잠이 부족하면 집중력과 판단력이 떨어진다.', q: '잠이 부족하면 어떤 일이 생기나요?', choices: ['집중력과 판단력 저하','기억력 향상','체력 증가','시력 개선'], answer: '집중력과 판단력 저하' },
+  { p: '대화를 할 때는 상대방의 말을 끝까지 듣는 태도가 중요하다. 이는 신뢰를 쌓는 첫걸음이다.', q: '윗글에서 신뢰를 쌓는 첫걸음이라 한 것은?', choices: ['끝까지 듣는 태도','빨리 말하는 것','큰 소리로 말하는 것','자주 끼어드는 것'], answer: '끝까지 듣는 태도' }
 ];
 const ASSOC_BANK = [
   { q: "'바다'와 가장 관련 있는 단어는?", choices: ['파도','사막','산','들판'], answer: '파도' },
   { q: "'도서관'과 가장 관련 있는 단어는?", choices: ['책','축구공','냄비','자동차'], answer: '책' },
   { q: "'겨울'과 가장 관련 있는 단어는?", choices: ['눈','매미','벚꽃','단풍'], answer: '눈' },
-  { q: "'병원'과 가장 관련 있는 단어는?", choices: ['의사','농부','화가','요리사'], answer: '의사' }
+  { q: "'병원'과 가장 관련 있는 단어는?", choices: ['의사','농부','화가','요리사'], answer: '의사' },
+  { q: "'주방'과 가장 관련 있는 단어는?", choices: ['냄비','축구공','망원경','악보'], answer: '냄비' }
 ];
 const SPELLING_BANK = [
   { q: '올바르게 표기된 것은?', choices: ['며칠','몇일','멫일','며칟'], answer: '며칠' },
@@ -1118,41 +1141,58 @@ const SPEED_WORDS = ['사랑','이해','가족','행복','노력','성장','지�
 const PUZZLE_BANK = [
   { q: '사과가 사탕보다 비싸고, 사탕이 껌보다 비쌉니다. 가장 저렴한 것은?', choices: ['껌','사탕','사과','알 수 없다'], answer: '껌' },
   { q: '철수는 영희보다 나이가 많고, 민수는 철수보다 나이가 많습니다. 가장 어린 사람은?', choices: ['영희','철수','민수','알 수 없다'], answer: '영희' },
-  { q: '빨강 다음에 파랑, 파랑 다음에 노랑이 반복됩니다. 6번째 색은?', choices: ['노랑','빨강','파랑','초록'], answer: '노랑' }
+  { q: '빨강 다음에 파랑, 파랑 다음에 노랑이 반복됩니다. 6번째 색은?', choices: ['노랑','빨강','파랑','초록'], answer: '노랑' },
+  { q: 'A는 B의 형이고, B는 C의 형입니다. 가장 나이 어린 사람은?', choices: ['C','A','B','알 수 없다'], answer: 'C' },
+  { q: '월요일부터 매일 1개씩 사과를 먹습니다. 금요일까지 먹은 사과는 총 몇 개?', choices: ['5개','4개','6개','3개'], answer: '5개' }
 ];
 const INFERENCE_BANK = [
   { q: '"비가 오면 땅이 젖는다"가 참일 때, 땅이 젖지 않았다면?', choices: ['비가 오지 않았다','비가 왔다','알 수 없다','땅이 말랐다'], answer: '비가 오지 않았다' },
   { q: '"모든 새는 날개가 있다"가 참일 때, 날개가 없다면?', choices: ['새가 아니다','새다','알 수 없다','포유류다'], answer: '새가 아니다' },
-  { q: '"운동을 하면 건강해진다"가 참일 때, 건강하지 않다면 가장 타당한 추론은?', choices: ['운동을 안 했을 가능성이 크다','반드시 운동을 했다','전혀 상관없다','병에 걸린 것이다'], answer: '운동을 안 했을 가능성이 크다' }
+  { q: '"운동을 하면 건강해진다"가 참일 때, 건강하지 않다면 가장 타당한 추론은?', choices: ['운동을 안 했을 가능성이 크다','반드시 운동을 했다','전혀 상관없다','병에 걸린 것이다'], answer: '운동을 안 했을 가능성이 크다' },
+  { q: '"불이 나면 연기가 난다"가 참일 때, 연기가 없다면?', choices: ['불이 나지 않았을 가능성이 크다','반드시 불이 났다','상관없다','연기가 사라진 것이다'], answer: '불이 나지 않았을 가능성이 크다' },
+  { q: '"열심히 공부하면 시험을 잘 본다"가 참일 때, 시험을 못 봤다면 가장 타당한 추론은?', choices: ['공부를 충분히 안 했을 가능성이 크다','반드시 공부를 안 했다','시험이 쉬웠다','우연이다'], answer: '공부를 충분히 안 했을 가능성이 크다' }
 ];
 const RELATION_BANK = [
   { q: '의사 : 병원 = 교사 : ?', choices: ['학교','자동차','음식점','공원'], answer: '학교' },
   { q: '물고기 : 물 = 새 : ?', choices: ['하늘','땅속','바다','사막'], answer: '하늘' },
   { q: '손 : 장갑 = 발 : ?', choices: ['양말','모자','목도리','안경'], answer: '양말' },
-  { q: '작가 : 책 = 화가 : ?', choices: ['그림','악보','건물','옷'], answer: '그림' }
+  { q: '작가 : 책 = 화가 : ?', choices: ['그림','악보','건물','옷'], answer: '그림' },
+  { q: '열쇠 : 자물쇠 = 비밀번호 : ?', choices: ['잠금장치','우산','시계','신발'], answer: '잠금장치' }
 ];
 const JUDGMENT_BANK = [
   { q: '"모든 사각형은 네 변을 가진다" — 이 문장은?', choices: ['참','거짓'], answer: '참' },
   { q: '"1은 2보다 크다" — 이 문장은?', choices: ['거짓','참'], answer: '거짓' },
   { q: '"봄 다음에는 여름이 온다" — 이 문장은?', choices: ['참','거짓'], answer: '참' },
-  { q: '"모든 새는 날 수 있다" — 이 문장은?', choices: ['거짓','참'], answer: '거짓' }
+  { q: '"모든 새는 날 수 있다" — 이 문장은?', choices: ['거짓','참'], answer: '거짓' },
+  { q: '"물은 100도에서 끓는다" (해수면 기준) — 이 문장은?', choices: ['참','거짓'], answer: '참' }
 ];
 const CAUSALITY_BANK = [
   { q: '길이 젖어 있었다. 가장 타당한 원인은?', choices: ['비가 왔다','바람이 불었다','해가 떴다','추웠다'], answer: '비가 왔다' },
   { q: '방이 갑자기 어두워졌다. 가장 타당한 원인은?', choices: ['전구가 나갔다','문이 열렸다','시계가 멈췄다','창문을 닦았다'], answer: '전구가 나갔다' },
-  { q: '나무 잎이 노랗게 변했다. 가장 타당한 원인은?', choices: ['가을이 왔다','비가 많이 왔다','바람이 없다','해가 안 떴다'], answer: '가을이 왔다' }
+  { q: '나무 잎이 노랗게 변했다. 가장 타당한 원인은?', choices: ['가을이 왔다','비가 많이 왔다','바람이 없다','해가 안 떴다'], answer: '가을이 왔다' },
+  { q: '아이스크림이 순식간에 녹았다. 가장 타당한 원인은?', choices: ['날씨가 더웠다','비가 왔다','바람이 불었다','밤이 되었다'], answer: '날씨가 더웠다' },
+  { q: '자동차가 갑자기 멈췄다. 가장 타당한 원인은?', choices: ['연료가 떨어졌다','도로가 넓었다','신호가 초록불이었다','날씨가 맑았다'], answer: '연료가 떨어졌다' }
 ];
 const SYSTEMATIC_BANK = [
   { q: '요리를 만드는 순서로 가장 알맞은 것은?', choices: ['재료 준비→조리→plating','조리→재료 준비→plating','plating→조리→재료 준비','조리→plating→재료 준비'], answer: '재료 준비→조리→plating' },
-  { q: '집을 짓는 순서로 가장 알맞은 것은?', choices: ['기초→골조→마감','마감→기초→골조','골조→마감→기초','기초→마감→골조'], answer: '기초→골조→마감' }
+  { q: '집을 짓는 순서로 가장 알맞은 것은?', choices: ['기초→골조→마감','마감→기초→골조','골조→마감→기초','기초→마감→골조'], answer: '기초→골조→마감' },
+  { q: '편지를 보내는 순서로 가장 알맞은 것은?', choices: ['작성→봉투에 넣기→우체통','우체통→작성→봉투에 넣기','봉투에 넣기→우체통→작성','작성→우체통→봉투에 넣기'], answer: '작성→봉투에 넣기→우체통' },
+  { q: '나무를 심는 순서로 가장 알맞은 것은?', choices: ['구덩이 파기→묘목 심기→물 주기','물 주기→구덩이 파기→묘목 심기','묘목 심기→구덩이 파기→물 주기','물 주기→묘목 심기→구덩이 파기'], answer: '구덩이 파기→묘목 심기→물 주기' },
+  { q: '보고서를 작성하는 순서로 가장 알맞은 것은?', choices: ['자료 조사→초안 작성→검토','초안 작성→자료 조사→검토','검토→자료 조사→초안 작성','초안 작성→검토→자료 조사'], answer: '자료 조사→초안 작성→검토' }
 ];
 const ARGUMENT_BANK = [
   { q: '"모두가 그렇게 말하니 그건 사실이다" — 이 주장의 약점은?', choices: ['다수의 의견이 항상 사실은 아니다','논리가 완벽하다','증거가 충분하다','결론이 타당하다'], answer: '다수의 의견이 항상 사실은 아니다' },
-  { q: '"어제 운동했더니 오늘 시험을 잘 봤다, 운동이 시험 점수를 높인다" — 이 주장의 문제는?', choices: ['단순한 우연을 인과관계로 착각했다','근거가 충분하다','논리가 타당하다','반박할 수 없다'], answer: '단순한 우연을 인과관계로 착각했다' }
+  { q: '"어제 운동했더니 오늘 시험을 잘 봤다, 운동이 시험 점수를 높인다" — 이 주장의 문제는?', choices: ['단순한 우연을 인과관계로 착각했다','근거가 충분하다','논리가 타당하다','반박할 수 없다'], answer: '단순한 우연을 인과관계로 착각했다' },
+  { q: '"그 사람은 부자니까 분명 행복할 것이다" — 이 주장의 문제는?', choices: ['재산과 행복이 항상 비례하지 않는다','논리가 완벽하다','반드시 참이다','충분한 근거다'], answer: '재산과 행복이 항상 비례하지 않는다' },
+  { q: '"유명인이 광고했으니 좋은 제품일 것이다" — 이 주장의 문제는?', choices: ['유명인의 추천이 품질을 보장하지 않는다','과학적으로 증명됐다','반박 불가능하다','합리적 근거다'], answer: '유명인의 추천이 품질을 보장하지 않는다' },
+  { q: '"내 친구도 그렇게 생각하니 맞는 말이다" — 이 주장의 문제는?', choices: ['한 사람의 동의가 사실을 증명하지 않는다','충분한 증거다','논리적으로 완벽하다','객관적이다'], answer: '한 사람의 동의가 사실을 증명하지 않는다' }
 ];
 const COMPLEX_BANK = [
   { q: 'A는 B보다 빠르고, B는 C보다 느립니다. C가 가장 느리지 않다면 순위는?', choices: ['A>C>B','A>B>C','C>A>B','B>A>C'], answer: 'A>C>B' },
-  { q: '세 사람 중 한 명만 진실을 말합니다. "나는 범인이 아니다"를 모두 말했다면?', choices: ['알 수 없다','모두 범인이다','모두 무죄다','한 명만 범인이다'], answer: '알 수 없다' }
+  { q: '세 사람 중 한 명만 진실을 말합니다. "나는 범인이 아니다"를 모두 말했다면?', choices: ['알 수 없다','모두 범인이다','모두 무죄다','한 명만 범인이다'], answer: '알 수 없다' },
+  { q: '네 명이 달리기를 했다. A는 B보다 빠르고, C는 D보다 빠르고, B는 C보다 빠르다. 가장 빠른 사람은?', choices: ['A','B','C','D'], answer: 'A' },
+  { q: '두 상자 중 하나에만 상품이 있다. "1번 상자에 있다"는 말이 거짓이라면 상품은 어디에?', choices: ['2번 상자','1번 상자','둘 다','알 수 없다'], answer: '2번 상자' },
+  { q: '세 개의 저울 중 하나만 고장났다. 두 번 측정해서 같은 결과가 나온 저울 두 개는?', choices: ['정상일 가능성이 크다','둘 다 고장났다','알 수 없다','반드시 고장났다'], answer: '정상일 가능성이 크다' }
 ];
 
 // ---- 미술/색상 (id 41~48) ----
@@ -1160,28 +1200,57 @@ const COLOR_PAIRS = [
   { colors: ['#2563eb','#f97316'], label: '파랑-주황 (보색 조화)' },
   { colors: ['#16a34a','#dc2626'], label: '초록-빨강 (보색 조화)' },
   { colors: ['#eab308','#7c3aed'], label: '노랑-보라 (보색 조화)' },
-  { colors: ['#0ea5e9','#0369a1'], label: '파랑 계열 (유사 조화)' }
+  { colors: ['#0ea5e9','#0369a1'], label: '파랑 계열 (유사 조화)' },
+  { colors: ['#dc2626','#f97316','#eab308'], label: '빨강-주황-노랑 (따뜻한 색 조화)' }
 ];
 const HARMONY_BANK = [
   { q: '따뜻한 느낌을 주는 색은?', choices: ['빨강','파랑','청록','남색'], answer: '빨강' },
   { q: '차가운 느낌을 주는 색은?', choices: ['파랑','주황','빨강','노랑'], answer: '파랑' },
-  { q: '보색 관계가 아닌 색 조합은?', choices: ['빨강-빨강','빨강-초록','노랑-보라','파랑-주황'], answer: '빨강-빨강' }
+  { q: '보색 관계가 아닌 색 조합은?', choices: ['빨강-빨강','빨강-초록','노랑-보라','파랑-주황'], answer: '빨강-빨강' },
+  { q: '같은 색상의 밝기만 다르게 배치하는 조화 방식은?', choices: ['유사 조화','보색 조화','삼각 조화','무채색 조화'], answer: '유사 조화' },
+  { q: '흰색, 회색, 검정처럼 색감이 없는 색을 무엇이라 할까요?', choices: ['무채색','원색','보색','파스텔색'], answer: '무채색' }
 ];
 const ART_ANALYSIS_BANK = [
   { q: '어두운 색을 많이 쓴 그림은 보통 어떤 느낌을 줄까요?', choices: ['무겁고 진지한 느낌','밝고 경쾌한 느낌','시원한 느낌','가벼운 느낌'], answer: '무겁고 진지한 느낌' },
-  { q: '밝고 파스텔톤인 그림은 보통 어떤 느낌을 줄까요?', choices: ['부드럽고 포근한 느낌','무섭고 어두운 느낌','딱딱한 느낌','차가운 느낌'], answer: '부드럽고 포근한 느낌' }
+  { q: '밝고 파스텔톤인 그림은 보통 어떤 느낌을 줄까요?', choices: ['부드럽고 포근한 느낌','무섭고 어두운 느낌','딱딱한 느낌','차가운 느낌'], answer: '부드럽고 포근한 느낌' },
+  { q: '거친 붓 터치가 많은 그림은 보통 어떤 느낌을 줄까요?', choices: ['역동적이고 강렬한 느낌','조용하고 정적인 느낌','단정한 느낌','차분한 느낌'], answer: '역동적이고 강렬한 느낌' },
+  { q: '여백이 많은 그림은 보통 어떤 느낌을 줄까요?', choices: ['여유롭고 고요한 느낌','복잡하고 답답한 느낌','시끄러운 느낌','불안한 느낌'], answer: '여유롭고 고요한 느낌' },
+  { q: '강한 대비(명암)를 사용한 그림은 보통 어떤 느낌을 줄까요?', choices: ['극적이고 긴장된 느낌','밋밋한 느낌','평화로운 느낌','부드러운 느낌'], answer: '극적이고 긴장된 느낌' }
 ];
 const STYLE_BANK = [
   { q: '사실적인 형태보다 감정과 색채를 강조하는 화풍은?', choices: ['표현주의','극사실주의','정물화','캘리그래피'], answer: '표현주의' },
-  { q: '실제와 똑같이 정밀하게 그리는 화풍은?', choices: ['극사실주의','추상화','표현주의','인상주의'], answer: '극사실주의' }
+  { q: '실제와 똑같이 정밀하게 그리는 화풍은?', choices: ['극사실주의','추상화','표현주의','인상주의'], answer: '극사실주의' },
+  { q: '순간의 빛과 색채 변화를 포착하려 한 화풍은?', choices: ['인상주의','극사실주의','팝아트','미니멀리즘'], answer: '인상주의' },
+  { q: '형태를 단순한 도형으로 분해해 표현하는 화풍은?', choices: ['입체주의(큐비즘)','인상주의','사실주의','민화'], answer: '입체주의(큐비즘)' },
+  { q: '구체적 형태 없이 색과 선만으로 표현하는 화풍은?', choices: ['추상화','정물화','풍경화','초상화'], answer: '추상화' }
 ];
 const COLOR_PSYCH_BANK = [
   { q: '빨간색이 주는 심리적 느낌은?', choices: ['열정, 흥분','차분함, 평화','신뢰, 안정','신비로움'], answer: '열정, 흥분' },
   { q: '파란색이 주는 심리적 느낌은?', choices: ['차분함, 신뢰','흥분, 열정','따뜻함','경고'], answer: '차분함, 신뢰' },
-  { q: '초록색이 주는 심리적 느낌은?', choices: ['안정, 편안함','위험, 경고','슬픔','화려함'], answer: '안정, 편안함' }
+  { q: '초록색이 주는 심리적 느낌은?', choices: ['안정, 편안함','위험, 경고','슬픔','화려함'], answer: '안정, 편안함' },
+  { q: '노란색이 주는 심리적 느낌은?', choices: ['밝음, 활기','무거움, 우울','차가움','엄숙함'], answer: '밝음, 활기' },
+  { q: '보라색이 주는 심리적 느낌은?', choices: ['신비로움, 고급스러움','단순함','경쾌함','평범함'], answer: '신비로움, 고급스러움' }
+];
+const COMPLETION_BANK = [
+  { q: '빨강, 주황, 노랑 다음에 올 색은? (무지개 순서)', choices: ['초록','보라','검정','회색'], answer: '초록' },
+  { q: '동그라미 안에 점 하나만 찍혀있는 얼굴 그림, 다음에 그릴 요소로 가장 자연스러운 것은?', choices: ['눈, 코, 입','바퀴','날개','지붕'], answer: '눈, 코, 입' },
+  { q: '나무 줄기만 그려진 그림에서 다음에 그리기 가장 자연스러운 것은?', choices: ['나뭇잎과 가지','자동차','물고기','건물'], answer: '나뭇잎과 가지' },
+  { q: '초록, 노랑, 초록, 노랑 다음에 올 색은? (반복 패턴)', choices: ['초록','파랑','빨강','보라'], answer: '초록' },
+  { q: '해, 구름, 산이 그려진 풍경화에서 마지막으로 채우기 가장 자연스러운 요소는?', choices: ['색칠(채색)','스케치','밑그림','액자'], answer: '색칠(채색)' }
+];
+const CREATIVITY_BANK = [
+  { q: '창작에서 가장 중요한 것은?', choices: ['자유로운 표현','정해진 규칙 준수','빠른 속도','정답 맞추기'], answer: '자유로운 표현' },
+  { q: '새로운 아이디어를 떠올릴 때 가장 도움이 되는 태도는?', choices: ['열린 마음으로 다양하게 시도하기','정답만 찾으려 하기','기존 방식만 고수하기','빨리 포기하기'], answer: '열린 마음으로 다양하게 시도하기' },
+  { q: '창작 활동이 정신 건강에 주는 대표적인 효과는?', choices: ['스트레스 완화와 정서 표현','시력 향상','근력 증가','기억력 저하'], answer: '스트레스 완화와 정서 표현' },
+  { q: '어린이의 자유로운 그림에서 가장 중요하게 봐야 할 것은?', choices: ['표현하고자 하는 마음과 개성','선이 얼마나 정확한가','색이 사실적인가','빨리 그렸는가'], answer: '표현하고자 하는 마음과 개성' },
+  { q: '브레인스토밍에서 지켜야 할 가장 중요한 원칙은?', choices: ['비판하지 않고 자유롭게 제안하기','정답만 말하기','한 사람만 말하기','빠르게 결론내기'], answer: '비판하지 않고 자유롭게 제안하기' }
 ];
 const AESTHETICS_BANK = [
-  { q: '일반적으로 균형 잡힌 좌우 대칭 구도는 어떤 느낌을 줄까요?', choices: ['안정적이다','불안정하다','혼란스럽다','산만하다'], answer: '안정적이다' }
+  { q: '일반적으로 균형 잡힌 좌우 대칭 구도는 어떤 느낌을 줄까요?', choices: ['안정적이다','불안정하다','혼란스럽다','산만하다'], answer: '안정적이다' },
+  { q: '화면을 3등분해서 중요한 요소를 배치하는 구도 원칙은?', choices: ['삼분할 구도','대칭 구도','방사 구도','황금비'], answer: '삼분할 구도' },
+  { q: '너무 많은 요소가 뒤섞여 있으면 보통 어떤 느낌을 줄까요?', choices: ['산만하고 복잡한 느낌','단순하고 명료한 느낌','안정적인 느낌','고요한 느낌'], answer: '산만하고 복잡한 느낌' },
+  { q: '자연에서 흔히 발견되는 아름다운 비율을 무엇이라 할까요?', choices: ['황금비','삼분할','대비','원근법'], answer: '황금비' },
+  { q: '반복되는 요소가 만드는 시각적 흐름을 무엇이라 할까요?', choices: ['리듬감','대칭','원근법','명암'], answer: '리듬감' }
 ];
 
 // ---- 기억력 (id 73~80) ----
@@ -1189,25 +1258,52 @@ const IMAGE_MEMORY_SETS = ['🍎🚗🌙⭐️','🐶🎈📚🔔','🌸🍇🚀
 const WORD_MEMORY_SETS = [['나무','구름','창문','연필'], ['바다','편지','우산','시계'], ['커피','정원','기차','달빛']];
 const PATH_BANK = [
   { q: '집→학교→도서관→집 순서로 이동했습니다. 두 번째로 간 곳은?', choices: ['도서관','학교','집','알 수 없다'], answer: '도서관' },
-  { q: '역→공원→카페→역 순서로 이동했습니다. 세 번째로 간 곳은?', choices: ['카페','공원','역','알 수 없다'], answer: '카페' }
+  { q: '역→공원→카페→역 순서로 이동했습니다. 세 번째로 간 곳은?', choices: ['카페','공원','역','알 수 없다'], answer: '카페' },
+  { q: '시장→은행→약국→집 순서로 이동했습니다. 첫 번째로 간 곳은?', choices: ['시장','은행','약국','집'], answer: '시장' },
+  { q: '회사→식당→카페→회사 순서로 이동했습니다. 마지막으로 간 곳(식사·음료 제외)은?', choices: ['회사','식당','카페','알 수 없다'], answer: '회사' },
+  { q: '학교→운동장→교실→도서관 순서로 이동했습니다. 세 번째로 간 곳은?', choices: ['교실','운동장','학교','도서관'], answer: '교실' }
 ];
 const INFO_MEMORY_BANK = [
   { info: '오늘의 약속: 오후 3시, 서울역 2번 출구', q: '약속 장소는 어디였나요?', choices: ['서울역 2번 출구','서울역 1번 출구','시청역','강남역'], answer: '서울역 2번 출구' },
-  { info: '주문 내역: 커피 2잔, 케이크 1개, 총 15,000원', q: '주문한 케이크는 몇 개였나요?', choices: ['1개','2개','3개','0개'], answer: '1개' }
+  { info: '주문 내역: 커피 2잔, 케이크 1개, 총 15,000원', q: '주문한 케이크는 몇 개였나요?', choices: ['1개','2개','3개','0개'], answer: '1개' },
+  { info: '버스 시간표: 다음 버스는 오전 9시 20분 출발', q: '다음 버스는 몇 시에 출발하나요?', choices: ['9시 20분','9시 10분','9시 30분','10시 20분'], answer: '9시 20분' },
+  { info: '병원 예약: 2층 내과, 접수번호 15번', q: '접수번호는 몇 번이었나요?', choices: ['15번','5번','51번','150번'], answer: '15번' },
+  { info: '택배 정보: 문 앞에 놓아주세요, 배송 예정 오후 6시', q: '배송 예정 시간은 언제였나요?', choices: ['오후 6시','오전 6시','오후 8시','오후 3시'], answer: '오후 6시' }
 ];
 const TEMPORAL_BANK = [
-  { q: '방금 3초가 지났습니다. 다음 중 3초에 가장 가까운 것은?', choices: ['숨을 한 번 크게 쉬는 시간','밥 한 끼 먹는 시간','잠을 자는 시간','영화 한 편 보는 시간'], answer: '숨을 한 번 크게 쉬는 시간' }
+  { q: '방금 3초가 지났습니다. 다음 중 3초에 가장 가까운 것은?', choices: ['숨을 한 번 크게 쉬는 시간','밥 한 끼 먹는 시간','잠을 자는 시간','영화 한 편 보는 시간'], answer: '숨을 한 번 크게 쉬는 시간' },
+  { q: '다음 중 1분에 가장 가까운 것은?', choices: ['계란 하나 삶기 시작한 직후','하루 종일','1초','한 시간'], answer: '계란 하나 삶기 시작한 직후' },
+  { q: '다음 중 하루(24시간)에 가장 가까운 것은?', choices: ['해가 뜨고 다시 뜰 때까지','일주일','한 달','한 시간'], answer: '해가 뜨고 다시 뜰 때까지' },
+  { q: '다음 중 1시간에 가장 가까운 것은?', choices: ['영화 한 편의 절반 정도','눈 한 번 깜빡이는 시간','하루 종일','일주일'], answer: '영화 한 편의 절반 정도' },
+  { q: '다음 중 일주일에 가장 가까운 것은?', choices: ['월요일부터 다음 월요일 전까지','하루','한 시간','1년'], answer: '월요일부터 다음 월요일 전까지' }
 ];
 const PAIR_MEMORY_SETS = [
   [['사과','빨강'], ['바나나','노랑'], ['하늘','파랑']],
-  [['개','멍멍'], ['고양이','야옹'], ['소','음메']]
+  [['개','멍멍'], ['고양이','야옹'], ['소','음메']],
+  [['봄','새싹'], ['여름','장마'], ['가을','단풍']],
+  [['의사','청진기'], ['화가','붓'], ['요리사','앞치마']]
 ];
 const EVENT_BANK = [
   { q: '기상 → 아침식사 → 출근 → 퇴근 순서에서 세 번째 일어난 일은?', choices: ['출근','기상','아침식사','퇴근'], answer: '출근' },
-  { q: '씨앗 → 새싹 → 꽃 → 열매 순서에서 두 번째 단계는?', choices: ['새싹','씨앗','꽃','열매'], answer: '새싹' }
+  { q: '씨앗 → 새싹 → 꽃 → 열매 순서에서 두 번째 단계는?', choices: ['새싹','씨앗','꽃','열매'], answer: '새싹' },
+  { q: '입학 → 졸업 → 취업 → 은퇴 순서에서 첫 번째 일어난 일은?', choices: ['입학','졸업','취업','은퇴'], answer: '입학' },
+  { q: '반죽 → 발효 → 굽기 → 완성 순서에서 세 번째 단계는?', choices: ['굽기','반죽','발효','완성'], answer: '굽기' },
+  { q: '기획 → 촬영 → 편집 → 공개 순서에서 마지막 전 단계는?', choices: ['편집','기획','촬영','공개'], answer: '편집' }
 ];
 
-function pick(bank) { return bank[rand(0, bank.length - 1)]; }
+// 바로 직전과 동일한 문항이 연속으로 나오지 않도록 방지 (bank 배열별로 마지막 인덱스 기억)
+const _pickLastIdx = new Map();
+function pick(bank) {
+  if (bank.length <= 1) return bank[0];
+  let idx = rand(0, bank.length - 1);
+  const lastIdx = _pickLastIdx.get(bank);
+  if (lastIdx !== undefined) {
+    let guard = 0;
+    while (idx === lastIdx && guard < 10) { idx = rand(0, bank.length - 1); guard++; }
+  }
+  _pickLastIdx.set(bank, idx);
+  return bank[idx];
+}
 function shuffled(arr) { return [...arr].sort(() => Math.random() - 0.5); }
 
 function generateQuestion(t) {
@@ -1221,7 +1317,7 @@ function generateQuestion(t) {
   if (id === 13) { const x = pick(READING_BANK); return { mode: 'choice', prompt: `${x.p}<br><br>${x.q}`, choices: shuffled(x.choices), answer: x.answer }; }
   if (id === 14) { const x = pick(ASSOC_BANK); return { mode: 'choice', prompt: x.q, choices: shuffled(x.choices), answer: x.answer }; }
   if (id === 15) { const x = pick(SPELLING_BANK); return { mode: 'choice', prompt: x.q, choices: shuffled(x.choices), answer: x.answer }; }
-  if (id === 16) { const w = pick(SPEED_WORDS.map(w=>({w}))).w; return { mode: 'wordmemory', prompt: '아래 단어를 빠르게 기억하세요', digits: w, answer: w, delay: 1200 }; }
+  if (id === 16) { const w = pick(SPEED_WORDS); return { mode: 'wordmemory', prompt: '아래 단어를 빠르게 기억하세요', digits: w, answer: w, delay: 1200 }; }
 
   // ===== 논리/추론 17~24 =====
   if (id === 17) { const x = pick(PUZZLE_BANK); return { mode: 'choice', prompt: x.q, choices: shuffled(x.choices), answer: x.answer }; }
@@ -1247,20 +1343,20 @@ function generateQuestion(t) {
   if (id === 41) { const x = pick(HARMONY_BANK); return { mode: 'choice', prompt: x.q, choices: shuffled(x.choices), answer: x.answer }; }
   if (id === 42) { const x = pick(ART_ANALYSIS_BANK); return { mode: 'choice', prompt: x.q, choices: shuffled(x.choices), answer: x.answer }; }
   if (id === 43) { const set = pick(COLOR_PAIRS); return { mode: 'colormemory', prompt: '아래 색 조합을 기억하세요', colors: set.colors, answer: set.label, choices: shuffled(COLOR_PAIRS.map(c=>c.label)) }; }
-  if (id === 44) { return { mode: 'choice', prompt: '빨강, 주황, 노랑 다음에 올 색은? (무지개 순서)', choices: shuffled(['초록','보라','검정','회색']), answer: '초록' }; }
+  if (id === 44) { const x = pick(COMPLETION_BANK); return { mode: 'choice', prompt: x.q, choices: shuffled(x.choices), answer: x.answer }; }
   if (id === 45) { const x = pick(STYLE_BANK); return { mode: 'choice', prompt: x.q, choices: shuffled(x.choices), answer: x.answer }; }
   if (id === 46) { const x = pick(COLOR_PSYCH_BANK); return { mode: 'choice', prompt: x.q, choices: shuffled(x.choices), answer: x.answer }; }
   if (id === 47) { const x = pick(AESTHETICS_BANK); return { mode: 'choice', prompt: x.q, choices: shuffled(x.choices), answer: x.answer }; }
-  if (id === 48) { return { mode: 'choice', prompt: '창작에서 가장 중요한 것은?', choices: shuffled(['자유로운 표현','정해진 규칙 준수','빠른 속도','정답 맞추기']), answer: '자유로운 표현' }; }
+  if (id === 48) { const x = pick(CREATIVITY_BANK); return { mode: 'choice', prompt: x.q, choices: shuffled(x.choices), answer: x.answer }; }
 
   // ===== 기억력 73~80 =====
   if (id === 73) { const len = rand(5,7); let d=''; for(let i=0;i<len;i++) d+=rand(0,9); return { mode: 'memory', prompt: '아래 숫자를 기억하세요', digits: d, answer: d }; }
-  if (id === 74) { const s = pick(IMAGE_MEMORY_SETS.map(s=>({s}))).s; return { mode: 'wordmemory', prompt: '아래 그림들을 순서대로 기억하세요', digits: s, answer: s, delay: 2500 }; }
-  if (id === 75) { const set = pick(WORD_MEMORY_SETS.map(s=>({s}))).s; const joined = set.join(' '); return { mode: 'wordmemory', prompt: '아래 단어들을 순서대로 기억하세요', digits: joined, answer: joined, delay: 3000 }; }
+  if (id === 74) { const s = pick(IMAGE_MEMORY_SETS); return { mode: 'wordmemory', prompt: '아래 그림들을 순서대로 기억하세요', digits: s, answer: s, delay: 2500 }; }
+  if (id === 75) { const set = pick(WORD_MEMORY_SETS); const joined = set.join(' '); return { mode: 'wordmemory', prompt: '아래 단어들을 순서대로 기억하세요', digits: joined, answer: joined, delay: 3000 }; }
   if (id === 76) { const x = pick(PATH_BANK); return { mode: 'choice', prompt: x.q, choices: shuffled(x.choices), answer: x.answer }; }
   if (id === 77) { const x = pick(INFO_MEMORY_BANK); return { mode: 'wordmemory', prompt: x.info, digits: '', answer: x.answer, followupQ: x.q, followupChoices: x.choices, delay: 2500 }; }
   if (id === 78) { const x = pick(TEMPORAL_BANK); return { mode: 'choice', prompt: x.q, choices: shuffled(x.choices), answer: x.answer }; }
-  if (id === 79) { const pairs = pick(PAIR_MEMORY_SETS.map(s=>({s}))).s; const target = pick(pairs.map(p=>({p}))).p; const shown = pairs.map(p=>p.join(' - ')).join(', '); return { mode: 'wordmemory', prompt: `아래 짝을 기억하세요: ${shown}`, digits: '', answer: target[1], followupQ: `'${target[0]}'의 짝은 무엇이었나요?`, followupChoices: shuffled(pairs.map(p=>p[1])), delay: 3500 }; }
+  if (id === 79) { const pairs = pick(PAIR_MEMORY_SETS); const target = pairs[rand(0, pairs.length - 1)]; const shown = pairs.map(p=>p.join(' - ')).join(', '); return { mode: 'wordmemory', prompt: `아래 짝을 기억하세요: ${shown}`, digits: '', answer: target[1], followupQ: `'${target[0]}'의 짝은 무엇이었나요?`, followupChoices: shuffled(pairs.map(p=>p[1])), delay: 3500 }; }
   if (id === 80) { const x = pick(EVENT_BANK); return { mode: 'choice', prompt: x.q, choices: shuffled(x.choices), answer: x.answer }; }
 
   // ===== 음악/리듬 33~40 (Web Audio) =====
@@ -1371,7 +1467,7 @@ function generateQuestionLegacy(type) {
     return { mode: 'choice', prompt: '다음 중 규칙(2의 배수)에 맞지 않는 수는?', choices: pool.map(String), answer: String(oddOne) };
   }
   if (type === 'probability') {
-    const item = PROBABILITY_BANK[rand(0, PROBABILITY_BANK.length - 1)];
+    const item = pick(PROBABILITY_BANK);
     return { mode: 'choice', prompt: item.q, choices: item.choices, answer: item.answer };
   }
   if (type === 'memory') {
