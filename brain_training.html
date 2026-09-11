@@ -786,6 +786,7 @@ html, body {
         <div class="training-title" id="trainingTitle">훈련 제목</div>
         <div class="training-timer" id="trainingTimer">준비 중...</div>
       </div>
+      <div id="buildStamp" style="text-align:right;font-size:10px;color:#9ca3af;margin:-8px 2px 8px;">build 2026-09-11T13:32Z</div>
 
       <div class="training-content" id="trainingContent">
         <div class="domain-immersive-bg"></div>
@@ -1204,17 +1205,18 @@ const _pickIdxLastServed = new Map();
 function pickIndex(total, historyKey) {
   let bag = _pickIdxBags.get(historyKey);
   if (!bag || bag.length === 0) {
+    const recent = _pickIdxLastServed.get(historyKey) || [];
     let fresh = _shuffleIndices(total);
-    const lastServed = _pickIdxLastServed.get(historyKey);
-    if (lastServed !== undefined) {
-      let guard = 0;
-      while (fresh[0] === lastServed && guard < 10) { fresh = _shuffleIndices(total); guard++; }
-    }
+    let guard = 0;
+    while (recent.includes(fresh[0]) && guard < 12) { fresh = _shuffleIndices(total); guard++; }
     bag = fresh;
     _pickIdxBags.set(historyKey, bag);
   }
   const v = bag.shift();
-  _pickIdxLastServed.set(historyKey, v);
+  const recent = _pickIdxLastServed.get(historyKey) || [];
+  recent.push(v);
+  if (recent.length > 2) recent.shift();
+  _pickIdxLastServed.set(historyKey, recent);
   return v;
 }
 function generateGridQuestion() {
@@ -1283,7 +1285,10 @@ const SENTENCE_BANK = [
   { q: '그는 어려운 상황에서도 ( )을 잃지 않았다.', choices: ['희망','절망','포기','방황'], answer: '희망' },
   { q: '오래된 우정은 ( )처럼 은은하게 깊어진다.', choices: ['묵은 술','새 옷','소나기','불꽃'], answer: '묵은 술' },
   { q: '그녀는 매사에 ( )한 태도로 일을 처리했다.', choices: ['신중','경솔','태만','산만'], answer: '신중' },
-  { q: '회의는 예상보다 ( )하게 끝났다.', choices: ['순조롭','험악','지루','혼란'], answer: '순조롭' }
+  { q: '회의는 예상보다 ( )하게 끝났다.', choices: ['순조롭','험악','지루','혼란'], answer: '순조롭' },
+  { q: '갑작스러운 소식에 그는 ( )을 감추지 못했다.', choices: ['놀라움','침착함','무관심','여유'], answer: '놀라움' },
+  { q: '꾸준한 연습 끝에 그의 실력은 ( )하게 늘었다.', choices: ['눈에 띄','흐릿','어색','불안정'], answer: '눈에 띄' },
+  { q: '오랜만의 휴식은 지친 마음에 ( )을 주었다.', choices: ['활력','부담','걱정','피로'], answer: '활력' }
 ];
 const SYNONYM_BANK = [
   { q: "'기쁘다'와 뜻이 가장 비슷한 말은?", choices: ['즐겁다','슬프다','두렵다','지치다'], answer: '즐겁다' },
@@ -1485,7 +1490,7 @@ const EVENT_BANK = [
 //    가방 방식은 은행 크기가 N이면 처음 N번은 수학적으로 100% 서로 다른 문항이
 //    나오는 것을 보장하고, 가방이 바닥나 새로 채울 때도 직전 문항과는 겹치지 않는다.
 const _pickBags = new Map();
-const _pickLastServed = new Map();
+const _pickLastServed = new Map(); // 각 bank의 최근 서빙된 인덱스 2개를 배열로 저장
 function _shuffleIndices(n) {
   const a = Array.from({ length: n }, (_, i) => i);
   for (let i = a.length - 1; i > 0; i--) {
@@ -1498,17 +1503,19 @@ function pick(bank) {
   if (bank.length <= 1) return bank[0];
   let bag = _pickBags.get(bank);
   if (!bag || bag.length === 0) {
+    const recent = _pickLastServed.get(bank) || [];
     let fresh = _shuffleIndices(bank.length);
-    const lastServed = _pickLastServed.get(bank);
-    if (lastServed !== undefined) {
-      let guard = 0;
-      while (fresh[0] === lastServed && guard < 10) { fresh = _shuffleIndices(bank.length); guard++; }
-    }
+    let guard = 0;
+    // 새 가방의 맨 앞이 최근 나온 것과 겹치지 않도록(순환 경계 반복 방지, 직전 2개까지 확인)
+    while (recent.includes(fresh[0]) && guard < 12) { fresh = _shuffleIndices(bank.length); guard++; }
     bag = fresh;
     _pickBags.set(bank, bag);
   }
   const idx = bag.shift();
-  _pickLastServed.set(bank, idx);
+  const recent = _pickLastServed.get(bank) || [];
+  recent.push(idx);
+  if (recent.length > 2) recent.shift();
+  _pickLastServed.set(bank, recent);
   return bank[idx];
 }
 function shuffled(arr) { return [...arr].sort(() => Math.random() - 0.5); }
