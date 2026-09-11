@@ -1032,15 +1032,28 @@ const SPATIAL_REASON_BANK = [
   { q: '원 안에 사각형이 있고, 사각형 안에 삼각형이 있다면 가장 바깥쪽 도형은?', choices: ['원','사각형','삼각형','알 수 없다'], answer: '원' }
 ];
 const GRID_SIZE = 3;
+// bank(배열)가 아닌 좌표/인덱스 랜덤용 반복방지 헬퍼 — 최근 뽑힌 값 일부를 기억해 제외
+const _pickIdxHistory = new Map();
+function pickIndex(total, historyKey) {
+  const windowSize = Math.min(Math.max(2, Math.floor(total / 2)), total - 1);
+  const history = _pickIdxHistory.get(historyKey) || [];
+  let v, guard = 0;
+  do { v = rand(0, total - 1); guard++; }
+  while (history.includes(v) && guard < 30);
+  history.push(v);
+  if (history.length > windowSize) history.shift();
+  _pickIdxHistory.set(historyKey, history);
+  return v;
+}
 function generateGridQuestion() {
   const total = GRID_SIZE * GRID_SIZE;
-  const target = rand(0, total - 1);
+  const target = pickIndex(total, 'grid');
   return { mode: 'gridmemory', prompt: '빛나는 칸의 위치를 기억하세요', target, answer: String(target) };
 }
 function generateOddColorQuestion() {
   const base = rand(0, 359);
   const total = 9;
-  const oddIdx = rand(0, total - 1);
+  const oddIdx = pickIndex(total, 'oddcolor');
   return { mode: 'oddcolor', prompt: '주변과 미세하게 다른 색 칸을 찾아 누르세요', base, oddIdx, answer: String(oddIdx) };
 }
 
@@ -1291,17 +1304,19 @@ const EVENT_BANK = [
   { q: '기획 → 촬영 → 편집 → 공개 순서에서 마지막 전 단계는?', choices: ['편집','기획','촬영','공개'], answer: '편집' }
 ];
 
-// 바로 직전과 동일한 문항이 연속으로 나오지 않도록 방지 (bank 배열별로 마지막 인덱스 기억)
-const _pickLastIdx = new Map();
+// 최근에 나온 문항들(은행 크기의 절반, 최소 2개)은 다시 뽑지 않도록 방지
+// → "직전 1개만" 피하던 이전 방식은 5회 중 같은 문제가 3번 나오는 등 클러스터링이 발생할 수 있어 범위를 넓힘
+const _pickHistory = new Map();
 function pick(bank) {
   if (bank.length <= 1) return bank[0];
-  let idx = rand(0, bank.length - 1);
-  const lastIdx = _pickLastIdx.get(bank);
-  if (lastIdx !== undefined) {
-    let guard = 0;
-    while (idx === lastIdx && guard < 10) { idx = rand(0, bank.length - 1); guard++; }
-  }
-  _pickLastIdx.set(bank, idx);
+  const windowSize = Math.min(Math.max(2, Math.floor(bank.length / 2)), bank.length - 1);
+  const history = _pickHistory.get(bank) || [];
+  let idx, guard = 0;
+  do { idx = rand(0, bank.length - 1); guard++; }
+  while (history.includes(idx) && guard < 30);
+  history.push(idx);
+  if (history.length > windowSize) history.shift();
+  _pickHistory.set(bank, history);
   return bank[idx];
 }
 function shuffled(arr) { return [...arr].sort(() => Math.random() - 0.5); }
