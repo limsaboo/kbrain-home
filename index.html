@@ -400,17 +400,8 @@
         휴대폰 홈 화면에 앱으로 설치하기
       </a>
       <script>
-        (function(){
-          var btn = document.getElementById('bhtcEnterBtn');
-          if(!btn) return;
-          btn.addEventListener('click', function(e){
-            var t = document.getElementById('systems');
-            if(t){
-              e.preventDefault();
-              t.scrollIntoView({behavior:'auto', block:'start'});
-            }
-          });
-        })();
+        // 2026-09-11: "입장하기" 클릭 시 #systems로 강제 스크롤시키던 예전 로직 제거.
+        // 지금은 버튼의 href="/brain_training.html"이 그대로 동작해야 하므로 아무 것도 가로채지 않음.
       </script>
         </div>
       </div>
