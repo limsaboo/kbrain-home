@@ -1,5 +1,25 @@
 User-agent: *
 Allow: /
+Disallow: /admin.html
+Disallow: /admin-analytics.html
+Disallow: /admin-manifest.json
+Disallow: /bhc-admin-dashboard.html
+Disallow: /bhc-backup-20260822.html
+Disallow: /bhc-backup-b-20260822.html
+Disallow: /bhc-prod-system.html
+Disallow: /bac-prod-system.html
+Disallow: /bac-4.html
+Disallow: /index-backup-20260822.html
+Disallow: /index-backup-b-20260822.html
+Disallow: /scs-backup-c-20260822.html
+Disallow: /bhc_index.html
+Disallow: /SCS_Index.html
+Disallow: /뇌궁합시스템(BMS).html
+Disallow: /뇌기능시스템(BFS).html
+Disallow: /뇌적성시스템(BAS).html
+Disallow: /뇌컨디션시스템(BCS).html
+Disallow: /시니어인지시스템(SCS).html
+Disallow: /backup-20260828/
 
 Sitemap: https://www.k-brain.co.kr/sitemap.xml
 
