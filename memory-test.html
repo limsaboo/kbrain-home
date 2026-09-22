@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>기억력 검사 | 한국뇌심리연구소</title>
+<meta name="description" content="한국뇌심리연구소 기억력 검사 - 그림과 숫자로 측정하는 5가지 기억 능력. 약 10분.">
+<link rel="canonical" href="https://www.k-brain.co.kr/memory-test.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="한국뇌심리연구소">
+<meta property="og:title" content="기억력 검사 | 한국뇌심리연구소">
+<meta property="og:description" content="한국뇌심리연구소 기억력 검사 - 그림과 숫자로 측정하는 5가지 기억 능력. 약 10분.">
+<meta property="og:url" content="https://www.k-brain.co.kr/memory-test.html">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:image" content="https://www.k-brain.co.kr/og-image.png">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{width:100%;overflow-x:hidden}
+body{
+  font-family:'Malgun Gothic','맑은 고딕','Apple SD Gothic Neo',sans-serif;
+  background:linear-gradient(160deg,#00695C 0%,#00897B 45%,#26A69A 100%);
+  background-attachment:fixed;
+  color:#12343B;font-weight:700;line-height:1.75;
+  word-break:keep-all;overflow-wrap:break-word;
+  padding:14px 12px 40px;
+}
+.wrap{max-width:560px;margin:0 auto}
+.card{
+  background:#FFFFFF;border-radius:20px;padding:22px 18px;
+  box-shadow:0 10px 28px rgba(0,0,0,.25);margin-bottom:16px;
+}
+.scr{display:none}
+.scr.on{display:block}
+
+h1{font-size:26px;font-weight:900;color:#006064;line-height:1.45;letter-spacing:-.5px}
+h2{font-size:20px;font-weight:900;color:#006064;line-height:1.5;margin-bottom:10px}
+h3{font-size:17px;font-weight:900;color:#00838F;line-height:1.55;margin-bottom:8px}
+p{font-size:16px;font-weight:700;line-height:1.8;color:#12343B}
+.mt8{margin-top:8px}.mt14{margin-top:14px}.mt20{margin-top:20px}
+
+.brandbar{
+  background:#00BCD4;color:#fff;border-radius:14px;
+  padding:12px 16px;text-align:center;font-size:15px;font-weight:900;
+  letter-spacing:.5px;margin-bottom:14px;line-height:1.6;
+}
+.brandbar .bk{display:block;font-size:19px;font-weight:900;letter-spacing:1px;line-height:1.5}
+.brandbar .be{display:block;font-size:12px;font-weight:700;letter-spacing:.3px;line-height:1.5;opacity:.95;white-space:nowrap}
+.badge{
+  display:inline-block;background:#006064;color:#fff;
+  border-radius:999px;padding:5px 14px;font-size:13px;font-weight:900;
+  margin-bottom:10px;line-height:1.5;
+}
+
+.spec{
+  border:3px solid #00BCD4;border-radius:14px;overflow:hidden;margin-top:14px;
+}
+.spec div{
+  display:flex;align-items:stretch;border-bottom:2px solid #B2EBF2;
+}
+.spec div:last-child{border-bottom:0}
+.spec b{
+  flex:0 0 108px;background:#E0F7FA;color:#006064;
+  font-size:14px;font-weight:900;padding:11px 10px;line-height:1.6;
+  display:flex;align-items:center;
+}
+.spec span{
+  flex:1;padding:11px 12px;font-size:15px;font-weight:700;
+  color:#12343B;line-height:1.7;display:flex;align-items:center;
+}
+
+.btn{
+  display:block;width:100%;border:0;border-radius:14px;
+  background:#00BCD4;color:#fff;font-size:19px;font-weight:900;
+  padding:17px 12px;margin-top:16px;cursor:pointer;line-height:1.5;
+  font-family:inherit;letter-spacing:-.3px;
+  box-shadow:0 5px 0 #00838F;
+}
+.btn:active{transform:translateY(3px);box-shadow:0 2px 0 #00838F}
+.btn.sub{background:#FFFFFF;color:#00838F;border:3px solid #00BCD4;box-shadow:0 5px 0 #B2EBF2}
+.btn:disabled{background:#CFD8DC;color:#78909C;box-shadow:0 5px 0 #B0BEC5}
+
+label{display:block;font-size:15px;font-weight:900;color:#00838F;margin:14px 0 6px;line-height:1.6}
+input,select{
+  width:100%;border:3px solid #B2EBF2;border-radius:12px;
+  padding:13px 12px;font-size:17px;font-weight:700;color:#12343B;
+  font-family:inherit;background:#fff;line-height:1.5;
+}
+input:focus,select:focus{outline:0;border-color:#00BCD4}
+.row2{display:flex;gap:10px}
+.row2>*{flex:1;min-width:0}
+
+.prog{
+  height:12px;background:#E0F7FA;border-radius:999px;
+  overflow:hidden;margin-bottom:6px;border:2px solid #B2EBF2;
+}
+.prog i{display:block;height:100%;background:#00BCD4;width:0;transition:width .25s}
+.progtxt{font-size:14px;font-weight:900;color:#00838F;text-align:right;line-height:1.6}
+
+/* 그림 격자 */
+.grid4{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
+.grid8{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.imgbox{
+  background:#F5FDFF;border:4px solid #B2EBF2;border-radius:16px;
+  padding:10px;display:flex;align-items:center;justify-content:center;
+  aspect-ratio:1/1;cursor:pointer;
+}
+.imgbox svg{width:100%;height:100%;display:block}
+.imgbox.pick{border-color:#00BCD4;background:#E0F7FA}
+.imgbox.show{cursor:default;border-color:#00BCD4}
+.slot{
+  background:#F5FDFF;border:4px dashed #B2EBF2;border-radius:16px;
+  aspect-ratio:1/1;display:flex;align-items:center;justify-content:center;
+}
+.slot.hit{border:6px solid #FF6D00;background:#FFF3E0;border-style:solid}
+.slot svg{width:100%;height:100%;display:block;padding:8px}
+
+/* 대형 자극 */
+.stage{
+  background:#F5FDFF;border:4px solid #00BCD4;border-radius:18px;
+  min-height:190px;display:flex;align-items:center;justify-content:center;
+  margin-top:14px;padding:16px;
+}
+.bignum{font-size:78px;font-weight:900;color:#006064;letter-spacing:6px;line-height:1.2}
+.shaperow{display:flex;gap:14px;align-items:center;justify-content:center;flex-wrap:wrap}
+.shaperow svg{width:74px;height:74px;display:block}
+
+/* 숫자패드 */
+.pad{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:14px}
+.pad button{
+  border:3px solid #B2EBF2;border-radius:14px;background:#fff;
+  font-size:26px;font-weight:900;color:#006064;padding:15px 0;
+  font-family:inherit;cursor:pointer;line-height:1.2;
+}
+.pad button:active{background:#E0F7FA}
+.pad button.act{background:#00BCD4;color:#fff;border-color:#00BCD4;font-size:19px}
+.entry{
+  border:4px solid #00BCD4;border-radius:14px;background:#fff;
+  min-height:62px;display:flex;align-items:center;justify-content:center;
+  font-size:34px;font-weight:900;color:#006064;letter-spacing:5px;
+  margin-top:14px;line-height:1.3;
+}
+
+/* 3지선다 배지 */
+.badges{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:16px}
+.bg{
+  border:4px solid #B2EBF2;border-radius:16px;background:#fff;
+  padding:16px 6px;text-align:center;cursor:pointer;font-family:inherit;
+}
+.bg .n{font-size:34px;font-weight:900;line-height:1.2;display:block}
+.bg .m{font-size:13px;font-weight:900;color:#00838F;line-height:1.5;display:block;margin-top:4px}
+.bg.a .n{color:#00BCD4}.bg.b .n{color:#FF6D00}.bg.c .n{color:#8E24AA}
+
+.count{
+  text-align:center;font-size:56px;font-weight:900;color:#00BCD4;
+  line-height:1.3;margin:10px 0;
+}
+.hint{
+  background:#E0F7FA;border-left:8px solid #00BCD4;border-radius:10px;
+  padding:13px 14px;font-size:15px;font-weight:700;color:#006064;
+  line-height:1.75;margin-top:14px;
+}
+.warn{
+  background:#FFF3E0;border-left:8px solid #FF6D00;border-radius:10px;
+  padding:13px 14px;font-size:14px;font-weight:700;color:#8C4A00;
+  line-height:1.75;margin-top:14px;
+}
+
+/* 결과 */
+.total{
+  background:#00BCD4;border-radius:18px;padding:22px 16px;
+  text-align:center;color:#fff;margin-top:6px;
+}
+.total .v{font-size:66px;font-weight:900;line-height:1.15;display:block}
+.total .u{font-size:17px;font-weight:900;line-height:1.6;display:block}
+.total .g{font-size:20px;font-weight:900;line-height:1.6;display:block;margin-top:8px}
+
+.bars{margin-top:8px}
+.bar{margin-top:16px}
+.bar .lab{
+  display:flex;justify-content:space-between;align-items:baseline;
+  font-size:15px;font-weight:900;color:#006064;line-height:1.6;margin-bottom:6px;
+}
+.bar .lab em{font-style:normal;font-size:18px;font-weight:900;color:#00838F}
+.track{
+  position:relative;height:26px;background:#E0F7FA;border-radius:999px;
+  border:2px solid #B2EBF2;overflow:hidden;
+}
+.track i{display:block;height:100%;background:#00BCD4;border-radius:999px}
+.track u{
+  position:absolute;top:-3px;bottom:-3px;width:5px;background:#FF6D00;
+  border-radius:3px;text-decoration:none;
+}
+.legend{
+  display:flex;gap:16px;justify-content:center;flex-wrap:wrap;
+  font-size:13px;font-weight:900;color:#00838F;line-height:1.6;margin-top:12px;
+}
+.legend s{
+  display:inline-block;width:16px;height:10px;border-radius:3px;
+  text-decoration:none;vertical-align:middle;margin-right:5px;
+}
+
+.radar{width:100%;max-width:340px;margin:10px auto 0;display:block}
+
+.interp{
+  border:3px solid #B2EBF2;border-radius:14px;padding:14px;margin-top:14px;
+  background:#F5FDFF;
+}
+.interp h3{margin-bottom:6px}
+.interp p{font-size:15px;line-height:1.85}
+
+.note{
+  background:#ECEFF1;border-radius:12px;padding:14px;
+  font-size:13px;font-weight:700;color:#455A64;line-height:1.8;margin-top:16px;
+}
+.legalbox{
+  background:#12343B;color:#fff;border-radius:14px;padding:16px;
+  font-size:14px;font-weight:900;line-height:1.8;margin-top:16px;text-align:center;
+}
+.foot{
+  text-align:center;font-size:13px;font-weight:700;color:#E0F7FA;
+  line-height:1.8;padding:8px 6px 0;
+}
+.foot a{color:#fff}
+a.linkbtn{
+  display:block;text-align:center;text-decoration:none;
+  border-radius:14px;padding:15px 12px;font-size:17px;font-weight:900;
+  margin-top:12px;line-height:1.5;
+}
+.lb1{background:#006064;color:#fff}
+.lb2{background:#fff;color:#00838F;border:3px solid #00BCD4}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- ============ 0. 시작 ============ -->
+<section class="scr on card" id="scr-intro">
+  <div class="brandbar"><span class="bk">한국뇌심리연구소</span><span class="be">Korea Brain Psychology Institute</span></div>
+  <span class="badge">MAS · 기억력 검사</span>
+  <h1>지금 내 기억은<br>어떻게 작동하고 있을까</h1>
+  <p class="mt14">이 검사는 "기억력이 좋은 편인가요?" 하고 묻지 않습니다. 그림과 숫자를 실제로 보고 기억해 보는 방식으로, 지금 이 순간 기억이 어떻게 작동하는지를 직접 확인합니다.</p>
+
+  <div class="spec">
+    <div><b>측정 영역</b><span>다섯 가지</span></div>
+    <div><b>문항 수</b><span>30문항</span></div>
+    <div><b>걸리는 시간</b><span>약 10분</span></div>
+    <div><b>출제 방식</b><span>그림 · 숫자 · 도형</span></div>
+    <div><b>글 읽기</b><span>필요 없음</span></div>
+  </div>
+
+  <h3 class="mt20">다섯 가지 영역</h3>
+  <div class="spec">
+    <div><b>기억 용량</b><span>한 번에 몇 개까지 담아 두는가</span></div>
+    <div><b>기억 속도</b><span>얼마나 빨리 받아들이는가</span></div>
+    <div><b>기억 유지</b><span>시간이 지나도 남아 있는가</span></div>
+    <div><b>기억 회상</b><span>필요할 때 꺼내 쓸 수 있는가</span></div>
+    <div><b>간섭 저항</b><span>비슷한 것이 끼어들어도 버티는가</span></div>
+  </div>
+
+  <div class="hint">조용한 곳에서, 중간에 멈추지 말고 한 번에 끝까지 진행해 주세요. 도중에 화면을 벗어나면 결과가 달라집니다.</div>
+
+  <div class="legalbox">본 검사는 의학적 진단이 아니며,<br>자기이해를 돕는 교육용 도구입니다.</div>
+
+  <h3 class="mt20">두 단계 중에서 고르세요</h3>
+  <div class="spec">
+    <div><b>기본 단계</b><span>처음 해 보시는 분 · 넉넉한 시간</span></div>
+    <div><b>고급 단계</b><span>더 정확히 알아보고 싶은 분 · 짧은 시간</span></div>
+  </div>
+  <div class="hint">두 단계 모두 30문항입니다. 알아보는 내용은 같고, 주어지는 시간과 숫자 길이가 다릅니다. 처음이라면 기본 단계를 권합니다.</div>
+
+  <button class="btn" onclick="setLevel('basic')">기본 단계로 시작하기</button>
+  <button class="btn sub" onclick="setLevel('adv')">고급 단계로 시작하기</button>
+</section>
+
+<!-- ============ 1. 인적사항 ============ -->
+<section class="scr card" id="scr-info">
+  <span class="badge">1 / 8 단계</span>
+  <h2>먼저 알려 주세요</h2>
+  <p>같은 연령대의 평균과 비교해 드리기 위해 필요합니다.</p>
+
+  <label for="f-name">이름</label>
+  <input id="f-name" type="text" placeholder="홍길동" autocomplete="name">
+
+  <label for="f-sex">성별</label>
+  <select id="f-sex">
+    <option value="">선택해 주세요</option>
+    <option value="남성">남성</option>
+    <option value="여성">여성</option>
+  </select>
+
+  <label>생년월일</label>
+  <div class="row2">
+    <select id="f-y"></select>
+    <select id="f-m"></select>
+    <select id="f-d"></select>
+  </div>
+
+  <label for="f-reg">거주 지역</label>
+  <select id="f-reg">
+    <option value="">선택해 주세요</option>
+  </select>
+
+  <div class="note">입력하신 내용은 연령·성별·지역별 기억 능력 분포를 연구하는 데에만 사용합니다. 개인을 식별하는 용도로 사용하지 않습니다.</div>
+
+  <button class="btn" id="btn-info" onclick="submitInfo()">다음</button>
+  <p id="info-err" style="color:#D32F2F;font-size:15px;margin-top:10px;display:none"></p>
+</section>
+
+<!-- ============ 2. 학습 ============ -->
+<section class="scr card" id="scr-learn">
+  <span class="badge">2 / 8 단계</span>
+  <h2>이 여덟 개를 기억해 주세요</h2>
+  <p>그림과 <b style="color:#00BCD4">놓인 자리</b>를 함께 기억하세요. 나중에 자리를 물어봅니다.</p>
+  <div class="count" id="learn-count">30</div>
+  <div class="grid8" id="learn-grid"></div>
+  <div class="hint">소리 내어 이름을 말하면서 보면 더 잘 남습니다.</div>
+</section>
+
+<!-- ============ 3. S1 숫자 ============ -->
+<section class="scr card" id="scr-s1">
+  <span class="badge">3 / 8 단계 · 기억 용량</span>
+  <div class="prog"><i id="p1"></i></div>
+  <div class="progtxt" id="t1"></div>
+  <h2 id="s1-title">숫자를 순서대로 기억하세요</h2>
+  <div class="stage"><div class="bignum" id="s1-stage">준비</div></div>
+  <div id="s1-stagecnt" style="text-align:center;margin-top:6px;font-size:15px;font-weight:900;color:#00838F">&nbsp;</div>
+  <div id="s1-input" style="display:none">
+    <div class="entry" id="s1-entry">&nbsp;</div>
+    <div class="pad" id="s1-pad"></div>
+  </div>
+</section>
+
+<!-- ============ 4. S2 도형 ============ -->
+<section class="scr card" id="scr-s2">
+  <span class="badge">4 / 8 단계 · 기억 속도</span>
+  <div class="prog"><i id="p2"></i></div>
+  <div class="progtxt" id="t2"></div>
+  <h2 id="s2-title">잠깐 보여 드립니다</h2>
+  <div class="stage"><div class="shaperow" id="s2-stage"></div></div>
+  <div id="s2-opts" style="display:none">
+    <h3 class="mt14">방금 본 것은 어느 것입니까</h3>
+    <div class="grid4" id="s2-grid"></div>
+  </div>
+</section>
+
+<!-- ============ 5. S3 유지 ============ -->
+<section class="scr card" id="scr-s3">
+  <span class="badge">5 / 8 단계 · 기억 유지</span>
+  <div class="prog"><i id="p3"></i></div>
+  <div class="progtxt" id="t3"></div>
+  <h2>처음에 외운 여덟 개 중 하나입니다</h2>
+  <p>어느 것이었습니까</p>
+  <div class="grid4" id="s3-grid"></div>
+</section>
+
+<!-- ============ 6. S4 회상 ============ -->
+<section class="scr card" id="scr-s4">
+  <span class="badge">6 / 8 단계 · 기억 회상</span>
+  <div class="prog"><i id="p4"></i></div>
+  <div class="progtxt" id="t4"></div>
+  <h2>표시된 자리에 있던 그림은</h2>
+  <div class="grid8" id="s4-map"></div>
+  <div class="grid4 mt14" id="s4-grid"></div>
+</section>
+
+<!-- ============ 7. 간섭 목록 ============ -->
+<section class="scr card" id="scr-interf">
+  <span class="badge">7 / 8 단계</span>
+  <h2>두 번째 묶음입니다</h2>
+  <p>이번 여덟 개도 기억해 주세요. 조금 뒤에 <b style="color:#FF6D00">첫 번째 묶음과 구별</b>해야 합니다.</p>
+  <div class="count" id="interf-count">20</div>
+  <div class="grid8" id="interf-grid"></div>
+</section>
+
+<!-- ============ 8. S5 간섭 ============ -->
+<section class="scr card" id="scr-s5">
+  <span class="badge">8 / 8 단계 · 간섭 저항</span>
+  <div class="prog"><i id="p5"></i></div>
+  <div class="progtxt" id="t5"></div>
+  <h2>이 그림은 어디에 있었습니까</h2>
+  <div class="stage"><div class="imgbox show" id="s5-stage" style="width:160px;border:0;background:none"></div></div>
+  <div class="badges">
+    <button class="bg a" onclick="ansS5(1)"><span class="n">①</span><span class="m">첫 번째 묶음</span></button>
+    <button class="bg b" onclick="ansS5(2)"><span class="n">②</span><span class="m">두 번째 묶음</span></button>
+    <button class="bg c" onclick="ansS5(0)"><span class="n">✕</span><span class="m">둘 다 아님</span></button>
+  </div>
+</section>
+
+<!-- ============ 결과 ============ -->
+<section class="scr" id="scr-result">
+  <div class="card">
+    <div class="brandbar">한국뇌심리연구소 기억력 검사 결과</div>
+    <h2 id="r-who"></h2>
+    <div class="total">
+      <span class="u">종합 기억 점수</span>
+      <span class="v" id="r-total">0</span>
+      <span class="g" id="r-grade"></span>
+    </div>
+    <div class="legalbox">본 검사는 의학적 진단이 아니며,<br>자기이해를 돕는 교육용 도구입니다.</div>
+  </div>
+
+  <div class="card">
+    <h2>다섯 영역 한눈에 보기</h2>
+    <svg class="radar" id="r-radar" viewBox="-35 0 390 300" role="img" aria-label="다섯 영역 점수 도형"></svg>
+    <div class="legend">
+      <span><s style="background:#00BCD4"></s>내 점수</span>
+      <span><s style="background:#FF6D00"></s><span id="r-agelab">연령대 참조값</span></span>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>영역별 점수</h2>
+    <div class="bars" id="r-bars"></div>
+    <div class="legend"><span><s style="background:#00BCD4"></s>내 점수</span><span><s style="background:#FF6D00"></s>연령대 참조선</span></div>
+    <div class="warn">여기 쓰인 연령대 값은 <b>단계별 초기 잠정 참조값</b>입니다. 실제 규준이 아닙니다. 검사 데이터가 쌓이면 한국인 실측 규준으로 교체됩니다.</div>
+  </div>
+
+  <div class="card">
+    <h2>내 기억이 작동하는 방식</h2>
+    <div id="r-interp"></div>
+  </div>
+
+  <div class="card">
+    <h2>지금 해 볼 수 있는 것</h2>
+    <div id="r-advice"></div>
+  </div>
+
+  <div class="card" id="r-next" style="display:none">
+    <h2 id="r-next-t"></h2>
+    <p id="r-next-p"></p>
+    <button class="btn" id="r-next-b" onclick="again()"></button>
+  </div>
+
+  <div class="card">
+    <h2>기억은 여섯 개 중 하나입니다</h2>
+    <p>기억은 사람을 이해하는 여섯 개의 열쇠 가운데 하나일 뿐입니다. 집중이 흔들려서 기억이 안 남는 것처럼 보이기도 하고, 감정이 흔들려서 집중이 안 되기도 합니다.</p>
+    <p class="mt14">기억 점수만으로는 그 이유까지 알 수 없습니다. 나머지 열쇠도 함께 확인해 보세요.</p>
+    <a class="linkbtn lb1" href="https://k-brain.co.kr/brain-ability-analysis.html">뇌능력 다중검사 해보기</a>
+    <a class="linkbtn lb2" href="https://k-brain.co.kr/brain_training.html">뇌건강 무료 훈련실 가기</a>
+    <a class="linkbtn lb2" href="https://k-brain.co.kr/">한국뇌심리연구소 홈으로</a>
+  </div>
+
+  <div class="card">
+    <div class="note" id="r-meta"></div>
+    <button class="btn sub" onclick="location.reload()">다시 검사하기</button>
+  </div>
+</section>
+
+<div class="foot">한국뇌심리연구소 · k-brain.co.kr<br>경천애인 · 홍익인간 · 재세이화</div>
+</div>
+
+<script>
+/* ===== 그림 데이터 (빌드 시 주입) ===== */
+var IMG = {};
+IMG["animal-bear"]="<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 512 512\"> <circle cx=\"203\" cy=\"173\" r=\"43\" fill=\"#8D5A3B\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle cx=\"309\" cy=\"173\" r=\"43\" fill=\"#8D5A3B\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> <path d=\"M164 217 Q165 146 256 146 Q347 146 348 217 L336 326 Q327 378 256 387 Q185 378 176 326Z\" fill=\"#8D5A3B\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> <circle cx=\"224\" cy=\"250\" r=\"10\" fill=\"#202020\"/><circle cx=\"288\" cy=\"250\" r=\"10\" fill=\"#202020\"/> <ellipse cx=\"256\" cy=\"292\" rx=\"43\" ry=\"34\" fill=\"#FDD835\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> <path d=\"M256 282 V305 M239 316 Q256 327 273 316\" fill=\"none\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> </svg>";
+IMG["animal-fox"]="<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 512 512\"> <path d=\"M174 153 L224 181 Q256 166 288 181 L338 153 L325 302 Q311 365 256 384 Q201 365 187 302Z\" fill=\"#FB8C00\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> <path d=\"M174 153 L211 219 L256 201 L301 219 L338 153 L312 293 Q298 337 256 353 Q214 337 200 293Z\" fill=\"#FFFFFF\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> <circle cx=\"226\" cy=\"257\" r=\"10\" fill=\"#202020\"/><circle cx=\"286\" cy=\"257\" r=\"10\" fill=\"#202020\"/> <path d=\"M244 290 L256 300 L268 290\" fill=\"none\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> </svg>";
+IMG["animal-lion"]="<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 512 512\"> <circle cx=\"256\" cy=\"257\" r=\"120\" fill=\"#FB8C00\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> <circle cx=\"256\" cy=\"257\" r=\"79\" fill=\"#FDD835\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> <path d=\"M213 238 Q256 211 299 238 L291 302 Q256 326 221 302Z\" fill=\"#FDD835\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> <circle cx=\"230\" cy=\"257\" r=\"9\" fill=\"#202020\"/><circle cx=\"282\" cy=\"257\" r=\"9\" fill=\"#202020\"/> <path d=\"M256 270 V292 M236 301 Q256 315 276 301\" fill=\"none\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> </svg>";
+IMG["animal-rabbit"]="<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 512 512\"> <path d=\"M207 190 Q182 135 195 102 Q205 79 221 99 Q241 126 245 181 Q256 176 267 181 Q271 126 291 99 Q307 79 317 102 Q330 135 305 190 Q336 214 334 274 Q330 356 256 372 Q182 356 178 274 Q176 214 207 190Z\" fill=\"#FFFFFF\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> <circle cx=\"226\" cy=\"254\" r=\"10\" fill=\"#202020\"/><circle cx=\"286\" cy=\"254\" r=\"10\" fill=\"#202020\"/> <path d=\"M256 276 V302 M239 313 Q256 325 273 313\" fill=\"none\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> </svg>";
+IMG["animal-tiger"]="<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 512 512\"> <path d=\"M171 207 Q170 159 202 138 L231 156 Q256 146 281 156 L310 138 Q342 159 341 207 L326 319 Q315 378 256 386 Q197 378 186 319Z\" fill=\"#FB8C00\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> <path d=\"M210 183 L222 223 M302 183 L290 223 M193 263 L222 273 M319 263 L290 273\" fill=\"none\" stroke=\"#263238\" stroke-width=\"18\" stroke-linecap=\"round\"/> <circle cx=\"224\" cy=\"242\" r=\"10\" fill=\"#202020\"/><circle cx=\"288\" cy=\"242\" r=\"10\" fill=\"#202020\"/> <path d=\"M236 284 Q256 299 276 284 M256 273 V300\" fill=\"none\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> </svg>";
+IMG["building-door"]="<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 512 512\"> <rect x=\"166\" y=\"121\" width=\"180\" height=\"272\" rx=\"8\" fill=\"#8D5A3B\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> <rect x=\"195\" y=\"151\" width=\"122\" height=\"100\" fill=\"#FDD835\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> <circle cx=\"302\" cy=\"291\" r=\"10\" fill=\"#FDD835\"/> </svg>";
+IMG["building-pillar"]="<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 512 512\"> <path d=\"M156 143 H356 V181 H329 V350 H356 V388 H156 V350 H183 V181 H156Z\" fill=\"#FFFFFF\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> <path d=\"M170 151 H342 M170 380 H342\" fill=\"none\" stroke=\"#1E88E5\" stroke-width=\"24\"/> </svg>";
+IMG["building-roof"]="<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 512 512\"> <path d=\"M132 299 L256 142 L380 299\" fill=\"#E53935\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> <path d=\"M166 294 V365 H346 V294\" fill=\"#8D5A3B\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> <path d=\"M235 365 V300 H277 V365\" fill=\"#FFFFFF\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> </svg>";
+IMG["building-stairs"]="<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 512 512\"> <path d=\"M147 360 H365 V325 H182 V286 H365 V250 H217 V212 H365 V176 H252 V139 H365\" fill=\"none\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> <path d=\"M147 360 H365\" fill=\"none\" stroke=\"#1E88E5\" stroke-width=\"24\"/> </svg>";
+IMG["building-window"]="<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 512 512\"> <rect x=\"137\" y=\"137\" width=\"238\" height=\"238\" rx=\"10\" fill=\"#1E88E5\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> <rect x=\"163\" y=\"163\" width=\"186\" height=\"186\" fill=\"#FFFFFF\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> <path d=\"M256 163 V349 M163 256 H349\" fill=\"none\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> </svg>";
+IMG["fruit-apple"]="<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 512 512\"> <path d=\"M256 151 C228 128 191 138 171 168 C145 207 151 293 181 337 C200 365 225 381 256 381 C287 381 312 365 331 337 C361 293 367 207 341 168 C321 138 284 128 256 151Z\" fill=\"#E53935\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> <path d=\"M256 151 C250 122 254 93 274 72\" fill=\"none\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> <path d=\"M272 84 C302 66 328 70 346 86 C320 103 294 106 272 84Z\" fill=\"#43A047\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> <path d=\"M151 217 C164 190 180 176 202 169\" fill=\"none\" stroke=\"#FF8A80\" stroke-width=\"12\" stroke-linecap=\"round\"/> </svg>";
+IMG["fruit-banana"]="<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 512 512\"> <path d=\"M150 208 Q193 347 312 342 Q348 340 363 308 Q322 324 294 307 Q230 270 205 175 Q174 168 150 208Z\" fill=\"#FDD835\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> <path d=\"M153 207 Q173 185 202 176\" fill=\"none\" stroke=\"#8D5A3B\" stroke-width=\"18\" stroke-linecap=\"round\"/> <path d=\"M312 342 Q344 339 363 308\" fill=\"none\" stroke=\"#8D5A3B\" stroke-width=\"18\" stroke-linecap=\"round\"/> </svg>";
+IMG["fruit-grape"]="<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 512 512\"> <path d=\"M255 139 C237 117 238 91 256 73\" fill=\"none\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> <path d=\"M257 88 C281 69 308 73 323 91 C298 104 275 103 257 88Z\" fill=\"#43A047\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> <circle cx=\"221\" cy=\"172\" r=\"38\" fill=\"#8E24AA\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle cx=\"290\" cy=\"172\" r=\"38\" fill=\"#8E24AA\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> <circle cx=\"187\" cy=\"231\" r=\"38\" fill=\"#8E24AA\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle cx=\"255\" cy=\"231\" r=\"38\" fill=\"#8E24AA\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle cx=\"323\" cy=\"231\" r=\"38\" fill=\"#8E24AA\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> <circle cx=\"221\" cy=\"290\" r=\"38\" fill=\"#8E24AA\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle cx=\"290\" cy=\"290\" r=\"38\" fill=\"#8E24AA\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> <circle cx=\"255\" cy=\"349\" r=\"38\" fill=\"#8E24AA\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> </svg>";
+IMG["fruit-strawberry"]="<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 512 512\"> <path d=\"M158 189 Q256 142 354 189 L330 314 Q314 376 256 393 Q198 376 182 314Z\" fill=\"#E53935\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> <path d=\"M160 190 Q202 128 256 158 Q310 128 352 190 Q306 184 256 205 Q206 184 160 190Z\" fill=\"#43A047\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> <g fill=\"#FDD835\"> <ellipse cx=\"214\" cy=\"239\" rx=\"8\" ry=\"13\"/><ellipse cx=\"262\" cy=\"231\" rx=\"8\" ry=\"13\"/><ellipse cx=\"310\" cy=\"244\" rx=\"8\" ry=\"13\"/> <ellipse cx=\"195\" cy=\"289\" rx=\"8\" ry=\"13\"/><ellipse cx=\"239\" cy=\"282\" rx=\"8\" ry=\"13\"/><ellipse cx=\"286\" cy=\"286\" rx=\"8\" ry=\"13\"/><ellipse cx=\"326\" cy=\"295\" rx=\"8\" ry=\"13\"/> <ellipse cx=\"219\" cy=\"335\" rx=\"8\" ry=\"13\"/><ellipse cx=\"267\" cy=\"328\" rx=\"8\" ry=\"13\"/><ellipse cx=\"304\" cy=\"340\" rx=\"8\" ry=\"13\"/> </g> </svg>";
+IMG["fruit-watermelon"]="<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 512 512\"> <path d=\"M137 244 Q256 397 375 244 Z\" fill=\"#E53935\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> <path d=\"M137 244 Q256 397 375 244\" fill=\"none\" stroke=\"#43A047\" stroke-width=\"28\" stroke-linecap=\"round\"/> <path d=\"M148 238 Q256 369 364 238\" fill=\"none\" stroke=\"#FFFFFF\" stroke-width=\"12\" stroke-linecap=\"round\"/> <g fill=\"#202020\"><ellipse cx=\"205\" cy=\"283\" rx=\"7\" ry=\"14\" transform=\"rotate(-35 205 283)\"/><ellipse cx=\"256\" cy=\"317\" rx=\"7\" ry=\"14\"/><ellipse cx=\"307\" cy=\"283\" rx=\"7\" ry=\"14\" transform=\"rotate(35 307 283)\"/></g> </svg>";
+IMG["furniture-bed"]="<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 512 512\"> <path d=\"M141 236 H371 V365 H141Z\" fill=\"#1E88E5\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> <path d=\"M141 236 H198 V294 H141Z\" fill=\"#FFFFFF\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> <path d=\"M198 236 H371 V294 H198Z\" fill=\"#FDD835\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> <path d=\"M141 365 V391 M371 365 V391\" fill=\"none\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> </svg>";
+IMG["furniture-chair"]="<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 512 512\"> <path d=\"M174 154 H338 V285 Q338 315 308 315 H204 Q174 315 174 285Z\" fill=\"#1E88E5\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> <path d=\"M174 315 V382 M338 315 V382 M204 315 V382\" fill=\"none\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> <path d=\"M204 382 H178 M338 382 H364\" fill=\"none\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> </svg>";
+IMG["furniture-desk"]="<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 512 512\"> <path d=\"M137 181 H375 V229 H137Z\" fill=\"#8D5A3B\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> <path d=\"M160 229 V374 M352 229 V374\" fill=\"none\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> <path d=\"M151 374 H183 M329 374 H361\" fill=\"none\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> <rect x=\"163\" y=\"248\" width=\"186\" height=\"63\" rx=\"8\" fill=\"#FDD835\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> </svg>";
+IMG["furniture-sofa"]="<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 512 512\"> <path d=\"M148 248 Q148 205 191 205 H321 Q364 205 364 248 V335 H148Z\" fill=\"#43A047\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> <path d=\"M148 271 Q119 271 119 307 V345 H393 V307 Q393 271 364 271\" fill=\"#43A047\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> <path d=\"M190 207 V326 M322 207 V326\" fill=\"none\" stroke=\"#202020\" stroke-width=\"14\"/> <path d=\"M153 345 V378 M359 345 V378\" fill=\"none\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> </svg>";
+IMG["furniture-wardrobe"]="<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 512 512\"> <rect x=\"145\" y=\"128\" width=\"222\" height=\"263\" rx=\"8\" fill=\"#8D5A3B\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> <path d=\"M256 128 V391\" fill=\"none\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> <circle cx=\"239\" cy=\"259\" r=\"9\" fill=\"#FDD835\"/><circle cx=\"273\" cy=\"259\" r=\"9\" fill=\"#FDD835\"/> <path d=\"M176 159 H225 M287 159 H336\" fill=\"none\" stroke=\"#FDD835\" stroke-width=\"12\" stroke-linecap=\"round\"/> </svg>";
+IMG["living-bag"]="<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 512 512\"> <path d=\"M160 191 H352 V372 Q352 393 331 393 H181 Q160 393 160 372Z\" fill=\"#1E88E5\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> <path d=\"M211 191 V158 Q211 125 256 125 Q301 125 301 158 V191\" fill=\"none\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> <path d=\"M211 250 H301\" fill=\"none\" stroke=\"#FFFFFF\" stroke-width=\"14\"/> </svg>";
+IMG["living-glove"]="<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 512 512\"> <path d=\"M204 357 Q176 345 171 315 L168 190 Q167 170 183 166 Q199 162 205 181 L215 243 L214 153 Q214 132 231 130 Q248 128 252 149 L258 240 L258 139 Q258 118 275 118 Q292 118 294 140 L297 242 L298 165 Q298 144 315 143 Q332 143 334 165 L338 283 Q339 335 307 365 Q284 386 247 382 Q220 379 204 357Z\" fill=\"#FDD835\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> <path d=\"M215 244 L215 275 M258 240 L258 276 M297 242 L297 276\" fill=\"none\" stroke=\"#202020\" stroke-width=\"10\"/> </svg>";
+IMG["living-hat"]="<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 512 512\"> <path d=\"M177 264 Q184 172 256 172 Q328 172 335 264Z\" fill=\"#1E88E5\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> <path d=\"M144 259 Q256 238 368 259 Q374 261 374 273 Q374 288 359 291 Q256 306 153 291 Q138 288 138 273 Q138 261 144 259Z\" fill=\"#1E88E5\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> <path d=\"M181 250 Q256 236 331 250\" fill=\"none\" stroke=\"#FFFFFF\" stroke-width=\"12\"/> </svg>";
+IMG["living-shoe"]="<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 512 512\"> <path d=\"M157 292 Q191 287 218 315 L267 356 Q287 373 322 371 L355 369 Q371 369 374 384 Q377 400 360 407 H183 Q147 407 141 381 Q137 361 151 344Z\" fill=\"#E53935\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> <path d=\"M214 315 L248 280 Q263 267 280 281 L309 305\" fill=\"none\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> <path d=\"M193 332 L286 370\" fill=\"none\" stroke=\"#FFFFFF\" stroke-width=\"12\"/> </svg>";
+IMG["living-umbrella"]="<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 512 512\"> <path d=\"M143 222 Q256 126 369 222 Q351 211 333 222 Q315 233 297 222 Q279 211 261 222 Q243 233 225 222 Q207 211 189 222 Q171 233 143 222Z\" fill=\"#E53935\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> <path d=\"M256 222 V350 Q256 380 283 380 Q307 380 307 357\" fill=\"none\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> <path d=\"M256 222 Q256 174 256 150\" fill=\"none\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> </svg>";
+IMG["nature-cloud"]="<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 512 512\"> <path d=\"M158 325 Q139 310 139 286 Q139 247 177 232 Q193 177 249 177 Q299 177 316 220 Q365 220 373 270 Q380 314 342 325Z\" fill=\"#FFFFFF\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> <path d=\"M185 287 H327\" fill=\"none\" stroke=\"#1E88E5\" stroke-width=\"14\" stroke-linecap=\"round\"/> </svg>";
+IMG["nature-field"]="<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 512 512\"> <path d=\"M126 367 Q182 285 256 292 Q330 285 386 367Z\" fill=\"#43A047\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> <path d=\"M165 326 Q210 283 256 292 Q302 283 347 326\" fill=\"none\" stroke=\"#FDD835\" stroke-width=\"18\"/> <path d=\"M198 295 Q205 260 226 243 M286 291 Q300 250 322 232\" fill=\"none\" stroke=\"#43A047\" stroke-width=\"18\" stroke-linecap=\"round\"/> <circle cx=\"226\" cy=\"243\" r=\"12\" fill=\"#E53935\"/><circle cx=\"322\" cy=\"232\" r=\"12\" fill=\"#E53935\"/> </svg>";
+IMG["nature-mountain"]="<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 512 512\"> <path d=\"M126 367 L222 196 L274 283 L315 220 L386 367Z\" fill=\"#43A047\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> <path d=\"M222 196 L246 238 L274 283 L255 265 L238 281 L222 259 L206 276 L193 253Z\" fill=\"#FFFFFF\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> <path d=\"M315 220 L333 249 L348 242 L386 367\" fill=\"#263238\" opacity=\".15\"/> </svg>";
+IMG["nature-river"]="<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 512 512\"> <path d=\"M126 153 Q256 126 386 153 L386 366 Q256 338 126 366Z\" fill=\"#1E88E5\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> <path d=\"M205 143 Q224 183 218 221 Q212 259 238 292 Q264 325 307 358\" fill=\"none\" stroke=\"#FFFFFF\" stroke-width=\"22\" stroke-linecap=\"round\"/> <path d=\"M306 151 Q288 190 294 228 Q300 266 274 299 Q248 332 205 360\" fill=\"none\" stroke=\"#00ACC1\" stroke-width=\"16\" stroke-linecap=\"round\"/> </svg>";
+IMG["nature-sea"]="<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 512 512\"> <path d=\"M137 294 Q167 264 197 294 Q227 324 256 294 Q286 264 316 294 Q346 324 375 294 V366 H137Z\" fill=\"#1E88E5\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> <path d=\"M137 330 Q167 300 197 330 Q227 360 256 330 Q286 300 316 330 Q346 360 375 330\" fill=\"none\" stroke=\"#00ACC1\" stroke-width=\"22\"/> <path d=\"M177 217 Q256 137 335 217 Q303 201 256 218 Q209 201 177 217Z\" fill=\"#FDD835\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> </svg>";
+IMG["stationery-eraser"]="<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 512 512\"> <path d=\"M168 214 Q168 190 192 190 H339 Q363 190 363 214 V302 Q363 326 339 326 H192 Q168 326 168 302Z\" fill=\"#EC407A\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> <path d=\"M250 190 V326\" fill=\"none\" stroke=\"#FFFFFF\" stroke-width=\"14\"/> <path d=\"M188 350 H324\" fill=\"none\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> </svg>";
+IMG["stationery-glue"]="<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 512 512\"> <path d=\"M203 185 H309 V215 H331 V354 Q331 379 306 379 H206 Q181 379 181 354 V215 H203Z\" fill=\"#1E88E5\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> <rect x=\"214\" y=\"132\" width=\"84\" height=\"53\" rx=\"8\" fill=\"#FDD835\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> <path d=\"M214 185 H298\" fill=\"none\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> </svg>";
+IMG["stationery-pencil"]="<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 512 512\"> <path d=\"M159 331 L299 191 L337 229 L197 369 L159 381Z\" fill=\"#FDD835\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> <path d=\"M299 191 L323 167 L361 205 L337 229Z\" fill=\"#E53935\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> <path d=\"M159 381 L168 346 L197 369Z\" fill=\"#8D5A3B\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> <path d=\"M213 277 L251 315\" fill=\"none\" stroke=\"#FFFFFF\" stroke-width=\"12\"/> </svg>";
+IMG["stationery-ruler"]="<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 512 512\"> <rect x=\"164\" y=\"154\" width=\"184\" height=\"204\" rx=\"8\" fill=\"#FDD835\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> <path d=\"M198 154 V184 M226 154 V171 M254 154 V184 M282 154 V171 M310 154 V184\" fill=\"none\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> <path d=\"M198 358 V328 M226 358 V341 M254 358 V328 M282 358 V341 M310 358 V328\" fill=\"none\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> </svg>";
+IMG["stationery-scissors"]="<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 512 512\"> <circle cx=\"207\" cy=\"310\" r=\"42\" fill=\"#1E88E5\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle cx=\"305\" cy=\"310\" r=\"42\" fill=\"#1E88E5\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> <path d=\"M230 279 L345 167 M282 279 L167 167\" fill=\"none\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> <path d=\"M230 279 L345 167 M282 279 L167 167\" fill=\"none\" stroke=\"#90A4AE\" stroke-width=\"24\" stroke-linecap=\"round\"/> <path d=\"M230 279 L345 167 M282 279 L167 167\" fill=\"none\" stroke=\"#202020\" stroke-width=\"10\" stroke-linecap=\"round\"/> </svg>";
+IMG["vehicle-airplane"]="<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 512 512\"> <path d=\"M256 117 Q274 117 282 142 L296 218 L365 270 Q378 280 372 295 Q367 309 349 304 L287 286 L280 348 L318 372 Q327 379 322 392 Q318 404 304 400 L256 381 L208 400 Q194 404 190 392 Q185 379 194 372 L232 348 L225 286 L163 304 Q145 309 140 295 Q134 280 147 270 L216 218 L230 142 Q238 117 256 117Z\" fill=\"#1E88E5\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> </svg>";
+IMG["vehicle-bicycle"]="<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 512 512\"> <circle cx=\"175\" cy=\"331\" r=\"58\" fill=\"none\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle cx=\"337\" cy=\"331\" r=\"58\" fill=\"none\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> <path d=\"M175 331 L231 218 L284 331 L175 331 L258 331 L231 218 L304 218 L337 331\" fill=\"none\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> <path d=\"M231 218 L212 185 M212 185 H190 M304 218 L326 191 M326 191 H350\" fill=\"none\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> <path d=\"M277 185 H309\" fill=\"none\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> </svg>";
+IMG["vehicle-bus"]="<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 512 512\"> <path d=\"M135 164 Q145 140 175 140 H337 Q367 140 377 164 V339 Q377 365 351 365 H161 Q135 365 135 339Z\" fill=\"#FDD835\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> <path d=\"M135 215 H377\" fill=\"none\" stroke=\"#202020\" stroke-width=\"16\"/> <rect x=\"163\" y=\"170\" width=\"70\" height=\"34\" rx=\"7\" fill=\"#FFFFFF\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> <rect x=\"279\" y=\"170\" width=\"70\" height=\"34\" rx=\"7\" fill=\"#FFFFFF\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> <rect x=\"163\" y=\"242\" width=\"70\" height=\"67\" rx=\"7\" fill=\"#FFFFFF\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> <rect x=\"279\" y=\"242\" width=\"70\" height=\"67\" rx=\"7\" fill=\"#FFFFFF\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> <circle cx=\"190\" cy=\"377\" r=\"29\" fill=\"#263238\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle cx=\"322\" cy=\"377\" r=\"29\" fill=\"#263238\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> </svg>";
+IMG["vehicle-taxi"]="<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 512 512\"> <path d=\"M151 218 L184 155 H328 L361 218\" fill=\"#FDD835\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> <path d=\"M151 218 H361 Q378 218 378 235 V328 H134 V235 Q134 218 151 218Z\" fill=\"#FDD835\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> <path d=\"M191 157 H321\" fill=\"none\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> <path d=\"M181 218 L198 176 H314 L331 218\" fill=\"#FFFFFF\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> <rect x=\"134\" y=\"252\" width=\"244\" height=\"55\" fill=\"#263238\" /> <circle cx=\"190\" cy=\"349\" r=\"30\" fill=\"#263238\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle cx=\"322\" cy=\"349\" r=\"30\" fill=\"#263238\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> <rect x=\"223\" y=\"229\" width=\"66\" height=\"23\" rx=\"6\" fill=\"#FDD835\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> </svg>";
+IMG["vehicle-train"]="<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 512 512\"> <rect x=\"132\" y=\"138\" width=\"248\" height=\"220\" rx=\"38\" fill=\"#1E88E5\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> <path d=\"M132 205 H380\" fill=\"none\" stroke=\"#202020\" stroke-width=\"16\"/> <rect x=\"166\" y=\"171\" width=\"72\" height=\"55\" rx=\"8\" fill=\"#FFFFFF\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> <rect x=\"274\" y=\"171\" width=\"72\" height=\"55\" rx=\"8\" fill=\"#FFFFFF\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> <rect x=\"158\" y=\"267\" width=\"196\" height=\"48\" rx=\"10\" fill=\"#FFFFFF\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> <circle cx=\"194\" cy=\"375\" r=\"30\" fill=\"#263238\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle cx=\"318\" cy=\"375\" r=\"30\" fill=\"#263238\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> <path d=\"M173 397 H339\" fill=\"none\" stroke=\"#202020\" stroke-width=\"16\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> </svg>";
+
+/* ===== 목록 정의 ===== */
+var LIST_A = ['fruit-apple','vehicle-train','living-umbrella','animal-tiger',
+              'building-window','nature-sea','stationery-pencil','furniture-chair'];
+var LIST_B = ['fruit-grape','vehicle-bus','living-glove','animal-lion',
+              'building-door','nature-mountain','stationery-eraser','furniture-desk'];
+
+/* S3 유지력: 정답 + 같은 범주 오답 3 (C군만 사용) */
+var S3 = [
+ {a:'fruit-apple',      o:['fruit-strawberry','fruit-watermelon','fruit-banana']},
+ {a:'vehicle-train',    o:['vehicle-taxi','vehicle-bicycle','vehicle-airplane']},
+ {a:'living-umbrella',  o:['living-hat','living-shoe','living-bag']},
+ {a:'animal-tiger',     o:['animal-bear','animal-fox','animal-rabbit']},
+ {a:'building-window',  o:['building-stairs','building-roof','building-pillar']},
+ {a:'nature-sea',       o:['nature-river','nature-field','nature-cloud']},
+ {a:'stationery-pencil',o:['stationery-ruler','stationery-scissors','stationery-glue']},
+ {a:'furniture-chair',  o:['furniture-bed','furniture-sofa','furniture-wardrobe']}
+];
+
+/* S4 회상력: 학습 격자 칸 위치(0~7) 단서 → 보기는 학습목록 내부 */
+var S4_SLOTS = [];
+
+/* S5 간섭저항: 1=첫묶음, 2=두번째묶음, 0=둘다아님 */
+var S5 = [
+ {k:'fruit-apple',        a:1},
+ {k:'furniture-desk',     a:2},
+ {k:'animal-tiger',       a:1},
+ {k:'animal-lion',        a:2},
+ {k:'vehicle-bicycle',    a:0},
+ {k:'building-window',    a:1}
+];
+
+/* S2 인코딩 속도: 색 × 도형 조합 */
+var COLORS = [['#E53935','빨강'],['#1565C0','파랑'],['#43A047','초록'],
+              ['#FDD835','노랑'],['#8E24AA','보라'],['#FB8C00','주황']];
+var SHAPES = ['circle','square','triangle','star','diamond','hexagon'];
+
+/* 연령대 잠정 참조값 [용량,속도,유지,회상,간섭] — 실측 규준 아님 */
+var AGEREF_BASIC = {
+ '20':[78,76,75,76,73], '30':[75,73,72,73,70], '40':[71,69,68,69,66],
+ '50':[66,64,63,64,61], '60':[60,58,58,58,55], '70':[53,51,52,51,48]
+};
+var AGEREF_ADV = {
+ '20':[66,64,63,64,61], '30':[63,61,60,61,58], '40':[59,57,56,57,54],
+ '50':[54,52,51,52,49], '60':[48,46,46,46,43], '70':[41,39,40,39,36]
+};
+
+/* 단계별 설정 */
+var LEVELS = {
+  basic:{ nm:'기본 단계', learn:30, interf:20, digits:[3,4,4,5,6,7], expo:3500, ref:AGEREF_BASIC },
+  adv:  { nm:'고급 단계', learn:20, interf:15, digits:[3,4,5,6,7,8], expo:2500, ref:AGEREF_ADV }
+};
+var CFG = LEVELS.basic, LV = 'basic';
+function setLevel(k){ LV=k; CFG=LEVELS[k]; s1len=CFG.digits.slice(); go('info'); }
+
+var AREA = ['기억 용량','기억 속도','기억 유지','기억 회상','간섭 저항'];
+var AREA_DESC = [
+ '한 번에 담아 두는 양',
+ '받아들이는 빠르기',
+ '시간이 지나도 남는 힘',
+ '필요할 때 꺼내는 힘',
+ '비슷한 것에 흔들리지 않는 힘'
+];
+
+var REGIONS = ['서울특별시','부산광역시','대구광역시','인천광역시','광주광역시','대전광역시',
+ '울산광역시','세종특별자치시','경기도','강원특별자치도','충청북도','충청남도',
+ '전북특별자치도','전라남도','경상북도','경상남도','제주특별자치도'];
+
+/* ===== 상태 ===== */
+var U = {name:'',sex:'',y:0,m:0,d:0,reg:'',age:0,band:'40'};
+var SC = [0,0,0,0,0];
+var startedAt = new Date();
+
+/* ===== 공통 ===== */
+function $(id){return document.getElementById(id);}
+function go(n){
+  var a=document.querySelectorAll('.scr');
+  for(var i=0;i<a.length;i++) a[i].classList.remove('on');
+  $('scr-'+n).classList.add('on');
+  window.scrollTo(0,0);
+}
+function svg(key){ return IMG[key] || '<svg viewBox="0 0 512 512"></svg>'; }
+function shuffle(arr){
+  var a=arr.slice();
+  for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}
+  return a;
+}
+/* 모바일 더블탭 중복 응답 차단 */
+var _lock=false;
+function locked(){
+  if(_lock) return true;
+  _lock=true;
+  setTimeout(function(){ _lock=false; },320);
+  return false;
+}
+function prog(n,cur,tot){
+  $('p'+n).style.width=Math.round(cur/tot*100)+'%';
+  $('t'+n).textContent=cur+' / '+tot;
+}
+
+/* ===== 인적사항 ===== */
+(function initForm(){
+  var y=$('f-y'),m=$('f-m'),d=$('f-d'),r=$('f-reg');
+  var now=new Date().getFullYear(), h='<option value="">년</option>';
+  for(var i=now-7;i>=now-100;i--) h+='<option value="'+i+'">'+i+'년</option>';
+  y.innerHTML=h;
+  h='<option value="">월</option>';
+  for(i=1;i<=12;i++) h+='<option value="'+i+'">'+i+'월</option>';
+  m.innerHTML=h;
+  h='<option value="">일</option>';
+  for(i=1;i<=31;i++) h+='<option value="'+i+'">'+i+'일</option>';
+  d.innerHTML=h;
+  for(i=0;i<REGIONS.length;i++){
+    var o=document.createElement('option');
+    o.value=REGIONS[i];o.textContent=REGIONS[i];r.appendChild(o);
+  }
+})();
+
+function submitInfo(){
+  if(locked()) return;
+  var e=$('info-err');
+  U.name=$('f-name').value.replace(/^\s+|\s+$/g,'');
+  U.sex=$('f-sex').value;
+  U.y=parseInt($('f-y').value,10)||0;
+  U.m=parseInt($('f-m').value,10)||0;
+  U.d=parseInt($('f-d').value,10)||0;
+  U.reg=$('f-reg').value;
+  if(!U.name||!U.sex||!U.y||!U.m||!U.d||!U.reg){
+    e.textContent='빈 칸을 모두 채워 주세요.';e.style.display='block';return;
+  }
+  e.style.display='none';
+  var t=new Date();
+  var age=t.getFullYear()-U.y;
+  if(t.getMonth()+1<U.m||(t.getMonth()+1===U.m&&t.getDate()<U.d)) age--;
+  U.age=age;
+  var b=Math.floor(age/10)*10;
+  if(b<20)b=20; if(b>70)b=70;
+  U.band=String(b);
+  startLearn();
+}
+
+/* ===== 학습 단계 ===== */
+function startLearn(){
+  var g=$('learn-grid'),h='';
+  for(var i=0;i<LIST_A.length;i++)
+    h+='<div class="imgbox show">'+svg(LIST_A[i])+'</div>';
+  g.innerHTML=h;
+  go('learn');
+  countdown('learn-count',CFG.learn,startS1);
+}
+function countdown(id,sec,cb){
+  var el=$(id);el.textContent=sec;
+  var t=setInterval(function(){
+    sec--;el.textContent=sec;
+    if(sec<=0){clearInterval(t);cb();}
+  },1000);
+}
+
+/* ===== S1 기억 용량 (숫자) ===== */
+var s1i=0, s1len=[3,4,4,5,6,7], s1seq='', s1buf='', s1hit=[];
+function startS1(){ s1i=0; go('s1'); s1Next(); }
+function s1Next(){
+  if(s1i>=6){ scoreS1(); startS2(); return; }
+  prog(1,s1i,6);
+  $('s1-input').style.display='none';
+  $('s1-title').textContent='숫자를 순서대로 기억하세요';
+  var n=s1len[s1i]; s1seq='';
+  for(var k=0;k<n;k++) s1seq+=String(Math.floor(Math.random()*10));
+  var st=$('s1-stage'); st.textContent='준비';
+  var pg0=$('s1-stagecnt'); if(pg0) pg0.textContent='\u00a0';
+  setTimeout(function(){ s1Play(0); }, 1300);
+}
+function s1Play(k){
+  if(s1i>=6) return;
+  var st=$('s1-stage');
+  if(k>=s1seq.length){
+    st.textContent='?';
+    var pgE=$('s1-stagecnt'); if(pgE) pgE.textContent='\u00a0';
+    void st.offsetHeight;
+    setTimeout(s1Ask,500); return;
+  }
+  requestAnimationFrame(function(){
+    st.textContent=s1seq.charAt(k);
+    var pg=$('s1-stagecnt'); if(pg) pg.textContent=(k+1)+' / '+s1seq.length;
+    void st.offsetHeight; /* 강제 리플로우: 화면에 즉시 그려지도록 보장 */
+    setTimeout(function(){
+      st.textContent='';
+      void st.offsetHeight;
+      setTimeout(function(){ s1Play(k+1); },280);
+    },1100);
+  });
+}
+function s1Ask(){
+  $('s1-title').textContent='본 순서 그대로 눌러 주세요';
+  s1buf='';
+  $('s1-entry').innerHTML='&nbsp;';
+  var p=$('s1-pad'),h='';
+  for(var i=1;i<=9;i++) h+='<button onclick="s1Tap(\''+i+'\')">'+i+'</button>';
+  h+='<button class="act" onclick="s1Del()">지움</button>';
+  h+='<button onclick="s1Tap(\'0\')">0</button>';
+  h+='<button class="act" onclick="s1Ok()">확인</button>';
+  p.innerHTML=h;
+  $('s1-input').style.display='block';
+}
+function s1Tap(v){ if(s1buf.length<8){ s1buf+=v; s1Draw(); } }
+function s1Del(){ s1buf=s1buf.slice(0,-1); s1Draw(); }
+function s1Draw(){ $('s1-entry').innerHTML = s1buf===''?'&nbsp;':s1buf; }
+function s1Ok(){
+  if(s1buf.length===0) return;
+  if(locked()) return;
+  s1hit.push(s1buf===s1seq?1:0);
+  s1i++; s1Next();
+}
+function scoreS1(){
+  var got=0,tot=0;
+  for(var i=0;i<s1len.length;i++){ tot+=s1len[i]; if(s1hit[i]) got+=s1len[i]; }
+  SC[0]=Math.round(got/tot*100);
+}
+
+/* ===== S2 기억 속도 (색·도형) ===== */
+var s2i=0, s2sets=[], s2hit=[], s2rt=[], s2t0=0;
+function shapeSVG(shape,color,size){
+  var s=size||74, c='<svg viewBox="0 0 100 100" width="'+s+'" height="'+s+'">';
+  var f='fill="'+color+'" stroke="#111" stroke-width="7" stroke-linejoin="round"';
+  if(shape==='circle')   c+='<circle cx="50" cy="50" r="38" '+f+'/>';
+  if(shape==='square')   c+='<rect x="14" y="14" width="72" height="72" rx="8" '+f+'/>';
+  if(shape==='triangle') c+='<path d="M50 12 88 86H12Z" '+f+'/>';
+  if(shape==='star')     c+='<path d="M50 10 62 38l30 3-23 20 7 29-26-15-26 15 7-29-23-20 30-3Z" '+f+'/>';
+  if(shape==='diamond')  c+='<path d="M50 10 90 50 50 90 10 50Z" '+f+'/>';
+  if(shape==='hexagon')  c+='<path d="M30 15h40l20 35-20 35H30L10 50Z" '+f+'/>';
+  return c+'</svg>';
+}
+function makeS2(){
+  s2sets=[];
+  var all=[];
+  for(var a=0;a<SHAPES.length;a++)
+    for(var b=0;b<COLORS.length;b++) all.push([SHAPES[a],COLORS[b][0]]);
+  for(var t=0;t<6;t++){
+    var pool=shuffle(all);
+    var show=[pool[0],pool[1],pool[2]];
+    var ans=show[Math.floor(Math.random()*3)];
+    var wrong=[],i=3;
+    while(wrong.length<3 && i<pool.length){
+      var p=pool[i]; i++;
+      var dup=false;
+      for(var j=0;j<3;j++) if(show[j][0]===p[0]&&show[j][1]===p[1]) dup=true;
+      if(!dup) wrong.push(p);
+    }
+    s2sets.push({show:show,ans:ans,opts:shuffle([ans].concat(wrong))});
+  }
+}
+function startS2(){ makeS2(); s2i=0; go('s2'); s2Next(); }
+function s2Next(){
+  if(s2i>=6){ scoreS2(); startS3(); return; }
+  prog(2,s2i,6);
+  $('s2-opts').style.display='none';
+  $('s2-title').textContent='잠깐 보여 드립니다';
+  var st=$('s2-stage'); st.innerHTML='';
+  setTimeout(function(){
+    if(s2i>=6||!s2sets[s2i]) return;
+    var s=s2sets[s2i],h='';
+    for(var i=0;i<3;i++) h+=shapeSVG(s.show[i][0],s.show[i][1]);
+    st.innerHTML=h;
+    setTimeout(function(){ st.innerHTML=''; s2Ask(); },CFG.expo);
+  },700);
+}
+function s2Ask(){
+  $('s2-title').textContent='어느 것을 보셨습니까';
+  var s=s2sets[s2i],g=$('s2-grid'),h='';
+  for(var i=0;i<s.opts.length;i++)
+    h+='<div class="imgbox" onclick="s2Pick('+i+')">'+shapeSVG(s.opts[i][0],s.opts[i][1],110)+'</div>';
+  g.innerHTML=h;
+  $('s2-opts').style.display='block';
+  s2t0=new Date().getTime();
+}
+function s2Pick(i){
+  if(locked()) return;
+  if(s2i>=6||!s2sets[s2i]) return;
+  var s=s2sets[s2i],p=s.opts[i];
+  s2hit.push((p[0]===s.ans[0]&&p[1]===s.ans[1])?1:0);
+  s2rt.push((new Date().getTime()-s2t0)/1000);
+  s2i++; s2Next();
+}
+function scoreS2(){
+  /* 속도 점수는 맞힌 문항의 반응시간만 반영한다.
+     틀린 답을 빨리 누른 것은 빠른 것이 아니라 찍은 것이다. */
+  var c=0,sum=0,i;
+  for(i=0;i<s2hit.length;i++){ if(s2hit[i]){ c++; sum+=s2rt[i]; } }
+  var acc=c/6*100, sp=0;
+  if(c>0){
+    var avg=sum/c;
+    sp=(5-avg)/(5-1.5)*100;
+    if(sp>100)sp=100; if(sp<0)sp=0;
+  }
+  SC[1]=Math.round(acc*0.7+sp*0.3);
+}
+
+/* ===== S3 기억 유지 ===== */
+var s3i=0, s3hit=0, s3cur=null;
+var S3Q=[];
+function startS3(){ s3i=0; s3hit=0; S3Q=shuffle(S3).slice(0,6); go('s3'); s3Next(); }
+function s3Next(){
+  if(s3i>=6){ SC[2]=Math.round(s3hit/6*100); startS4(); return; }
+  prog(3,s3i,6);
+  var q=S3Q[s3i];
+  s3cur=shuffle([q.a].concat(q.o));
+  var g=$('s3-grid'),h='';
+  for(var i=0;i<s3cur.length;i++)
+    h+='<div class="imgbox" onclick="s3Pick('+i+')">'+svg(s3cur[i])+'</div>';
+  g.innerHTML=h;
+}
+function s3Pick(i){
+  if(locked()) return;
+  if(s3i>=6||!s3cur) return;
+  if(s3cur[i]===S3Q[s3i].a) s3hit++;
+  s3i++; s3Next();
+}
+
+/* ===== S4 기억 회상 (위치 단서) ===== */
+var s4i=0, s4hit=0, s4cur=null;
+function startS4(){ s4i=0; s4hit=0; S4_SLOTS=shuffle([0,1,2,3,4,5,6,7]).slice(0,6); go('s4'); s4Next(); }
+function s4Next(){
+  if(s4i>=6){ SC[3]=Math.round(s4hit/6*100); startInterf(); return; }
+  prog(4,s4i,6);
+  var slot=S4_SLOTS[s4i];
+  var m=$('s4-map'),h='';
+  for(var i=0;i<8;i++)
+    h+='<div class="slot'+(i===slot?' hit':'')+'"></div>';
+  m.innerHTML=h;
+  var ans=LIST_A[slot], pool=[];
+  for(i=0;i<LIST_A.length;i++) if(LIST_A[i]!==ans) pool.push(LIST_A[i]);
+  pool=shuffle(pool).slice(0,3);
+  s4cur=shuffle([ans].concat(pool));
+  var g=$('s4-grid'); h='';
+  for(i=0;i<s4cur.length;i++)
+    h+='<div class="imgbox" onclick="s4Pick('+i+')">'+svg(s4cur[i])+'</div>';
+  g.innerHTML=h;
+}
+function s4Pick(i){
+  if(locked()) return;
+  if(s4i>=6||!s4cur) return;
+  if(s4cur[i]===LIST_A[S4_SLOTS[s4i]]) s4hit++;
+  s4i++; s4Next();
+}
+
+/* ===== 간섭 목록 ===== */
+function startInterf(){
+  var g=$('interf-grid'),h='';
+  for(var i=0;i<LIST_B.length;i++)
+    h+='<div class="imgbox show">'+svg(LIST_B[i])+'</div>';
+  g.innerHTML=h;
+  go('interf');
+  countdown('interf-count',CFG.interf,startS5);
+}
+
+/* ===== S5 간섭 저항 ===== */
+var s5i=0, s5hit=0, s5q=[];
+function startS5(){ s5i=0; s5hit=0; s5q=shuffle(S5); go('s5'); s5Next(); }
+function s5Next(){
+  if(s5i>=6){ SC[4]=Math.round(s5hit/6*100); showResult(); return; }
+  prog(5,s5i,6);
+  $('s5-stage').innerHTML=svg(s5q[s5i].k);
+}
+function ansS5(v){
+  if(locked()) return;
+  if(s5i>=6||!s5q[s5i]) return;
+  if(v===s5q[s5i].a) s5hit++;
+  s5i++; s5Next();
+}
+
+/* ===== 결과 ===== */
+function grade(v){
+  if(v>=85) return '아주 잘 작동하고 있습니다';
+  if(v>=70) return '안정적으로 작동하고 있습니다';
+  if(v>=55) return '무난하게 작동하고 있습니다';
+  if(v>=40) return '조금 힘이 부치는 상태입니다';
+  return '오늘은 많이 지쳐 있는 상태입니다';
+}
+var TIPS = [
+ ['한 번에 담는 양이 넓습니다. 여러 가지를 동시에 다루는 일에 강점이 있습니다.',
+  '한 번에 담는 양이 좁은 편입니다. 할 일을 세 개씩 끊어서 적어 두면 훨씬 편해집니다.'],
+ ['받아들이는 속도가 빠릅니다. 처음 듣는 내용도 금방 자기 것으로 만듭니다.',
+  '받아들이는 데 시간이 걸리는 편입니다. 빨리 보려 하지 말고 한 번 더 보는 쪽이 잘 맞습니다.'],
+ ['시간이 지나도 잘 남습니다. 어제 일을 오늘 꺼내 쓰는 데 무리가 없습니다.',
+  '시간이 지나면 흐려지는 편입니다. 본 그날 저녁에 한 번만 다시 떠올려도 크게 달라집니다.'],
+ ['필요할 때 꺼내 쓰는 힘이 좋습니다. 단서 하나만 있어도 나머지가 따라 나옵니다.',
+  '분명 아는데 안 떠오르는 일이 잦을 수 있습니다. 기억이 없는 게 아니라 꺼내는 길이 좁은 것입니다.'],
+ ['비슷한 것이 섞여도 흔들리지 않습니다. 복잡한 상황에서 헷갈리는 일이 적습니다.',
+  '비슷한 것이 끼어들면 섞이기 쉽습니다. 사람 이름이나 약속이 헷갈린다면 이 영역 때문일 수 있습니다.']
+];
+var ACT = [
+ '오늘 살 물건을 종이에 적지 말고 세 개만 외워서 다녀오기',
+ '뉴스 한 꼭지를 한 번만 보고, 내용을 소리 내어 말해 보기',
+ '자기 전에 오늘 만난 사람 세 명을 순서대로 떠올리기',
+ '옛날 사진 한 장을 보고 그날 있었던 일을 다섯 문장으로 말하기',
+ '비슷한 이름 두 사람을 각각 다른 특징과 함께 외워 두기'
+];
+
+function showResult(){
+  var tot=Math.round((SC[0]+SC[1]+SC[2]+SC[3]+SC[4])/5);
+  var ref=CFG.ref[U.band];
+  $('r-who').textContent = U.name+'님 · '+U.age+'세 · '+U.sex+' · '+CFG.nm;
+  $('r-total').textContent = tot;
+  $('r-grade').textContent = grade(tot);
+  $('r-agelab').textContent = U.band+'대 '+CFG.nm+' 참조값';
+
+  /* 막대 */
+  var h='';
+  for(var i=0;i<5;i++){
+    h+='<div class="bar"><div class="lab"><span>'+AREA[i]+'</span><em>'+SC[i]+'</em></div>'
+     + '<div class="track"><i style="width:'+Math.max(SC[i],2)+'%"></i>'
+     + '<u style="left:calc('+ref[i]+'% - 2px)"></u></div></div>';
+  }
+  $('r-bars').innerHTML=h;
+
+  drawRadar(SC,ref);
+
+  /* 해석 */
+  h='';
+  for(i=0;i<5;i++){
+    var hi = SC[i]>=ref[i];
+    h+='<div class="interp"><h3>'+AREA[i]+' · '+SC[i]+'점</h3>'
+     + '<p>'+AREA_DESC[i]+'을 봅니다. '+TIPS[i][hi?0:1]+'</p></div>';
+  }
+  $('r-interp').innerHTML=h;
+
+  /* 낮은 두 영역 실천 */
+  var idx=[0,1,2,3,4].sort(function(a,b){return (SC[a]-ref[a])-(SC[b]-ref[b]);});
+  h='<p>가장 힘이 부친 두 영역부터 건드리는 것이 가장 빠릅니다.</p>';
+  for(i=0;i<2;i++){
+    var k=idx[i];
+    h+='<div class="interp"><h3>'+AREA[k]+'</h3><p>'+ACT[k]+'</p></div>';
+  }
+  h+='<div class="warn">점수가 낮게 나왔다고 해서 문제가 있다는 뜻이 아닙니다. 잠이 부족하거나 마음이 무거운 날에는 누구나 낮게 나옵니다. 며칠 뒤 다시 해 보시면 차이를 직접 보실 수 있습니다.</div>';
+  $('r-advice').innerHTML=h;
+
+  if(LV==='basic'){
+    $('r-next-t').textContent='더 정확히 알아보고 싶으시면';
+    $('r-next-p').textContent='고급 단계는 시간이 더 짧고 숫자가 한 자리 더 깁니다. 같은 다섯 영역을 더 촘촘하게 봅니다. 이름은 다시 넣지 않으셔도 됩니다.';
+    $('r-next-b').textContent='고급 단계 이어서 하기';
+  }else{
+    $('r-next-t').textContent='조금 여유 있게 다시 해 보시려면';
+    $('r-next-p').textContent='기본 단계는 보는 시간이 더 깁니다. 시간이 넉넉할 때 어떻게 달라지는지 직접 비교해 보실 수 있습니다.';
+    $('r-next-b').textContent='기본 단계 해 보기';
+  }
+  $('r-next').style.display='block';
+
+  var dt=new Date();
+  $('r-meta').innerHTML='검사 일시 '+dt.getFullYear()+'년 '+(dt.getMonth()+1)+'월 '+dt.getDate()+'일<br>'
+    +'거주 지역 '+U.reg+'<br>소요 시간 약 '+Math.round((dt-startedAt)/60000)+'분<br>'
+    +'한국뇌심리연구소 MAS · '+CFG.nm+' · 30문항';
+
+  try{
+    localStorage.setItem('mas_last', JSON.stringify({
+      n:U.name,x:U.sex,a:U.age,r:U.reg,lv:LV,s:SC,t:tot,d:dt.toISOString()
+    }));
+  }catch(e){}
+
+  go('result');
+}
+
+/* 다른 단계로 이어서 하기 (인적사항은 그대로 유지) */
+function again(){
+  if(locked()) return;
+  setLevel(LV==='basic'?'adv':'basic');
+  SC=[0,0,0,0,0];
+  s1i=0; s1hit=[]; s1buf=''; s1seq='';
+  s2i=0; s2hit=[]; s2rt=[]; s2sets=[];
+  s3i=0; s3hit=0; s3cur=null; S3Q=[];
+  s4i=0; s4hit=0; s4cur=null; S4_SLOTS=[];
+  s5i=0; s5hit=0; s5q=[];
+  startedAt=new Date();
+  startLearn();
+}
+
+/* 레이더 (오각형) */
+function drawRadar(me,ref){
+  var cx=160,cy=150,R=100,N=5,i,g='';
+  function pt(i,v){
+    var ang=-Math.PI/2 + i*2*Math.PI/N;
+    var r=R*(v/100);
+    return [cx+r*Math.cos(ang), cy+r*Math.sin(ang)];
+  }
+  for(var lv=1;lv<=4;lv++){
+    var p='';
+    for(i=0;i<N;i++){var q=pt(i,lv*25);p+=(i?' ':'')+q[0].toFixed(1)+','+q[1].toFixed(1);}
+    g+='<polygon points="'+p+'" fill="none" stroke="#B2EBF2" stroke-width="2"/>';
+  }
+  for(i=0;i<N;i++){
+    var e=pt(i,100);
+    g+='<line x1="'+cx+'" y1="'+cy+'" x2="'+e[0].toFixed(1)+'" y2="'+e[1].toFixed(1)+'" stroke="#B2EBF2" stroke-width="2"/>';
+  }
+  function poly(v,col,fill){
+    var p='';
+    for(var i=0;i<N;i++){var q=pt(i,v[i]);p+=(i?' ':'')+q[0].toFixed(1)+','+q[1].toFixed(1);}
+    return '<polygon points="'+p+'" fill="'+fill+'" stroke="'+col+'" stroke-width="4" stroke-linejoin="round"/>';
+  }
+  g+=poly(ref,'#FF6D00','rgba(255,109,0,.12)');
+  g+=poly(me,'#00BCD4','rgba(0,188,212,.30)');
+  for(i=0;i<N;i++){
+    var q=pt(i,100);
+    var lx=cx+(q[0]-cx)*1.24, ly=cy+(q[1]-cy)*1.24;
+    var anc = Math.abs(lx-cx)<8 ? 'middle' : (lx>cx?'start':'end');
+    g+='<text x="'+lx.toFixed(1)+'" y="'+(ly+5).toFixed(1)+'" text-anchor="'+anc+'" '
+     + 'font-size="14" font-weight="900" fill="#006064">'+AREA[i]+'</text>';
+  }
+  $('r-radar').innerHTML=g;
+}
+</script>
+</body>
+</html>
