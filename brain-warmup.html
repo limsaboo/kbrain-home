@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>오늘의 두뇌 워밍업 | 한국뇌심리연구소</title>
+<meta name="description" content="한국뇌심리연구소(KBPI) 오늘의 두뇌 워밍업 — 한눈에 세기·색깔 함정·그림 자리 기억·불빛 순서 누르기·공 따라가기. 인지심리학 표준 과제 기반 교육용 두뇌 활동.">
+<meta name="theme-color" content="#0B2A5B">
+<link rel="canonical" href="https://www.k-brain.co.kr/brain-warmup.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0B2A5B; --navy2:#16407F; --ink:#0B2A5B; --sub:#34507F;
+  --cream:#FFF6E5; --cream2:#FFE7C2;
+  --blue:#1E6BFF; --red:#E53935; --teal:#00A6A6; --orange:#FF7A00; --purple:#8E24AA;
+  --green:#12A150; --gold:#FFC107;
+  --task:#1E6BFF;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+html{background:#FFE7C2}
+body{
+  font-family:'Noto Sans KR',system-ui,-apple-system,'Apple SD Gothic Neo','Malgun Gothic',sans-serif;
+  color:var(--ink);font-weight:700;line-height:1.65;
+  background:linear-gradient(180deg,var(--cream) 0%,var(--cream2) 100%);min-height:100%;background-color:var(--cream);
+  overflow-x:hidden;-webkit-user-select:none;user-select:none;word-break:keep-all;overflow-wrap:break-word;
+}
+button{font-family:inherit;touch-action:manipulation;cursor:pointer;color:inherit}
+.app{max-width:480px;margin:0 auto;min-height:100dvh;display:flex;flex-direction:column}
+.screen{display:none;flex:1;flex-direction:column;padding:0 16px calc(18px + env(safe-area-inset-bottom))}
+.screen.active{display:flex}
+
+/* 공통 헤더 */
+.bar{margin:0 -16px;background:var(--navy);color:#fff;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px;border-radius:0 0 18px 18px;box-shadow:0 4px 14px rgba(11,42,91,.25)}
+.logo{display:flex;align-items:center;gap:8px;font-size:15px;font-weight:900;letter-spacing:.01em}
+.logo i{font-style:normal;background:var(--gold);color:var(--navy);border-radius:7px;padding:1px 8px;font-size:12.5px;font-weight:900}
+.bar .quit{background:rgba(255,255,255,.14);border:1.5px solid rgba(255,255,255,.4);color:#fff;border-radius:10px;padding:4px 12px;font-size:14px;font-weight:900}
+
+/* 시작 화면 */
+.hero{text-align:center;margin:20px 0 4px}
+.hero .kicker{display:inline-block;background:var(--navy);color:var(--gold);font-size:13.5px;font-weight:900;border-radius:99px;padding:3px 14px}
+.hero h1{font-size:33px;font-weight:900;line-height:1.3;margin-top:10px;color:var(--navy)}
+.hero h1 b{color:var(--orange)}
+.hero p{font-size:16px;color:var(--sub);font-weight:700;margin-top:6px;line-height:1.7}
+.hero p strong{color:var(--red);font-weight:900}
+.tasks{list-style:none;display:flex;flex-direction:column;gap:9px;margin:16px 0 14px}
+.tasks li{display:grid;grid-template-columns:48px 1fr;align-items:center;gap:12px;background:#fff;border-radius:16px;padding:10px 14px;box-shadow:0 3px 10px rgba(11,42,91,.08);border-left:7px solid var(--c)}
+.tasks .ic{width:48px;height:48px;border-radius:14px;background:var(--c);display:flex;align-items:center;justify-content:center}
+.tasks .ic svg{width:34px;height:34px}
+.tasks .t{font-size:18px;font-weight:900;color:var(--navy);line-height:1.35}
+.tasks .t span{font-size:12.5px;font-weight:900;color:var(--c);border:1.5px solid var(--c);border-radius:99px;padding:0 8px;margin-left:6px;vertical-align:2px}
+.tasks .d{font-size:14px;color:var(--sub);font-weight:700;line-height:1.5}
+.label{font-size:15.5px;font-weight:900;color:var(--navy);text-align:center;margin:2px 0 8px}
+.seg{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.seg button{background:#fff;border:2.5px solid #C9D3E6;border-radius:14px;padding:9px 4px;font-size:19px;font-weight:900;line-height:1.35;color:var(--navy)}
+.seg button span{display:block;font-size:12.5px;color:var(--sub);font-weight:700}
+.seg button.on{background:var(--navy);border-color:var(--navy);color:#fff;box-shadow:0 6px 16px rgba(11,42,91,.3)}
+.seg button.on span{color:var(--gold)}
+.big{display:block;width:100%;margin-top:16px;background:var(--orange);color:#fff;border:none;border-radius:18px;padding:16px;font-size:23px;font-weight:900;box-shadow:0 8px 20px rgba(255,122,0,.4),inset 0 -4px 0 rgba(0,0,0,.15)}
+.big:active{transform:translateY(2px)}
+.best{margin-top:10px;text-align:center;font-size:15px;color:var(--green);font-weight:900}
+details.ref{margin-top:14px;background:#fff;border-radius:14px;padding:10px 14px;box-shadow:0 2px 8px rgba(11,42,91,.07)}
+details.ref summary{font-size:15px;font-weight:900;color:var(--navy);cursor:pointer}
+details.ref ul{margin:8px 0 2px 18px;font-size:13.5px;color:var(--sub);font-weight:700;line-height:1.7}
+.note{margin-top:12px;font-size:12.5px;color:var(--sub);font-weight:700;text-align:center;line-height:1.75}
+
+/* 게임 화면 */
+.prog{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:12px}
+.prog span{height:9px;border-radius:99px;background:#D6DDEA}
+.prog span.done{background:var(--navy2)}
+.prog span.now{background:var(--task)}
+.thead{display:flex;align-items:center;justify-content:space-between;margin-top:10px;gap:8px}
+.tname{display:flex;align-items:center;gap:8px;font-size:20px;font-weight:900;color:var(--task)}
+.tname em{font-style:normal;background:var(--task);color:#fff;border-radius:8px;font-size:14px;padding:1px 9px}
+.trial{font-size:14.5px;font-weight:900;color:var(--sub);background:#fff;border-radius:99px;padding:2px 12px;box-shadow:0 2px 6px rgba(11,42,91,.08)}
+.prompt{text-align:center;min-height:84px;display:flex;flex-direction:column;justify-content:center;margin-top:6px}
+.prompt h2{font-size:23px;font-weight:900;line-height:1.4;color:var(--navy)}
+.prompt p{font-size:16px;font-weight:700;color:var(--sub);line-height:1.55;margin-top:2px}
+.prompt.ok h2{color:var(--green)} .prompt.no h2{color:var(--red)}
+.tbar{height:26px;display:grid;grid-template-columns:1fr 44px;align-items:center;gap:8px;visibility:hidden}
+.tbar.on{visibility:visible}
+.tbar .track{height:12px;border-radius:99px;background:#D6DDEA;overflow:hidden}
+.tbar .fill{height:100%;width:100%;background:var(--task);border-radius:99px}
+.tbar .fill.low{background:var(--red)}
+.tbar b{font-size:15px;font-weight:900;color:var(--navy);text-align:right}
+.field{position:relative;flex:1;min-height:300px;max-height:430px;margin-top:4px;background:#fff;border-radius:20px;box-shadow:0 6px 18px rgba(11,42,91,.1),inset 0 0 0 3px var(--task);overflow:hidden}
+.center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:18px;gap:8px}
+.center .icbig{width:84px;height:84px;border-radius:24px;background:var(--task);display:flex;align-items:center;justify-content:center}
+.center .icbig svg{width:58px;height:58px}
+.center h3{font-size:25px;font-weight:900;color:var(--task)}
+.center p{font-size:17px;font-weight:700;color:var(--navy);line-height:1.7;max-width:330px}
+.center small{font-size:13px;color:var(--sub);font-weight:700}
+.center .rdy{font-size:46px;font-weight:900;color:var(--task)}
+.dot{position:absolute;border-radius:50%;box-shadow:inset 0 -4px 0 rgba(0,0,0,.18)}
+.hide{opacity:0}
+.num{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);color:#fff;font-size:17px;font-weight:900}
+.word{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:86px;font-weight:900;letter-spacing:.04em}
+.card{position:absolute;border:3px solid #D6DDEA;border-radius:14px;background:#FFFDF7;display:flex;align-items:center;justify-content:center;padding:6px;transition:transform .15s}
+.card svg{width:78%;height:78%}
+.card.back{background:var(--navy);border-color:var(--navy)}
+.card.back b{color:var(--gold);font-size:13px;font-weight:900;letter-spacing:.05em}
+.card:not(:disabled):active{transform:scale(.95)}
+.card.correct{border:4px solid var(--green);box-shadow:0 0 0 4px rgba(18,161,80,.25)}
+.card.wrong{border:4px solid var(--red)}
+.tile{position:absolute;border:none;border-radius:16px;background:#E3E9F4;box-shadow:inset 0 -5px 0 rgba(11,42,91,.12);font-size:28px;font-weight:900;color:#fff;transition:background .08s}
+.tile.lit{background:var(--gold);box-shadow:0 0 22px rgba(255,193,7,.9)}
+.tile.ok{background:var(--orange)}
+.tile.bad{background:var(--red)}
+.tile.show{background:var(--navy2)}
+.ball{position:absolute;border:none;border-radius:50%;background:var(--blue);box-shadow:inset 0 -5px 0 rgba(0,0,0,.2)}
+.ball.tg{background:var(--orange)}
+.ball.sel{outline:5px solid var(--navy);outline-offset:3px}
+.ball.ring{outline:5px solid var(--green);outline-offset:3px}
+.ball.bad{background:#9AA7BD;outline:5px solid var(--red);outline-offset:3px}
+.ball.bad::after{content:'✕';color:#fff;font-size:22px;font-weight:900}
+.ball.pulse{animation:pl .6s ease-in-out infinite alternate}
+@keyframes pl{from{transform:scale(1)}to{transform:scale(1.15)}}
+.opts{display:none;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.opts.on{display:grid}
+.opt{background:#fff;border:3px solid #C9D3E6;border-radius:16px;min-height:64px;display:flex;align-items:center;justify-content:center;gap:10px;font-size:26px;font-weight:900;color:var(--navy);box-shadow:0 3px 8px rgba(11,42,91,.08)}
+.opt .sw{width:26px;height:26px;border-radius:50%;display:inline-block}
+.opt b{font-weight:900}
+.opt:active{transform:scale(.97)}
+.opt.correct{border-color:var(--green);background:#E6F8EE}
+.opt.correct::before{content:'✔';color:var(--green);font-size:22px}
+.opt.wrong{border-color:var(--red);background:#FDECEC}
+.opt.wrong::before{content:'✕';color:var(--red);font-size:22px}
+.opt.dim{opacity:.4}
+.next{display:none;width:100%;margin-top:12px;background:var(--navy);color:#fff;border:none;border-radius:16px;padding:15px;font-size:21px;font-weight:900;box-shadow:0 6px 16px rgba(11,42,91,.3)}
+.next.on{display:block}
+
+/* 결과 화면 */
+.rhead{text-align:center;margin-top:18px}
+.rhead .kicker{display:inline-block;background:var(--navy);color:var(--gold);font-size:13.5px;font-weight:900;border-radius:99px;padding:3px 14px}
+.rhead h2{font-size:28px;font-weight:900;margin-top:8px;color:var(--navy)}
+.score{font-size:70px;font-weight:900;color:var(--orange);line-height:1.1;margin-top:4px}
+.score small{font-size:28px;color:var(--navy)}
+.rmsg{font-size:17.5px;font-weight:900;color:var(--green);margin-top:6px;line-height:1.6}
+.rlist{list-style:none;margin:14px 0 4px;display:flex;flex-direction:column;gap:8px}
+.rlist li{display:grid;grid-template-columns:1fr auto;align-items:center;gap:10px;background:#fff;border-radius:14px;padding:10px 14px;border-left:7px solid var(--c);box-shadow:0 2px 8px rgba(11,42,91,.07)}
+.rlist .n{font-size:16.5px;font-weight:900;color:var(--navy)}
+.rlist .a{font-size:12.5px;color:var(--sub);font-weight:700;margin-left:6px}
+.rlist .mk{display:flex;gap:6px}
+.rlist .mk i{width:18px;height:18px;border-radius:50%;border:3px solid var(--c);display:block}
+.rlist .mk i.o{background:var(--c)}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.btn2{background:#fff;border:2.5px solid var(--navy);color:var(--navy);border-radius:14px;padding:12px 6px;font-size:17px;font-weight:900}
+.cta{display:flex;flex-direction:column;gap:8px;margin-top:14px}
+.cta a{display:flex;align-items:center;justify-content:center;text-decoration:none;border-radius:14px;padding:13px;font-size:16.5px;font-weight:900}
+.cta .k{background:#FEE500;color:#191919}
+.cta .h{background:var(--navy);color:#fff}
+.toast{position:fixed;left:50%;bottom:30px;transform:translateX(-50%);background:var(--navy);color:#fff;padding:10px 18px;border-radius:99px;font-size:15px;font-weight:900;opacity:0;transition:opacity .25s;pointer-events:none;z-index:9}
+.toast.on{opacity:.96}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- ============ 시작 화면 ============ -->
+<section class="screen active" id="scrStart">
+  <div class="bar"><div class="logo"><i>KBPI</i>한국뇌심리연구소</div><a class="quit" href="/bhtc.html" style="text-decoration:none">헬스클럽</a></div>
+  <div class="hero">
+    <span class="kicker">하루 3분 두뇌 활동</span>
+    <h1>오늘의<br><b>두뇌 워밍업</b></h1>
+    <p>5가지 과제 · 과제마다 2문제<br>할 때마다 <strong>새로운 문제</strong>가 만들어집니다</p>
+  </div>
+  <ul class="tasks" id="taskList"></ul>
+  <div class="label">난이도를 골라 주세요</div>
+  <div class="seg" id="diffSeg">
+    <button data-d="easy">천천히<span>처음·시니어</span></button>
+    <button data-d="normal" class="on">보통<span>일반</span></button>
+    <button data-d="hard">빠르게<span>도전</span></button>
+  </div>
+  <button class="big" id="btnStart">워밍업 시작하기</button>
+  <div class="best" id="bestLine"></div>
+  <details class="ref">
+    <summary>과제 근거 보기 (인지심리학 표준 과제)</summary>
+    <ul id="refList"></ul>
+  </details>
+  <p class="note">본 콘텐츠는 자기이해와 두뇌 활동을 돕는 교육용 프로그램입니다.<br>점수는 능력의 우열을 뜻하지 않으며, 의료적 진단·치료를 대신하지 않습니다.</p>
+</section>
+
+<!-- ============ 게임 화면 ============ -->
+<section class="screen" id="scrGame">
+  <div class="bar"><div class="logo"><i>KBPI</i>두뇌 워밍업</div><button class="quit" id="btnQuit">그만하기</button></div>
+  <div class="prog" id="prog"></div>
+  <div class="thead"><div class="tname" id="tname"></div><div class="trial" id="trial"></div></div>
+  <div class="prompt" id="prompt"><h2></h2><p></p></div>
+  <div class="tbar" id="tbar"><div class="track"><div class="fill" id="tfill"></div></div><b id="ttxt"></b></div>
+  <div class="field" id="field"></div>
+  <div class="opts" id="opts"></div>
+  <button class="next" id="btnNext">다음</button>
+</section>
+
+<!-- ============ 결과 화면 ============ -->
+<section class="screen" id="scrResult">
+  <div class="bar"><div class="logo"><i>KBPI</i>한국뇌심리연구소</div></div>
+  <div class="rhead">
+    <span class="kicker" id="rDiff"></span>
+    <h2>오늘의 워밍업 완료</h2>
+    <div class="score" id="rScore"></div>
+    <div class="rmsg" id="rMsg"></div>
+  </div>
+  <ul class="rlist" id="rList"></ul>
+  <button class="big" id="btnAgain">새 문제로 한 번 더</button>
+  <div class="row2">
+    <button class="btn2" id="btnHome">난이도 바꾸기</button>
+    <button class="btn2" id="btnShare">기록 공유하기</button>
+  </div>
+  <div class="cta">
+    <a class="k" href="https://open.kakao.com/o/sq64NuAi" target="_blank" rel="noopener">한국뇌심리연구소 오픈채팅 참여하기</a>
+    <a class="h" href="https://k-brain.co.kr" target="_blank" rel="noopener">연구소 홈페이지 바로가기</a>
+  </div>
+  <p class="note">점수는 오늘의 컨디션 기록일 뿐, 능력의 우열이 아닙니다.<br>교육용 콘텐츠이며 의료적 진단을 대신하지 않습니다.</p>
+</section>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+(()=>{
+'use strict';
+/* ================= 데이터 ================= */
+const ICON={
+  count:'<svg viewBox="0 0 40 40"><circle cx="11" cy="12" r="5" fill="#fff"/><circle cx="27" cy="10" r="5" fill="#fff"/><circle cx="19" cy="24" r="5" fill="#fff"/><circle cx="31" cy="29" r="5" fill="#fff"/><circle cx="9" cy="31" r="5" fill="#fff"/></svg>',
+  stroop:'<svg viewBox="0 0 40 40"><text x="20" y="28" text-anchor="middle" font-size="22" font-weight="900" fill="#fff" font-family="sans-serif">가</text><rect x="6" y="32" width="28" height="4" rx="2" fill="#FFC107"/></svg>',
+  cards:'<svg viewBox="0 0 40 40"><rect x="4" y="6" width="14" height="18" rx="3" fill="#fff"/><rect x="22" y="6" width="14" height="18" rx="3" fill="#0B2A5B" stroke="#fff" stroke-width="2"/><rect x="13" y="20" width="14" height="16" rx="3" fill="#fff" stroke="#00A6A6" stroke-width="2"/></svg>',
+  corsi:'<svg viewBox="0 0 40 40"><rect x="4" y="4" width="9" height="9" rx="2" fill="#fff"/><rect x="15.5" y="4" width="9" height="9" rx="2" fill="#FFC107"/><rect x="27" y="4" width="9" height="9" rx="2" fill="#fff"/><rect x="4" y="15.5" width="9" height="9" rx="2" fill="#fff"/><rect x="15.5" y="15.5" width="9" height="9" rx="2" fill="#fff"/><rect x="27" y="15.5" width="9" height="9" rx="2" fill="#FFC107"/><rect x="4" y="27" width="9" height="9" rx="2" fill="#FFC107"/><rect x="15.5" y="27" width="9" height="9" rx="2" fill="#fff"/><rect x="27" y="27" width="9" height="9" rx="2" fill="#fff"/></svg>',
+  mot:'<svg viewBox="0 0 40 40"><circle cx="12" cy="13" r="6" fill="#fff"/><circle cx="28" cy="15" r="6" fill="#FFC107"/><circle cx="18" cy="29" r="6" fill="#fff"/><path d="M33 26 l-4 6 M31 34 l6-3" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/></svg>'
+};
+const TASKS=[
+  {key:'count', name:'한눈에 세기',      area:'주의 폭',   color:'#1E6BFF', desc:'잠깐 보인 점의 개수를 맞혀요',
+   how:'점이 아주 잠깐 나타납니다.<br>하나씩 세지 말고 한눈에 파악해 보세요.', ref:'순간 수량 파악 과제 — Kaufman, Lord, Reese & Volkmann (1949)'},
+  {key:'stroop',name:'색깔 함정',        area:'억제 조절', color:'#E53935', desc:'글자 뜻이 아닌 글자의 색을 골라요',
+   how:"'빨강'이라는 글자가 파란색으로 쓰여 있다면<br>정답은 <b style=\"color:#1E6BFF\">파랑</b>입니다. 글자 뜻에 속지 마세요.", ref:'스트룹 색-단어 과제 — Stroop (1935)'},
+  {key:'cards', name:'그림 자리 기억',    area:'시공간 기억',color:'#00A6A6', desc:'그림카드가 있던 자리를 기억해요',
+   how:'그림카드를 잘 보고 자리를 기억하세요.<br>카드가 뒤집히면, 물어보는 그림의 자리를 누릅니다.', ref:'사물-위치 기억 과제 — Postma & De Haan (1996)'},
+  {key:'corsi', name:'불빛 순서 누르기',  area:'작업기억',  color:'#FF7A00', desc:'불이 켜진 순서대로 칸을 눌러요',
+   how:'칸에 불이 하나씩 켜집니다.<br>불이 다 꺼지면 켜진 순서 그대로 눌러 주세요.', ref:'코르시 블록 과제 — Corsi (1972)'},
+  {key:'mot',   name:'공 따라가기',       area:'시각 추적', color:'#8E24AA', desc:'움직이는 공 중 표시된 공을 찾아요',
+   how:'주황색으로 표시된 공을 기억하세요.<br>공들이 움직인 뒤, 그 공을 직접 눌러 주세요.', ref:'다중 대상 추적 과제 — Pylyshyn & Storm (1988)'}
+];
+const DIFF={
+  easy:  {label:'천천히',flash:1800,count:[3,5],stroop:9,cards:4,cols:2,memo:5000,corsi:3,corsiOn:850,balls:5,targets:1,trackMs:3500,speed:.11,answer:10},
+  normal:{label:'보통',  flash:1200,count:[5,7],stroop:6,cards:6,cols:3,memo:5000,corsi:4,corsiOn:680,balls:6,targets:2,trackMs:4500,speed:.16,answer:8},
+  hard:  {label:'빠르게',flash:800, count:[6,9],stroop:4,cards:8,cols:4,memo:4500,corsi:5,corsiOn:560,balls:8,targets:3,trackMs:5000,speed:.21,answer:6}
+};
+const INK=[
+  {n:'빨강',h:'#E53935',e:'이에요'},{n:'파랑',h:'#1E6BFF',e:'이에요'},
+  {n:'초록',h:'#12A150',e:'이에요'},{n:'보라',h:'#8E24AA',e:'예요'}
+];
+const PICS=[
+  {name:'집',j:'은',svg:'<rect x="22" y="46" width="56" height="40" fill="#FFB74D"/><polygon points="12,50 50,15 88,50" fill="#E53935"/><rect x="44" y="62" width="13" height="24" fill="#6D4C41"/>'},
+  {name:'나무',j:'는',svg:'<rect x="44" y="56" width="12" height="32" fill="#795548"/><circle cx="50" cy="38" r="27" fill="#2E7D32"/>'},
+  {name:'사람',j:'은',svg:'<circle cx="50" cy="24" r="13" fill="#FFCC80"/><rect x="33" y="40" width="34" height="30" rx="10" fill="#1E6BFF"/><rect x="37" y="67" width="10" height="22" rx="3" fill="#0B2A5B"/><rect x="53" y="67" width="10" height="22" rx="3" fill="#0B2A5B"/>'},
+  {name:'해',j:'는',svg:'<g stroke="#FF9800" stroke-width="6" stroke-linecap="round"><line x1="50" y1="8" x2="50" y2="20"/><line x1="50" y1="80" x2="50" y2="92"/><line x1="8" y1="50" x2="20" y2="50"/><line x1="80" y1="50" x2="92" y2="50"/><line x1="20" y1="20" x2="28" y2="28"/><line x1="72" y1="72" x2="80" y2="80"/><line x1="20" y1="80" x2="28" y2="72"/><line x1="72" y1="28" x2="80" y2="20"/></g><circle cx="50" cy="50" r="21" fill="#FFC107"/>'},
+  {name:'꽃',j:'은',svg:'<rect x="47" y="50" width="6" height="42" fill="#2E7D32"/><g fill="#EC407A"><circle cx="50" cy="22" r="12"/><circle cx="67" cy="34" r="12"/><circle cx="61" cy="53" r="12"/><circle cx="39" cy="53" r="12"/><circle cx="33" cy="34" r="12"/></g><circle cx="50" cy="38" r="9" fill="#FFC107"/>'},
+  {name:'물고기',j:'는',svg:'<ellipse cx="44" cy="50" rx="31" ry="19" fill="#00A6A6"/><polygon points="70,50 93,32 93,68" fill="#00838F"/><circle cx="30" cy="46" r="4.5" fill="#0B2A5B"/>'},
+  {name:'달',j:'은',svg:'<path d="M62 12 A39 39 0 1 0 62 88 A31 31 0 1 1 62 12Z" fill="#FBC02D"/>'},
+  {name:'하트',j:'는',svg:'<path d="M50 86 C20 64 8 46 20 31 C30 19 46 22 50 35 C54 22 70 19 80 31 C92 46 80 64 50 86Z" fill="#E53935"/>'},
+  {name:'우산',j:'은',svg:'<path d="M10 52 A40 40 0 0 1 90 52 Z" fill="#8E24AA"/><path d="M50 52 V80 A7 7 0 0 1 36 80" stroke="#0B2A5B" stroke-width="6" fill="none" stroke-linecap="round"/>'}
+];
+const DOT_COLORS=['#1E6BFF','#E53935','#12A150','#8E24AA','#FF7A00'];
+
+/* ================= 유틸 ================= */
+const $=s=>document.querySelector(s);
+const rint=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const store={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+const picSVG=p=>`<svg viewBox="0 0 100 100">${p.svg}</svg>`;
+const vib=p=>{try{navigator.vibrate&&navigator.vibrate(p)}catch(e){}};
+
+/* ================= 상태 ================= */
+const S={diffKey:'normal',diff:DIFF.normal,results:[]};
+let runId=0,cleanups=[],nextRes=null;
+const addCleanup=f=>cleanups.push(f);
+function doCleanup(){cleanups.forEach(f=>{try{f()}catch(e){}});cleanups=[]}
+class Cancel extends Error{}
+const guard=t=>{if(t!==runId)throw new Cancel()};
+async function wait(t,ms){await sleep(ms);guard(t)}
+const F=$('#field');
+const fsize=()=>{const r=F.getBoundingClientRect();return{w:r.width,h:r.height}};
+
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.toggle('active',s.id===id));window.scrollTo(0,0)}
+function setPrompt(h,p,cls){const e=$('#prompt');e.className='prompt'+(cls?' '+cls:'');e.querySelector('h2').textContent=h;e.querySelector('p').innerHTML=p||''}
+const setSub=p=>{$('#prompt p').textContent=p};
+function clearStage(){F.innerHTML='';const o=$('#opts');o.innerHTML='';o.classList.remove('on');$('#tbar').classList.remove('on')}
+function spots(n,size){
+  const{w,h}=fsize(),pad=10,minD=size*1.35,out=[];let tries=0;
+  while(out.length<n&&tries<6000){tries++;
+    const x=pad+Math.random()*(w-size-pad*2),y=pad+Math.random()*(h-size-pad*2);
+    if(out.every(p=>Math.hypot(p.x-x,p.y-y)>minD))out.push({x,y});}
+  while(out.length<n)out.push({x:pad+Math.random()*(w-size-pad*2),y:pad+Math.random()*(h-size-pad*2)});
+  return out;
+}
+async function ready(t){F.innerHTML='<div class="center"><div class="rdy">준비</div><p>화면 가운데를 보세요</p></div>';await wait(t,1000);F.innerHTML=''}
+
+/* 타이머 막대 */
+function startBar(sec,onEnd){
+  const bar=$('#tbar'),fill=$('#tfill'),txt=$('#ttxt');bar.classList.add('on');
+  const t0=performance.now();let raf,stopped=false;
+  const tick=now=>{if(stopped)return;const left=Math.max(0,sec-(now-t0)/1000);
+    fill.style.width=(left/sec*100)+'%';fill.classList.toggle('low',left<=3&&!!onEnd);txt.textContent=Math.ceil(left)+'초';
+    if(left<=0){stopped=true;onEnd&&onEnd();return}raf=requestAnimationFrame(tick)};
+  raf=requestAnimationFrame(tick);
+  const stop=()=>{stopped=true;cancelAnimationFrame(raf)};addCleanup(stop);return stop;
+}
+/* 보기 선택형 */
+function choose(t,{options,correct,sec}){
+  return new Promise(res=>{
+    guard(t);const box=$('#opts');box.innerHTML='';box.classList.add('on');let done=false;
+    const btns=options.map((html,i)=>{const b=document.createElement('button');b.className='opt';b.innerHTML=html;b.addEventListener('click',()=>fin(i));box.appendChild(b);return b});
+    const stop=startBar(sec,()=>fin(-1));
+    function fin(i){if(done||t!==runId)return;done=true;stop();
+      btns.forEach((b,j)=>{b.disabled=true;b.classList.add(j===correct?'correct':j===i?'wrong':'dim')});
+      res({ok:i===correct,timeout:i<0})}
+  });
+}
+function waitNext(t,label){
+  const b=$('#btnNext');b.textContent=label;b.classList.add('on');
+  return new Promise(r=>{nextRes=r}).then(()=>guard(t));
+}
+
+/* ================= 과제 1 : 한눈에 세기 ================= */
+async function tCount(t){
+  const d=S.diff,n=rint(d.count[0],d.count[1]),col=pick(DOT_COLORS);
+  setPrompt('점이 잠깐 나타납니다','하나씩 세지 말고 한눈에!');
+  await ready(t);
+  const{w,h}=fsize(),size=Math.round(Math.max(34,Math.min(56,Math.sqrt(w*h/(n*6)))));
+  const els=spots(n,size).map(p=>{const e=document.createElement('div');e.className='dot';e.style.cssText=`left:${p.x}px;top:${p.y}px;width:${size}px;height:${size}px;background:${col}`;F.appendChild(e);return e});
+  await wait(t,d.flash);
+  els.forEach(e=>e.classList.add('hide'));
+  setPrompt('점은 모두 몇 개였나요?','알맞은 숫자를 눌러 주세요');
+  const others=shuffle([n-2,n-1,n+1,n+2,n+3].filter(v=>v>=1)).slice(0,3);
+  const opts=[n,...others].sort((a,b)=>a-b);
+  const r=await choose(t,{options:opts.map(v=>`<b>${v}개</b>`),correct:opts.indexOf(n),sec:d.answer});
+  els.forEach((e,i)=>{e.classList.remove('hide');e.innerHTML=`<span class="num">${i+1}</span>`});
+  return{...r,msg:`점은 모두 ${n}개였어요`};
+}
+
+/* ================= 과제 2 : 색깔 함정 ================= */
+async function tStroop(t){
+  const word=pick(INK),ink=pick(INK.filter(c=>c!==word));
+  setPrompt("글자의 '색깔'을 고르세요",'글자 뜻에 속지 마세요');
+  await ready(t);
+  F.innerHTML=`<div class="word" style="color:${ink.h}">${word.n}</div>`;
+  const opts=shuffle(INK);
+  const r=await choose(t,{options:opts.map(c=>`<i class="sw" style="background:${c.h}"></i><b>${c.n}</b>`),correct:opts.indexOf(ink),sec:S.diff.stroop});
+  return{...r,msg:`글자 뜻은 '${word.n}', 글자 색깔은 '${ink.n}'${ink.e}`};
+}
+
+/* ================= 과제 3 : 그림 자리 기억 ================= */
+async function tCards(t){
+  const d=S.diff,n=d.cards,cols=d.cols,rows=Math.ceil(n/cols),pics=shuffle(PICS).slice(0,n);
+  setPrompt('그림의 자리를 기억하세요',`그림카드 ${n}장을 잘 보세요`);
+  await ready(t);
+  const{w,h}=fsize(),g=12,cw=(w-g*(cols+1))/cols,ch=Math.min(cw*1.12,(h-g*(rows+1))/rows),oy=(h-(ch*rows+g*(rows-1)))/2;
+  const cards=pics.map((p,i)=>{const c=document.createElement('button');c.className='card';c.disabled=true;
+    c.style.cssText=`left:${g+(i%cols)*(cw+g)}px;top:${oy+Math.floor(i/cols)*(ch+g)}px;width:${cw}px;height:${ch}px`;
+    c.innerHTML=picSVG(p);c._p=p;F.appendChild(c);return c});
+  const stopM=startBar(d.memo/1000,null);$('#ttxt').textContent='';
+  await wait(t,d.memo);stopM();$('#tbar').classList.remove('on');
+  cards.forEach(c=>{c.classList.add('back');c.innerHTML='<b>KBPI</b>'});
+  await wait(t,400);
+  const target=pick(cards);
+  setPrompt(`'${target._p.name}'${target._p.j} 어디에 있었나요?`,`<span style="display:inline-flex;align-items:center;gap:6px">찾을 그림 <svg viewBox="0 0 100 100" style="width:30px;height:30px">${target._p.svg}</svg> 의 자리를 눌러 주세요</span>`);
+  return new Promise(res=>{
+    let done=false;const stop=startBar(d.answer+2,()=>fin(null));
+    cards.forEach(c=>{c.disabled=false;c.onclick=()=>fin(c)});
+    function fin(c){if(done||t!==runId)return;done=true;stop();cards.forEach(x=>x.disabled=true);
+      if(c&&c!==target){c.classList.remove('back');c.innerHTML=picSVG(c._p);c.classList.add('wrong')}
+      target.classList.remove('back');target.innerHTML=picSVG(target._p);target.classList.add('correct');
+      res({ok:c===target,timeout:!c,msg:`초록 테두리 자리에 '${target._p.name}' 카드가 있었어요`})}
+  });
+}
+
+/* ================= 과제 4 : 불빛 순서 누르기 ================= */
+async function tCorsi(t){
+  const d=S.diff;
+  setPrompt('불이 켜지는 순서를 기억하세요',`불이 ${d.corsi}번 켜집니다`);
+  await ready(t);
+  const{w,h}=fsize(),g=12,sz=Math.min((w-g*4)/3,(h-g*4)/3),ox=(w-(sz*3+g*2))/2,oy=(h-(sz*3+g*2))/2;
+  const tiles=[...Array(9)].map((_,i)=>{const b=document.createElement('button');b.className='tile';b.disabled=true;
+    b.style.cssText=`left:${ox+(i%3)*(sz+g)}px;top:${oy+Math.floor(i/3)*(sz+g)}px;width:${sz}px;height:${sz}px`;F.appendChild(b);return b});
+  const seq=shuffle([...Array(9).keys()]).slice(0,d.corsi);
+  await wait(t,500);
+  for(const i of seq){tiles[i].classList.add('lit');await wait(t,d.corsiOn);tiles[i].classList.remove('lit');await wait(t,300)}
+  setPrompt('켜진 순서대로 눌러 주세요',`0 / ${seq.length}`);
+  return new Promise(res=>{
+    let k=0,done=false;const stop=startBar(d.answer+seq.length,()=>fin(false,true));
+    tiles.forEach((b,i)=>{b.disabled=false;b.onclick=()=>{if(done)return;
+      if(i===seq[k]){b.classList.add('ok');b.textContent=k+1;k++;setSub(`${k} / ${seq.length}`);vib(15);if(k===seq.length)fin(true,false)}
+      else{b.classList.add('bad');fin(false,false)}}});
+    function fin(ok,to){if(done||t!==runId)return;done=true;stop();tiles.forEach(b=>b.disabled=true);
+      if(!ok)seq.forEach((i,n)=>{if(!tiles[i].classList.contains('ok'))tiles[i].classList.add('show');tiles[i].textContent=n+1});
+      res({ok,timeout:to,msg:ok?'순서를 정확히 기억했어요':'칸의 숫자가 불이 켜진 순서예요'})}
+  });
+}
+
+/* ================= 과제 5 : 공 따라가기 ================= */
+async function tMot(t){
+  const d=S.diff,n=d.balls,T=d.targets;
+  setPrompt(`주황 공 ${T}개를 기억하세요`,'공이 섞여도 끝까지 눈으로 따라가세요');
+  await ready(t);
+  const{w,h}=fsize(),size=Math.round(Math.max(44,Math.min(56,w/7))),pos=spots(n,size);
+  const balls=pos.map(p=>{const e=document.createElement('button');e.className='ball';e.disabled=true;
+    e.style.cssText=`left:${p.x}px;top:${p.y}px;width:${size}px;height:${size}px`;F.appendChild(e);
+    const a=Math.random()*Math.PI*2,sp=d.speed*w*(0.8+Math.random()*0.4);
+    return{e,x:p.x,y:p.y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp}});
+  const targets=shuffle(balls).slice(0,T);
+  targets.forEach(b=>b.e.classList.add('tg','pulse'));
+  await wait(t,2400);
+  targets.forEach(b=>b.e.classList.remove('tg','pulse'));
+  setPrompt('공이 움직입니다','주황이었던 공을 끝까지 따라가세요');
+  await wait(t,300);
+  await new Promise((res,rej)=>{
+    const t0=performance.now();let last=t0,raf;const pad=4;
+    const tick=now=>{
+      if(t!==runId){cancelAnimationFrame(raf);return rej(new Cancel())}
+      const dt=Math.min(40,now-last)/1000;last=now;
+      balls.forEach(b=>{b.x+=b.vx*dt;b.y+=b.vy*dt;
+        if(b.x<pad){b.x=pad;b.vx=Math.abs(b.vx)}if(b.x>w-size-pad){b.x=w-size-pad;b.vx=-Math.abs(b.vx)}
+        if(b.y<pad){b.y=pad;b.vy=Math.abs(b.vy)}if(b.y>h-size-pad){b.y=h-size-pad;b.vy=-Math.abs(b.vy)}
+        if(Math.random()<dt*0.6){const a=Math.atan2(b.vy,b.vx)+(Math.random()-.5)*1.2,s=Math.hypot(b.vx,b.vy);b.vx=Math.cos(a)*s;b.vy=Math.sin(a)*s}
+        b.e.style.left=b.x+'px';b.e.style.top=b.y+'px'});
+      if(now-t0>=d.trackMs)return res();
+      raf=requestAnimationFrame(tick)};
+    raf=requestAnimationFrame(tick);addCleanup(()=>cancelAnimationFrame(raf));
+  });
+  guard(t);
+  setPrompt(`처음 주황이었던 공 ${T}개를 눌러 주세요`,`0 / ${T}`);
+  return new Promise(res=>{
+    let sel=[],done=false;const stop=startBar(d.answer+T*2,()=>fin(true));
+    balls.forEach(b=>{b.e.disabled=false;b.e.onclick=()=>{if(done)return;
+      if(sel.includes(b)){sel=sel.filter(x=>x!==b);b.e.classList.remove('sel')}else{sel.push(b);b.e.classList.add('sel')}
+      setSub(`${sel.length} / ${T}`);vib(15);if(sel.length===T)fin(false)}});
+    function fin(to){if(done||t!==runId)return;done=true;stop();balls.forEach(b=>b.e.disabled=true);
+      const ok=!to&&sel.length===T&&sel.every(b=>targets.includes(b));
+      sel.forEach(b=>{if(!targets.includes(b)){b.e.classList.remove('sel');b.e.classList.add('bad')}});
+      targets.forEach(b=>{b.e.classList.remove('sel');b.e.classList.add('tg','ring')});
+      res({ok,timeout:to,msg:'초록 테두리의 주황 공이 처음 표시된 공이에요'})}
+  });
+}
+const TRIALS=[tCount,tStroop,tCards,tCorsi,tMot];
+
+/* ================= 진행 ================= */
+function paintTask(i){
+  const tk=TASKS[i];document.documentElement.style.setProperty('--task',tk.color);
+  $('#prog').innerHTML=TASKS.map((_,j)=>`<span class="${j<i?'done':j===i?'now':''}"></span>`).join('');
+  $('#tname').innerHTML=`<em>과제 ${i+1}</em>${tk.name}`;
+}
+async function intro(t,i){
+  const tk=TASKS[i];clearStage();$('#trial').textContent=`${tk.area}`;
+  setPrompt(`과제 ${i+1}. ${tk.name}`,tk.desc);
+  F.innerHTML=`<div class="center"><div class="icbig">${ICON[tk.key]}</div><h3>${tk.name}</h3><p>${tk.how}</p><small>근거: ${tk.ref}</small></div>`;
+  await waitNext(t,'시작하기');
+}
+async function play(t){
+  for(let i=0;i<5;i++){
+    paintTask(i);await intro(t,i);
+    for(let k=0;k<2;k++){
+      $('#trial').textContent=`문제 ${k+1} / 2`;clearStage();
+      const r=await TRIALS[i](t);guard(t);
+      S.results[i][k]=r.ok;vib(r.ok?35:[40,60,40]);
+      setPrompt(r.ok?'정답이에요!':r.timeout?'시간이 다 되었어요':'아쉬워요, 정답을 확인해 보세요',r.msg,r.ok?'ok':'no');
+      $('#tbar').classList.remove('on');
+      await waitNext(t,k===0?'다음 문제':i===4?'결과 보기':'다음 과제로');
+    }
+  }
+  finish();
+}
+function startGame(){
+  doCleanup();const t=++runId;nextRes=null;
+  S.results=TASKS.map(()=>[false,false]);show('scrGame');
+  requestAnimationFrame(()=>play(t).catch(e=>{if(!(e instanceof Cancel))console.error(e)}));
+}
+function stopGame(){doCleanup();runId++;nextRes=null;$('#btnNext').classList.remove('on');clearStage()}
+function finish(){
+  stopGame();
+  const sc=S.results.flat().filter(Boolean).length;
+  $('#rDiff').textContent=`난이도 · ${S.diff.label}`;
+  $('#rScore').innerHTML=`${sc}<small> / 10</small>`;
+  $('#rMsg').textContent=sc===10?'10문제 모두 해냈어요! 집중이 아주 잘 된 날입니다'
+    :sc>=7?'좋아요! 오늘 두뇌가 잘 깨어 있네요'
+    :sc>=4?'잘하셨어요. 내일 새 문제로 한 번 더 해 보세요'
+    :'처음엔 누구나 어려워요. 반복할수록 익숙해집니다';
+  $('#rList').innerHTML=TASKS.map((tk,i)=>`<li style="--c:${tk.color}"><span><span class="n">${tk.name}</span><span class="a">${tk.area}</span></span><span class="mk">${S.results[i].map(o=>`<i class="${o?'o':''}"></i>`).join('')}</span></li>`).join('');
+  const key='kbpi_warmup_best_'+S.diffKey,prev=+(store.get(key)||0);if(sc>prev)store.set(key,String(sc));
+  show('scrResult');
+}
+function renderStart(){
+  $('#taskList').innerHTML=TASKS.map(tk=>`<li style="--c:${tk.color}"><span class="ic">${ICON[tk.key]}</span><span><span class="t">${tk.name}<span>${tk.area}</span></span><br><span class="d">${tk.desc}</span></span></li>`).join('');
+  $('#refList').innerHTML=TASKS.map(tk=>`<li>${tk.name}: ${tk.ref}</li>`).join('');
+  const b=store.get('kbpi_warmup_best_'+S.diffKey);
+  $('#bestLine').textContent=b?`나의 최고 기록 (${S.diff.label}) ${b} / 10`:'';
+}
+function toast(m){const e=$('#toast');e.textContent=m;e.classList.add('on');setTimeout(()=>e.classList.remove('on'),1800)}
+
+/* ================= 이벤트 ================= */
+$('#diffSeg').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
+  document.querySelectorAll('#diffSeg button').forEach(x=>x.classList.toggle('on',x===b));
+  S.diffKey=b.dataset.d;S.diff=DIFF[S.diffKey];renderStart()});
+$('#btnStart').addEventListener('click',startGame);
+$('#btnAgain').addEventListener('click',startGame);
+$('#btnHome').addEventListener('click',()=>{renderStart();show('scrStart')});
+$('#btnQuit').addEventListener('click',()=>{stopGame();renderStart();show('scrStart')});
+$('#btnNext').addEventListener('click',()=>{const r=nextRes;nextRes=null;$('#btnNext').classList.remove('on');r&&r()});
+$('#btnShare').addEventListener('click',async()=>{
+  const sc=S.results.flat().filter(Boolean).length;
+  const text=`[한국뇌심리연구소] 오늘의 두뇌 워밍업(${S.diff.label}) 10문제 중 ${sc}문제 성공! 하루 3분, 함께 두뇌를 깨워요.`;
+  const url=location.protocol.startsWith('http')?location.href:'https://k-brain.co.kr';
+  try{if(navigator.share){await navigator.share({title:'오늘의 두뇌 워밍업',text,url});return}}catch(e){return}
+  try{await navigator.clipboard.writeText(text+' '+url);toast('기록이 복사되었어요')}catch(e){toast('공유를 지원하지 않는 환경이에요')}
+});
+renderStart();
+})();
+</script>
+</body>
+</html>
