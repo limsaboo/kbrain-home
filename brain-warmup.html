@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>오늘의 두뇌 워밍업 | 한국뇌심리연구소</title>
-<meta name="description" content="한국뇌심리연구소(KBPI) 오늘의 두뇌 워밍업 — 한눈에 세기·색깔 함정·그림 자리 기억·불빛 순서 누르기·공 따라가기. 인지심리학 표준 과제 기반 교육용 두뇌 활동.">
+<title>두뇌 워밍업 | 한국뇌심리연구소</title>
+<meta name="description" content="한국뇌심리연구소(KBPI) 두뇌 워밍업 — 한눈에 세기·색깔 함정·그림 자리 기억·불빛 순서 누르기·공 따라가기. 인지심리학 표준 과제 기반 교육용 두뇌 활동.">
 <meta name="theme-color" content="#0B2A5B">
 <link rel="canonical" href="https://www.k-brain.co.kr/brain-warmup.html">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -163,7 +163,7 @@ details.ref ul{margin:8px 0 2px 18px;font-size:13.5px;color:var(--sub);font-weig
   <div class="bar"><div class="logo"><i>KBPI</i>한국뇌심리연구소</div><a class="quit" href="/bhtc.html" style="text-decoration:none">헬스클럽</a></div>
   <div class="hero">
     <span class="kicker">하루 3분 두뇌 활동</span>
-    <h1>오늘의<br><b>두뇌 워밍업</b></h1>
+    <h1><b>두뇌 워밍업</b></h1>
     <p>5가지 과제 · 과제마다 2문제<br>할 때마다 <strong>새로운 문제</strong>가 만들어집니다</p>
   </div>
   <ul class="tasks" id="taskList"></ul>
@@ -199,7 +199,7 @@ details.ref ul{margin:8px 0 2px 18px;font-size:13.5px;color:var(--sub);font-weig
   <div class="bar"><div class="logo"><i>KBPI</i>한국뇌심리연구소</div></div>
   <div class="rhead">
     <span class="kicker" id="rDiff"></span>
-    <h2>오늘의 워밍업 완료</h2>
+    <h2>워밍업 완료</h2>
     <div class="score" id="rScore"></div>
     <div class="rmsg" id="rMsg"></div>
   </div>
@@ -510,9 +510,9 @@ $('#btnQuit').addEventListener('click',()=>{stopGame();renderStart();show('scrSt
 $('#btnNext').addEventListener('click',()=>{const r=nextRes;nextRes=null;$('#btnNext').classList.remove('on');r&&r()});
 $('#btnShare').addEventListener('click',async()=>{
   const sc=S.results.flat().filter(Boolean).length;
-  const text=`[한국뇌심리연구소] 오늘의 두뇌 워밍업(${S.diff.label}) 10문제 중 ${sc}문제 성공! 하루 3분, 함께 두뇌를 깨워요.`;
+  const text=`[한국뇌심리연구소] 두뇌 워밍업(${S.diff.label}) 10문제 중 ${sc}문제 성공! 하루 3분, 함께 두뇌를 깨워요.`;
   const url=location.protocol.startsWith('http')?location.href:'https://k-brain.co.kr';
-  try{if(navigator.share){await navigator.share({title:'오늘의 두뇌 워밍업',text,url});return}}catch(e){return}
+  try{if(navigator.share){await navigator.share({title:'두뇌 워밍업',text,url});return}}catch(e){return}
   try{await navigator.clipboard.writeText(text+' '+url);toast('기록이 복사되었어요')}catch(e){toast('공유를 지원하지 않는 환경이에요')}
 });
 renderStart();
