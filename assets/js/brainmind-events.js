@@ -13,7 +13,7 @@
 
     var URL_BASE = "https://grxqfaeznqqohnlltged.supabase.co";
     var KEY = "sb_publishable_Sgv6BVPo1dOnVICcX1tfzA_gf7T5Z4I";
-    var ENDPOINT = URL_BASE + "/rest/v1/brainmind_events";
+    var ENDPOINT = URL_BASE + "/rest/v1/kbpi_events";
 
     function read(store, key) { try { return store.getItem(key); } catch (e) { return null; } }
     var device = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent) ? "mobile" : "desktop";
@@ -26,6 +26,8 @@
           target: target ? String(target).slice(0, 200) : null,
           visitor_id: read(localStorage, "kbpi_vid"),
           session_id: read(sessionStorage, "kbpi_sid"),
+          page: location.pathname,
+          source: ((new URLSearchParams(location.search)).get("from") || (new URLSearchParams(location.search)).get("utm_source") || "").slice(0, 100) || null,
           device: device
         };
         fetch(ENDPOINT, {
