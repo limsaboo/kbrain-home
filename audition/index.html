@@ -2,6 +2,10 @@
 <html lang="ko">
 <head>
 <meta name="robots" content="noindex,nofollow">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#7B1FE0">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" href="icon-192.png">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>강사 오디션 연습실</title>
@@ -1262,5 +1266,6 @@ $('inMin').value=S.min;
 window.LA={faceAnalyze:faceAnalyze, faceSample:faceSample, loadFaceModel:loadFaceModel, FACE:FACE, voiceAnalyze:voiceAnalyze, startRec:startRec, stopRec:stopRec, REC:REC, voiceCards:voiceCards, analyze:analyze, SAMPLE:SAMPLE, S:S, AX:AX, render:render, show:show, planBlocks:planBlocks, histSet:histSet};
 })();
 </script>
+<script>if('serviceWorker' in navigator && location.protocol==='https:'){window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){})})}</script>
 </body>
 </html>

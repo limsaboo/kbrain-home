@@ -1,0 +1,17 @@
+{
+  "name": "강사 오디션 연습실",
+  "short_name": "오디션 연습실",
+  "description": "가상 청중과 심사위원 앞에서 강의를 연습하고 성적표를 받는 한국뇌심리연구소 강사 훈련 앱",
+  "lang": "ko",
+  "start_url": "./?source=pwa",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#FFF1C2",
+  "theme_color": "#7B1FE0",
+  "icons": [
+    {"src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any"},
+    {"src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any"},
+    {"src": "icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
+  ]
+}
