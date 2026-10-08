@@ -1,0 +1,1237 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta name="robots" content="noindex,nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>강사 오디션 연습실</title>
+<style>
+:root{
+  --red:#E10600; --orange:#FF6A00; --gold:#F5B800; --green:#00A33B;
+  --blue:#0066FF; --purple:#7B1FE0; --pink:#E6007E; --ink:#0A0A0A;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:#FFF3C4; color:var(--ink);
+  font-family:"Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  font-weight:700; line-height:1.85; font-size:17px;
+  word-break:keep-all; overflow-wrap:break-word;
+}
+.wrap{max-width:640px; margin:0 auto; padding:0 0 40px}
+.hero{
+  background:linear-gradient(135deg,#7B1FE0 0%,#E6007E 58%,#FF6A00 100%);
+  color:#fff; padding:26px 20px 22px; border-radius:0 0 28px 28px;
+}
+.hero .brand{font-size:15px; font-weight:800; letter-spacing:.02em; opacity:.95}
+.hero h1{margin:6px 0 6px; font-size:32px; line-height:1.35; font-weight:900; text-wrap:balance}
+.hero p{margin:0; font-size:16px; line-height:1.8; font-weight:700}
+.steps{display:flex; gap:8px; padding:16px 16px 4px}
+.steps button{
+  flex:1; border:3px solid var(--ink); background:#fff; border-radius:14px;
+  padding:10px 4px; font:inherit; font-size:15px; font-weight:900; color:var(--ink); line-height:1.4;
+}
+.steps button.on{background:var(--red); border-color:var(--red); color:#fff}
+.steps button.done{background:var(--green); border-color:var(--green); color:#fff}
+.steps button:disabled{opacity:.45}
+.panel{padding:12px 16px 0; display:none}
+.panel.on{display:block}
+.card{
+  background:#fff; border:4px solid var(--c,#111); border-radius:18px;
+  padding:16px 16px 14px; margin:14px 0;
+}
+.card>h2,.card>h3{margin:0 0 6px; font-size:21px; line-height:1.5; font-weight:900; color:var(--c,#111); text-wrap:balance}
+.card .hint{margin:0 0 10px; font-size:15px; line-height:1.8; color:#222}
+.chips{display:flex; flex-wrap:wrap; gap:10px}
+.chip{
+  border:3px solid var(--ink); background:#fff; color:var(--ink); border-radius:14px;
+  padding:10px 18px; font:inherit; font-size:18px; font-weight:900; line-height:1.4; min-width:58px;
+}
+.chip.on{background:var(--purple); border-color:var(--purple); color:#fff}
+.places{display:grid; grid-template-columns:1fr 1fr; gap:10px}
+.place{
+  border:4px solid var(--ink); border-radius:16px; background:#fff; padding:0; overflow:hidden;
+  font:inherit; text-align:left; color:var(--ink);
+}
+.place svg{display:block; width:100%; height:auto}
+.place span{display:block; padding:8px 10px 8px; font-size:16px; font-weight:900; line-height:1.5}
+.place.on{border-color:var(--red); box-shadow:0 0 0 3px var(--red)}
+.place.on span{background:var(--red); color:#fff}
+.stage svg{width:100%; height:auto; display:block; border-radius:14px}
+.legend{display:flex; flex-wrap:wrap; gap:8px 14px; margin-top:10px; font-size:14px; line-height:1.6}
+.legend i{display:inline-block; width:14px; height:14px; border-radius:50%; margin-right:6px; vertical-align:-2px}
+table.plan{width:100%; border-collapse:collapse; font-size:15px; line-height:1.7}
+table.plan th{background:var(--orange); color:#fff; padding:8px 8px; text-align:left; font-weight:900}
+table.plan td{border-bottom:2px solid #ddd; padding:8px 8px; vertical-align:top; text-align:left}
+table.plan td:first-child{white-space:nowrap}
+.btn{
+  display:block; width:100%; border:0; border-radius:16px; background:var(--red); color:#fff;
+  font:inherit; font-size:20px; font-weight:900; padding:16px 20px; line-height:1.5; margin:12px 0 0;
+}
+.btn.alt{background:var(--blue)}
+.btn.green{background:var(--green)}
+.live{position:relative}
+#recVid{width:60%; max-width:240px; display:none; margin:6px auto; border:4px solid var(--pink); border-radius:16px; transform:scaleX(-1); background:#000}
+.btn.red{background:var(--red)}
+.clock{font-size:52px; font-weight:900; line-height:1.4; text-align:center; color:var(--ink); margin:8px 0 4px}
+.meter{height:20px; background:#EEE; border-radius:10px; overflow:hidden; border:2px solid var(--ink); margin-bottom:12px}
+.meter i{display:block; height:100%; width:0; background:linear-gradient(90deg,#00A33B,#F5B800,#E10600)}
+.chk{display:flex; gap:10px; align-items:flex-start; font-weight:900; font-size:16px; line-height:1.7; margin:10px 0}
+.chk input{width:24px; height:24px; flex:none; margin-top:3px}
+.live{min-height:80px; max-height:170px; overflow:auto; margin-top:10px; padding:10px 12px; border:3px solid var(--blue); border-radius:14px; font-size:16px; font-weight:800; line-height:1.9; color:var(--ink)}
+.live:empty::before{content:"여기에 인식된 말이 실시간으로 나타납니다"; color:#555}
+.btn.ghost{background:#fff; color:var(--ink); border:3px solid var(--ink)}
+.row{display:flex; gap:10px}
+.row>*{flex:1}
+label.lb{display:block; margin:10px 0 4px; font-size:16px; font-weight:900; color:var(--purple)}
+input[type=text],input[type=number],textarea{
+  width:100%; border:3px solid var(--purple); border-radius:12px; padding:12px 14px;
+  font:inherit; font-size:17px; font-weight:700; color:var(--ink); background:#fff; line-height:1.7;
+}
+textarea{min-height:230px; resize:vertical}
+.stepper{display:flex; gap:8px; align-items:stretch}
+.stepper button{width:56px; border:3px solid var(--ink); background:#fff; border-radius:12px; font:inherit; font-size:26px; font-weight:900}
+.stepper input{text-align:center; font-size:22px; font-weight:900}
+.rate{display:flex; align-items:center; justify-content:space-between; gap:8px; margin:8px 0}
+.rate b{flex:1; font-size:16px; line-height:1.5}
+.rate .chips{gap:6px; flex-wrap:nowrap}
+.rate .chip{min-width:40px; padding:8px 0; font-size:17px; width:40px; text-align:center}
+.info{margin:10px 0 0; padding:10px 12px; border-radius:12px; background:#FFF0F0; border:3px solid var(--red); font-size:15px; line-height:1.8}
+.info.warn{background:#FFF7DA; border-color:var(--gold)}
+.toast{
+  position:fixed; left:50%; bottom:24px; transform:translateX(-50%); background:var(--ink); color:#fff;
+  padding:12px 18px; border-radius:14px; font-size:16px; font-weight:900; z-index:50; display:none; max-width:90vw; text-align:center;
+}
+/* ---------- 리포트 ---------- */
+.rep{background:#fff; border:5px solid var(--purple); border-radius:20px; overflow:hidden}
+.rep-head{
+  background:linear-gradient(135deg,#7B1FE0 0%,#E6007E 58%,#FF6A00 100%); color:#fff; padding:18px 18px 16px;
+}
+.rep-head .k{font-size:14px; font-weight:800; opacity:.95; line-height:1.6}
+.rep-head h2{margin:2px 0 4px; font-size:27px; line-height:1.4; font-weight:900; text-wrap:balance}
+.meta{display:grid; grid-template-columns:1fr 1fr; gap:6px 12px; margin-top:8px; font-size:14.5px; line-height:1.6}
+.meta div{background:rgba(255,255,255,.2); border-radius:10px; padding:6px 10px}
+.meta b{display:block; font-size:12.5px; opacity:.95; font-weight:800}
+.rep .card{margin:14px}
+.total{display:flex; align-items:center; gap:14px}
+.total .num{font-size:64px; line-height:1.1; font-weight:900; color:var(--red)}
+.total .num small{font-size:22px; color:var(--ink)}
+.grade{display:inline-block; font-size:30px; font-weight:900; color:#fff; background:var(--purple); border-radius:14px; padding:4px 16px; line-height:1.5}
+.verdict{margin:8px 0 0; font-size:16.5px; line-height:1.85}
+.two{display:grid; grid-template-columns:repeat(auto-fit,minmax(min(270px,100%),1fr)); gap:12px; align-items:start}
+.two>*{min-width:0}
+.rep,.rep *{max-width:100%}
+.axlist{list-style:none; margin:0; padding:0}
+.axlist li{display:flex; align-items:center; gap:10px; margin:6px 0; font-size:16px; line-height:1.5}
+.axlist .dot{width:16px; height:16px; border-radius:50%; flex:none}
+.axlist .nm{flex:1; font-weight:900}
+.axlist .sc{font-weight:900; font-size:19px}
+.bar{height:16px; background:#EEE; border-radius:9px; overflow:hidden; margin-top:3px}
+.bar i{display:block; height:100%; border-radius:9px}
+.jrow{display:flex; gap:12px; margin:12px 0; align-items:flex-start}
+.jic{width:46px; height:46px; border-radius:50%; flex:none; display:flex; align-items:center; justify-content:center; font-size:24px; color:#fff}
+.jbody{flex:1; min-width:0}
+.jbody .t{display:flex; justify-content:space-between; gap:8px; font-weight:900; font-size:17px; line-height:1.5}
+.jbody .t em{font-style:normal; font-size:21px}
+.jbody p{margin:2px 0 0; font-size:15.5px; line-height:1.85}
+.an{margin:0; padding:0; list-style:none}
+.an li{margin:10px 0; padding-left:14px; border-left:7px solid var(--c); font-size:15.8px; line-height:1.9}
+.an li b{color:var(--c); font-size:16.5px}
+.ol{margin:6px 0 0; padding-left:1.7em}
+.ol li{margin:6px 0; padding-left:.2em; line-height:1.85; font-size:15.8px}
+.ol li::marker{font-weight:900; color:var(--c,#111)}
+.note{font-size:13.5px; line-height:1.85; color:#222; background:#F2F2F2; border-radius:12px; padding:10px 12px; margin:14px}
+.hist{width:100%; table-layout:fixed; border-collapse:collapse; font-size:13px; line-height:1.6}
+.hist th{background:var(--blue); color:#fff; padding:6px 1px; text-align:center; font-weight:900; word-break:break-all}
+.hist td{border-bottom:2px solid #ddd; padding:6px 1px; text-align:center; word-break:break-all}
+.actions{padding:0 16px}
+.svgbox svg{width:100%; height:auto; display:block}
+/* ---------- 인쇄 ---------- */
+@page{size:A4; margin:9mm}
+@media print{
+  body{background:#fff; -webkit-print-color-adjust:exact; print-color-adjust:exact; font-size:12.5px}
+  .noprint,.hero,.steps,#s1,#s2,.toast{display:none!important}
+  #s3{display:block!important; padding:0}
+  .wrap{max-width:none; padding:0}
+  .rep{border:none!important; border-radius:0!important}
+  .card{break-inside:auto; margin:8px 0}
+  .card h3{break-after:avoid}
+  .card:has(svg):not(:has(.bar)){break-inside:avoid}
+  .card svg{max-height:215px; width:100%}
+  .jrow,.arow,.card li,.card tr,.tip{break-inside:avoid}
+  .rep .card{padding:10px 12px}
+  .page2{display:none}
+  .total .num{font-size:52px}
+  .two{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero noprint">
+    <div class="brand">🧠 한국뇌심리연구소 · 강사 훈련 시스템</div>
+    <h1>강사 오디션 연습실</h1>
+    <p>가상 청중과 심사위원 앞에서 연습하고, 점수와 개선책이 담긴 성적표를 PDF로 받아 보세요.</p>
+  </header>
+
+  <nav class="steps noprint" id="steps">
+    <button id="st1" class="on">① 무대 설정</button>
+    <button id="st2" disabled>② 강의 입력</button>
+    <button id="st3" disabled>③ 성적표</button>
+  </nav>
+
+  <!-- ① 무대 설정 -->
+  <section class="panel on" id="s1">
+    <div class="card" style="--c:var(--purple)">
+      <h2>1. 청중은 몇 명으로 할까요?</h2>
+      <p class="hint">가상 청중은 적극형·신중형·조용형·까다로운형 네 유형으로 나뉘어 반응합니다.</p>
+      <div class="chips" id="chAud"></div>
+    </div>
+    <div class="card" style="--c:var(--red)">
+      <h2>2. 심사위원은 몇 명으로 할까요?</h2>
+      <p class="hint">심사위원마다 중요하게 보는 항목이 달라서, 같은 강의도 점수가 다르게 나옵니다.</p>
+      <div class="chips" id="chJud"></div>
+      <div class="legend" id="jlegend"></div>
+    </div>
+    <div class="card" style="--c:var(--orange)">
+      <h2>3. 강의 장소를 고르세요</h2>
+      <div class="places" id="places"></div>
+    </div>
+    <div class="card" style="--c:var(--green)">
+      <h2>4. 강의 시간을 고르세요</h2>
+      <div class="chips" id="chMin"></div>
+    </div>
+    <div class="card stage" style="--c:var(--blue)">
+      <h2>내 무대 미리보기</h2>
+      <div id="stage"></div>
+      <div class="legend" id="alegend"></div>
+    </div>
+    <div class="card" style="--c:var(--pink)">
+      <h2>사전 협의용 강의 구성안</h2>
+      <p class="hint">선택한 시간에 맞춰 PPT를 이 순서로 준비하세요. 아래 구성은 제가 설계한 연습용 틀이며, 검증된 표준은 아닙니다.</p>
+      <div id="plan"></div>
+      <button class="btn ghost" id="btnCopyPlan">구성안 복사하기</button>
+    </div>
+    <button class="btn" id="go2">다음: 강의 입력하기 ▶</button>
+  </section>
+
+  <!-- ② 강의 입력 -->
+  <section class="panel" id="s2">
+    <div class="card" style="--c:var(--purple)">
+      <h2>기본 정보</h2>
+      <label class="lb" for="inName">강사 이름</label>
+      <input type="text" id="inName" value="임찬우 소장" autocomplete="off">
+      <label class="lb" for="inTitle">강의 주제</label>
+      <input type="text" id="inTitle" value="뇌궁합 체험 특강" autocomplete="off">
+      <label class="lb">실제로 강의한 시간(분)</label>
+      <div class="stepper">
+        <button id="mMinus" type="button">−</button>
+        <input type="number" id="inMin" inputmode="decimal" step="any" min="0.5" max="180" value="20">
+        <button id="mPlus" type="button">＋</button>
+      </div>
+      <p class="hint" style="margin-top:8px">목표 시간은 <b id="tgtShow" style="color:var(--red)">20분</b>입니다.</p>
+    </div>
+    <div class="card" style="--c:var(--red)">
+      <h2>🎙 녹음하며 연습하기</h2>
+      <p class="hint">녹음 버튼을 누르고 강의하세요. 정한 시간(<b id="recTgt" style="color:var(--red)">20분</b>)이 되면 자동으로 끝나고 알림이 울립니다. 녹음 소리로 <b>강약 · 억양 · 쉼 · 발음 · 내용 충실도 · 정시 종료</b>를 분석합니다.</p>
+      <label class="lb" for="inScript">준비한 대본 (내용 충실도 비교용, 선택)</label>
+      <textarea id="inScript" placeholder="강의 대본을 붙여 넣으면 실제로 말한 내용과 비교합니다"></textarea>
+      <label class="chk"><input type="checkbox" id="recUseSR" checked> 음성 인식 함께 사용 (발음·내용 분석용, 인터넷 필요)</label>
+      <label class="chk"><input type="checkbox" id="recUseCam"> 카메라로 표정 분석 (영상은 폰 안에서만 처리, 저장·전송 안 함 · 인터넷 필요)</label>
+      <video id="recVid" playsinline muted style="display:none"></video>
+      <div class="clock" id="recClock">20:00</div>
+      <div class="meter"><i id="recMeterI"></i></div>
+      <button class="btn red" id="recBtn" type="button">● 녹음 시작</button>
+      <div class="info warn" id="recStatus">크롬에서 주소(https)로 열어야 마이크가 허용되는 경우가 많습니다.</div>
+      <div class="live" id="recText"></div>
+      <audio id="recAudio" controls style="display:none;width:100%;margin-top:10px"></audio>
+      <button class="btn ghost" id="recReset" type="button" style="display:none">녹음 지우고 다시 하기</button>
+    </div>
+    <div class="card" style="--c:var(--red)">
+      <h2>강의 대본 붙여넣기</h2>
+      <p class="hint">연습 때 말한 내용을 폰 키보드의 마이크 버튼으로 받아쓰기한 글, 또는 준비한 대본을 붙여 넣으세요. 앱은 이 글로 말 속도, 질문, 호명, 쉬운 말, 표현 안전을 분석합니다.</p>
+      <textarea id="inText" placeholder="여기에 붙여넣기"></textarea>
+      <div class="info warn" id="txInfo">글자 수: 0자</div>
+      <button class="btn ghost" id="btnSample">샘플 대본 불러오기 (테스트용)</button>
+    </div>
+    <div class="card" style="--c:var(--pink)">
+      <h2>내가 느낀 점수 (1~5)</h2>
+      <p class="hint">목소리 힘이나 표정은 앱이 측정할 수 없어서, 소장님이 직접 점수를 주세요. 1은 아쉬움, 5는 아주 좋음입니다.</p>
+      <div id="selfs"></div>
+    </div>
+    <button class="btn" id="goScore">채점하고 성적표 보기 ▶</button>
+    <button class="btn ghost" id="back1">◀ 무대 설정으로</button>
+  </section>
+
+  <!-- ③ 성적표 -->
+  <section class="panel" id="s3">
+    <div id="report"></div>
+    <div class="actions noprint">
+      <button class="btn green" id="btnPrint">PDF로 저장 · 인쇄하기</button>
+      <p class="info" style="margin-top:10px">누르면 인쇄 화면이 열립니다. 폰에서는 <b>프린터 선택 → "PDF로 저장"</b>을 고르면 파일로 저장됩니다.</p>
+      <button class="btn alt" id="btnRetry">다시 연습하기 (입력으로)</button>
+      <button class="btn ghost" id="btnClearHist">훈련 기록 지우기</button>
+    </div>
+  </section>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+'use strict';
+
+/* ================= 기본 데이터 ================= */
+var AX = [
+  {k:'deliver', name:'전달력',        color:'#0066FF'},
+  {k:'engage',  name:'참여유도',      color:'#E10600'},
+  {k:'level',   name:'시니어 눈높이', color:'#00A33B'},
+  {k:'struct',  name:'구성·시간',     color:'#FF6A00'},
+  {k:'safe',    name:'표현 안전',     color:'#7B1FE0'},
+  {k:'energy',  name:'에너지·화면',   color:'#E6007E'}
+];
+var JUDGES = [
+  {id:'j1', name:'복지관 프로그램 담당자', icon:'🏛️', color:'#FF6A00', lens:'기관 담당자 입장에서', off:-2,
+   w:{deliver:.15, engage:.15, level:.25, struct:.30, safe:.10, energy:.05}},
+  {id:'j2', name:'요양원 원장',           icon:'🏥', color:'#00A33B', lens:'시설 책임자 입장에서', off:-4,
+   w:{deliver:.20, engage:.05, level:.25, struct:.15, safe:.30, energy:.05}},
+  {id:'j3', name:'방송 PD',               icon:'🎬', color:'#E10600', lens:'방송 연출 입장에서',   off:0,
+   w:{deliver:.25, engage:.20, level:.05, struct:.15, safe:.05, energy:.30}},
+  {id:'j4', name:'시니어 수강생 대표',    icon:'👵', color:'#E6007E', lens:'수강생 입장에서',     off:3,
+   w:{deliver:.20, engage:.25, level:.30, struct:.05, safe:.05, energy:.15}},
+  {id:'j5', name:'평생교육 교수',         icon:'🎓', color:'#7B1FE0', lens:'교육 설계 입장에서',   off:-1,
+   w:{deliver:.15, engage:.15, level:.15, struct:.30, safe:.20, energy:.05}}
+];
+var ATYPES = [
+  {k:'active',  name:'적극형',     color:'#E10600', share:.30, start:78, d:1.5, b:1.25, h:.6,  f:40},
+  {k:'careful', name:'신중형',     color:'#0066FF', share:.30, start:70, d:2.5, b:1.0,  h:1.0, f:30},
+  {k:'quiet',   name:'조용형',     color:'#00A33B', share:.25, start:62, d:3.2, b:.85,  h:1.2, f:22},
+  {k:'picky',   name:'까다로운형', color:'#7B1FE0', share:.15, start:55, d:4.0, b:.7,   h:1.8, f:15}
+];
+var PLACES = [
+  {id:'hall',   name:'복지관 강당',   c1:'#FFE27A', c2:'#FF8A00'},
+  {id:'living', name:'요양원 거실',   c1:'#FFD0E8', c2:'#E6007E'},
+  {id:'class',  name:'교실',          c1:'#BFF0C8', c2:'#00A33B'},
+  {id:'cafe',   name:'북카페',        c1:'#FFD7B0', c2:'#B84A00'},
+  {id:'studio', name:'방송 스튜디오', c1:'#E5CCFF', c2:'#7B1FE0'},
+  {id:'garden', name:'야외 정원',     c1:'#BFE3FF', c2:'#0066FF'}
+];
+var AUD_OPTS=[5,10,20,30], JUD_OPTS=[3,4,5], MIN_OPTS=[10,20,30,60,90];
+var SELFS = [
+  {k:'voice',  t:'목소리 힘과 표정'},
+  {k:'gaze',   t:'카메라 보고 말하기'},
+  {k:'screen', t:'화면·자세·진행 안정감'}
+];
+
+/* 위험·완화·어려운 말 목록 (연습용 기준) */
+var RISK = ['치료','완치','치매 예방','치매예방','예방됩니다','예방할 수','진단합니다','진단해','확진','검증된','100%','반드시 낫','효과가 있습니다','효과가 입증','의학적 효과','치매에 걸리','병이 낫'];
+var SOFT = ['일 수 있어요','일 수 있습니다','할 수 있어요','편일 수','재미로','자기이해','참고로','일 수도'];
+var HARD = ['인지기능','인지','기능','프로그램','메커니즘','알고리즘','전두엽','측두엽','해마','신경','피질','도파민','세로토닌','병리','증후','뇌과학','프로세스','피드백','콘텐츠','시스템','매뉴얼','패러다임','트렌드','스트레스'];
+var EX_WORDS = ['예를 들어','예를 들면','쉽게 말해','쉽게 말하면','비유하면','이를테면'];
+
+/* ================= 상태 ================= */
+var S = {aud:10, jud:5, place:'hall', min:20, selfs:{voice:3,gaze:3,screen:3}, last:null};
+
+/* ================= 유틸 ================= */
+function $(id){return document.getElementById(id)}
+function clamp(v,a,b){return Math.max(a,Math.min(b,v))}
+function esc(s){return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function r0(v){return Math.round(v)}
+function toast(msg){var t=$('toast'); t.textContent=msg; t.style.display='block'; clearTimeout(toast._t); toast._t=setTimeout(function(){t.style.display='none'},2600)}
+function save(){try{localStorage.setItem('la_state',JSON.stringify({aud:S.aud,jud:S.jud,place:S.place,min:S.min,selfs:S.selfs,name:$('inName').value,title:$('inTitle').value}))}catch(e){}}
+function load(){try{var s=JSON.parse(localStorage.getItem('la_state')||'null'); if(s){S.aud=s.aud||S.aud;S.jud=s.jud||S.jud;S.place=s.place||S.place;S.min=s.min||S.min;if(s.selfs)S.selfs=s.selfs; if(s.name)$('inName').value=s.name; if(s.title)$('inTitle').value=s.title}}catch(e){}}
+function histGet(){try{return JSON.parse(localStorage.getItem('la_hist')||'[]')}catch(e){return []}}
+function histSet(a){try{localStorage.setItem('la_hist',JSON.stringify(a.slice(-10)))}catch(e){}}
+
+function countMatches(text, list){
+  var n=0, found=[];
+  list.forEach(function(w){
+    var idx=0, c=0;
+    while((idx=text.indexOf(w,idx))>=0){c++; idx+=w.length}
+    if(c){n+=c; found.push(w+(c>1?'×'+c:''))}
+  });
+  return {n:n, found:found};
+}
+
+/* ================= 분석 엔진 ================= */
+function splitSentences(text){
+  var parts=text.split(/[.!?。…\n]+/).map(function(s){return s.trim()}).filter(function(s){return s.length>3});
+  if(parts.length<=3 && text.length>200){
+    var norm=text.replace(/([요다죠까])(?=\s)/g,'$1|');
+    parts=norm.split(/[.!?。…\n|]+/).map(function(s){return s.trim()}).filter(function(s){return s.length>3});
+  }
+  return parts;
+}
+function findEvents(text){
+  var ev=[], m;
+  var q=/(까요|나요|인가요|인지요|\?)/g; while((m=q.exec(text))){ev.push({i:m.index,t:'q',b:9})}
+  var c=/[가-힣]{2,4}님/g; while((m=c.exec(text))){ev.push({i:m.index,t:'c',b:8})}
+  var p=/(채팅|손을? ?들|말씀해|골라|선택|써 ?주|적어|따라|박수|이유를|대답)/g; while((m=p.exec(text))){ev.push({i:m.index,t:'p',b:4})}
+  ev.sort(function(a,b){return a.i-b.i});
+  return ev;
+}
+function hardTokens(tokens){
+  var cnt=0, eng=0, terms={};
+  tokens.forEach(function(tok){
+    var h=tok.replace(/[^가-힣]/g,'');
+    var isEng=/[A-Za-z]{2,}/.test(tok);
+    var hit=HARD.some(function(w){return tok.indexOf(w)>=0});
+    if(isEng){eng++}
+    if(hit || h.length>=7){cnt++; var key=hit?(HARD.filter(function(w){return tok.indexOf(w)>=0})[0]):h; terms[key]=(terms[key]||0)+1}
+  });
+  return {hard:cnt, eng:eng, terms:terms};
+}
+
+function analyze(text, actualMin, targetMin, selfs, cfg){
+  text=(text||'').trim();
+  var L=text.length;
+  var chars=text.replace(/\s/g,'').length;
+  var tokens=text.split(/\s+/).filter(Boolean);
+  var sents=splitSentences(text);
+  var avgSent = sents.length? chars/sents.length : chars;
+  var speed = actualMin>0? chars/actualMin : 0;
+  var ev=findEvents(text);
+  var qN=ev.filter(function(e){return e.t==='q'}).length;
+  var cN=ev.filter(function(e){return e.t==='c'}).length;
+  var pN=ev.filter(function(e){return e.t==='p'}).length;
+  var M=clamp(Math.ceil(actualMin),1,120);
+  /* 장치 시각(분) */
+  var evMin = ev.map(function(e){return {m:L? e.i/L*actualMin : 0, t:e.t, b:e.b}});
+  var times = evMin.map(function(e){return e.m}).sort(function(a,b){return a-b});
+  var gap=0, prev=0;
+  times.forEach(function(t){gap=Math.max(gap,t-prev); prev=t});
+  gap=Math.max(gap, actualMin-prev);
+  if(!times.length) gap=actualMin;
+  var rate = actualMin>0? (qN+cN+pN*0.5)/(actualMin/10) : 0;
+
+  /* --- 축 점수 --- */
+  var speedScore = (speed>=220&&speed<=320)?100: Math.max(0, 100 - Math.min(Math.abs(speed-220),Math.abs(speed-320))*0.45);
+  var sentScore = avgSent<=40?100: Math.max(0, 100-(avgSent-40)*2);
+  var deliver = 0.5*speedScore + 0.5*sentScore;
+
+  var engage = Math.min(100, rate/6*100);
+  if(gap>7) engage -= (gap-7)*4;
+  engage = clamp(engage,0,100);
+
+  var ht = hardTokens(tokens);
+  var tc = Math.max(tokens.length,1);
+  var hardPer = ht.hard/tc*100, engPer = ht.eng/tc*100;
+  var exN = countMatches(text, EX_WORDS).n;
+  var level = clamp(100 - hardPer*5 - engPer*4 + Math.min(10, exN*5), 0, 100);
+
+  var diff = targetMin>0? (actualMin-targetMin)/targetMin*100 : 0;
+  var timeScore = clamp(100 - Math.max(0,Math.abs(diff)-5)*2.5, 0, 100);
+  var head = text.slice(0, Math.max(80, r0(L*.2))), tail = text.slice(Math.max(0, L-Math.max(80, r0(L*.2))));
+  var intro = /(안녕|반갑|오늘은|소개|시작)/.test(head);
+  var outro = /(정리|마무리|감사|오늘 배운|기억|다음에|다음 시간)/.test(tail);
+  var struct = 0.5*timeScore + (intro?25:0) + (outro?25:0);
+
+  var rk = countMatches(text, RISK), sf = countMatches(text, SOFT);
+  var safe = clamp(100 - rk.n*15 + Math.min(10, sf.n*2), 0, 100);
+
+  var sv=selfs||{}; var sa=((sv.voice||3)+(sv.gaze||3)+(sv.screen||3))/3;
+  var energy = sa*20;
+
+  var axes = {deliver:deliver, engage:engage, level:level, struct:struct, safe:safe, energy:energy};
+  AX.forEach(function(a){axes[a.k]=r0(clamp(axes[a.k],0,100))});
+
+  /* --- 심사위원 --- */
+  var judges = JUDGES.slice(0, cfg.jud).map(function(j){
+    var sum=0, best=null, worst=null;
+    AX.forEach(function(a){
+      var c=j.w[a.k]*axes[a.k]; sum+=c;
+      if(!best||c>best.c) best={k:a.k,c:c};
+    });
+    /* 가장 비중 큰 항목 중 점수가 가장 낮은 것 */
+    AX.forEach(function(a){ if(j.w[a.k]>=.15 && (!worst || axes[a.k]<axes[worst])) worst=a.k });
+    var score=r0(clamp(sum + j.off, 0, 100));
+    return {id:j.id, name:j.name, icon:j.icon, color:j.color, lens:j.lens, score:score, best:best.k, worst:worst||best.k};
+  });
+  var judgeAvg = r0(judges.reduce(function(s,j){return s+j.score},0)/judges.length);
+
+  /* --- 청중 시뮬레이션 --- */
+  var counts = ATYPES.map(function(t){return Math.round(cfg.aud*t.share)});
+  var diffN = cfg.aud - counts.reduce(function(a,b){return a+b},0); counts[0]+=diffN; if(counts[0]<0)counts[0]=0;
+  var segHard=[], segEv=[];
+  for(var m=0;m<M;m++){
+    var a0=r0(m/M*L), a1=r0((m+1)/M*L);
+    var seg=text.slice(a0,a1).split(/\s+/).filter(Boolean);
+    var hh=hardTokens(seg); segHard.push(seg.length? hh.hard/seg.length*100 : 0);
+    var b=0; ev.forEach(function(e){ if(e.i>=a0 && e.i<a1) b+=e.b });
+    segEv.push(Math.min(b,18));
+  }
+  var typeSeries = ATYPES.map(function(t){
+    var e=t.start, arr=[];
+    for(var m=0;m<M;m++){
+      e = e - t.d - t.h*segHard[m]*0.3 + t.b*segEv[m];
+      if(m===M-1 && outro) e+=5;
+      e = clamp(e, t.f, 100); arr.push(e);
+    }
+    return arr;
+  });
+  var total=cfg.aud;
+  var overall=[];
+  for(var m2=0;m2<M;m2++){
+    var s2=0; ATYPES.forEach(function(t,ti){ s2+=typeSeries[ti][m2]*counts[ti] });
+    overall.push(total? s2/total : 0);
+  }
+  var danger=[], run=[];
+  overall.forEach(function(v,i){ if(v<45){run.push(i)} else { if(run.length>=3) danger.push([run[0],run[run.length-1]+1]); run=[] } });
+  if(run.length>=3) danger.push([run[0],run[run.length-1]+1]);
+  var engageAvg = r0(overall.reduce(function(a,b){return a+b},0)/Math.max(overall.length,1));
+  var typeAvg = ATYPES.map(function(t,ti){return r0(typeSeries[ti].reduce(function(a,b){return a+b},0)/Math.max(M,1))});
+
+  var totalScore = r0(0.7*judgeAvg + 0.3*engageAvg);
+  return {
+    meta:{L:L, chars:chars, tokens:tokens.length, sents:sents.length, avgSent:r0(avgSent), speed:r0(speed), actualMin:actualMin, targetMin:targetMin, diff:Math.round(diff*10)/10,
+          qN:qN, cN:cN, pN:pN, rate:Math.round(rate*10)/10, gap:Math.round(gap*10)/10, hard:ht.hard, hardPer:Math.round(hardPer*10)/10, eng:ht.eng, terms:ht.terms,
+          exN:exN, intro:intro, outro:outro, riskN:rk.n, riskList:rk.found, softN:sf.n, selfAvg:Math.round(sa*10)/10},
+    axes:axes, judges:judges, judgeAvg:judgeAvg, counts:counts, overall:overall.map(function(v){return r0(v)}), M:M,
+    evMin:evMin, danger:danger, engageAvg:engageAvg, typeAvg:typeAvg, total:totalScore
+  };
+}
+
+/* ================= 문장 생성 ================= */
+var GOOD = {deliver:'말 속도와 문장 길이가 안정적이어서 듣기 편했습니다.', engage:'질문과 호명이 자주 들어가 참여를 잘 이끌었습니다.', level:'쉬운 말로 풀어 설명해 이해하기 좋았습니다.', struct:'시간 배분과 도입·마무리가 안정적이었습니다.', safe:'단정적인 표현을 피하고 안전하게 전달했습니다.', energy:'에너지와 화면 앞 태도가 좋았다고 평가했습니다.'};
+var BAD  = {deliver:'말이 너무 빠르거나 문장이 길어 따라가기 힘든 구간이 있었습니다.', engage:'참여를 이끄는 장치가 적거나 간격이 길었습니다.', level:'어려운 말이나 외래어가 많아 풀어 설명할 필요가 있습니다.', struct:'시간 초과·부족이나 도입·마무리가 약했습니다.', safe:'단정적이거나 의학적으로 오해될 표현이 보였습니다.', energy:'목소리 힘이나 화면 앞 태도가 아쉬웠다고 느꼈습니다.'};
+function lv(s){return s>=85?'강점':s>=70?'양호':s>=55?'보완 필요':'집중 보완'}
+function eun(w){var c=w.charCodeAt(w.length-1);return (c>=0xAC00&&c<=0xD7A3&&(c-0xAC00)%28!==0)?'은':'는'}
+function axisName(k){return AX.filter(function(a){return a.k===k})[0].name}
+function axisColor(k){return AX.filter(function(a){return a.k===k})[0].color}
+
+function analysisText(r){
+  var m=r.meta, a=r.axes, T={};
+  var sp = m.speed<220?'다소 느림':(m.speed>320?'다소 빠름':'적정');
+  T.deliver = '말 속도는 분당 '+m.speed+'글자('+sp+', 연습 기준 220~320), 한 문장 평균 '+m.avgSent+'글자입니다. '+(a.deliver>=70?'듣기 편한 속도입니다.':'속도와 문장 길이를 조정하면 점수가 크게 오릅니다.');
+  T.engage  = '10분당 참여 장치 '+m.rate+'회(질문 '+m.qN+'·호명 '+m.cN+'·참여 유도 문구 '+m.pN+')이고, 장치 사이 가장 긴 공백은 '+m.gap+'분입니다. '+(m.gap>7?'7분을 넘는 공백이 있어 청중이 지루해질 수 있습니다.':'공백이 길지 않아 흐름이 유지됩니다.');
+  var tk=Object.keys(m.terms).slice(0,5).join(', ');
+  T.level   = '어려운 말 후보 '+m.hard+'개(100어절당 '+m.hardPer+'), 영문·외래어 '+m.eng+'개'+(tk?' (예: '+tk+')':'')+'. '+(m.exN? '쉬운 예시 표현이 '+m.exN+'번 있어 좋습니다.' : '"예를 들어" 같은 쉬운 예시가 없습니다.');
+  T.struct  = '목표 '+m.targetMin+'분, 실제 '+m.actualMin+'분(차이 '+(m.diff>0?'+':'')+m.diff+'%). 도입 '+(m.intro?'확인됨':'약함')+', 마무리 '+(m.outro?'확인됨':'약함')+'.';
+  T.safe    = '주의 표현 '+m.riskN+'건'+(m.riskList.length?' ('+m.riskList.join(', ')+')':'')+', 완화 표현("~일 수 있어요" 등) '+m.softN+'건입니다.';
+  T.energy  = '자가평가 평균 '+m.selfAvg+'점(5점 만점)입니다. 이 항목은 앱이 측정할 수 없어 소장님 자가평가만 반영했습니다.';
+  return T;
+}
+var TIPS = {
+  deliver:['한 문장은 40글자 안쪽으로 끊어 말합니다.','핵심 단어 앞에서 한 박자 쉽니다.','분당 220~320글자를 목표로 속도를 맞춥니다.'],
+  engage:['4박자(질문→선택→결과 한 줄→이유 묻기)를 5분 안에 한 번 넣습니다.','이름을 불러 한 분씩 묻는 장면을 매 10분마다 만듭니다.','반응이 없으면 "채팅에 글자 하나만" 같은 가벼운 요청을 씁니다.'],
+  level:['전문 용어는 처음 나올 때 한 문장으로 풀어 줍니다.','"예를 들어"로 일상 사례를 먼저 말합니다.','영문·외래어는 우리말로 바꾸거나 한 번만 씁니다.'],
+  struct:['도입 인사와 오늘의 목표를 첫 2분 안에 말합니다.','마무리에 "오늘 정리하면" 한 문장을 꼭 넣습니다.','시간표(도입·체험·설명·참여·마무리)대로 타이머를 맞춥니다.'],
+  safe:['"치료·예방·진단" 같은 단어는 "재미로 보는 자기이해"로 바꿉니다.','결과는 "~한 편일 수 있어요"로 끝냅니다.','처음과 끝에 "의학적 진단이 아닙니다"를 말합니다.'],
+  energy:['서서 말하고 카메라를 눈높이에 둡니다.','첫 문장은 평소보다 한 톤 높여 시작합니다.','화면 속 얼굴 한 명을 정해 그 사람에게 말합니다.']
+};
+var DRILL = {
+  deliver:'매일 3분: 대본 한 단락을 소리 내어 읽고 문장마다 끊어 쉬는 연습 (1주)',
+  engage:'매일 5분: 4박자 한 바퀴를 말로 돌려 보기. 질문 문장 3개를 미리 외워 두기 (1주)',
+  level:'매일 3분: 어려운 말 5개를 골라 "초등학생도 아는 말"로 한 문장씩 바꿔 쓰기 (1주)',
+  struct:'격일 10분: 도입 2분·마무리 2분만 따로 반복 녹음하고 시간 재기 (1주)',
+  safe:'매일 2분: 위험 표현 목록을 안전 표현으로 바꿔 말하는 카드 만들기 (1주)',
+  energy:'매일 3분: 서서 폰 카메라 앞에서 첫 30초만 반복하고 가장 마음에 드는 버전 남기기 (1주)'
+};
+
+/* ================= SVG 그림 ================= */
+function sceneDeco(id,w,h){
+  var s='';
+  if(id==='hall'){ s+='<rect x="0" y="0" width="'+w*.14+'" height="'+h*.78+'" fill="#B00020"/><rect x="'+w*.86+'" y="0" width="'+w*.14+'" height="'+h*.78+'" fill="#B00020"/><rect x="0" y="'+h*.78+'" width="'+w+'" height="'+h*.22+'" fill="#8B5A2B"/><rect x="'+w*.36+'" y="'+h*.28+'" width="'+w*.28+'" height="'+h*.1+'" rx="6" fill="#fff" opacity=".9"/>'; }
+  if(id==='living'){ s+='<rect x="'+w*.08+'" y="'+h*.5+'" width="'+w*.5+'" height="'+h*.3+'" rx="14" fill="#8E1F6B"/><rect x="'+w*.62+'" y="'+h*.12+'" width="'+w*.28+'" height="'+h*.32+'" rx="6" fill="#fff"/><circle cx="'+w*.76+'" cy="'+h*.28+'" r="'+h*.1+'" fill="#FFC400"/><rect x="0" y="'+h*.82+'" width="'+w+'" height="'+h*.18+'" fill="#C2185B" opacity=".6"/>'; }
+  if(id==='class'){ s+='<rect x="'+w*.1+'" y="'+h*.1+'" width="'+w*.8+'" height="'+h*.48+'" rx="8" fill="#0B5D2A" stroke="#C69C6D" stroke-width="5"/><path d="M'+w*.18+' '+h*.28+' h'+w*.4+' M'+w*.18+' '+h*.4+' h'+w*.55+'" stroke="#fff" stroke-width="4" stroke-linecap="round"/><rect x="0" y="'+h*.84+'" width="'+w+'" height="'+h*.16+'" fill="#8B5A2B"/>'; }
+  if(id==='cafe'){ s+='<rect x="'+w*.08+'" y="'+h*.1+'" width="'+w*.4+'" height="'+h*.45+'" rx="6" fill="#fff" opacity=".85"/><path d="M'+w*.28+' '+h*.1+' v'+h*.45+' M'+w*.08+' '+h*.32+' h'+w*.4+'" stroke="#8A4B00" stroke-width="5"/><circle cx="'+w*.72+'" cy="'+h*.62+'" r="'+h*.12+'" fill="#6B3300"/><circle cx="'+w*.72+'" cy="'+h*.62+'" r="'+h*.08+'" fill="#FFE2B5"/><rect x="0" y="'+h*.84+'" width="'+w+'" height="'+h*.16+'" fill="#6B3300"/>'; }
+  if(id==='studio'){ s+='<polygon points="'+w*.2+',0 '+w*.05+','+h*.8+' '+w*.38+','+h*.8+'" fill="#fff" opacity=".35"/><polygon points="'+w*.8+',0 '+w*.62+','+h*.8+' '+w*.95+','+h*.8+'" fill="#fff" opacity=".35"/><rect x="0" y="'+h*.8+'" width="'+w+'" height="'+h*.2+'" fill="#2B0B5C"/><circle cx="'+w*.5+'" cy="'+h*.3+'" r="'+h*.11+'" fill="#FFD000"/>'; }
+  if(id==='garden'){ s+='<circle cx="'+w*.82+'" cy="'+h*.2+'" r="'+h*.12+'" fill="#FFC400"/><ellipse cx="'+w*.25+'" cy="'+h*.9+'" rx="'+w*.4+'" ry="'+h*.32+'" fill="#00A33B"/><ellipse cx="'+w*.8+'" cy="'+h*.95+'" rx="'+w*.4+'" ry="'+h*.3+'" fill="#007A2D"/><rect x="'+w*.2+'" y="'+h*.42+'" width="'+w*.04+'" height="'+h*.3+'" fill="#7A4B1F"/><circle cx="'+w*.22+'" cy="'+h*.36+'" r="'+h*.16+'" fill="#00C853"/>'; }
+  return s;
+}
+function placeThumb(p){
+  var w=240,h=130;
+  return '<svg viewBox="0 0 '+w+' '+h+'" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="g'+p.id+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="'+p.c1+'"/><stop offset="1" stop-color="'+p.c2+'"/></linearGradient></defs><rect width="'+w+'" height="'+h+'" fill="url(#g'+p.id+')"/>'+sceneDeco(p.id,w,h)+'</svg>';
+}
+function stageSvg(){
+  var p=PLACES.filter(function(x){return x.id===S.place})[0];
+  var w=360, h=250, sceneH=130;
+  var s='<svg viewBox="0 0 '+w+' '+h+'" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="gs" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="'+p.c1+'"/><stop offset="1" stop-color="'+p.c2+'"/></linearGradient></defs>';
+  s+='<rect width="'+w+'" height="'+h+'" fill="#fff"/>';
+  s+='<svg x="0" y="0" width="'+w+'" height="'+sceneH+'" viewBox="0 0 '+w+' '+sceneH+'"><rect width="'+w+'" height="'+sceneH+'" fill="url(#gs)"/>'+sceneDeco(p.id,w,sceneH)+'</svg>';
+  /* 강사 */
+  s+='<circle cx="'+w/2+'" cy="'+(sceneH-52)+'" r="13" fill="#111"/><rect x="'+(w/2-16)+'" y="'+(sceneH-38)+'" width="32" height="38" rx="10" fill="#E10600"/><text x="'+w/2+'" y="'+(sceneH-72)+'" font-size="12" font-weight="900" text-anchor="middle" fill="#111">강사</text>';
+  /* 심사위원 */
+  var js=JUDGES.slice(0,S.jud), gap=w/(js.length+1);
+  s+='<rect x="8" y="'+(sceneH+4)+'" width="'+(w-16)+'" height="42" rx="12" fill="#111"/>';
+  js.forEach(function(j,i){
+    var cx=gap*(i+1);
+    s+='<circle cx="'+cx+'" cy="'+(sceneH+25)+'" r="16" fill="'+j.color+'" stroke="#fff" stroke-width="3"/><text x="'+cx+'" y="'+(sceneH+31)+'" font-size="16" text-anchor="middle">'+j.icon+'</text>';
+  });
+  /* 청중 */
+  var counts=ATYPES.map(function(t){return Math.round(S.aud*t.share)}); var d=S.aud-counts.reduce(function(a,b){return a+b},0); counts[0]+=d;
+  var seq=[]; ATYPES.forEach(function(t,i){for(var k=0;k<counts[i];k++)seq.push(t.color)});
+  var perRow=Math.min(10,Math.ceil(S.aud/ (S.aud>20?3:2)));
+  var rows=Math.ceil(seq.length/perRow), y0=sceneH+66, rh=(h-y0-6)/Math.max(rows,1);
+  var r=Math.min(11, rh/2.2, (w-24)/perRow/2.3);
+  seq.forEach(function(c,i){
+    var row=Math.floor(i/perRow), col=i%perRow, inRow=Math.min(perRow, seq.length-row*perRow);
+    var cx=w/2 + (col-(inRow-1)/2)*((w-30)/perRow), cy=y0+row*rh+rh/2;
+    s+='<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="'+c+'"/><rect x="'+(cx-r*.8)+'" y="'+(cy+r*.8)+'" width="'+(r*1.6)+'" height="'+(r*.7)+'" rx="3" fill="'+c+'" opacity=".6"/>';
+  });
+  s+='</svg>';
+  return s;
+}
+
+function radarSvg(axes, prevAxes, list){
+  var AXL=list||AX;
+  var cx=230, cy=170, R=100, n=AXL.length;
+  function pt(i,v){var a=-Math.PI/2+i*2*Math.PI/n; return [cx+Math.cos(a)*R*v/100, cy+Math.sin(a)*R*v/100]}
+  var s='<svg viewBox="0 0 460 340" xmlns="http://www.w3.org/2000/svg" font-family="inherit">';
+  [20,40,60,80,100].forEach(function(v){
+    var p=AXL.map(function(a,i){return pt(i,v).join(',')}).join(' ');
+    s+='<polygon points="'+p+'" fill="'+(v===100?'#FAF5FF':'none')+'" stroke="#BBB" stroke-width="'+(v===100?2:1)+'"/>';
+  });
+  AXL.forEach(function(a,i){var p=pt(i,100); s+='<line x1="'+cx+'" y1="'+cy+'" x2="'+p[0]+'" y2="'+p[1]+'" stroke="#CCC" stroke-width="1.5"/>'});
+  if(prevAxes){
+    var pp=AXL.map(function(a,i){return pt(i,prevAxes[a.k]).join(',')}).join(' ');
+    s+='<polygon points="'+pp+'" fill="none" stroke="#666" stroke-width="2.5" stroke-dasharray="6 5"/>';
+  }
+  var poly=AXL.map(function(a,i){return pt(i,axes[a.k]).join(',')}).join(' ');
+  s+='<polygon points="'+poly+'" fill="rgba(123,31,224,.30)" stroke="#7B1FE0" stroke-width="4" stroke-linejoin="round"/>';
+  AXL.forEach(function(a,i){
+    var p=pt(i,axes[a.k]);
+    s+='<circle cx="'+p[0]+'" cy="'+p[1]+'" r="7" fill="'+a.color+'" stroke="#fff" stroke-width="2.5"/>';
+    var lp=pt(i,100), ang=-Math.PI/2+i*2*Math.PI/n, lx=cx+Math.cos(ang)*(R+26), ly=cy+Math.sin(ang)*(R+22);
+    var anchor=Math.abs(Math.cos(ang))<.25?'middle':(Math.cos(ang)>0?'start':'end');
+    if(anchor==='start')lx=cx+Math.cos(ang)*(R+12); if(anchor==='end')lx=cx+Math.cos(ang)*(R+12);
+    s+='<text x="'+lx+'" y="'+ly+'" font-size="19" font-weight="900" text-anchor="'+anchor+'" fill="'+a.color+'">'+a.name+'</text>';
+    s+='<text x="'+lx+'" y="'+(ly+21)+'" font-size="19" font-weight="900" text-anchor="'+anchor+'" fill="#111">'+axes[a.k]+'</text>';
+  });
+  s+='</svg>';
+  return s;
+}
+function barRows(items){ /* [{name,color,val,tag}] */
+  return items.map(function(it){
+    return '<div style="margin:10px 0"><div style="display:flex;justify-content:space-between;gap:8px;font-weight:900;line-height:1.5"><span style="color:'+it.color+'">'+esc(it.name)+'</span><span>'+it.val+'점'+(it.tag?' · '+esc(it.tag):'')+'</span></div><div class="bar"><i style="width:'+it.val+'%;background:'+it.color+'"></i></div></div>';
+  }).join('');
+}
+function lineSvg(r){
+  var w=340,h=190,pl=34,pr=10,pt=12,pb=34, M=r.M;
+  var pw=w-pl-pr, ph=h-pt-pb;
+  function X(m){return pl+(M<=1?0:m/(M-1))*pw}
+  function Y(v){return pt+ph*(1-v/100)}
+  var s='<svg viewBox="0 0 '+w+' '+h+'" xmlns="http://www.w3.org/2000/svg" font-family="inherit">';
+  [0,25,50,75,100].forEach(function(v){
+    s+='<line x1="'+pl+'" y1="'+Y(v)+'" x2="'+(w-pr)+'" y2="'+Y(v)+'" stroke="#DDD" stroke-width="1.5"/><text x="'+(pl-6)+'" y="'+(Y(v)+4)+'" font-size="11" font-weight="800" text-anchor="end" fill="#333">'+v+'</text>';
+  });
+  r.danger.forEach(function(d){
+    var x1=X(d[0]), x2=X(Math.max(d[1]-1,d[0]));
+    s+='<rect x="'+x1+'" y="'+pt+'" width="'+Math.max(x2-x1,6)+'" height="'+ph+'" fill="#E10600" opacity=".16"/>';
+  });
+  s+='<line x1="'+pl+'" y1="'+Y(45)+'" x2="'+(w-pr)+'" y2="'+Y(45)+'" stroke="#E10600" stroke-width="2" stroke-dasharray="6 5"/><text x="'+(w-pr)+'" y="'+(Y(45)-4)+'" font-size="11" font-weight="900" text-anchor="end" fill="#E10600">이탈 위험선 45</text>';
+  var pts=r.overall.map(function(v,i){return X(i)+','+Y(v)}).join(' ');
+  var area=X(0)+','+Y(0)+' '+pts+' '+X(M-1)+','+Y(0);
+  s+='<polygon points="'+area+'" fill="rgba(0,102,255,.14)"/><polyline points="'+pts+'" fill="none" stroke="#0066FF" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>';
+  var step=M<=12?1:(M<=30?5:10);
+  for(var m=0;m<M;m+=step){ s+='<text x="'+X(m)+'" y="'+(h-pb+16)+'" font-size="11" font-weight="800" text-anchor="middle" fill="#333">'+(m+1)+'</text>' }
+  s+='<text x="'+(pl+pw/2)+'" y="'+(h-4)+'" font-size="11" font-weight="900" text-anchor="middle" fill="#111">강의 진행 시간(분)</text>';
+  var col={q:'#E10600', c:'#00A33B', p:'#FF6A00'};
+  r.evMin.forEach(function(e){
+    var m=Math.min(e.m/(r.meta.actualMin||1)*(M-1), M-1), x=X(m);
+    s+='<polygon points="'+(x-4)+','+(pt+ph)+' '+(x+4)+','+(pt+ph)+' '+x+','+(pt+ph-8)+'" fill="'+col[e.t]+'" opacity=".85"/>';
+  });
+  s+='</svg>';
+  return s;
+}
+
+/* ================= 렌더 ================= */
+function chipRow(id, opts, cur, unit, onPick){
+  var el=$(id); el.innerHTML='';
+  opts.forEach(function(v){
+    var b=document.createElement('button'); b.type='button'; b.className='chip'+(v===cur?' on':''); b.textContent=v+unit;
+    b.onclick=function(){onPick(v)}; el.appendChild(b);
+  });
+}
+function planBlocks(min){
+  var P=[['도입',.11],['체험',.28],['설명',.28],['참여',.22],['마무리',.11]];
+  var mins=P.map(function(p){return Math.round(p[1]*min*10)/10});
+  var sum=mins.reduce(function(a,b){return a+b},0); mins[4]=Math.round((mins[4]+(min-sum))*10)/10;
+  var loops=Math.max(1,Math.round(mins[1]/6));
+  var slides=[
+    ['인사 · 오늘의 목표','오늘 체험할 것 미리보기'],
+    (function(){var a=[];for(var i=1;i<=loops;i++)a.push('체험 '+i+': 질문 → 선택 → 결과 한 줄 → 이유 묻기');return a})(),
+    ['핵심 메시지 3가지','쉬운 예시 ("예를 들어")'],
+    ['한 분께 이유 묻기','소감 한 줄 나누기'],
+    ['오늘의 정리','다음 만남 안내 · 안전 문구']
+  ];
+  return P.map(function(p,i){return {name:p[0], min:mins[i], slides:slides[i]}});
+}
+function renderPlan(){
+  var b=planBlocks(S.min), t=0, html='<table class="plan"><tr><th>구간</th><th>PPT 내용</th></tr>';
+  b.forEach(function(x){
+    html+='<tr><td><b>'+x.name+'</b><br>'+x.min+'분</td><td>'+x.slides.map(esc).join('<br>')+'</td></tr>';
+  });
+  $('plan').innerHTML=html+'</table>';
+}
+function planText(){
+  var b=planBlocks(S.min);
+  return '[강의 구성안 · '+S.min+'분]\n'+b.map(function(x){return '■ '+x.name+' ('+x.min+'분)\n'+x.slides.map(function(s){return '  - '+s}).join('\n')}).join('\n');
+}
+function renderS1(){
+  chipRow('chAud',AUD_OPTS,S.aud,'명',function(v){S.aud=v;renderS1();save()});
+  chipRow('chJud',JUD_OPTS,S.jud,'명',function(v){S.jud=v;renderS1();save()});
+  chipRow('chMin',MIN_OPTS,S.min,'분',function(v){S.min=v;$('inMin').value=v;$('tgtShow').textContent=v+'분';$('recTgt').textContent=v+'분';if(!REC.on)$('recClock').textContent=fmtClock(v*60);renderS1();save()});
+  $('jlegend').innerHTML=JUDGES.slice(0,S.jud).map(function(j){return '<span><i style="background:'+j.color+'"></i>'+j.icon+' '+esc(j.name)+'</span>'}).join('');
+  $('alegend').innerHTML=ATYPES.map(function(t){return '<span><i style="background:'+t.color+'"></i>'+t.name+'</span>'}).join('')+'<span><i style="background:#111"></i>심사 테이블</span>';
+  var pl=$('places'); pl.innerHTML='';
+  PLACES.forEach(function(p){
+    var b=document.createElement('button'); b.type='button'; b.className='place'+(p.id===S.place?' on':'');
+    b.innerHTML=placeThumb(p)+'<span>'+p.name+'</span>'; b.onclick=function(){S.place=p.id;renderS1();save()}; pl.appendChild(b);
+  });
+  $('stage').innerHTML=stageSvg();
+  $('tgtShow').textContent=S.min+'분'; $('recTgt').textContent=S.min+'분'; $('recClock').textContent=fmtClock(S.min*60);
+  renderPlan();
+}
+function renderSelfs(){
+  var el=$('selfs'); el.innerHTML='';
+  SELFS.forEach(function(s){
+    var row=document.createElement('div'); row.className='rate';
+    var b=document.createElement('b'); b.textContent=s.t; row.appendChild(b);
+    var ch=document.createElement('div'); ch.className='chips';
+    [1,2,3,4,5].forEach(function(v){
+      var c=document.createElement('button'); c.type='button'; c.className='chip'+(S.selfs[s.k]===v?' on':''); c.textContent=v;
+      c.onclick=function(){S.selfs[s.k]=v;renderSelfs();save()}; ch.appendChild(c);
+    });
+    row.appendChild(ch); el.appendChild(row);
+  });
+}
+function updateTxInfo(){
+  var t=$('inText').value, n=t.replace(/\s/g,'').length, min=parseFloat($('inMin').value)||0;
+  var sp=min>0? Math.round(n/min):0;
+  var msg='글자 수: '+n.toLocaleString()+'자 · 예상 말 속도: 분당 '+sp+'글자';
+  var el=$('txInfo'); el.textContent=msg;
+  if(n<300){el.textContent+=' · 글이 짧아 분석 정확도가 낮습니다.'}
+  el.className='info warn';
+}
+
+/* ===================== 표정 분석 모듈 (폰 안에서만 처리, 영상 저장·전송 없음) ===================== */
+var MP_VER='0.10.14';
+var MP_URL='https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@'+MP_VER;
+var MP_MODEL='https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task';
+var FAX=[
+  {k:'vis',  name:'화면 유지',color:'#0066FF',w:15},
+  {k:'gaze', name:'카메라 응시',color:'#E10600',w:25},
+  {k:'expr', name:'표정 변화',color:'#E6007E',w:25},
+  {k:'smile',name:'미소',color:'#FF6A00',w:15},
+  {k:'move', name:'고개 움직임',color:'#00A33B',w:20}
+];
+var FTIPS={
+  vis:['폰을 눈높이에 세우고 얼굴이 화면 중앙 위쪽에 오게 합니다.','강의 중 얼굴이 화면 밖으로 나가지 않게 앉은 자세를 고정합니다.','뒤에서 비추는 빛(창문)을 피하고 얼굴 앞쪽에 조명을 둡니다.'],
+  gaze:['말할 때 카메라 렌즈를 보고, 화면 속 청중 얼굴은 질문 들을 때만 봅니다.','대본은 폰 위쪽(렌즈 가까이)에 두고 읽습니다.','핵심 문장은 렌즈를 3초 동안 보며 말합니다.'],
+  expr:['중요한 단어에서 눈썹을 올려 강조합니다.','질문할 때는 눈썹을 올리고, 설명할 때는 편안한 표정을 유지합니다.','거울 앞에서 3분 동안 문장마다 표정을 바꿔 연습합니다.'],
+  smile:['첫 인사와 마무리 인사에서 입꼬리를 올립니다.','참여자 이름을 부를 때 미소를 함께 보냅니다.','웃기 어려우면 말하기 직전에 "이"를 소리 없이 발음해 입꼬리를 올립니다.'],
+  move:['고개를 너무 고정하지 말고, 강조할 때 가볍게 끄덕입니다.','반대로 흔들림이 크면 의자에 등을 붙이고 폰을 고정합니다.','손동작은 어깨 안쪽 범위에서 크게 쓰고 고개는 천천히 움직입니다.']
+};
+var FDRILL={
+  vis:'매일 2분, 폰을 세워 놓고 얼굴이 화면 안에 있는지 확인하며 자기소개 (1주)',
+  gaze:'매일 3분, 렌즈만 보며 대본 한 단락을 말하고 녹화해 시선 확인 (1주)',
+  expr:'매일 3분, 같은 문장을 놀람·기쁨·진지함으로 세 번 말하고 표정 비교 (1주)',
+  smile:'매일 2분, 인사말을 웃는 얼굴로 5번 반복해 말하기 (1주)',
+  move:'매일 3분, 강조 문장마다 가볍게 끄덕이며 말하는 연습 (1주)'
+};
+var FACE={lm:null, loading:null, fail:'', samples:[], on:false};
+function loadFaceModel(){
+  if(FACE.lm) return Promise.resolve(FACE.lm);
+  if(FACE.loading) return FACE.loading;
+  FACE.loading=(async function(){
+    try{
+      var mod=await import(MP_URL+'/vision_bundle.mjs');
+      var fs=await mod.FilesetResolver.forVisionTasks(MP_URL+'/wasm');
+      var mk=function(del){ return mod.FaceLandmarker.createFromOptions(fs,{baseOptions:{modelAssetPath:MP_MODEL,delegate:del},runningMode:'VIDEO',numFaces:1,outputFaceBlendshapes:true}) };
+      try{ FACE.lm=await mk('GPU') }catch(e){ FACE.lm=await mk('CPU') }
+      FACE.fail=''; return FACE.lm;
+    }catch(e){ FACE.fail=String(e&&e.message||e); FACE.loading=null; return null }
+  })();
+  return FACE.loading;
+}
+function faceSample(res){
+  var bs=res&&res.faceBlendshapes&&res.faceBlendshapes[0], lms=res&&res.faceLandmarks&&res.faceLandmarks[0];
+  if(!bs||!lms) return {ok:0};
+  var b={}; bs.categories.forEach(function(c){b[c.categoryName]=c.score});
+  function g(k){return b[k]||0}
+  var smile=(g('mouthSmileLeft')+g('mouthSmileRight'))/2;
+  var brow=(g('browInnerUp')+(g('browOuterUpLeft')+g('browOuterUpRight'))/2)/2;
+  var jaw=g('jawOpen');
+  var h=Math.abs((g('eyeLookOutLeft')+g('eyeLookInRight'))-(g('eyeLookInLeft')+g('eyeLookOutRight')))/2;
+  var v=Math.abs((g('eyeLookUpLeft')+g('eyeLookUpRight'))-(g('eyeLookDownLeft')+g('eyeLookDownRight')))/2;
+  var L=lms[234], R=lms[454], N=lms[1], fw=Math.abs(R.x-L.x)||0.001;
+  var yaw=(N.x-(L.x+R.x)/2)/fw;
+  return {ok:1, smile:smile, brow:brow, jaw:jaw, dev:Math.max(h,v), yaw:yaw, nx:N.x/fw, ny:N.y/fw, cam:(Math.max(h,v)<0.35&&Math.abs(yaw)<0.18)?1:0};
+}
+/* samples: [{ok,...}], stepSec: 표본 간격(초) */
+function faceAnalyze(samples, stepSec){
+  var n=samples.length;
+  if(n<10) return {error:'표정 분석에 필요한 영상이 부족합니다 (2초 이상 필요).'};
+  var ok=samples.filter(function(s){return s.ok}), visible=ok.length/n;
+  var axes={}, notes={}, why={};
+  axes.vis=r0(lerp([[0.3,10],[0.7,55],[0.9,90],[0.97,100]],visible));
+  notes.vis='얼굴이 화면 안에서 인식된 시간이 '+r0(visible*100)+'%입니다(연습 기준 90% 이상).';
+  if(ok.length<Math.max(8,n*0.2)){
+    ['gaze','expr','smile','move'].forEach(function(k){axes[k]=null; why[k]='얼굴이 충분히 인식되지 않았습니다. 밝은 곳에서 폰을 눈높이에 세워 다시 시도하세요.'});
+  } else {
+    var cam=ok.filter(function(s){return s.cam}).length/ok.length;
+    axes.gaze=r0(lerp([[0.2,15],[0.5,55],[0.7,85],[0.85,100]],cam));
+    notes.gaze='카메라 쪽을 본 시간이 '+r0(cam*100)+'%입니다(눈동자 방향과 고개 방향으로 추정, 연습 기준 70% 이상).';
+    var sm=ok.map(function(s){return s.smile}), br=ok.map(function(s){return s.brow});
+    var smRate=sm.filter(function(x){return x>0.25}).length/ok.length;
+    axes.smile=r0(lerp([[0.02,25],[0.1,60],[0.25,90],[0.4,100],[0.8,85],[1,60]],smRate));
+    notes.smile='미소 짓는 시간이 '+r0(smRate*100)+'%입니다(연습 기준 25~60%). '+(smRate<0.1?'인사와 마무리에서 웃는 얼굴을 더 보여 주세요.':'');
+    var e1=lerp([[0.02,30],[0.08,70],[0.2,100]],sd(sm)), e2=lerp([[0.02,30],[0.06,70],[0.15,100]],sd(br));
+    axes.expr=r0((e1+e2)/2);
+    notes.expr='웃음과 눈썹의 움직임이 시간에 따라 얼마나 달라졌는지 본 값입니다. 속마음이 아니라 청중에게 보이는 표정 변화의 크기입니다.';
+    var nx=ok.map(function(s){return s.nx}), ny=ok.map(function(s){return s.ny}), mv=Math.sqrt(Math.pow(sd(nx),2)+Math.pow(sd(ny),2));
+    axes.move=r0(lerp([[0.005,40],[0.03,85],[0.05,100],[0.15,100],[0.3,60],[0.5,40]],mv));
+    notes.move='고개와 얼굴 위치의 움직임 폭이 '+(Math.round(mv*1000)/1000)+'입니다(얼굴 너비 대비). '+(mv<0.03?'너무 굳어 있을 수 있습니다.':mv>0.15?'움직임이 커서 화면이 흔들려 보일 수 있습니다.':'자연스러운 범위입니다.');
+  }
+  var tw=0, ts=0; FAX.forEach(function(a){ if(axes[a.k]!==null&&axes[a.k]!==undefined){tw+=a.w; ts+=a.w*axes[a.k]} });
+  var w=Math.max(1,Math.round(5/stepSec)), sg=[], ss=[];
+  for(var s=0;s<n;s+=w){ var seg=samples.slice(s,s+w), o=seg.filter(function(x){return x.ok});
+    sg.push(o.length>=Math.max(2,seg.length*0.3)? 100*o.filter(function(x){return x.cam}).length/o.length : null);
+    ss.push(o.length>=Math.max(2,seg.length*0.3)? 100*mean(o.map(function(x){return x.smile})) : null); }
+  var expAxes=[axes.expr,axes.smile].filter(function(x){return x!==null&&x!==undefined});
+  return {axes:axes, notes:notes, why:why, score:tw?r0(ts/tw):0, lively:expAxes.length?r0(mean(expAxes)):null, series:{gaze:sg, smile:ss, sec:5}, info:{visible:visible, n:n}};
+}
+function faceCards(F){
+  var h='', list=FAX.filter(function(a){return F.axes[a.k]!==null&&F.axes[a.k]!==undefined});
+  h+='<div class="card" style="--c:var(--pink)"><h3>🎥 표정 분석 레이더</h3>';
+  h+='<p class="hint" style="margin-bottom:6px">청중에게 보이는 <b>무대 표현</b>(웃음·눈썹·시선·고개)을 폰 안에서 분석한 값입니다. 영상은 저장하거나 보내지 않습니다. 강사는 필요한 만큼 표현을 연기하는 직업이므로, 이 점수는 속마음이 아니라 <b>청중에게 전달되는 표현의 풍부함</b>을 훈련하는 도구입니다. 사람의 성격이나 진심을 판정하지 않습니다.</p>';
+  if(F.lively!==null) h+='<p style="margin:6px 0;font-weight:900;font-size:19px;line-height:1.7">무대 표정 활기도 <span style="color:var(--pink);font-size:28px">'+F.lively+'</span>점</p>';
+  h+='<div class="svgbox">'+(list.length>=3? radarSvg(F.axes,null,list): '<p class="hint">측정된 항목이 3개 미만이라 레이더를 그리지 못했습니다.</p>')+'</div>';
+  h+=barRows(FAX.map(function(a){ var v=F.axes[a.k]; return {name:a.name, color:a.color, val:(v===null||v===undefined)?0:v, tag:(v===null||v===undefined)?'측정 안 됨':lv(v)} }));
+  h+='</div>';
+  h+='<div class="card" style="--c:var(--red)"><h3>카메라 응시 비율 (5초마다)</h3><div class="svgbox">'+curveSvg(F.series.gaze,'#E10600','시간 경과 · 카메라를 본 비율(%)',0,100,F.series.sec)+'</div></div>';
+  h+='<div class="card" style="--c:var(--orange)"><h3>미소 정도 (5초마다)</h3><div class="svgbox">'+curveSvg(F.series.smile,'#FF6A00','시간 경과 · 미소 세기(0~100)',0,100,F.series.sec)+'</div></div>';
+  h+='<div class="card" style="--c:var(--pink)"><h3>표정 항목별 분석</h3><ul class="an">';
+  FAX.forEach(function(a){ var v=F.axes[a.k]; h+='<li style="--c:'+a.color+'"><b>'+a.name+' · '+((v===null||v===undefined)?'측정 안 됨':v+'점('+lv(v)+')')+'</b><br>'+((v===null||v===undefined)?F.why[a.k]:F.notes[a.k])+'</li>' });
+  h+='</ul></div>';
+  var weak=FAX.filter(function(a){return F.axes[a.k]!==null&&F.axes[a.k]!==undefined&&F.axes[a.k]<85}).sort(function(a,b){return F.axes[a.k]-F.axes[b.k]}).slice(0,2);
+  h+='<div class="card" style="--c:var(--green)"><h3>표정 개선책과 훈련법</h3>';
+  if(weak.length){ weak.forEach(function(a,i){ h+='<p style="margin:8px 0 0;color:'+a.color+';font-weight:900">'+(i+1)+'순위 · '+a.name+' ('+F.axes[a.k]+'점)</p><ol class="ol" style="--c:'+a.color+'">'+FTIPS[a.k].map(function(t){return '<li>'+t+'</li>'}).join('')+'</ol><p style="margin:4px 0 0;font-weight:800;line-height:1.8"><span style="color:'+a.color+'">훈련</span> — '+FDRILL[a.k]+'</p>' }) }
+  else h+='<p class="verdict">측정된 표정 항목이 모두 85점 이상입니다. 지금 방식을 유지하세요.</p>';
+  h+='</div>';
+  return h;
+}
+/* 녹화 중 표본 수집 (200ms 간격) */
+async function startFace(){
+  FACE.samples=[]; FACE.on=false; $('recVid').style.display='none';
+  if(!$('recUseCam').checked) return;
+  if(!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia)){ FACE.msg='이 화면에서는 카메라를 쓸 수 없습니다.'; return }
+  recMsg('표정 분석 도구를 불러오는 중입니다 (처음 한 번, 인터넷 필요)…','warn');
+  var lm=await loadFaceModel();
+  if(!lm){ FACE.msg='표정 분석 도구를 불러오지 못했습니다(인터넷 확인). 음성 분석만 진행합니다.'; return }
+  try{ FACE.stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user',width:{ideal:480},height:{ideal:360}},audio:false}) }
+  catch(e){ FACE.msg='카메라를 쓸 수 없습니다('+(e&&e.name||'오류')+'). 음성 분석만 진행합니다.'; return }
+  var v=$('recVid'); v.srcObject=FACE.stream; v.style.display='block'; try{ await v.play() }catch(e){}
+  FACE.on=true; FACE.t0=performance.now(); FACE.last=-1;
+  FACE.iv=setInterval(function(){
+    if(!FACE.on||v.readyState<2) return;
+    try{ var res=lm.detectForVideo(v, performance.now()); FACE.samples.push(faceSample(res)) }catch(e){ FACE.samples.push({ok:0}) }
+  },200);
+}
+function stopFace(){
+  if(!FACE.on&&!FACE.stream) return;
+  FACE.on=false; clearInterval(FACE.iv);
+  try{ FACE.stream&&FACE.stream.getTracks().forEach(function(t){t.stop()}) }catch(e){}
+  FACE.stream=null; $('recVid').style.display='none'; $('recVid').srcObject=null;
+}
+
+/* ===================== 음성 분석 모듈 ===================== */
+var VAX=[
+  {k:'pron',name:'발음 명료',color:'#0066FF',w:20},
+  {k:'dyn', name:'강약 조절',color:'#E10600',w:20},
+  {k:'into',name:'억양 변화',color:'#00A33B',w:15},
+  {k:'expr',name:'음성 표현',color:'#E6007E',w:15},
+  {k:'fid', name:'내용 충실',color:'#7B1FE0',w:20},
+  {k:'time',name:'정시 종료',color:'#FF6A00',w:10}
+];
+var VTIPS={
+  pron:['문장 끝 음절까지 입을 크게 벌려 또박또박 말합니다.','핵심 단어 앞에서 한 박자 쉬고 천천히 발음합니다.','마이크를 입에서 한 뼘 거리에 두고 조용한 곳에서 다시 녹음합니다.'],
+  dyn:['중요한 문장은 평소보다 한 단계 크게, 덧붙이는 설명은 한 단계 작게 말합니다.','문장 끝에서 힘이 빠지지 않게 끝까지 소리를 유지합니다.','질문을 던지기 직전에 목소리를 한 번 키웁니다.'],
+  into:['질문은 끝을 올리고, 결론은 끝을 내려 말합니다.','숫자와 이름 앞에서 음을 한 톤 올립니다.','같은 문장을 세 가지 높이로 읽어 보고 가장 자연스러운 것을 고릅니다.'],
+  expr:['기쁨·놀람·공감이 담긴 문장은 속도와 크기를 함께 바꿉니다.','핵심 문장 앞에서 2초 쉬고 천천히 말합니다.','10초마다 소리 크기나 속도를 한 번은 바꿔 봅니다.'],
+  fid:['준비한 대본의 핵심 단어 5개를 외워 빠뜨리지 않고 말합니다.','도입·본론·마무리 순서를 종이 한 장에 적어 두고 봅니다.','녹음을 들으며 대본과 비교해 빠진 부분을 표시합니다.'],
+  time:['시간표(도입·체험·설명·참여·마무리)에 분 단위를 적고 타이머로 연습합니다.','끝나기 2분 전 알림을 맞추고 마무리 멘트를 미리 준비합니다.','시간이 남으면 이야기를 늘리지 말고 참여 질문 하나를 넣습니다.']
+};
+var VDRILL={
+  pron:'매일 3분, 대본 한 단락을 입을 크게 벌려 읽고 녹음해 들어보기 (1주)',
+  dyn:'매일 3분, 같은 문장을 작게·보통·크게 세 번 읽고 가장 좋은 크기 기억하기 (1주)',
+  into:'매일 3분, 질문 문장 5개를 끝을 올려 읽고 결론 문장 5개를 끝을 내려 읽기 (1주)',
+  expr:'매일 3분, 같은 문단을 기쁘게·차분하게·놀라며 세 번 읽고 녹음 비교 (1주)',
+  fid:'격일 10분, 대본을 덮고 핵심 5가지만 보고 말한 뒤 빠진 것 확인 (1주)',
+  time:'격일 10분, 타이머를 켜고 정해진 시간에 정확히 끝내는 연습 (1주)'
+};
+function lerp(pts,x){
+  if(x<=pts[0][0])return pts[0][1];
+  for(var i=1;i<pts.length;i++){ if(x<=pts[i][0]){var a=pts[i-1],b=pts[i]; return a[1]+(b[1]-a[1])*(x-a[0])/(b[0]-a[0])} }
+  return pts[pts.length-1][1];
+}
+function pctl(arr,p){ if(!arr.length)return 0; var s=arr.slice().sort(function(a,b){return a-b}); return s[Math.floor(p*(s.length-1))] }
+function mean(a){ return a.length? a.reduce(function(x,y){return x+y},0)/a.length : 0 }
+function sd(a){ if(a.length<2)return 0; var m=mean(a); return Math.sqrt(mean(a.map(function(x){return (x-m)*(x-m)}))) }
+function bigramMap(s){ s=s.replace(/[\s.,!?'"“”‘’~·\-…()]/g,''); var m={},n=0; for(var i=0;i<s.length-1;i++){var k=s.substr(i,2); m[k]=(m[k]||0)+1; n++} return {m:m,n:n} }
+function diceSim(a,b){ var A=bigramMap(a), B=bigramMap(b); if(!A.n||!B.n)return 0; var ov=0; for(var k in A.m){ if(B.m[k]) ov+=Math.min(A.m[k],B.m[k]) } return 2*ov/(A.n+B.n) }
+function keywordCover(script,spoken){
+  var sp=spoken.replace(/\s/g,''); var toks=script.split(/[\s,.!?;:()"“”‘’…]+/).filter(function(t){return t.length>=2});
+  var seen={}, u=[]; toks.forEach(function(t){ if(!seen[t]){seen[t]=1;u.push(t)} });
+  if(!u.length)return 0; var hit=0; u.forEach(function(t){ if(sp.indexOf(t)>=0) hit++ }); return hit/u.length;
+}
+/* frames: [[db, f0], ...]  dur: 초  targetSec: 목표 초  sp:{text, conf:[]}  script: 준비 대본 */
+function voiceAnalyze(frames, dur, targetSec, sp, script){
+  var n=frames.length;
+  if(n<40||dur<2) return {error:'녹음이 너무 짧아 분석할 수 없습니다 (2초 이상 필요).'};
+  var fps=n/dur;
+  var dbs=frames.map(function(f){return f[0]});
+  var floor=pctl(dbs,0.1), top=pctl(dbs,0.95);
+  var lowSignal=(top-floor)<10;
+  var thr=floor+Math.max(8,(top-floor)*0.35);
+  var voiced=frames.map(function(f){return f[0]>thr});
+  var vCount=voiced.filter(Boolean).length, speakRatio=vCount/n;
+  var minPause=Math.round(0.4*fps), longPause=Math.round(3*fps), pauses=0, longP=0, run=0;
+  voiced.forEach(function(v,i){ if(!v){run++} else { if(run>=minPause)pauses++; if(run>=longPause)longP++; run=0 } });
+  if(run>=minPause)pauses++; if(run>=longPause)longP++;
+  var vdb=[]; frames.forEach(function(f,i){ if(voiced[i]) vdb.push(f[0]) });
+  var spread=vdb.length? pctl(vdb,0.9)-pctl(vdb,0.1) : 0;
+  var f0s=[]; frames.forEach(function(f,i){ if(voiced[i]&&f[1]>0) f0s.push(f[1]) });
+  var med=pctl(f0s,0.5), st=[];
+  if(med>0) f0s.forEach(function(f){ var s=12*Math.log(f/med)/Math.LN2; if(Math.abs(s)<=12) st.push(s) });
+  var pitchOK=st.length>=Math.round(2*fps), stSd=pitchOK? sd(st):0;
+  /* 5초 창 곡선, 10초 창 변화폭 */
+  function windows(sec){
+    var w=Math.max(1,Math.round(sec*fps)), out=[];
+    for(var s=0;s<n;s+=w){
+      var d=[],p=[],vc=0,e=Math.min(n,s+w);
+      for(var i=s;i<e;i++){ if(voiced[i]){vc++; d.push(frames[i][0]); if(frames[i][1]>0&&med>0){var x=12*Math.log(frames[i][1]/med)/Math.LN2; if(Math.abs(x)<=12)p.push(x)}} }
+      out.push({db:vc>=Math.max(5,w*0.15)? mean(d):null, st:p.length>=5? mean(p):null, vr:vc/(e-s)});
+    }
+    return out;
+  }
+  var w5=windows(5), w10=windows(10);
+  var spoken=(sp&&sp.text||'').trim(), conf=(sp&&sp.conf||[]).filter(function(c){return c>0});
+  var axes={}, notes={}, why={};
+  /* 강약 */
+  if(lowSignal){ axes.dyn=null; why.dyn='소리가 거의 들어오지 않았거나 소음만 있었습니다. 마이크 위치와 권한을 확인하세요.' }
+  else{
+    axes.dyn=r0(lerp([[2,20],[6,55],[10,90],[14,100],[22,100],[32,70],[40,55]],spread));
+    notes.dyn='목소리 크기의 큰 쪽과 작은 쪽 차이가 약 '+r0(spread)+'dB입니다(연습 기준 10~22dB). '+(spread<10?'전체적으로 크기가 비슷해 강조가 약하게 들릴 수 있습니다.':spread>22?'크기 차이가 커서 작은 소리가 묻힐 수 있습니다.':'강조할 때와 풀어 말할 때의 차이가 적당합니다.');
+  }
+  /* 억양 */
+  if(!pitchOK||lowSignal){ axes.into=null; why.into='높낮이를 읽을 만큼 맑은 목소리 구간이 부족했습니다(소음이 크거나 속삭임일 수 있음).' }
+  else{
+    axes.into=r0(lerp([[0.5,20],[1.5,50],[2.5,85],[3.5,100],[6,100],[9,70]],stSd));
+    notes.into='목소리 높낮이가 평균에서 약 '+(Math.round(stSd*10)/10)+'반음 움직였습니다(연습 기준 2.5~6반음). '+(stSd<2.5?'말투가 단조롭게 들릴 수 있습니다. 질문과 결론에서 높낮이를 더 주세요.':'높낮이 변화가 충분합니다.');
+  }
+  /* 음성 표현 변화폭 */
+  var dbW=w10.map(function(w){return w.db}).filter(function(x){return x!==null}), stW=w10.map(function(w){return w.st}).filter(function(x){return x!==null});
+  var vrW=w10.map(function(w){return w.vr});
+  if(dur<30||dbW.length<3||lowSignal){ axes.expr=null; why.expr='30초 이상 녹음해야 구간별 변화를 잴 수 있습니다.' }
+  else{
+    var a1=lerp([[0.5,20],[2,70],[4,100]],sd(dbW)), a3=lerp([[0.02,30],[0.08,80],[0.15,100]],sd(vrW));
+    var parts=[a1,a3]; if(stW.length>=3) parts.push(lerp([[0.2,30],[0.8,70],[1.5,100]],sd(stW)));
+    axes.expr=r0(mean(parts));
+    notes.expr='10초 구간마다 소리 크기·높낮이·말하는 비율이 얼마나 달라졌는지 본 값입니다(속마음이 아니라 청중에게 들리는 변화의 크기입니다). '+(axes.expr<70?'처음부터 끝까지 비슷한 상태로 말했습니다. 중요한 대목에서 속도와 크기를 바꿔 보세요.':'구간마다 변화가 있어 단조롭지 않게 들립니다.');
+  }
+  /* 발음 명료도 */
+  if(!conf.length){ axes.pron=null; why.pron='음성 인식 결과가 없어 잴 수 없습니다(인식을 끄셨거나 폰이 지원하지 않음).' }
+  else{
+    var cm=mean(conf);
+    axes.pron=r0(lerp([[0.5,30],[0.7,60],[0.85,85],[0.93,100]],cm));
+    notes.pron='폰이 말을 알아들은 확신도가 평균 '+r0(cm*100)+'%입니다. 발음 자체를 직접 잰 값이 아니라 대리 지표이며, 마이크와 소음에도 영향을 받습니다.';
+  }
+  /* 내용 충실 */
+  var fidInfo=null;
+  if(script&&script.replace(/\s/g,'').length>=30&&spoken.replace(/\s/g,'').length>=20){
+    var cov=keywordCover(script,spoken), dc=diceSim(script,spoken);
+    var sim=0.6*cov+0.4*dc; axes.fid=r0(clamp(sim/0.8,0,1)*100); fidInfo={cov:cov,dice:dc};
+    notes.fid='준비한 대본의 핵심 단어 '+r0(cov*100)+'%가 말 속에 나왔고, 표현 일치도는 '+r0(dc*100)+'%입니다(대본과 80% 겹치면 만점으로 가정). 음성 인식 오류가 섞일 수 있습니다.';
+  } else { axes.fid=null; why.fid=(script&&script.replace(/\s/g,'').length>=30)?'인식된 말이 너무 적어 비교할 수 없습니다.':'준비 대본을 넣지 않아 비교하지 못했습니다.' }
+  /* 정시 종료 */
+  var diffR=(dur-targetSec)/Math.max(targetSec,1);
+  axes.time=r0(clamp(100-200*Math.abs(diffR),0,100));
+  notes.time='목표 '+Math.round(targetSec/60*10)/10+'분, 실제 '+Math.round(dur/60*10)/10+'분 ('+(diffR>=0?'+':'')+r0(diffR*100)+'%)입니다. '+(Math.abs(diffR)<=0.05?'시간을 잘 맞췄습니다.':diffR<0?'목표보다 일찍 끝났습니다. 참여 순서를 하나 더 넣어 보세요.':'목표를 넘겼습니다. 마무리를 앞당기세요.');
+  var tw=0, ts=0; VAX.forEach(function(a){ if(axes[a.k]!==null&&axes[a.k]!==undefined){tw+=a.w; ts+=a.w*axes[a.k]} });
+  var score=tw? r0(ts/tw):0;
+  return {axes:axes, notes:notes, why:why, score:score, series:{db:w5.map(function(w){return w.db}), st:w5.map(function(w){return w.st}), sec:5},
+    info:{dur:dur, speakRatio:speakRatio, pauses:pauses, longPauses:longP, spread:spread, stSd:stSd, conf:conf.length?mean(conf):null, fid:fidInfo, lowSignal:lowSignal, usedAxes:tw}};
+}
+
+/* ===================== 녹음 ===================== */
+var REC={on:false, frames:[], dur:0, sp:{text:'',conf:[]}};
+function fmtClock(s){ s=Math.max(0,Math.round(s)); var m=Math.floor(s/60), x=s%60; return m+':'+(x<10?'0':'')+x }
+function beep(n){
+  try{ var c=new (window.AudioContext||window.webkitAudioContext)(); var t=c.currentTime;
+    for(var i=0;i<n;i++){ var o=c.createOscillator(), g=c.createGain(); o.frequency.value=880; g.gain.value=0.2; o.connect(g); g.connect(c.destination); o.start(t+i*0.35); o.stop(t+i*0.35+0.2) }
+    setTimeout(function(){try{c.close()}catch(e){}},2000);
+  }catch(e){}
+  try{ if(navigator.vibrate) navigator.vibrate([250,120,250,120,250]) }catch(e){}
+}
+function autoPitch(buf, sr){
+  var N=buf.length, minLag=Math.floor(sr/400), maxLag=Math.floor(sr/70), best=0, bl=0, e0=0, i, lag;
+  for(i=0;i<N;i++) e0+=buf[i]*buf[i];
+  if(e0<1e-6) return 0;
+  var corr=new Array(maxLag+1);
+  for(lag=minLag;lag<=maxLag;lag++){ var s=0, e1=0; for(i=0;i<N-lag;i+=2){ s+=buf[i]*buf[i+lag]; e1+=buf[i+lag]*buf[i+lag] } corr[lag]=s/Math.sqrt((e0/2)*(e1||1e-9)) }
+  for(lag=minLag;lag<=maxLag;lag++){ if(corr[lag]>best){best=corr[lag]; bl=lag} }
+  return best>0.5? sr/bl : 0;
+}
+function recMsg(msg,cls){ var el=$('recStatus'); el.textContent=msg; el.className='info '+(cls||'warn') }
+async function startRec(overrideSec){
+  if(REC.on) return;
+  if(window.isSecureContext===false){ recMsg('이 파일은 폰 저장소(content://)에서 열려 있어서 마이크가 막힙니다. 인터넷 주소(https)에 올려서 열어야 녹음이 됩니다. 아래 대본 붙여넣기 방식은 지금도 쓸 수 있습니다.','bad'); return }
+  FACE.msg=''; await startFace();
+  if(!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia)){ stopFace(); recMsg('이 화면에서는 녹음을 쓸 수 없습니다. 폰 크롬에서 주소(https)로 열어 주세요.','bad'); return }
+  var stream;
+  try{ stream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:false, noiseSuppression:false, autoGainControl:false}}) }
+  catch(e){ stopFace(); recMsg('마이크를 쓸 수 없습니다 ('+(e&&e.name||'오류')+'). 크롬 주소창 왼쪽 자물쇠에서 마이크를 "허용"으로 바꿔 주세요. 미리보기 창에서는 막힐 수 있으니 크롬에서 열어 주세요.','bad'); return }
+  var AC=window.AudioContext||window.webkitAudioContext, ctx=new AC(), src=ctx.createMediaStreamSource(stream), an=ctx.createAnalyser(); an.fftSize=2048; src.connect(an);
+  REC.on=true; REC.frames=[]; REC.sp={text:'',conf:[]}; REC.interim=''; REC.stream=stream; REC.ctx=ctx; REC.an=an; REC.chunks=[]; REC.srFail=false; REC.loud=false;
+  REC.target=overrideSec||S.min*60; REC.t0=performance.now();
+  S.voice=null; S.face=null; $('recAudio').style.display='none'; $('recText').textContent='';
+  try{ var mt=(window.MediaRecorder&&MediaRecorder.isTypeSupported&&MediaRecorder.isTypeSupported('audio/webm;codecs=opus'))?{mimeType:'audio/webm;codecs=opus'}:{}; REC.mr=new MediaRecorder(stream,mt); REC.mr.ondataavailable=function(e){if(e.data&&e.data.size)REC.chunks.push(e.data)}; REC.mr.start(1000) }catch(e){ REC.mr=null }
+  try{ if(navigator.wakeLock) REC.wl=await navigator.wakeLock.request('screen') }catch(e){}
+  var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(SR&&$('recUseSR').checked){
+    try{
+      var sr=new SR(); sr.lang='ko-KR'; sr.continuous=true; sr.interimResults=true; REC.sr=sr;
+      sr.onresult=function(ev){
+        var im='';
+        for(var i=ev.resultIndex;i<ev.results.length;i++){ var r=ev.results[i];
+          if(r.isFinal){ REC.sp.text+=r[0].transcript+' '; REC.sp.conf.push(r[0].confidence) } else { im+=r[0].transcript } }
+        REC.interim=im;
+      };
+      sr.onerror=function(ev){ if(ev.error==='not-allowed'||ev.error==='audio-capture'||ev.error==='service-not-allowed'||ev.error==='network'){ REC.srFail=true; REC.srErr=ev.error } };
+      sr.onend=function(){ if(REC.on&&!REC.srFail){ setTimeout(function(){ try{sr.start()}catch(e){} },150) } };
+      sr.start();
+    }catch(e){ REC.srFail=true }
+  } else if(!SR){ REC.srFail=true; REC.srErr='unsupported' }
+  var buf=new Float32Array(an.fftSize), sampleRate=ctx.sampleRate;
+  $('recBtn').textContent='■ 녹음 끝내기'; $('recBtn').className='btn red';
+  recMsg('녹음 중입니다. 정해진 시간이 되면 자동으로 끝나고 알림이 울립니다.'+(FACE.msg?' '+FACE.msg:''),FACE.msg?'warn':'ok');
+  REC.iv=setInterval(function(){
+    an.getFloatTimeDomainData(buf);
+    var s=0, i; for(i=0;i<buf.length;i++) s+=buf[i]*buf[i];
+    var rms=Math.sqrt(s/buf.length), db=20*Math.log10(rms+1e-9);
+    var f0=0; if(db>-55){ f0=autoPitch(buf.subarray(0,1536),sampleRate) }
+    REC.frames.push([db,f0]);
+    if(db>-45) REC.loud=true;
+    var el=(performance.now()-REC.t0)/1000, left=REC.target-el;
+    $('recMeterI').style.width=clamp((db+60)/50*100,0,100)+'%';
+    $('recClock').textContent=fmtClock(left);
+    var live=(REC.sp.text+REC.interim); $('recText').textContent=live.slice(-220);
+    if(el>6&&!REC.loud) recMsg('소리가 거의 들어오지 않습니다. 마이크를 가리고 있지 않은지, 권한이 허용인지 확인하세요.','bad');
+    if(left<=0) stopRec(true);
+  },50);
+}
+function stopRec(auto){
+  if(!REC.on) return; REC.on=false; clearInterval(REC.iv);
+  try{ REC.sr&&REC.sr.stop() }catch(e){}
+  try{ REC.mr&&REC.mr.state!=='inactive'&&REC.mr.stop() }catch(e){}
+  try{ REC.stream.getTracks().forEach(function(t){t.stop()}) }catch(e){}
+  try{ REC.ctx.close() }catch(e){}
+  try{ REC.wl&&REC.wl.release() }catch(e){}
+  REC.dur=(performance.now()-REC.t0)/1000;
+  var fs=FACE.samples.slice(); stopFace(); REC.faceS=fs;
+  if(auto) beep(3);
+  setTimeout(function(){ finishRec(auto) },500);
+}
+function finishRec(auto){
+  var text=(REC.sp.text||'').trim();
+  S.face=(REC.faceS&&REC.faceS.length>=10)?{samples:REC.faceS,dur:REC.dur}:null;
+  S.voice={frames:REC.frames, dur:REC.dur, sp:{text:text, conf:REC.sp.conf.slice()}};
+  $('recBtn').textContent='● 녹음 시작'; $('recBtn').className='btn red';
+  $('recClock').textContent=fmtClock(S.min*60);
+  try{ if(REC.chunks&&REC.chunks.length){ var b=new Blob(REC.chunks,{type:REC.chunks[0].type||'audio/webm'}); var a=$('recAudio'); a.src=URL.createObjectURL(b); a.style.display='block' } }catch(e){}
+  var msg='녹음 '+fmtClock(REC.dur)+(auto?' (정시 자동 종료)':'')+' · 인식된 글자 '+text.replace(/\s/g,'').length+'자';
+  if(REC.srFail||!text) msg+=' · 음성 인식이 되지 않아 글이 없습니다. 아래 칸에 대본을 붙여 넣거나, 인식을 끄고 다시 녹음한 뒤 키보드 마이크로 받아쓰기하세요.';
+  recMsg(msg, (REC.srFail||!text)?'warn':'ok');
+  if(text && (!$('inText').value.trim() || $('inText').dataset.auto==='1')){ $('inText').value=text; $('inText').dataset.auto='1' }
+  $('inMin').value=Math.max(0.5,Math.round(REC.dur/6)/10);
+  updateTxInfo();
+  $('recReset').style.display='block';
+}
+function recReset(){
+  if(REC.on) stopRec(false);
+  S.voice=null; S.face=null; $('recAudio').style.display='none'; $('recAudio').removeAttribute('src'); $('recText').textContent='';
+  $('recReset').style.display='none'; recMsg('녹음을 지웠습니다.','ok');
+}
+/* ===================== 음성 성적표 카드 ===================== */
+function curveSvg(vals, color, unit, fixMin, fixMax, secPer){
+  var W=460,H=230,L=52,R=14,T=14,B=44, pw=W-L-R, ph=H-T-B;
+  var nums=vals.filter(function(v){return v!==null}); if(!nums.length) return '<p class="hint">그래프로 그릴 값이 부족합니다.</p>';
+  var mn=fixMin!==undefined?fixMin:Math.floor(Math.min.apply(null,nums)-2), mx=fixMax!==undefined?fixMax:Math.ceil(Math.max.apply(null,nums)+2);
+  if(mx-mn<4){mx=mn+4}
+  function X(i){return L+(vals.length>1? pw*i/(vals.length-1):pw/2)} function Y(v){return T+ph*(1-(v-mn)/(mx-mn))}
+  var s='<svg viewBox="0 0 '+W+' '+H+'" xmlns="http://www.w3.org/2000/svg" font-family="inherit">';
+  for(var g=0;g<=4;g++){ var gv=mn+(mx-mn)*g/4, gy=Y(gv); s+='<line x1="'+L+'" y1="'+gy+'" x2="'+(W-R)+'" y2="'+gy+'" stroke="#DDD" stroke-width="1.5"/><text x="'+(L-6)+'" y="'+(gy+5)+'" font-size="15" font-weight="800" text-anchor="end" fill="#111">'+(Math.round(gv*10)/10)+'</text>' }
+  var seg=[]; vals.forEach(function(v,i){ if(v===null){ if(seg.length)flush(); } else seg.push([X(i),Y(v)]) }); if(seg.length)flush();
+  function flush(){ if(seg.length>1) s+='<polyline points="'+seg.map(function(p){return p.join(',')}).join(' ')+'" fill="none" stroke="'+color+'" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>'; seg.forEach(function(p){ s+='<circle cx="'+p[0]+'" cy="'+p[1]+'" r="5" fill="'+color+'" stroke="#fff" stroke-width="2"/>' }); seg=[] }
+  var step=Math.max(1,Math.ceil(vals.length/6));
+  for(var i=0;i<vals.length;i+=step){ var sec=i*secPer, lab=sec>=60? (Math.round(sec/6)/10)+'분' : sec+'초'; s+='<text x="'+X(i)+'" y="'+(H-22)+'" font-size="15" font-weight="800" text-anchor="middle" fill="#111">'+lab+'</text>' }
+  s+='<text x="'+(L+pw/2)+'" y="'+(H-3)+'" font-size="15" font-weight="900" text-anchor="middle" fill="'+color+'">'+unit+'</text></svg>';
+  return s;
+}
+function voiceCards(V){
+  var h='';
+  var list=VAX.filter(function(a){return V.axes[a.k]!==null&&V.axes[a.k]!==undefined});
+  var I=V.info;
+  h+='<div class="card" style="--c:var(--blue)"><h3>🎙 음성 분석 레이더</h3>';
+  h+='<p class="hint" style="margin-bottom:6px">청중에게 들리는 <b>무대 목소리</b>(크기·높낮이·쉼·시간)와 음성 인식 결과를 잰 값입니다. 속마음이나 감정을 읽는 것이 아니라 전달되는 표현을 훈련하는 점수이며, 마이크와 주변 소음에 따라 달라집니다.</p>';
+  h+='<div class="svgbox">'+(list.length>=3? radarSvg(V.axes,null,list): '<p class="hint">측정된 항목이 3개 미만이라 레이더를 그리지 못했습니다.</p>')+'</div>';
+  h+=barRows(VAX.map(function(a){ var v=V.axes[a.k]; return {name:a.name, color:a.color, val:(v===null||v===undefined)?0:v, tag:(v===null||v===undefined)?'측정 안 됨':lv(v)} }));
+  h+='<table class="hist" style="margin-top:8px"><tr><th style="width:50%">항목</th><th>값</th></tr>';
+  [['녹음 길이',fmtClock(I.dur)],['말하는 시간 비율',r0(I.speakRatio*100)+'%'],['쉼(0.4초+) 횟수',I.pauses+'회'],['긴 쉼(3초+) 횟수',I.longPauses+'회'],['소리 크기 폭',r0(I.spread)+'dB'],['높낮이 변화',I.stSd?(Math.round(I.stSd*10)/10)+'반음':'측정 안 됨'],['인식 확신도',I.conf!==null?r0(I.conf*100)+'%':'측정 안 됨']].forEach(function(x){ h+='<tr><td style="text-align:left;padding-left:6px">'+x[0]+'</td><td><b>'+x[1]+'</b></td></tr>' });
+  h+='</table></div>';
+  h+='<div class="card" style="--c:var(--red)"><h3>소리 크기 변화 (5초마다)</h3><div class="svgbox">'+curveSvg(V.series.db,'#E10600','시간 경과 · 위로 갈수록 큰 소리(dB, 상대값)',undefined,undefined,V.series.sec)+'</div></div>';
+  h+='<div class="card" style="--c:var(--green)"><h3>목소리 높낮이 변화 (5초마다)</h3><div class="svgbox">'+curveSvg(V.series.st,'#00A33B','시간 경과 · 0은 내 평균 높이(반음)',undefined,undefined,V.series.sec)+'</div><p class="hint" style="margin-top:8px">0 위쪽은 평소보다 높게, 아래쪽은 낮게 말한 구간입니다.</p></div>';
+  h+='<div class="card" style="--c:var(--purple)"><h3>음성 항목별 분석</h3><ul class="an">';
+  VAX.forEach(function(a){ var v=V.axes[a.k]; h+='<li style="--c:'+a.color+'"><b>'+a.name+' · '+((v===null||v===undefined)?'측정 안 됨':v+'점('+lv(v)+')')+'</b><br>'+((v===null||v===undefined)?V.why[a.k]:V.notes[a.k])+'</li>' });
+  h+='</ul></div>';
+  var weak=VAX.filter(function(a){return V.axes[a.k]!==null&&V.axes[a.k]!==undefined&&V.axes[a.k]<85}).sort(function(a,b){return V.axes[a.k]-V.axes[b.k]}).slice(0,2);
+  h+='<div class="card" style="--c:var(--orange)"><h3>음성 개선책과 훈련법</h3>';
+  if(weak.length){ weak.forEach(function(a,i){ h+='<p style="margin:8px 0 0;color:'+a.color+';font-weight:900">'+(i+1)+'순위 · '+a.name+' ('+V.axes[a.k]+'점)</p><ol class="ol" style="--c:'+a.color+'">'+VTIPS[a.k].map(function(t){return '<li>'+t+'</li>'}).join('')+'</ol><p style="margin:4px 0 0;font-weight:800;line-height:1.8"><span style="color:'+a.color+'">훈련</span> — '+VDRILL[a.k]+'</p>' }) }
+  else h+='<p class="verdict">측정된 음성 항목이 모두 85점 이상입니다. 지금 방식을 유지하세요.</p>';
+  h+='</div>';
+  return h;
+}
+
+function render(r, form){
+  var P=PLACES.filter(function(x){return x.id===S.place})[0];
+  var hist=histGet(); var prev=hist.length? hist[hist.length-1] : null;
+  var order=AX.slice().sort(function(a,b){return r.axes[a.k]-r.axes[b.k]});
+  var weak=order.slice(0,3).filter(function(a){return r.axes[a.k]<85});
+  var strong=AX.slice().sort(function(a,b){return r.axes[b.k]-r.axes[a.k]})[0];
+  var grade = r.total>=90?'S':r.total>=80?'A':r.total>=70?'B':r.total>=60?'C':'D';
+  var verdict = r.total>=85?'모의 기준으로 매우 안정적입니다. 지금 수준을 유지하며 실전에서 확인해 보세요.'
+              : r.total>=75?'모의 기준으로 좋은 수준입니다. 아래 보완점 한두 가지만 다듬으면 됩니다.'
+              : r.total>=60?'기본기는 갖췄습니다. 점수가 낮은 항목부터 한 가지씩 훈련하세요.'
+              : '먼저 구조(질문 던지기·시간표)부터 연습하는 단계입니다. 괜찮습니다, 여기서 가장 많이 오릅니다.';
+  var T=analysisText(r);
+  var d=new Date(); var date=d.getFullYear()+'.'+String(d.getMonth()+1).padStart(2,'0')+'.'+String(d.getDate()).padStart(2,'0');
+  var h='<div class="rep">';
+  h+='<div class="rep-head"><div class="k">🧠 한국뇌심리연구소 · 강사 오디션 연습실</div><h2>강의 종합 성적표</h2>';
+  h+='<div class="meta"><div><b>강사</b>'+esc(form.name)+'</div><div><b>강의 주제</b>'+esc(form.title)+'</div><div><b>연습 일자</b>'+date+'</div><div><b>장소 · 시간</b>'+P.name+' · '+r.meta.actualMin+'분(목표 '+r.meta.targetMin+'분)</div><div><b>가상 청중</b>'+S.aud+'명</div><div><b>심사위원</b>'+S.jud+'명</div></div></div>';
+
+  h+='<div class="card" style="--c:var(--red)"><h3>종합 점수</h3><div class="total"><div class="num">'+r.total+'<small>점</small></div><div><span class="grade">'+grade+'등급</span></div></div>';
+  h+='<p class="verdict">'+(r.parts?r.parts.map(function(p){return p.n+' <b>'+p.v+'점</b>('+Math.round(p.w*100)+'%)'}).join(' + ')+'으로 합산했습니다. 내용 점수 = ':'')+'심사위원 평균 <b style="color:var(--purple)">'+r.judgeAvg+'점</b>(70%) + 청중 호응도 <b style="color:var(--blue)">'+r.engageAvg+'점</b>(30%)로 계산했습니다. '+verdict+'</p>';
+  if(prev){var df=r.total-prev.total; h+='<p class="verdict">지난 연습 대비 <b style="color:'+(df>=0?'var(--green)':'var(--red)')+'">'+(df>0?'+':'')+df+'점</b>입니다.</p>'}
+  h+='</div>';
+
+  h+='<div class="card" style="--c:var(--purple)"><h3>6가지 능력 레이더</h3><div class="two"><div class="svgbox">'+radarSvg(r.axes, prev&&prev.axes?prev.axes:null)+'</div><div><ul class="axlist">';
+  AX.forEach(function(a){h+='<li><span class="dot" style="background:'+a.color+'"></span><span class="nm" style="color:'+a.color+'">'+a.name+'</span><span class="sc">'+r.axes[a.k]+'</span></li><div class="bar"><i style="width:'+r.axes[a.k]+'%;background:'+a.color+'"></i></div>'});
+  h+='</ul>'+(prev&&prev.axes?'<p class="hint" style="font-size:13.5px;margin:8px 0 0">점선은 지난 연습입니다.</p>':'')+'</div></div></div>';
+
+  h+='<div class="card" style="--c:var(--orange)"><h3>심사위원 채점과 한마디</h3>';
+  r.judges.forEach(function(j){
+    h+='<div class="jrow"><div class="jic" style="background:'+j.color+'">'+j.icon+'</div><div class="jbody"><div class="t"><span style="color:'+j.color+'">'+esc(j.name)+'</span><em style="color:'+j.color+'">'+j.score+'점</em></div><p>'+j.lens+' '+axisName(j.best)+eun(axisName(j.best))+' '+GOOD[j.best]+(j.worst!==j.best?' 다만 '+axisName(j.worst)+eun(axisName(j.worst))+' '+BAD[j.worst]:'')+'</p></div></div>';
+  });
+  h+='</div>';
+
+  h+='<div class="page2"></div>';
+  h+='<div class="card" style="--c:var(--blue)"><h3>청중 호응도 변화</h3><div class="svgbox">'+lineSvg(r)+'</div>';
+  h+='<div class="legend"><span><i style="background:#E10600"></i>질문</span><span><i style="background:#00A33B"></i>호명</span><span><i style="background:#FF6A00"></i>참여 유도</span><span><i style="background:#0066FF"></i>평균 호응도</span></div>';
+  h+='<p class="hint" style="margin-top:8px">'+(r.danger.length?'이탈 위험 구간: '+r.danger.map(function(d){return (d[0]+1)+'~'+d[1]+'분'}).join(', ')+'. 이 구간에 질문이나 호명을 넣어 보세요.':'호응도가 이탈 위험선 아래로 길게 내려가는 구간은 없었습니다.')+'</p></div>';
+
+  h+='<div class="card" style="--c:var(--green)"><h3>청중 유형별 반응</h3>'+barRows(ATYPES.map(function(t,i){return {name:t.name+' '+r.counts[i]+'명', color:t.color, val:r.typeAvg[i]}}))+'</div>';
+
+  if(r.voice) h+=voiceCards(r.voice);
+  if(r.face) h+=faceCards(r.face);
+  h+='<div class="card" style="--c:var(--pink)"><h3>항목별 분석 평가</h3><ul class="an">';
+  AX.forEach(function(a){h+='<li style="--c:'+a.color+'"><b>'+a.name+' · '+r.axes[a.k]+'점('+lv(r.axes[a.k])+')</b><br>'+T[a.k]+'</li>'});
+  h+='</ul></div>';
+
+  h+='<div class="card" style="--c:var(--red)"><h3>개선책</h3>';
+  if(weak.length){weak.forEach(function(a,i){h+='<p style="margin:8px 0 0;color:'+a.color+';font-weight:900">'+(i+1)+'순위 · '+a.name+' ('+r.axes[a.k]+'점)</p><ol class="ol" style="--c:'+a.color+'">'+TIPS[a.k].map(function(t){return '<li>'+t+'</li>'}).join('')+'</ol>'})}
+  else {h+='<p class="verdict">모든 항목이 85점 이상입니다. 지금 방식을 유지하면서 실전에서 반응을 확인하세요. 가장 높은 강점은 <b style="color:'+strong.color+'">'+strong.name+'</b>입니다.</p>'}
+  h+='</div>';
+
+  h+='<div class="card" style="--c:var(--green)"><h3>이번 주 훈련법</h3><ol class="ol" style="--c:var(--green)">';
+  (weak.length?weak:[strong]).forEach(function(a){h+='<li><b style="color:'+a.color+'">'+a.name+'</b> — '+DRILL[a.k]+'</li>'});
+  h+='<li><b style="color:var(--purple)">공통</b> — 연습 후 이 앱으로 다시 채점해 점수 변화를 기록합니다.</li></ol></div>';
+
+  var hs=hist.slice(-4);
+  h+='<div class="card" style="--c:var(--blue)"><h3>훈련 기록</h3><table class="hist"><tr><th>일자</th><th>종합</th>'+AX.map(function(a){return '<th>'+({deliver:'전달',engage:'참여',level:'쉬움',struct:'구성',safe:'안전',energy:'활기'})[a.k]+'</th>'}).join('')+'</tr>';
+  hs.forEach(function(x){h+='<tr><td>'+esc(String(x.date).slice(5))+'</td><td><b>'+x.total+'</b></td>'+AX.map(function(a){return '<td>'+(x.axes?x.axes[a.k]:'-')+'</td>'}).join('')+'</tr>'});
+  h+='<tr style="background:#F3EBFF"><td><b>이번</b></td><td><b>'+r.total+'</b></td>'+AX.map(function(a){return '<td><b>'+r.axes[a.k]+'</b></td>'}).join('')+'</tr></table><p style="margin:8px 0 0;font-size:13.5px;line-height:1.8;font-weight:800">쉬움 = 시니어 눈높이<br>활기 = 에너지·화면</p></div>';
+
+  h+='<div class="note"><b>꼭 읽어 주세요.</b> 이 성적표는 컴퓨터가 계산한 <b>모의 평가</b>이며 실제 심사 결과가 아닙니다. 가상 청중과 심사위원은 규칙으로 움직이고, 앱은 목소리·표정·영상을 보거나 들을 수 없어 대본·시간·자가평가만 반영합니다. 말 속도(220~320글자/분), 문장 길이(40글자), 참여 장치(10분당 6회) 등 기준값은 연습용 가정치이며 검증된 표준이 아닙니다. 실전 반응은 실제 청중 앞에서 확인하세요. 본 도구는 의학적 진단과 무관합니다.</div>';
+  h+='</div>';
+  $('report').innerHTML=h;
+}
+
+/* ================= 흐름 ================= */
+function show(step){
+  ['s1','s2','s3'].forEach(function(id,i){$(id).classList.toggle('on', i+1===step)});
+  ['st1','st2','st3'].forEach(function(id,i){
+    var b=$(id); b.classList.remove('on','done');
+    if(i+1===step)b.classList.add('on'); else if(i+1<step)b.classList.add('done');
+  });
+  $('st2').disabled = step<2 && !S.visited2; $('st3').disabled = !S.last;
+  window.scrollTo(0,0);
+}
+var SAMPLE = '안녕하세요, 여러분 반갑습니다. 오늘은 재미로 해보는 뇌궁합 체험 시간입니다. 어렵지 않으니 편하게 따라와 주세요. 먼저 첫 번째 질문입니다. 여러분은 어떤 사람에게 끌리시나요? A는 따뜻하고 편안한 사람, B는 활발하고 에너지 넘치는 사람, C는 차분하고 신비로운 사람, D는 자신감 있고 주도적인 사람입니다. 채팅에 글자 하나만 써 주세요. 네, A를 고르신 분이 많네요. A를 고르신 분은 따뜻함을 중요하게 보는 편일 수 있어요. 김영희님, 왜 A를 고르셨어요? 좋습니다, 아주 솔직하게 말씀해 주셨습니다. 이번에는 두 번째 질문입니다. 사람을 볼 때 무엇을 먼저 보시나요? A는 표정, B는 분위기, C는 행동, D는 전체적인 느낌입니다. 손을 들어서 알려 주세요. 예를 들어 처음 만난 자리에서 상대가 웃고 있으면 마음이 편해지지요. 이런 것이 표정을 먼저 보는 분들의 모습일 수 있어요. 박철수님은 어떤 걸 고르셨나요? 네, 행동을 중요하게 보는 편일 수 있어요. 세 번째 질문입니다. 새로운 모임에서 먼저 다가가는 편이신가요? A는 바로 다가간다, B는 조금 지켜본다, C는 기다린다, D는 자연스럽게 기회를 만든다입니다. 쉽게 말해 나는 어떤 방식으로 관계를 시작하는지 알아보는 질문입니다. 채팅에 골라 주세요. 이 결과는 재미로 보는 자기이해일 뿐이고 의학적 진단이 아닙니다. 마무리하겠습니다. 오늘 정리하면 사람마다 끌리는 모습과 관계를 시작하는 방식이 다를 수 있다는 점입니다. 감사합니다. 다음 시간에 또 만나요.';
+
+function wire(){
+  $('go2').onclick=function(){S.visited2=true; show(2); updateTxInfo()};
+  $('back1').onclick=function(){show(1)};
+  $('st1').onclick=function(){show(1)};
+  $('st2').onclick=function(){if(!$('st2').disabled)show(2)};
+  $('st3').onclick=function(){if(S.last)show(3)};
+  $('mMinus').onclick=function(){var v=Math.max(1,(parseInt($('inMin').value)||1)-1);$('inMin').value=v;updateTxInfo()};
+  $('mPlus').onclick=function(){var v=Math.min(180,(parseInt($('inMin').value)||0)+1);$('inMin').value=v;updateTxInfo()};
+  $('inMin').oninput=updateTxInfo; $('inText').oninput=updateTxInfo;
+  $('inText').addEventListener('input',function(){this.dataset.auto='0'});
+  $('recBtn').onclick=function(){ if(REC.on) stopRec(false); else startRec() };
+  $('recReset').onclick=recReset;
+  $('btnSample').onclick=function(){$('inText').value=SAMPLE; $('inMin').value=5; updateTxInfo(); toast('샘플 대본을 넣었습니다 (5분 분량)')};
+  function fallbackCopy(t){
+    var ta=document.createElement('textarea'); ta.value=t; ta.setAttribute('readonly','');
+    ta.style.cssText='position:fixed;left:0;top:0;width:1px;height:1px;opacity:0;font-size:16px';
+    document.body.appendChild(ta); ta.select(); ta.setSelectionRange(0,t.length);
+    var ok=false; try{ok=document.execCommand('copy')}catch(e){}
+    document.body.removeChild(ta); return ok;
+  }
+  function showManual(t){
+    var box=$('planManual');
+    if(!box){box=document.createElement('textarea'); box.id='planManual'; box.readOnly=true; box.rows=9;
+      box.style.cssText='width:100%;margin-top:12px;padding:12px;font:800 16px/1.8 inherit;border:3px solid #E6007E;border-radius:14px;color:#0A0A0A;background:#fff';
+      $('btnCopyPlan').parentNode.appendChild(box)}
+    box.value=t; box.focus(); box.select();
+    toast('아래 글상자를 길게 눌러 "전체 선택 → 복사"를 눌러 주세요');
+  }
+  $('btnCopyPlan').onclick=function(){
+    var t=planText();
+    function fb(){ if(fallbackCopy(t)) toast('구성안을 복사했습니다'); else showManual(t); }
+    if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(function(){toast('구성안을 복사했습니다')},fb)}
+    else fb();
+  };
+  $('goScore').onclick=function(){
+    var text=$('inText').value.trim();
+    if(text.replace(/\s/g,'').length<50){toast('대본을 50자 이상 붙여 넣어 주세요'); return}
+    var actual=parseFloat($('inMin').value)||0;
+    if(actual<=0){toast('강의한 시간을 입력해 주세요'); return}
+    var form={name:$('inName').value.trim()||'강사', title:$('inTitle').value.trim()||'강의'};
+    var r=analyze(text, actual, S.min, S.selfs, {jud:S.jud, aud:S.aud});
+    var V=null, F=null;
+    if(S.voice){ V=voiceAnalyze(S.voice.frames, S.voice.dur, S.min*60, S.voice.sp, ($('inScript')&&$('inScript').value)||''); if(V.error){toast(V.error); V=null} }
+    if(S.face&&S.face.samples&&S.face.samples.length){ F=faceAnalyze(S.face.samples, S.face.dur/S.face.samples.length); if(F.error){toast(F.error); F=null} }
+    if(V||F){
+      r.contentTotal=r.total; var wc=V&&F?0.5:V?0.6:0.8, wv=V&&F?0.3:V?0.4:0, wf=V&&F?0.2:F?0.2:0;
+      r.parts=[{n:'내용',v:r.total,w:wc}]; if(V){r.voice=V; r.parts.push({n:'음성',v:V.score,w:wv})} if(F){r.face=F; r.parts.push({n:'표정',v:F.score,w:wf})}
+      r.total=Math.round(r.parts.reduce(function(t,p){return t+p.v*p.w},0));
+    }
+    S.last={r:r, form:form};
+    render(r, form);
+    var h=histGet(); h.push({date:new Date().toISOString().slice(0,10), total:r.total, axes:r.axes}); histSet(h);
+    save(); show(3);
+  };
+  $('btnPrint').onclick=function(){window.print()};
+  $('btnRetry').onclick=function(){show(2)};
+  $('btnClearHist').onclick=function(){histSet([]); if(S.last){render(S.last.r,S.last.form)} toast('훈련 기록을 지웠습니다')};
+  $('inName').onchange=save; $('inTitle').onchange=save;
+}
+load(); renderS1(); renderSelfs(); wire(); show(1);
+$('inMin').value=S.min;
+window.LA={faceAnalyze:faceAnalyze, faceSample:faceSample, loadFaceModel:loadFaceModel, FACE:FACE, voiceAnalyze:voiceAnalyze, startRec:startRec, stopRec:stopRec, REC:REC, voiceCards:voiceCards, analyze:analyze, SAMPLE:SAMPLE, S:S, AX:AX, render:render, show:show, planBlocks:planBlocks, histSet:histSet};
+})();
+</script>
+</body>
+</html>
