@@ -240,14 +240,17 @@ textarea{min-height:230px; resize:vertical}
       <label class="lb" for="inScript">준비한 대본 (내용 충실도 비교용, 선택)</label>
       <textarea id="inScript" placeholder="강의 대본을 붙여 넣으면 실제로 말한 내용과 비교합니다"></textarea>
       <label class="chk"><input type="checkbox" id="recUseSR" checked> 음성 인식 함께 사용 (발음·내용 분석용, 인터넷 필요)</label>
-      <label class="chk"><input type="checkbox" id="recUseCam"> 카메라로 표정 분석 (영상은 폰 안에서만 처리, 저장·전송 안 함 · 인터넷 필요)</label>
+      <label class="chk"><input type="checkbox" id="recUseCam"> 카메라 녹화 + 표정 분석 (영상은 폰 안에서만 처리하고 서버로 보내지 않음 · 표정 분석 도구는 인터넷 필요)</label>
       <video id="recVid" playsinline muted style="display:none"></video>
       <div class="clock" id="recClock">20:00</div>
       <div class="meter"><i id="recMeterI"></i></div>
       <button class="btn red" id="recBtn" type="button">● 녹음 시작</button>
       <div class="info warn" id="recStatus">크롬에서 주소(https)로 열어야 마이크가 허용되는 경우가 많습니다.</div>
       <div class="live" id="recText"></div>
+      <video id="recPlay" controls playsinline style="display:none;width:100%;max-height:420px;margin-top:10px;border:4px solid var(--pink);border-radius:16px;background:#000"></video>
       <audio id="recAudio" controls style="display:none;width:100%;margin-top:10px"></audio>
+      <a id="recSave" class="btn alt" style="display:none;text-align:center;text-decoration:none;margin-top:10px" download="강의연습.webm">💾 녹화·녹음 파일 폰에 저장하기</a>
+      <p class="hint" id="recSaveNote" style="display:none;margin-top:8px">저장하기를 누르면 폰 다운로드 폴더에 파일이 생깁니다. 이 앱 서버에는 보내지 않고 폰 안에만 있습니다. 이 화면을 닫으면 녹화본은 사라지니 필요하면 먼저 저장하세요.</p>
       <button class="btn ghost" id="recReset" type="button" style="display:none">녹음 지우고 다시 하기</button>
     </div>
     <div class="card" style="--c:var(--red)">
@@ -993,8 +996,19 @@ async function startRec(overrideSec){
   var AC=window.AudioContext||window.webkitAudioContext, ctx=new AC(), src=ctx.createMediaStreamSource(stream), an=ctx.createAnalyser(); an.fftSize=2048; src.connect(an);
   REC.on=true; REC.frames=[]; REC.sp={text:'',conf:[]}; REC.interim=''; REC.stream=stream; REC.ctx=ctx; REC.an=an; REC.chunks=[]; REC.srFail=false; REC.loud=false;
   REC.target=overrideSec||S.min*60; REC.t0=performance.now();
-  S.voice=null; S.face=null; $('recAudio').style.display='none'; $('recText').textContent='';
-  try{ var mt=(window.MediaRecorder&&MediaRecorder.isTypeSupported&&MediaRecorder.isTypeSupported('audio/webm;codecs=opus'))?{mimeType:'audio/webm;codecs=opus'}:{}; REC.mr=new MediaRecorder(stream,mt); REC.mr.ondataavailable=function(e){if(e.data&&e.data.size)REC.chunks.push(e.data)}; REC.mr.start(1000) }catch(e){ REC.mr=null }
+  S.voice=null; S.face=null; $('recAudio').style.display='none'; $('recPlay').style.display='none'; $('recSave').style.display='none'; $('recSaveNote').style.display='none'; $('recText').textContent='';
+  try{
+    var hasV=!!(FACE.stream&&FACE.stream.getVideoTracks().length);
+    var ms=hasV? new MediaStream(stream.getAudioTracks().concat(FACE.stream.getVideoTracks())) : stream;
+    var cand=hasV?['video/webm;codecs=vp8,opus','video/webm;codecs=vp9,opus','video/webm','video/mp4']:['audio/webm;codecs=opus','audio/webm','audio/mp4'];
+    var mime=''; if(window.MediaRecorder&&MediaRecorder.isTypeSupported){ for(var ci=0;ci<cand.length;ci++){ if(MediaRecorder.isTypeSupported(cand[ci])){mime=cand[ci];break} } }
+    var opt={}; if(mime)opt.mimeType=mime; if(hasV){opt.videoBitsPerSecond=600000;opt.audioBitsPerSecond=64000}
+    REC.hasV=hasV; REC.mrDone=false;
+    REC.mr=new MediaRecorder(ms,opt);
+    REC.mr.ondataavailable=function(e){if(e.data&&e.data.size)REC.chunks.push(e.data)};
+    REC.mr.onstop=function(){REC.mrDone=true};
+    REC.mr.start(1000);
+  }catch(e){ REC.mr=null; REC.mrDone=true }
   try{ if(navigator.wakeLock) REC.wl=await navigator.wakeLock.request('screen') }catch(e){}
   var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
   if(SR&&$('recUseSR').checked){
@@ -1039,7 +1053,7 @@ function stopRec(auto){
   REC.dur=(performance.now()-REC.t0)/1000;
   var fs=FACE.samples.slice(); stopFace(); REC.faceS=fs;
   if(auto) beep(3);
-  setTimeout(function(){ finishRec(auto) },500);
+  var tries=0; (function wait(){ if(REC.mrDone||!REC.mr||tries++>40){ finishRec(auto) } else setTimeout(wait,150) })();
 }
 function finishRec(auto){
   var text=(REC.sp.text||'').trim();
@@ -1047,8 +1061,15 @@ function finishRec(auto){
   S.voice={frames:REC.frames, dur:REC.dur, sp:{text:text, conf:REC.sp.conf.slice()}};
   $('recBtn').textContent='● 녹음 시작'; $('recBtn').className='btn red';
   $('recClock').textContent=fmtClock(S.min*60);
-  try{ if(REC.chunks&&REC.chunks.length){ var b=new Blob(REC.chunks,{type:REC.chunks[0].type||'audio/webm'}); var a=$('recAudio'); a.src=URL.createObjectURL(b); a.style.display='block' } }catch(e){}
-  var msg='녹음 '+fmtClock(REC.dur)+(auto?' (정시 자동 종료)':'')+' · 인식된 글자 '+text.replace(/\s/g,'').length+'자';
+  try{ if(REC.chunks&&REC.chunks.length){
+    var bt=REC.chunks[0].type||(REC.hasV?'video/webm':'audio/webm'); var bl=new Blob(REC.chunks,{type:bt}); var url=URL.createObjectURL(bl);
+    var pv=$('recPlay'), pa=$('recAudio'), sv=$('recSave'); var ext=/mp4/.test(bt)?'mp4':'webm';
+    if(REC.hasV){ pv.src=url; pv.style.display='block'; pa.style.display='none' } else { pa.src=url; pa.style.display='block'; pv.style.display='none' }
+    sv.href=url; var d=new Date(), z=function(n){return (n<10?'0':'')+n}; sv.download='강의연습_'+d.getFullYear()+z(d.getMonth()+1)+z(d.getDate())+'_'+z(d.getHours())+z(d.getMinutes())+'.'+ext;
+    [pv,pa].forEach(function(el){ el.onloadedmetadata=function(){ if(el.duration===Infinity||isNaN(el.duration)){ el.currentTime=1e101; el.ontimeupdate=function(){ el.ontimeupdate=null; el.currentTime=0 } } } }); sv.style.display='block'; $('recSaveNote').style.display='block';
+    REC.sizeMB=Math.round(bl.size/1048576*10)/10;
+  } }catch(e){}
+  var msg=(REC.hasV?'녹화 ':'녹음 ')+fmtClock(REC.dur)+(REC.sizeMB?' · '+REC.sizeMB+'MB':'')+(auto?' (정시 자동 종료)':'')+' · 인식된 글자 '+text.replace(/\s/g,'').length+'자';
   if(REC.srFail||!text) msg+=' · 음성 인식이 되지 않아 글이 없습니다. 아래 칸에 대본을 붙여 넣거나, 인식을 끄고 다시 녹음한 뒤 키보드 마이크로 받아쓰기하세요.';
   recMsg(msg, (REC.srFail||!text)?'warn':'ok');
   if(text && (!$('inText').value.trim() || $('inText').dataset.auto==='1')){ $('inText').value=text; $('inText').dataset.auto='1' }
@@ -1058,7 +1079,7 @@ function finishRec(auto){
 }
 function recReset(){
   if(REC.on) stopRec(false);
-  S.voice=null; S.face=null; $('recAudio').style.display='none'; $('recAudio').removeAttribute('src'); $('recText').textContent='';
+  S.voice=null; S.face=null; $('recAudio').style.display='none'; $('recAudio').removeAttribute('src'); $('recPlay').style.display='none'; $('recPlay').removeAttribute('src'); $('recSave').style.display='none'; $('recSaveNote').style.display='none'; $('recText').textContent='';
   $('recReset').style.display='none'; recMsg('녹음을 지웠습니다.','ok');
 }
 /* ===================== 음성 성적표 카드 ===================== */
