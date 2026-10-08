@@ -555,7 +555,7 @@ function stageSvg(){
   var w=360, h=250, sceneH=130;
   var s='<svg viewBox="0 0 '+w+' '+h+'" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="gs" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="'+p.c1+'"/><stop offset="1" stop-color="'+p.c2+'"/></linearGradient></defs>';
   s+='<rect width="'+w+'" height="'+h+'" fill="#fff"/>';
-  s+='<svg x="0" y="0" width="'+w+'" height="'+sceneH+'" viewBox="0 0 '+w+' '+sceneH+'"><rect width="'+w+'" height="'+sceneH+'" fill="url(#gs)"/>'+sceneDeco(p.id,w,sceneH)+'</svg>';
+  s+='<svg x="0" y="0" width="'+w+'" height="'+sceneH+'" viewBox="0 0 '+w+' '+sceneH+'"><rect width="'+w+'" height="'+sceneH+'" fill="url(#gs)"/>'+sceneDeco(p.id,w,sceneH)+'<image href="img/place_'+p.id+'.jpg" x="0" y="0" width="'+w+'" height="'+sceneH+'" preserveAspectRatio="xMidYMid slice"/></svg>';
   /* 강사 */
   s+='<circle cx="'+w/2+'" cy="'+(sceneH-52)+'" r="13" fill="#111"/><rect x="'+(w/2-16)+'" y="'+(sceneH-38)+'" width="32" height="38" rx="10" fill="#E10600"/><text x="'+w/2+'" y="'+(sceneH-72)+'" font-size="12" font-weight="900" text-anchor="middle" fill="#111">강사</text>';
   /* 심사위원 */
