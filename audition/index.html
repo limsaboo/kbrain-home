@@ -778,6 +778,7 @@ function faceAnalyze(samples, stepSec){
   var n=samples.length;
   if(n<10) return {error:'표정 분석에 필요한 영상이 부족합니다 (2초 이상 필요).'};
   var ok=samples.filter(function(s){return s.ok}), visible=ok.length/n;
+  if(visible<0.3) return {notFound:true, visible:visible};
   var axes={}, notes={}, why={};
   axes.vis=r0(lerp([[0.3,10],[0.7,55],[0.9,90],[0.97,100]],visible));
   notes.vis='얼굴이 화면 안에서 인식된 시간이 '+r0(visible*100)+'%입니다(연습 기준 90% 이상).';
@@ -1144,7 +1145,7 @@ function render(r, form){
   h+='<div class="meta"><div><b>강사</b>'+esc(form.name)+'</div><div><b>강의 주제</b>'+esc(form.title)+'</div><div><b>연습 일자</b>'+date+'</div><div><b>장소 · 시간</b>'+P.name+' · '+r.meta.actualMin+'분(목표 '+r.meta.targetMin+'분)</div><div><b>가상 청중</b>'+S.aud+'명</div><div><b>심사위원</b>'+S.jud+'명</div></div></div>';
 
   h+='<div class="card" style="--c:var(--red)"><h3>종합 점수</h3><div class="total"><div class="num">'+r.total+'<small>점</small></div><div><span class="grade">'+grade+'등급</span></div></div>';
-  h+='<p class="verdict">'+(r.parts?r.parts.map(function(p){return p.n+' <b>'+p.v+'점</b>('+Math.round(p.w*100)+'%)'}).join(' + ')+'으로 합산했습니다. 내용 점수 = ':'')+'심사위원 평균 <b style="color:var(--purple)">'+r.judgeAvg+'점</b>(70%) + 청중 호응도 <b style="color:var(--blue)">'+r.engageAvg+'점</b>(30%)로 계산했습니다. '+verdict+'</p>';
+  h+='<p class="verdict">'+(r.parts?r.parts.map(function(p){return p.n+' <b>'+p.v+'점</b>('+Math.round(p.w*100)+'%)'}).join(' + ')+'으로 합산했습니다. 내용 점수 = ':'')+'심사위원 평균 <b style="color:var(--purple)">'+r.judgeAvg+'점</b>(70%) + 청중 호응도 <b style="color:var(--blue)">'+r.engageAvg+'점</b>(30%)로 계산했습니다. '+verdict+'</p>'+(r.faceNote?'<p class="hint" style="color:#E00000">'+r.faceNote+'</p>':'');
   if(prev){var df=r.total-prev.total; h+='<p class="verdict">지난 연습 대비 <b style="color:'+(df>=0?'var(--green)':'var(--red)')+'">'+(df>0?'+':'')+df+'점</b>입니다.</p>'}
   h+='</div>';
 
@@ -1243,14 +1244,15 @@ function wire(){
     if(actual<=0){toast('강의한 시간을 입력해 주세요'); return}
     var form={name:$('inName').value.trim()||'강사', title:$('inTitle').value.trim()||'강의'};
     var r=analyze(text, actual, S.min, S.selfs, {jud:S.jud, aud:S.aud});
-    var V=null, F=null;
+    var V=null, F=null, faceNote='';
     if(S.voice){ V=voiceAnalyze(S.voice.frames, S.voice.dur, S.min*60, S.voice.sp, ($('inScript')&&$('inScript').value)||''); if(V.error){toast(V.error); V=null} }
-    if(S.face&&S.face.samples&&S.face.samples.length){ F=faceAnalyze(S.face.samples, S.face.dur/S.face.samples.length); if(F.error){toast(F.error); F=null} }
+    if(S.face&&S.face.samples&&S.face.samples.length){ F=faceAnalyze(S.face.samples, S.face.dur/S.face.samples.length); if(F.error){toast(F.error); F=null} else if(F.notFound){faceNote='얼굴이 화면에서 '+r0(F.visible*100)+'%만 인식되어(기준 30% 이상) 표정은 총점에서 제외했습니다. 폰을 세워 얼굴이 정면으로 보이게 다시 시도하세요(누워서 찍으면 인식이 어렵습니다).'; F=null} }
     if(V||F){
       r.contentTotal=r.total; var wc=V&&F?0.5:V?0.6:0.8, wv=V&&F?0.3:V?0.4:0, wf=V&&F?0.2:F?0.2:0;
       r.parts=[{n:'내용',v:r.total,w:wc}]; if(V){r.voice=V; r.parts.push({n:'음성',v:V.score,w:wv})} if(F){r.face=F; r.parts.push({n:'표정',v:F.score,w:wf})}
       r.total=Math.round(r.parts.reduce(function(t,p){return t+p.v*p.w},0));
     }
+    if(faceNote) r.faceNote=faceNote;
     S.last={r:r, form:form};
     render(r, form);
     var h=histGet(); h.push({date:new Date().toISOString().slice(0,10), total:r.total, axes:r.axes}); histSet(h);
