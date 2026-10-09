@@ -753,7 +753,7 @@ function loadFaceModel(){
       var mod=await import(MP_URL+'/vision_bundle.mjs');
       var fs=await mod.FilesetResolver.forVisionTasks(MP_URL+'/wasm');
       var mk=function(del){ return mod.FaceLandmarker.createFromOptions(fs,{baseOptions:{modelAssetPath:MP_MODEL,delegate:del},runningMode:'VIDEO',numFaces:1,outputFaceBlendshapes:true}) };
-      try{ FACE.lm=await mk('GPU') }catch(e){ FACE.lm=await mk('CPU') }
+      FACE.mk=mk; try{ FACE.lm=await mk('GPU') }catch(e){ FACE.cpu=1; FACE.lm=await mk('CPU') }
       FACE.fail=''; return FACE.lm;
     }catch(e){ FACE.fail=String(e&&e.message||e); FACE.loading=null; return null }
   })();
@@ -829,7 +829,7 @@ function faceCards(F){
 }
 /* 녹화 중 표본 수집 (200ms 간격) */
 async function startFace(){
-  FACE.samples=[]; FACE.on=false; $('recVid').style.display='none';
+  FACE.samples=[]; FACE.on=false; FACE.err=''; $('recVid').style.display='none';
   if(!$('recUseCam').checked) return;
   if(!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia)){ FACE.msg='이 화면에서는 카메라를 쓸 수 없습니다.'; return }
   recMsg('표정 분석 도구를 불러오는 중입니다 (처음 한 번, 인터넷 필요)…','warn');
@@ -841,7 +841,10 @@ async function startFace(){
   FACE.on=true; FACE.t0=performance.now(); FACE.last=-1;
   FACE.iv=setInterval(function(){
     if(!FACE.on||v.readyState<2) return;
-    try{ var res=lm.detectForVideo(v, performance.now()); FACE.samples.push(faceSample(res)) }catch(e){ FACE.samples.push({ok:0}) }
+    try{ var res=(FACE.lm||lm).detectForVideo(v, performance.now()); FACE.samples.push(faceSample(res)) }catch(e){ FACE.err=String(e&&e.message||e).slice(0,80); FACE.samples.push({ok:0}) }
+    if(FACE.samples.length===15 && !FACE.cpu && !FACE.samples.some(function(s){return s.ok}) && FACE.mk){
+      FACE.cpu=1; FACE.mk('CPU').then(function(m){ FACE.lm=m }).catch(function(){});
+    }
   },200);
 }
 function stopFace(){
@@ -1246,7 +1249,7 @@ function wire(){
     var r=analyze(text, actual, S.min, S.selfs, {jud:S.jud, aud:S.aud});
     var V=null, F=null, faceNote='';
     if(S.voice){ V=voiceAnalyze(S.voice.frames, S.voice.dur, S.min*60, S.voice.sp, ($('inScript')&&$('inScript').value)||''); if(V.error){toast(V.error); V=null} }
-    if(S.face&&S.face.samples&&S.face.samples.length){ F=faceAnalyze(S.face.samples, S.face.dur/S.face.samples.length); if(F.error){toast(F.error); F=null} else if(F.notFound){faceNote='얼굴이 화면에서 '+r0(F.visible*100)+'%만 인식되어(기준 30% 이상) 표정은 총점에서 제외했습니다. 폰을 세워 얼굴이 정면으로 보이게 다시 시도하세요(누워서 찍으면 인식이 어렵습니다).'; F=null} }
+    if(S.face&&S.face.samples&&S.face.samples.length){ F=faceAnalyze(S.face.samples, S.face.dur/S.face.samples.length); if(F.error){toast(F.error); F=null} else if(F.notFound){faceNote='얼굴이 화면에서 '+r0(F.visible*100)+'%만 인식되어(기준 30% 이상) 표정은 총점에서 제외했습니다. 폰을 세워 얼굴이 정면으로 보이게 다시 시도하세요(원인 확인용: '+(FACE.cpu?'CPU 방식 재시도함':'GPU 방식')+(FACE.err?', 오류 '+FACE.err:', 오류 없음')+').'; F=null} }
     if(V||F){
       r.contentTotal=r.total; var wc=V&&F?0.5:V?0.6:0.8, wv=V&&F?0.3:V?0.4:0, wf=V&&F?0.2:F?0.2:0;
       r.parts=[{n:'내용',v:r.total,w:wc}]; if(V){r.voice=V; r.parts.push({n:'음성',v:V.score,w:wv})} if(F){r.face=F; r.parts.push({n:'표정',v:F.score,w:wf})}
