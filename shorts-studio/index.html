@@ -404,6 +404,7 @@ async function rawBlob(path){
   if (!r.ok) throw new Error(explain(r.status)); return r.blob();
 }
 async function rawText(path){ return (await rawBlob(path)).text(); }
+const fileCache = new Map();
 function saveBlob(blob, name){ const u = URL.createObjectURL(blob), a = document.createElement('a'); a.href = u; a.download = name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 60000); }
 function human(base){
   const m = base.match(/^(\d{4})-(\d\d)-(\d\d)_(kbpi|kbm)_\d{6}-(\d\d)(\d\d)/);
@@ -438,6 +439,7 @@ async function loadResults(){
           <button data-a="txt">📝 설명글 보기</button></div>` : ''}
         ${state === 'fail' ? `<div class="btns"><button class="full" data-a="err">⚠️ 실패 이유 보기</button></div>` : ''}
         <div class="slot"></div></div>`; }).join('');
+    gs.filter(([, f]) => f['.mp4'] && f['.mp3'] && !f['.error.txt']).slice(0, 2).forEach(([, f]) => { const pth = f['.mp4'].path; if (!fileCache.has(pth)) rawBlob(pth).then(bl => fileCache.set(pth, new File([bl], f['.mp4'].name, {type:'video/mp4'}))).catch(() => {}); });
     $$('#list .item').forEach(it => {
       const base = it.dataset.base, f = Object.fromEntries(gs).hasOwnProperty(base) ? Object.fromEntries(gs)[base] : {}, slot = it.querySelector('.slot');
       it.querySelectorAll('button[data-a]').forEach(b => b.onclick = async () => {
@@ -445,9 +447,16 @@ async function loadResults(){
         try{
           if (a === 'mp4' || a === 'mp3') saveBlob(await rawBlob(f['.' + a].path), f['.' + a].name);
           else if (a === 'share'){
-            const blob = await rawBlob(f['.mp4'].path), file = new File([blob], f['.mp4'].name, {type:'video/mp4'});
-            if (navigator.canShare && navigator.canShare({files:[file]})) await navigator.share({files:[file], title:(hist[base] || {}).hook || base});
-            else { saveBlob(blob, file.name); msg(slot, 'info', '이 기기에서는 바로 공유가 안 돼서 영상을 저장했어요. 갤러리/파일에서 올려주세요.'); }
+            const path = f['.mp4'].path, title = (hist[base] || {}).hook || base;
+            let file = fileCache.get(path);
+            if (!file){   /* 준비가 덜 됐으면 먼저 내려받고, 한 번 더 누르게 한다 (브라우저는 '누른 직후'에만 공유창을 허용) */
+              file = new File([await rawBlob(path)], f['.mp4'].name, {type:'video/mp4'}); fileCache.set(path, file);
+              if (navigator.canShare && navigator.canShare({files:[file]})){ msg(slot, 'ok', '✅ 영상 준비가 끝났어요. <b>“바로 공유하기”를 한 번 더</b> 눌러주세요.'); b.disabled = false; b.textContent = '📤 한 번 더 눌러 공유'; return; }
+            }
+            if (navigator.canShare && navigator.canShare({files:[file]})){
+              try{ await navigator.share({files:[file], title}); }
+              catch(e){ if (e.name === 'AbortError') throw e; saveBlob(file, file.name); msg(slot, 'info', '바로 공유가 안 돼서 영상을 저장했어요. 갤러리/파일에서 올려주세요.'); }
+            } else { saveBlob(file, file.name); msg(slot, 'info', '이 기기에서는 바로 공유가 안 돼서 영상을 저장했어요. 갤러리/파일에서 올려주세요.'); }
           }
           else if (a === 'play'){
             const u = URL.createObjectURL(await rawBlob(f['.mp4'].path)); blobUrls.push(u);
