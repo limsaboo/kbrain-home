@@ -1,0 +1,478 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#00A651">
+<meta name="robots" content="noindex,nofollow">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>쇼츠 제작소</title>
+<style>
+:root{
+  --green:#00A651; --green-d:#0B4623; --green-l:#CFF5DD;
+  --pink:#E6007E; --pink-d:#780046; --pink-l:#FFD3E8;
+  --yellow:#FFE600; --yellow-l:#FFF7B3; --ink:#111; --white:#fff;
+  --brand:var(--green); --brand-d:var(--green-d); --brand-l:var(--green-l);
+}
+body.kbm{--brand:var(--pink); --brand-d:var(--pink-d); --brand-l:var(--pink-l);}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{font-family:"Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;font-size:18px;font-weight:700;line-height:1.8;color:var(--ink);background:var(--yellow-l);padding-bottom:calc(84px + env(safe-area-inset-bottom));-webkit-text-size-adjust:100%}
+header{position:sticky;top:0;z-index:5;background:var(--brand);color:#fff;padding:14px 16px;border-bottom:5px solid var(--yellow)}
+header h1{margin:0;font-size:22px;font-weight:900;line-height:1.5;text-align:center;text-shadow:0 2px 0 rgba(0,0,0,.35)}
+header small{display:block;text-align:center;font-size:14px;font-weight:800;color:var(--yellow);line-height:1.5}
+.wrap{max-width:600px;margin:0 auto;padding:16px}
+.card{border:4px solid var(--brand);background:#fff;border-radius:20px;padding:16px;margin:0 0 16px}
+.card.y{background:var(--yellow);border-color:var(--ink)}
+.card h2{margin:0 0 8px;font-size:20px;font-weight:900;line-height:1.6;color:var(--brand-d)}
+.card h2 span{display:inline-block;min-width:34px;height:34px;line-height:34px;text-align:center;border-radius:50%;background:var(--brand);color:#fff;margin-right:8px;font-size:18px}
+.hint{font-size:15px;font-weight:800;color:#333;line-height:1.7;margin:4px 0 8px}
+label{display:block;font-size:16px;font-weight:900;margin:12px 0 4px;color:var(--ink)}
+input[type=text],input[type=url],input[type=password],textarea,select{width:100%;font:inherit;font-weight:800;font-size:18px;line-height:1.7;padding:12px;border:3px solid var(--ink);border-radius:14px;background:#fff;color:var(--ink)}
+textarea{min-height:190px;resize:vertical}
+input:focus,textarea:focus,select:focus{outline:4px solid var(--yellow);border-color:var(--brand)}
+.row{display:flex;gap:10px}
+.row>*{flex:1}
+button{font:inherit;font-weight:900;cursor:pointer;border:3px solid var(--ink);border-radius:16px;padding:12px;color:var(--ink);background:#fff;line-height:1.5}
+button:active{transform:translateY(2px)}
+.bigbtn{width:100%;font-size:22px;padding:16px;background:var(--yellow);box-shadow:0 5px 0 var(--ink)}
+.brandbtn{font-size:19px;padding:14px 8px;border-width:4px}
+.brandbtn.kbpi{background:var(--green-l);border-color:var(--green)}
+.brandbtn.kbm{background:var(--pink-l);border-color:var(--pink)}
+.brandbtn.on.kbpi{background:var(--green);color:#fff}
+.brandbtn.on.kbm{background:var(--pink);color:#fff}
+.motifs{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.motifs button{padding:8px 2px;font-size:13px;line-height:1.3;background:#fff}
+.motifs button b{display:block;font-size:30px;line-height:1.3}
+.motifs button.on{background:var(--brand);color:#fff;border-color:var(--ink)}
+.chk{display:flex;gap:10px;align-items:flex-start;margin:12px 0 4px}
+.chk input{width:26px;height:26px;margin-top:5px;flex:none;accent-color:var(--brand)}
+.err{background:#FFE1E1;border:3px solid #D00000;color:#7A0000;border-radius:14px;padding:12px;margin:12px 0;font-size:16px;line-height:1.7}
+.ok{background:var(--green-l);border:3px solid var(--green);color:#064D26;border-radius:14px;padding:12px;margin:12px 0;font-size:16px;line-height:1.7}
+.info{background:var(--yellow);border:3px solid var(--ink);border-radius:14px;padding:12px;margin:12px 0;font-size:16px;line-height:1.7}
+.count{font-size:14px;color:#333;text-align:right;line-height:1.4}
+.count.bad{color:#C00000}
+/* 미리보기: 영상(1080x1920)을 270px 폭으로 축소한 모양 */
+.pv-wrap{display:flex;flex-direction:column;align-items:center;gap:10px}
+.pv{width:270px;height:480px;border-radius:16px;border:4px solid var(--ink);overflow:hidden;position:relative;background:var(--brand);flex:none}
+.pv .hd{height:28px;background:var(--brand-d);color:#fff;font-size:10px;line-height:28px;text-align:center}
+.pv .mo{position:absolute;left:0;right:0;top:42px;height:160px;text-align:center;font-size:96px;line-height:160px}
+.pv .tx{position:absolute;left:22px;right:22px;top:205px;height:130px;display:flex;align-items:center;justify-content:center;text-align:center;color:#fff;font-weight:900;font-size:23px;line-height:1.5;text-shadow:-2px 0 #000,2px 0 #000,0 -2px #000,0 2px #000,2px 2px #000,-2px -2px #000}
+.pv .tx em{font-style:normal;color:var(--yellow)}
+.pv .sr{position:absolute;left:0;right:0;top:343px;text-align:center;color:#fff;font-size:9px;line-height:1.4;text-shadow:-1px 0 #000,1px 0 #000,0 -1px #000,0 1px #000}
+.pv .cta{position:absolute;left:22px;right:22px;top:362px;height:42px;background:var(--yellow);border:2px solid #000;border-radius:12px;color:#000;font-size:14px;line-height:38px;text-align:center}
+.pv .ft{position:absolute;left:0;right:0;bottom:0;height:68px;background:var(--brand-d);color:#fff;font-size:9px;line-height:1.9;text-align:center;padding-top:14px}
+.pv .ft b{color:var(--yellow);display:block}
+.pvnav{display:flex;gap:10px;align-items:center}
+.pvnav button{width:56px;font-size:22px}
+.pvnav span{min-width:90px;text-align:center;font-size:16px}
+/* 결과 */
+.item{border:4px solid var(--brand);border-radius:20px;background:#fff;padding:14px;margin:0 0 16px}
+.item h3{margin:0 0 4px;font-size:19px;line-height:1.6}
+.badge{display:inline-block;border-radius:999px;padding:0 12px;font-size:15px;border:3px solid var(--ink);line-height:1.7}
+.badge.done{background:var(--green);color:#fff}.badge.run{background:var(--yellow)}.badge.fail{background:#D00000;color:#fff}
+.item .btns{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+.item .btns .full{grid-column:1/3}
+.item video{width:100%;max-height:420px;background:#000;border-radius:12px;margin-top:10px}
+.item textarea{min-height:200px;margin-top:10px;font-size:16px}
+.p{display:none}.p.on{display:block}
+nav{position:fixed;left:0;right:0;bottom:0;z-index:6;background:var(--brand-d);display:grid;grid-template-columns:repeat(3,1fr);padding:8px 8px calc(8px + env(safe-area-inset-bottom));gap:8px;border-top:5px solid var(--yellow)}
+nav button{background:#fff;font-size:17px;padding:8px 4px;border-radius:14px;line-height:1.4}
+nav button b{display:block;font-size:24px;line-height:1.2}
+nav button.on{background:var(--yellow)}
+a.lnk{color:var(--brand-d);word-break:break-all}
+ol.guide{padding-left:26px;margin:8px 0}
+ol.guide li{margin-bottom:8px}
+</style>
+</head>
+<body>
+<header><h1>🎬 쇼츠 제작소</h1><small>한국뇌심리연구소 · 한국뇌궁합연구소</small></header>
+<div class="wrap">
+
+<!-- ===== 1) 만들기 ===== -->
+<section id="p-make" class="p on">
+  <div class="card y">
+    <h2>📚 저장해 둔 대본으로 시작</h2>
+    <select id="bank"><option value="">— 대본 은행에서 고르기 —</option></select>
+    <div class="hint">고르면 아래 칸이 자동으로 채워져요. 고쳐서 써도 됩니다.</div>
+  </div>
+
+  <div class="card"><h2><span>1</span>어느 연구소 영상인가요?</h2>
+    <div class="row">
+      <button class="brandbtn kbpi on" data-brand="kbpi">🧠 한국뇌심리<br>연구소</button>
+      <button class="brandbtn kbm" data-brand="kbm">💗 한국뇌궁합<br>연구소</button>
+    </div>
+    <label for="keyword">키워드 (내가 알아보려고 적는 메모)</label>
+    <input id="keyword" type="text" placeholder="예) 수면과 기억">
+  </div>
+
+  <div class="card"><h2><span>2</span>첫 화면 문구</h2>
+    <div class="hint">영상 맨 처음 3초에 크게 나와요. <b>*별표*</b>로 감싼 말은 <b style="background:var(--yellow);padding:0 6px">노랗게</b> 강조돼요. 줄을 나누려면 엔터를 누르세요. (40자 이내)</div>
+    <textarea id="hook" style="min-height:110px" placeholder="예) 잠이 *기억*을&#10;만든다고요?"></textarea>
+    <div class="count" id="c-hook"></div>
+  </div>
+
+  <div class="card"><h2><span>3</span>장면 문구</h2>
+    <div class="hint">장면은 <b>빈 줄</b>로 나눠요. 한 장면은 3.4초 나옵니다. 1~6장면, 장면당 60자 이내. 마지막에 "프로필 링크로 오세요" 장면은 자동으로 붙어요.</div>
+    <textarea id="beats" placeholder="낮에 배운 것은&#10;*잠자는 동안* 정리돼요&#10;&#10;그래서 시험 전날&#10;*밤샘*은 손해일 수 있어요"></textarea>
+    <div class="count" id="c-beats"></div>
+  </div>
+
+  <div class="card"><h2><span>4</span>그림 고르기</h2>
+    <div class="hint">영상 위쪽에 움직이는 그림이 직접 그려져요.</div>
+    <div class="motifs" id="motifs"></div>
+  </div>
+
+  <div class="card"><h2><span>5</span>근거 (신뢰의 핵심)</h2>
+    <div class="chk"><input type="checkbox" id="part"><label for="part" style="margin:0">참여형 콘텐츠예요 (과학적 주장 없이 "해보세요/댓글 달아주세요" 같은 내용)</label></div>
+    <div id="srcbox">
+      <label for="sshort">화면에 표시할 출처 이름</label>
+      <input id="sshort" type="text" placeholder="예) 근거: Wammes 외 (2016)">
+      <label for="surl">출처 링크 (https://…)</label>
+      <input id="surl" type="url" placeholder="https://pubmed.ncbi.nlm.nih.gov/…">
+      <div class="hint">링크가 없는 과학적 주장은 영상으로 만들어지지 않아요. 연구소의 신뢰를 지키는 규칙입니다.</div>
+    </div>
+  </div>
+
+  <div class="card"><h2><span>6</span>올릴 때 쓸 설명</h2>
+    <label for="caption">설명글 (선택)</label>
+    <textarea id="caption" style="min-height:96px" placeholder="예) 수면과 기억의 관계를 한 컷으로 정리했어요."></textarea>
+    <label for="link">연결할 링크 (비우면 기본 주소)</label>
+    <input id="link" type="url" placeholder="https://">
+    <label for="stage">이 영상의 목적</label>
+    <select id="stage"><option>관심</option><option>관심→신뢰</option><option>신뢰</option><option>참여</option><option>참여→공유</option><option>공감→참여</option></select>
+  </div>
+
+  <div class="card y"><h2>👀 미리보기 <small style="font-size:14px">(대략적인 모양)</small></h2>
+    <div class="pv-wrap">
+      <div class="pv" id="pv">
+        <div class="hd" id="pv-hd"></div><div class="mo" id="pv-mo"></div>
+        <div class="tx" id="pv-tx"></div><div class="sr" id="pv-sr"></div>
+        <div class="cta" id="pv-cta"></div>
+        <div class="ft"><b id="pv-ft1"></b><span id="pv-ft2"></span></div>
+      </div>
+      <div class="pvnav"><button id="pv-prev">◀</button><span id="pv-n"></span><button id="pv-next">▶</button></div>
+      <div class="hint" style="text-align:center">그림은 영상에서 직접 그려져요. 여기서는 이모지로 대신 보여줍니다. 글자 크기와 줄바꿈은 영상에서 자동으로 맞춰져요.</div>
+    </div>
+  </div>
+
+  <div id="makeMsg"></div>
+  <button class="bigbtn" id="go">🎬 영상 + 음악 만들기</button>
+  <div class="hint" style="text-align:center;margin-top:10px">만드는 데 보통 2~4분 걸려요. 앱을 닫아도 서버가 계속 만듭니다. 끝나면 “결과”에서 받으세요.</div>
+</section>
+
+<!-- ===== 2) 결과 ===== -->
+<section id="p-res" class="p">
+  <div class="card y"><h2>📥 만들어진 영상</h2>
+    <button class="bigbtn" id="refresh" style="font-size:19px">🔄 새로고침</button>
+    <div id="resMsg"></div>
+  </div>
+  <div id="list"></div>
+</section>
+
+<!-- ===== 3) 설정 ===== -->
+<section id="p-set" class="p">
+  <div class="card y"><h2>🔗 서버 연결 (처음 한 번만)</h2>
+    <div class="hint">이 정보는 <b>이 휴대폰 안에만</b> 저장되고 다른 곳으로 보내지 않아요. (GitHub 서버로만 전송)</div>
+    <label for="s-owner">GitHub 아이디</label><input id="s-owner" type="text" value="limsaboo" autocapitalize="off">
+    <label for="s-repo">제작 저장소 이름 (비공개)</label><input id="s-repo" type="text" value="kbm-shorts" autocapitalize="off">
+    <label for="s-branch">브랜치</label><input id="s-branch" type="text" value="main" autocapitalize="off">
+    <label for="s-dir">작업 폴더 (저장소 안의 제작소 폴더)</label><input id="s-dir" type="text" value="studio" autocapitalize="off">
+    <label for="s-token">접속 열쇠 (토큰)</label><input id="s-token" type="password" autocomplete="off" placeholder="github_pat_…">
+    <div class="row" style="margin-top:12px"><button id="s-save" style="background:var(--yellow)">💾 저장</button><button id="s-test" style="background:var(--green-l)">🔌 연결 시험</button></div>
+    <button id="s-clear" style="margin-top:10px;width:100%;background:#FFE1E1">🗑 열쇠 지우기</button>
+    <div id="setMsg"></div>
+  </div>
+  <div class="card"><h2>📱 홈 화면에 설치</h2>
+    <button id="install" class="bigbtn" style="display:none;font-size:19px">홈 화면에 설치하기</button>
+    <div class="hint" id="installHint">크롬 오른쪽 위 ⋮ 메뉴 → “홈 화면에 추가” 또는 “앱 설치”를 누르세요.</div>
+  </div>
+  <div class="card"><h2>🧭 열쇠(토큰) 만드는 법</h2>
+    <ol class="guide">
+      <li>GitHub 접속 → 오른쪽 위 내 사진 → <b>Settings</b></li>
+      <li>맨 아래 <b>Developer settings</b> → <b>Personal access tokens</b> → <b>Fine-grained tokens</b> → <b>Generate new token</b></li>
+      <li><b>Repository access</b>는 “Only select repositories”에서 <b>제작 저장소 하나만</b> 고르기</li>
+      <li>Permissions: <b>Contents = Read and write</b>, <b>Actions = Read-only</b></li>
+      <li>만들어진 열쇠(github_pat_…)를 위 칸에 붙여넣고 저장 → 연결 시험</li>
+    </ol>
+  </div>
+</section>
+</div>
+
+<nav>
+  <button data-tab="make" class="on"><b>✍️</b>만들기</button>
+  <button data-tab="res"><b>📥</b>결과</button>
+  <button data-tab="set"><b>⚙️</b>설정</button>
+</nav>
+
+<script>
+"use strict";
+/* ---------- 도구 ---------- */
+const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+const mem = {};
+const store = {
+  get(k, d){ try{ const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); }catch(e){ return k in mem ? mem[k] : d; } },
+  set(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){ mem[k] = v; } },
+  del(k){ try{ localStorage.removeItem(k); }catch(e){} delete mem[k]; }
+};
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const markup = s => esc(s).replace(/\*([^*]+)\*/g, '<em>$1</em>').replace(/\n/g, '<br>');
+const plain = s => String(s).replace(/\*/g, '');
+
+const BRANDS = {
+  kbpi:{name:'한국뇌심리연구소', series:'뇌심리 한 컷', cta:'프로필 링크에서 무료 체험', ctaBeat:'*프로필 링크*에서\n*무료 체험*하세요',
+        foot:'매일 한 컷 · 팔로우하고 내 뇌를 이해해요', link:'https://k-brain.co.kr/'},
+  kbm:{name:'한국뇌궁합연구소', series:'뇌궁합 한 컷', cta:'프로필 링크에서 무료 확인', ctaBeat:'*프로필 링크*에서\n내 *뇌궁합* 확인!',
+        foot:'매일 한 컷 · 팔로우하고 내 마음을 알아가요', link:'https://limsaboo.github.io/brain-match/'}
+};
+const MOTIFS = [['clock','시계','🕐'],['pencil','연필','✏️'],['walker','걷기','🚶'],['brain','뇌','🧠'],['eye','눈','👁️'],
+                ['bridge','다리','🌉'],['hearts','하트','💗'],['heartq','이상형','💘'],['friends','친구','👫'],['couple','커플','💑']];
+const BANK = [{"id": "kbpi_time", "brand": "kbpi", "motif": "clock", "stage": "관심→신뢰", "hook": "왜 *나이가 들수록*\n시간이 빨라질까?", "beats": ["어릴 땐 *여름방학*이\n끝없이 길었죠", "처음 해보는 일이\n*많았기* 때문이에요", "새로운 경험은\n기억에 *진하게* 남아요", "반복되는 일상은 *덜* 남아서\n지나고 보면 짧게 느껴진다는\n설명이 있어요", "오늘 *새로운 것 하나*만\n해보세요"], "source_short": "근거: Scientific American", "source_url": "https://www.scientificamerican.com/article/why-does-time-seem-to-speed-up-with-age/", "caption": "나이가 들수록 시간이 빠르게 느껴지는 이유 — 새로운 경험과 기억의 관계를 한 컷으로 정리했어요.", "participation": false, "keyword": ""}, {"id": "kbpi_drawing", "brand": "kbpi", "motif": "pencil", "stage": "신뢰", "hook": "*쓰는 것*보다\n*그리는 것*이\n더 오래 기억돼요", "beats": ["단어를 *그려서* 외운 사람이", "*쓰면서* 외운 사람보다\n더 잘 기억했어요", "그림은 *보기·움직임·의미*를\n한꺼번에 쓰기 때문이라고\n연구자들은 설명해요", "그래서 우리 연구소는\n*그림*으로 나를 이해해요"], "source_short": "근거: Wammes 외 (2016), Waterloo대", "source_url": "https://uwaterloo.ca/psychology/news/need-remember-something-better-draw-it-study-finds", "caption": "쓰는 것보다 그리는 것이 기억에 더 오래 남는다는 연구 — 그림으로 나를 이해하는 한국뇌심리연구소의 방식과 연결됩니다.", "participation": false, "keyword": ""}, {"id": "kbpi_walk", "brand": "kbpi", "motif": "walker", "stage": "관심", "hook": "생각이 막힐 땐\n*앉아 있지 말고 걸어요*", "beats": ["스탠퍼드 연구에서\n*걷는 동안* 창의적인\n아이디어가 더 많이 나왔어요", "러닝머신 위\n*실내 걷기*에서도\n효과가 있었어요", "아이디어가 안 떠오르면\n*10분만 걸어보세요*"], "source_short": "근거: Oppezzo & Schwartz (2014)", "source_url": "https://www.gwern.net/doc/psychology/novelty/2014-oppezzo.pdf", "caption": "걷기와 창의적 사고의 관계 — 스탠퍼드 연구 결과를 한 컷으로 정리했어요.", "participation": false, "keyword": ""}, {"id": "kbpi_self", "brand": "kbpi", "motif": "brain", "stage": "참여", "hook": "내 뇌는 어떤\n*성향*일까?", "beats": ["그림 하나로\n*나를 이해하는* 시간", "정답도, *우열*도 없어요", "나를 이해하면\n*사람과의 관계*도 달라져요", "지금 *무료*로\n체험해 보세요"], "source_short": "한국뇌심리연구소 · 자기이해 교육", "source_url": "https://k-brain.co.kr/", "caption": "평가가 아니라 자기이해를 돕는 한국뇌심리연구소의 체험 시스템.", "participation": true, "keyword": ""}, {"id": "kbm_100ms", "brand": "kbm", "motif": "eye", "stage": "관심→참여", "hook": "*0.1초*면 첫인상이\n정해진다고요?", "beats": ["프린스턴 연구에서\n얼굴을 *0.1초*만 보여줬어요", "그런데도 *호감·신뢰*\n판단이 나왔어요", "더 오래 보면\n*확신*만 커졌어요", "나는 *첫눈에 반하는* 편?\n*천천히* 알아가는 편?"], "source_short": "근거: Willis & Todorov (2006), PubMed", "source_url": "https://pubmed.ncbi.nlm.nih.gov/16866745/", "caption": "0.1초 첫인상 연구 — 나는 첫눈에 반하는 편일까? 뇌궁합에서 내 스타일을 확인해 보세요.", "participation": false, "keyword": ""}, {"id": "kbm_bridge", "brand": "kbm", "motif": "bridge", "stage": "관심→참여", "hook": "*두근거림*을\n사랑으로 착각한다고요?", "beats": ["1974년 연구에서\n*흔들다리* 위의 남성들은", "안정된 다리 위 남성보다\n*더 많이 연락했어요*", "심장이 뛰는 이유를\n*상대 때문*이라고\n해석했다는 거예요", "나의 *설렘 스타일*은\n어떤 유형일까요?"], "source_short": "근거: Dutton & Aron (1974) 오귀인 연구", "source_url": "https://en.wikipedia.org/wiki/Misattribution_of_arousal", "caption": "흔들다리 실험으로 알려진 '설렘의 오귀인' — 내 설렘 스타일은 뭘까요?", "participation": false, "keyword": ""}, {"id": "kbm_exposure", "brand": "kbm", "motif": "hearts", "stage": "관심", "hook": "*자주 보면*\n정말 더 좋아질까?", "beats": ["심리학의 *단순노출효과*", "자주 접할수록 *호감*이\n올라가는 경향이 있어요", "1968년 *자이언스*의 연구로\n널리 알려졌어요", "물론 *모든 사람*에게\n똑같이 통하는 건 아니에요"], "source_short": "근거: Zajonc (1968) 단순노출효과", "source_url": "https://en.wikipedia.org/wiki/Mere-exposure_effect", "caption": "자주 볼수록 호감이 생긴다? 단순노출효과를 한 컷으로 알아봐요.", "participation": false, "keyword": ""}, {"id": "kbm_ideal", "brand": "kbm", "motif": "heartq", "stage": "참여", "hook": "내 *이상형*,\n정말 알고 있나요?", "beats": ["머릿속 이상형을\n*키워드 3개*로 말해보세요", "*외모*? *말투*? *분위기*?", "댓글로 *알려주세요*", "내 *이상형 유형*\n지금 확인해 보세요"], "source_short": "한국뇌궁합연구소 · 이상형 체험", "source_url": "https://limsaboo.github.io/brain-match/", "caption": "내 이상형 키워드 3개를 댓글로 남겨주세요! 뇌궁합에서 내 이상형 유형도 확인해 보세요.", "participation": true, "keyword": ""}, {"id": "kbm_friend", "brand": "kbm", "motif": "friends", "stage": "참여→공유", "hook": "*친구*와 나,\n얼마나 잘 맞을까?", "beats": ["같이 있으면 *편한 친구*,\n왜 편할까요?", "이유를 *유형*으로\n알아보면 재밌어요", "결과를 *친구에게 공유*해서\n서로 비교해 보세요"], "source_short": "한국뇌궁합연구소 · 친구 궁합 체험", "source_url": "https://limsaboo.github.io/brain-match/", "caption": "친구와 나는 얼마나 잘 맞을까? 결과를 공유하고 비교해 보세요.", "participation": true, "keyword": ""}, {"id": "kbm_couple", "brand": "kbm", "motif": "couple", "stage": "공감→참여", "hook": "*같은 말*인데\n왜 다르게 들릴까?", "beats": ["같은 상황을\n*서로 다르게* 느끼는 건\n흔한 일이에요", "누가 *틀린* 게 아니라\n*방식이 다른* 거예요", "우리 *부부·연인*은\n어떤 유형일까요?"], "source_short": "한국뇌궁합연구소 · 관계 체험", "source_url": "https://limsaboo.github.io/brain-match/", "caption": "같은 말인데 다르게 들리는 이유 — 우리 둘의 유형을 확인해 보세요.", "participation": true, "keyword": ""}];
+
+/* ---------- 상태 ---------- */
+const F = Object.assign({brand:'kbpi', keyword:'', hook:'', beats:'', motif:'brain', participation:false, sshort:'', surl:'', caption:'', link:'', stage:'관심'}, store.get('draft', {}));
+const params = new URLSearchParams(location.search);
+const S = Object.assign({owner:'limsaboo', repo:'kbm-shorts', branch:'main', dir:'studio', token:''}, store.get('settings', {}));
+const dirp = p => (S.dir ? S.dir.replace(/^\/+|\/+$/g, '') + '/' : '') + p;
+function apiBase(){
+  const p = params.get('api');                      // 시험용: 내 컴퓨터(localhost)만 허용 — 열쇠 유출 방지
+  if (p){ try{ const u = new URL(p); if (u.hostname === 'localhost' || u.hostname === '127.0.0.1') return u.origin; }catch(e){} }
+  return 'https://api.github.com';
+}
+
+/* ---------- 탭 ---------- */
+function tab(name){
+  $$('.p').forEach(e => e.classList.toggle('on', e.id === 'p-' + name));
+  $$('nav button').forEach(b => b.classList.toggle('on', b.dataset.tab === name));
+  window.scrollTo(0, 0);
+  if (name === 'res') loadResults();
+}
+$$('nav button').forEach(b => b.onclick = () => tab(b.dataset.tab));
+
+/* ---------- 입력 화면 ---------- */
+function applyBrand(){
+  document.body.classList.toggle('kbm', F.brand === 'kbm');
+  $$('.brandbtn').forEach(b => b.classList.toggle('on', b.dataset.brand === F.brand));
+  document.querySelector('meta[name=theme-color]').content = F.brand === 'kbm' ? '#E6007E' : '#00A651';
+}
+function drawMotifs(){
+  $('#motifs').innerHTML = MOTIFS.map(m => `<button data-m="${m[0]}" class="${F.motif === m[0] ? 'on' : ''}"><b>${m[2]}</b>${m[1]}</button>`).join('');
+  $$('#motifs button').forEach(b => b.onclick = () => { F.motif = b.dataset.m; save(); drawMotifs(); preview(); });
+}
+function fillForm(){
+  ['keyword','hook','beats','caption'].forEach(k => $('#' + k).value = F[k]);
+  $('#sshort').value = F.sshort; $('#surl').value = F.surl; $('#link').value = F.link; $('#stage').value = F.stage;
+  $('#part').checked = F.participation; $('#srcbox').style.display = F.participation ? 'none' : 'block';
+  applyBrand(); drawMotifs(); counts(); preview();
+}
+function save(){ store.set('draft', F); }
+function readForm(){
+  ['keyword','hook','beats','caption'].forEach(k => F[k] = $('#' + k).value);
+  F.sshort = $('#sshort').value; F.surl = $('#surl').value.trim(); F.link = $('#link').value.trim(); F.stage = $('#stage').value;
+  F.participation = $('#part').checked;
+}
+function sceneList(){ return F.beats.split(/\n\s*\n/).map(s => s.trim()).filter(Boolean); }
+function counts(){
+  const h = plain(F.hook).replace(/\n/g, '').length;
+  $('#c-hook').textContent = h + ' / 40자'; $('#c-hook').classList.toggle('bad', h > 40);
+  const sc = sceneList(), bad = sc.some(s => plain(s).replace(/\n/g, '').length > 60) || sc.length > 6;
+  $('#c-beats').textContent = sc.length + '장면 (최대 6)'; $('#c-beats').classList.toggle('bad', bad);
+}
+let pvI = 0;
+function scenes(){ const b = BRANDS[F.brand]; return [F.hook || '첫 화면 문구', ...sceneList(), b.ctaBeat]; }
+function preview(){
+  const b = BRANDS[F.brand], sc = scenes(); pvI = Math.min(pvI, sc.length - 1);
+  $('#pv-hd').textContent = b.name + ' | ' + b.series;
+  $('#pv-mo').textContent = (MOTIFS.find(m => m[0] === F.motif) || [])[2] || '';
+  $('#pv-tx').innerHTML = '<div>' + markup(sc[pvI]) + '</div>';
+  $('#pv-sr').textContent = F.participation ? (F.sshort || b.name + ' · 체험') : (F.sshort || '근거: (출처 이름)');
+  $('#pv-cta').textContent = '▶ ' + b.cta; $('#pv-ft1').textContent = b.foot; $('#pv-ft2').textContent = b.name;
+  $('#pv-n').textContent = (pvI + 1) + ' / ' + sc.length;
+}
+$('#pv-prev').onclick = () => { pvI = Math.max(0, pvI - 1); preview(); };
+$('#pv-next').onclick = () => { pvI = Math.min(scenes().length - 1, pvI + 1); preview(); };
+$$('.brandbtn').forEach(b => b.onclick = () => { F.brand = b.dataset.brand; save(); applyBrand(); preview(); });
+['keyword','hook','beats','caption','sshort','surl','link','stage','part'].forEach(id => $('#' + id).addEventListener('input', () => {
+  readForm(); $('#srcbox').style.display = F.participation ? 'none' : 'block'; save(); counts(); preview();
+}));
+$('#bank').innerHTML += BANK.map((t, i) => `<option value="${i}">${t.brand === 'kbm' ? '💗' : '🧠'} ${esc(plain(t.hook).replace(/\n/g, ' '))}</option>`).join('');
+$('#bank').onchange = e => {
+  const t = BANK[e.target.value]; if (!t) return;
+  Object.assign(F, {brand:t.brand, keyword:t.keyword || '', hook:t.hook, beats:t.beats.join('\n\n'), motif:t.motif, participation:!!t.participation,
+    sshort:t.source_short, surl:t.participation ? '' : t.source_url, caption:t.caption, link:'', stage:t.stage});
+  pvI = 0; save(); fillForm(); window.scrollTo({top:0, behavior:'smooth'});
+};
+
+/* ---------- GitHub 통신 ---------- */
+function gh(path, opt = {}){
+  return fetch(apiBase() + path, Object.assign({}, opt, {headers:Object.assign({
+    'Authorization':'Bearer ' + S.token, 'Accept':'application/vnd.github+json', 'X-GitHub-Api-Version':'2022-11-28'}, opt.headers || {})}));
+}
+const repoPath = () => `/repos/${encodeURIComponent(S.owner)}/${encodeURIComponent(S.repo)}`;
+function explain(status){
+  return ({401:'열쇠(토큰)가 틀렸거나 만료됐어요. 설정에서 다시 넣어주세요.',
+    403:'열쇠 권한이 부족해요. Contents=읽기/쓰기, Actions=읽기 전용인지 확인하세요.',
+    404:'저장소를 못 찾았어요. 아이디·저장소 이름·열쇠가 이 저장소를 허용했는지 확인하세요.',
+    409:'저장 충돌이에요. 잠시 후 다시 눌러보세요.', 422:'같은 이름의 작업이 이미 있어요. 1분 뒤 다시 눌러보세요.'})[status] || ('서버 응답 오류 (' + status + ')');
+}
+function b64(str){ const by = new TextEncoder().encode(str); let bin = ''; by.forEach(b => bin += String.fromCharCode(b)); return btoa(bin); }
+function kst(){ const d = new Date(Date.now() + 9 * 3600 * 1000), p = n => String(n).padStart(2, '0');
+  return {date:`${d.getUTCFullYear()}-${p(d.getUTCMonth() + 1)}-${p(d.getUTCDate())}`, stamp:`${String(d.getUTCFullYear()).slice(2)}${p(d.getUTCMonth() + 1)}${p(d.getUTCDate())}-${p(d.getUTCHours())}${p(d.getUTCMinutes())}`}; }
+
+function validate(){
+  readForm(); const err = [];
+  if (!S.token) err.push('설정 탭에서 서버 연결(열쇠)을 먼저 해주세요.');
+  if (!F.hook.trim()) err.push('첫 화면 문구를 써주세요.');
+  if (plain(F.hook).replace(/\n/g, '').length > 40) err.push('첫 화면 문구가 40자를 넘었어요.');
+  const sc = sceneList();
+  if (sc.length < 1) err.push('장면 문구를 1개 이상 써주세요. (장면은 빈 줄로 나눠요)');
+  if (sc.length > 6) err.push('장면은 6개까지예요.');
+  if (sc.some(s => plain(s).replace(/\n/g, '').length > 60)) err.push('장면 하나가 60자를 넘었어요.');
+  if (!F.participation){
+    if (!/^https?:\/\/\S+\.\S+/.test(F.surl)) err.push('출처 링크(https://…)가 필요해요. 과학적 주장이 없는 내용이면 “참여형”을 체크하세요.');
+    if (!F.sshort.trim()) err.push('화면에 표시할 출처 이름을 써주세요.');
+  }
+  if (F.link && !/^https?:\/\//.test(F.link)) err.push('연결 링크는 https:// 로 시작해야 해요.');
+  return err;
+}
+function msg(el, kind, html){ el.innerHTML = html ? `<div class="${kind}">${html}</div>` : ''; }
+
+async function makeJob(){
+  const box = $('#makeMsg'), err = validate();
+  if (err.length){ msg(box, 'err', err.map(esc).join('<br>')); box.scrollIntoView({behavior:'smooth', block:'center'}); return; }
+  const t = kst(), id = `${F.brand}_${t.stamp}`;
+  const job = {date:t.date, id, brand:F.brand, keyword:F.keyword.trim(), motif:F.motif, stage:F.stage, hook:F.hook.trim(),
+    beats:sceneList(), source_short:F.participation ? '' : F.sshort.trim(), source_url:F.participation ? '' : F.surl,
+    participation:F.participation, caption:F.caption.trim()};
+  if (F.link) job.link = F.link;
+  $('#go').disabled = true; msg(box, 'info', '⏳ 서버로 보내는 중…');
+  try{
+    const r = await gh(`${repoPath()}/contents/${dirp('jobs/' + t.date + '_' + id + '.json')}`, {method:'PUT', headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({message:`job ${id}`, content:b64(JSON.stringify(job, null, 2)), branch:S.branch})});
+    if (!r.ok){ msg(box, 'err', esc(explain(r.status))); return; }
+    const data = await r.json(), sha = data.commit && data.commit.sha;
+    const hist = store.get('hist', {}); hist[`${t.date}_${id}`] = {keyword:job.keyword, hook:plain(job.hook).replace(/\n/g, ' '), brand:job.brand, sha, at:Date.now()};
+    store.set('hist', hist);
+    msg(box, 'ok', '✅ 서버에 접수됐어요. 만드는 중… (보통 2~4분)<div id="runst" style="margin-top:6px"></div>');
+    watch(sha, `${t.date}_${id}`);
+  }catch(e){ msg(box, 'err', '인터넷 연결을 확인해주세요. (' + esc(e.message) + ')'); }
+  finally{ $('#go').disabled = false; }
+}
+$('#go').onclick = makeJob;
+
+let watching = 0;
+async function watch(sha, base){
+  const my = ++watching; const t0 = Date.now();
+  while (my === watching && Date.now() - t0 < 15 * 60 * 1000){
+    await new Promise(r => setTimeout(r, 7000));
+    const el = $('#runst'); if (!el) return;
+    try{
+      const r = await gh(`${repoPath()}/actions/runs?head_sha=${sha}&per_page=5`);
+      if (!r.ok){ el.textContent = '진행 상태를 읽지 못했어요 (' + explain(r.status) + ') — “결과” 탭을 확인하세요.'; return; }
+      const run = ((await r.json()).workflow_runs || [])[0];
+      if (!run){ el.textContent = (Date.now() - t0 > 90000) ? '서버가 아직 시작하지 않았어요. 저장소의 Actions 설정을 확인해야 해요.' : '서버가 시작하길 기다리는 중…'; continue; }
+      if (run.status !== 'completed'){ el.textContent = run.status === 'queued' ? '대기 중…' : '영상 만드는 중…'; continue; }
+      el.textContent = run.conclusion === 'success' ? '🎉 끝났어요! “결과” 탭에서 받으세요.' : '⚠️ 서버 작업이 실패했어요. “결과” 탭에서 이유를 확인하세요.';
+      return;
+    }catch(e){ el.textContent = '연결이 끊겼어요. 잠시 뒤 “결과” 탭에서 확인하세요.'; return; }
+  }
+}
+
+/* ---------- 결과 ---------- */
+const blobUrls = [];
+async function rawBlob(path){
+  const r = await gh(`${repoPath()}/contents/${path.split('/').map(encodeURIComponent).join('/')}?ref=${encodeURIComponent(S.branch)}`, {headers:{'Accept':'application/vnd.github.raw+json'}});
+  if (!r.ok) throw new Error(explain(r.status)); return r.blob();
+}
+async function rawText(path){ return (await rawBlob(path)).text(); }
+function saveBlob(blob, name){ const u = URL.createObjectURL(blob), a = document.createElement('a'); a.href = u; a.download = name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 60000); }
+function group(files){
+  const g = {};
+  files.forEach(f => { const m = f.name.match(/^(.*?)(\.error\.txt|\.mp4|\.mp3|\.jpg|\.txt)$/); if (!m) return; (g[m[1]] = g[m[1]] || {})[m[2]] = f; });
+  return Object.entries(g).sort((a, b) => b[0].localeCompare(a[0])).slice(0, 15);
+}
+async function loadResults(){
+  const L = $('#list'), M = $('#resMsg');
+  if (!S.token){ msg(M, 'err', '설정 탭에서 서버 연결을 먼저 해주세요.'); L.innerHTML = ''; return; }
+  msg(M, 'info', '⏳ 불러오는 중…');
+  try{
+    const r = await gh(`${repoPath()}/contents/${dirp('out')}?ref=${encodeURIComponent(S.branch)}`);
+    if (r.status === 404){ msg(M, 'info', '아직 만들어진 영상이 없어요.'); L.innerHTML = ''; return; }
+    if (!r.ok){ msg(M, 'err', esc(explain(r.status))); return; }
+    const gs = group(await r.json()), hist = store.get('hist', {});
+    msg(M, '', ''); if (!gs.length){ msg(M, 'info', '아직 만들어진 영상이 없어요.'); L.innerHTML = ''; return; }
+    L.innerHTML = gs.map(([base, f], i) => {
+      const h = hist[base] || {}, state = f['.error.txt'] ? 'fail' : (f['.mp4'] && f['.mp3'] ? 'done' : 'run');
+      const title = h.hook || base, brand = base.includes('_kbm_') ? '💗' : '🧠';
+      return `<div class="item" data-base="${esc(base)}">
+        <span class="badge ${state}">${state === 'done' ? '완성' : state === 'fail' ? '실패' : '만드는 중'}</span>
+        <h3>${brand} ${esc(title)}</h3><div class="hint">${esc(base)}${h.keyword ? ' · 키워드: ' + esc(h.keyword) : ''}</div>
+        ${state === 'done' ? `<div class="btns">
+          <button class="full" data-a="share" style="background:var(--yellow)">📤 공유하기 (유튜브·인스타로 바로)</button>
+          <button data-a="mp4" style="background:var(--green-l)">⬇️ 영상 mp4</button>
+          <button data-a="mp3" style="background:var(--pink-l)">🎵 음악 mp3</button>
+          <button data-a="play">▶ 미리 보기</button>
+          <button data-a="txt">📝 설명글 보기</button></div>` : ''}
+        ${state === 'fail' ? `<div class="btns"><button class="full" data-a="err">⚠️ 실패 이유 보기</button></div>` : ''}
+        <div class="slot"></div></div>`; }).join('');
+    $$('#list .item').forEach(it => {
+      const base = it.dataset.base, f = Object.fromEntries(gs).hasOwnProperty(base) ? Object.fromEntries(gs)[base] : {}, slot = it.querySelector('.slot');
+      it.querySelectorAll('button[data-a]').forEach(b => b.onclick = async () => {
+        const a = b.dataset.a; b.disabled = true; const old = b.textContent; b.textContent = '⏳ …';
+        try{
+          if (a === 'mp4' || a === 'mp3') saveBlob(await rawBlob(f['.' + a].path), f['.' + a].name);
+          else if (a === 'share'){
+            const blob = await rawBlob(f['.mp4'].path), file = new File([blob], f['.mp4'].name, {type:'video/mp4'});
+            if (navigator.canShare && navigator.canShare({files:[file]})) await navigator.share({files:[file], title:(hist[base] || {}).hook || base});
+            else { saveBlob(blob, file.name); msg(slot, 'info', '이 기기에서는 바로 공유가 안 돼서 영상을 저장했어요. 갤러리/파일에서 올려주세요.'); }
+          }
+          else if (a === 'play'){
+            const u = URL.createObjectURL(await rawBlob(f['.mp4'].path)); blobUrls.push(u);
+            slot.innerHTML = `<video src="${u}" controls playsinline></video>`;
+          }
+          else if (a === 'txt'){
+            const t = await rawText(f['.txt'].path);
+            slot.innerHTML = `<textarea readonly>${esc(t)}</textarea><button class="bigbtn" style="font-size:18px;margin-top:10px" data-copy>📋 설명글 복사</button>`;
+            slot.querySelector('[data-copy]').onclick = async () => { try{ await navigator.clipboard.writeText(t); msg(slot.querySelector('textarea').parentNode.appendChild(document.createElement('div')), 'ok', '복사했어요'); }catch(e){ slot.querySelector('textarea').select(); } };
+          }
+          else if (a === 'err'){ msg(slot, 'err', esc((await rawText(f['.error.txt'].path)).split('\n')[0])); }
+        }catch(e){ if (e.name !== 'AbortError') msg(slot, 'err', esc(e.message)); }
+        b.disabled = false; b.textContent = old;
+      });
+    });
+  }catch(e){ msg(M, 'err', '인터넷 연결을 확인해주세요. (' + esc(e.message) + ')'); }
+}
+$('#refresh').onclick = loadResults;
+
+/* ---------- 설정 ---------- */
+function fillSettings(){ $('#s-owner').value = S.owner; $('#s-repo').value = S.repo; $('#s-branch').value = S.branch; $('#s-dir').value = S.dir; $('#s-token').value = S.token; }
+function readSettings(){ S.owner = $('#s-owner').value.trim(); S.repo = $('#s-repo').value.trim(); S.branch = $('#s-branch').value.trim() || 'main'; S.dir = $('#s-dir').value.trim(); S.token = $('#s-token').value.trim(); }
+$('#s-save').onclick = () => { readSettings(); store.set('settings', S); msg($('#setMsg'), 'ok', '저장했어요.'); };
+$('#s-clear').onclick = () => { S.token = ''; $('#s-token').value = ''; store.set('settings', S); msg($('#setMsg'), 'ok', '열쇠를 지웠어요.'); };
+$('#s-test').onclick = async () => {
+  readSettings(); store.set('settings', S); const M = $('#setMsg');
+  if (!S.token){ msg(M, 'err', '열쇠(토큰)를 먼저 넣어주세요.'); return; }
+  msg(M, 'info', '⏳ 연결 확인 중…');
+  try{
+    const r = await gh(repoPath()); if (!r.ok){ msg(M, 'err', esc(explain(r.status))); return; }
+    const d = await r.json(), push = d.permissions ? d.permissions.push : undefined;
+    const ac = await gh(`${repoPath()}/actions/runs?per_page=1`);
+    msg(M, push === false || !ac.ok ? 'err' : 'ok',
+      `저장소 <b>${esc(d.full_name)}</b> (${d.private ? '비공개 🔒' : '공개 ⚠️ — 영상이 누구에게나 보여요'})<br>` +
+      (push === false ? '❌ 쓰기 권한이 없어요 (Contents=읽기/쓰기 필요)<br>' : '✅ 쓰기 권한 있음<br>') +
+      (ac.ok ? '✅ 진행 상태 읽기 가능' : '❌ Actions 읽기 권한이 필요해요 (' + esc(explain(ac.status)) + ')'));
+  }catch(e){ msg(M, 'err', '인터넷 연결을 확인해주세요. (' + esc(e.message) + ')'); }
+};
+let deferred = null;
+window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); deferred = e; $('#install').style.display = 'block'; });
+$('#install').onclick = async () => { if (deferred){ deferred.prompt(); deferred = null; $('#install').style.display = 'none'; } };
+window.addEventListener('appinstalled', () => { $('#installHint').textContent = '✅ 설치됐어요! 홈 화면에서 열어보세요.'; });
+
+/* ---------- 시작 ---------- */
+fillSettings(); fillForm();
+if ('serviceWorker' in navigator && location.protocol !== 'file:') navigator.serviceWorker.register('sw.js').catch(() => {});
+</script>
+</body>
+</html>
