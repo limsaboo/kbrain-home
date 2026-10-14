@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>5대 조절력 검사 | 한국뇌심리연구소 5CAS</title>
+<title>조절력 브레이크 | 한국뇌궁합연구소</title>
 <meta name="theme-color" content="#7C5BA8">
 <style>
 :root{
@@ -120,7 +120,7 @@ input,select{width:100%;font:inherit;font-size:18px;font-weight:800;padding:12px
 .tbox .th:active{background:#FFF3A8;}
 .tbox .ti{font-size:30px;line-height:1;}
 .tbox .tt{flex:1;text-align:left;}
-.tbox .tt b{display:block;font-size:19px;font-weight:900;color:var(--tc);line-height:1.5;}
+.tbox .tt b{display:block;font-size:17px;font-weight:900;color:var(--tc);line-height:1.5;}
 .tbox .tt span{font-size:14px;line-height:1.5;}
 .tbox .ar{background:var(--tc);color:#fff;border-radius:50%;width:34px;height:34px;display:flex;align-items:center;justify-content:center;font-size:16px;flex:none;transition:transform .2s;}
 .tbox.open .ar{transform:rotate(180deg);}
@@ -130,6 +130,52 @@ input,select{width:100%;font:inherit;font-size:18px;font-weight:800;padding:12px
 .btn2{display:block;width:100%;margin-top:10px;padding:13px;border:3px solid var(--ink);border-radius:14px;font:inherit;font-size:17px;font-weight:900;text-align:center;color:#fff;background:var(--c-speed);text-decoration:none;line-height:1.5;}
 .tsec{margin:0 16px 8px;font-size:20px;font-weight:900;line-height:1.6;text-align:left;}
 .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#111;color:#FFE600;padding:12px 20px;border-radius:14px;font-size:16px;font-weight:900;z-index:9;display:none;max-width:90%;text-align:center;line-height:1.6;}
+
+.modes{display:flex;gap:10px;margin:0 16px 12px;}
+.modes .btn{margin:0;width:auto;flex:1;font-size:18px;padding:14px 6px;}
+.ring{--p:0;width:136px;height:136px;border-radius:50%;background:conic-gradient(var(--brand) calc(var(--p)*1%),#E6E6E6 0);display:flex;align-items:center;justify-content:center;flex:none;border:3px solid var(--ink);}
+.ring>div{width:100px;height:100px;border-radius:50%;background:#fff;border:3px solid var(--ink);display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.1;}
+.ring b{font-size:40px;font-weight:900;color:var(--brand);}
+.ring small{font-size:14px;font-weight:900;color:var(--ink);}
+.bal{margin:12px 0 0;border:3px solid var(--ink);border-radius:14px;background:#FFE600;padding:8px 12px;font-size:17px;font-weight:900;line-height:1.7;text-align:left;}
+.book{margin:8px 0 0;border:3px solid var(--ink);border-radius:14px;background:#FFD0E6;padding:8px 12px;font-size:16px;font-weight:900;line-height:1.7;text-align:left;}
+.free{display:inline-block;background:var(--c-anger);color:#fff;border-radius:10px;padding:0 10px;font-size:14px;font-weight:900;margin-left:6px;vertical-align:2px;line-height:1.7;}
+.sub{margin:0 16px 14px;border:3px solid var(--tc);border-radius:18px;background:#fff;overflow:hidden;}
+.sub .sh2{background:var(--tc);color:#fff;font-size:19px;font-weight:900;padding:8px 14px;text-align:left;line-height:1.5;}
+.sub .sr{display:flex;align-items:center;gap:10px;padding:8px 12px;border-top:2px dashed #999;}
+.sub .sr img{width:46px;height:58px;object-fit:cover;border-radius:8px;border:2px solid var(--ink);flex:none;}
+.sub .sn{flex:1;text-align:left;font-size:15px;line-height:1.5;}
+.sub .sn b{display:block;font-size:17px;font-weight:900;}
+.sub .sv{font-size:26px;font-weight:900;color:var(--tc);min-width:50px;text-align:right;}
+.prog{margin:0 0 12px;border:3px solid var(--tc);border-radius:14px;padding:10px 12px;text-align:left;font-size:15px;line-height:1.8;background:#fff;}
+.prog b{color:var(--tc);font-size:17px;}
+.lockc{text-align:center;}
+#s-report .a4{background:#fff;border:3px solid var(--ink);margin:0 12px 14px;padding:14px 12px;page-break-inside:avoid;}
+#s-report .a4 .box,#s-report .a4 .gauge,#s-report .a4 .prow{margin-left:0;margin-right:0;}
+#s-report .a4 .sub{margin-left:0;margin-right:0;}
+.cover{border:8px double var(--ink);padding:22px 14px 20px;background:#fff;text-align:center;position:relative;min-height:560px;display:flex;flex-direction:column;justify-content:center;gap:6px;}
+.cover .org{font-size:14px;font-weight:900;letter-spacing:1.5px;line-height:1.6;}
+.cover .org2{font-size:22px;font-weight:900;line-height:1.5;color:var(--brand);}
+.cover .rt{font-size:32px;font-weight:900;line-height:1.4;margin:14px 0 4px;}
+.cover .rs{font-size:15px;font-weight:900;letter-spacing:1px;}
+.cover .subj{font-size:28px;font-weight:900;line-height:1.5;margin:6px 0 0;}
+.cover .dt{font-size:16px;font-weight:900;}
+.cover .dir{font-size:16px;font-weight:900;line-height:1.8;margin-top:8px;border-top:3px solid var(--ink);padding-top:12px;}
+.cover .dir b{font-size:22px;}
+.cover hr{border:0;border-top:3px solid var(--ink);margin:10px 24px;}
+.cert{position:absolute;left:12px;top:12px;width:78px;height:78px;border-radius:50%;border:4px solid #B8860B;background:#FFE600;color:#111;font-weight:900;font-size:15px;line-height:1.3;display:flex;align-items:center;justify-content:center;text-align:center;}
+.seal{position:absolute;right:12px;top:12px;width:74px;height:74px;border:5px solid #E53935;border-radius:50%;color:#E53935;font-weight:900;font-size:17px;line-height:1.3;display:flex;align-items:center;justify-content:center;text-align:center;transform:rotate(-14deg);background:#fff;}
+.stamp2{position:absolute;right:26px;bottom:52px;width:64px;height:64px;border:4px solid #E53935;border-radius:8px;color:#E53935;font-weight:900;font-size:20px;line-height:1.2;display:flex;align-items:center;justify-content:center;text-align:center;transform:rotate(-8deg);opacity:.9;}
+@media print{#s-report .a4{border:0;margin:0;page-break-after:always;} .cover{min-height:1000px;}}
+
+.hang{display:flex !important;align-items:flex-start;gap:8px;text-align:left;}
+.hang>.em{flex:none;}
+.hang>.tx{flex:1;min-width:0;}
+.li{display:flex;gap:6px;align-items:flex-start;margin:4px 0;text-align:left;}
+.li .n{flex:none;font-weight:900;min-width:1.7em;}
+.li .n.b{min-width:1em;}
+.li .t{flex:1;min-width:0;}
+.prog .li{font-size:15px;}
 svg text{font-family:inherit;}
 @media print{.noprint{display:none !important;} body{background:#fff;}}
 </style>
@@ -139,7 +185,7 @@ svg text{font-family:inherit;}
 
 <!-- 인트로 -->
 <section id="s-intro">
-  <div class="band">한국뇌심리연구소<small>5CAS · 5대 조절력 시스템</small></div>
+  <div class="band">한국뇌궁합연구소<small>Korea Brain Matching Institute · 조절력 브레이크 5CAS</small></div>
   <div class="invite hide" id="invite-banner"></div>
   <h1>내 안의 <em>조절력 브레이크</em>는<br>몇 점일까?</h1>
   <p class="lead">화 · 말 · 결정 · 속도 · 유혹<br>다섯 순간의 조절력을 그림으로 확인합니다.</p>
@@ -155,8 +201,8 @@ svg text{font-family:inherit;}
     <div class="pills"><div class="pill m" data-g="남">남자</div><div class="pill w" data-g="여">여자</div></div>
     <div class="err" id="err"></div>
   </div>
-  <button class="btn y" id="b-start" type="button">검사 시작하기 ▶</button>
-  <p class="foot1">입력한 정보는 서버로 보내지 않고, 이 화면 안에서만 계산합니다.<br>본 검사는 의학적 진단이 아닌 자기이해용입니다.</p>
+  <div class="modes"><button class="btn y" id="b-solo" type="button">🙋 나 혼자<br>해보기</button><button class="btn r" id="b-couple" type="button">💞 연인·부부와<br>함께 해보기</button></div>
+  <p class="foot1">입력 정보는 서버로 보내지 않고 이 화면 안에서만 계산해요 · 자기이해용 재미 검사</p>
 </section>
 
 <!-- 검사 -->
@@ -183,9 +229,11 @@ svg text{font-family:inherit;}
   <div class="pat" id="r-pattern"></div>
   <div id="r-pair"></div>
   <div id="r-gauges"></div>
+  <div id="r-sub15"></div>
   <div class="safe" id="r-safe"></div>
   <div id="r-train"></div>
   <div class="help hide" id="r-help"></div>
+  <button class="btn g noprint" id="b-report" type="button">📜 인증서 · 결과 보고서 보기</button>
   <button class="btn y noprint" id="b-save" type="button">결과 카드 이미지로 저장·공유</button>
   <div class="cta">
     <h3>🔗 다음 단계 ① 그 사람과 나, 어디서 부딪힐까?</h3>
@@ -193,11 +241,11 @@ svg text{font-family:inherit;}
   </div>
   <a class="btn g noprint" id="b-match" href="https://limsaboo.github.io/brain-match/" target="_blank" rel="noopener">무료 뇌궁합 앱으로 이동 ▶</a>
   <div class="cta">
-    <h3>📘 다음 단계 ② 후속 전자책 (2026년 12월 출간 예정)</h3>
-    <p>뇌성향 검사 활용 안내서에서 ‘조절력’ 해석과 연습법을 자세히 다룹니다.</p>
+    <h3>📘 다음 단계 ② 커플 에피소드로 읽는 『조절력 브레이크』 시리즈</h3>
+    <p>두 사람의 조합마다 이야기와 훈련이 있어요. 출간 소식은 그로블 한국뇌심리연구소 마켓(groble.im/kbrain)에서 확인하세요. (준비 중)</p>
   </div>
   <button class="btn r noprint" id="b-again" type="button">처음부터 다시 하기</button>
-  <p class="foot1">한국뇌심리연구소 · 5CAS 5대 조절력 시스템<br>본 검사는 의학적 진단이 아닌 자기이해용입니다.</p>
+  <p class="foot1">한국뇌궁합연구소 · 조절력 브레이크 (5CAS)</p>
 </section>
 
 
@@ -213,10 +261,19 @@ svg text{font-family:inherit;}
   <div class="help hide" id="c-help"></div>
   <div class="tsec">💪 함께 훈련하기 (박스를 눌러 보세요)</div>
   <div id="c-train"></div>
+  <button class="btn g noprint" id="c-report" type="button">📜 두 사람 인증서 · 결과 보고서 보기</button>
   <button class="btn y noprint" id="c-share" type="button">이 비교 결과 링크 보내기</button>
   <button class="btn g noprint hide" id="c-back" type="button">◀ 내 결과로 돌아가기</button>
   <button class="btn r noprint" id="c-me" type="button">나도 검사하기 ▶</button>
-  <p class="foot1">한국뇌심리연구소 · 5CAS 5대 조절력 시스템<br>점수는 서로를 평가하는 표가 아니라, 함께 연습할 곳을 찾는 지도입니다.</p>
+  <p class="foot1">점수는 서로를 평가하는 표가 아니라, 함께 연습할 곳을 찾는 지도예요.<br>한국뇌궁합연구소 · 조절력 브레이크 (5CAS)</p>
+</section>
+
+<!-- 인증서·보고서 -->
+<section id="s-report" class="hide">
+  <div class="rhead noprint"><h2>📜 인증서 · 결과 보고서</h2><p>화면을 캡처하거나 인쇄(PDF 저장)해 보관하세요</p></div>
+  <div id="rp-body"></div>
+  <button class="btn y noprint" id="rp-print" type="button">🖨 인쇄 · PDF로 저장</button>
+  <button class="btn g noprint" id="rp-back" type="button">◀ 결과로 돌아가기</button>
 </section>
 <div class="toast" id="toast"></div>
 
@@ -229,11 +286,79 @@ var IMG = {"anger": ["data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAY
 var DOMAINS = [
   {id:'anger',    name:'분노조절력', short:'화날 때',   color:'#E53935', q:'화가 치밀 때, 내 모습과 닮은 그림인가요?',     line:'화가 오를 때 불을 줄이는 밸브'},
   {id:'decision', name:'결정승인력', short:'결정할 때', color:'#0057FF', q:'결정을 내릴 때, 내 모습과 닮은 그림인가요?',   line:'최종 사인 전 마지막 검토'},
-  {id:'speech',   name:'언어자재력', short:'말할 때',   color:'#FF8A00', q:'감정이 오른 채 말할 때, 내 모습과 닮은 그림인가요?', line:'하고 싶은 말과 해야 할 말을 가리는 필터'},
+  {id:'speech',   name:'언어표현력', short:'말할 때',   color:'#FF8A00', q:'감정이 오른 채 말할 때, 내 모습과 닮은 그림인가요?', line:'하고 싶은 말과 해야 할 말을 가리는 필터'},
   {id:'speed',    name:'실행완급력', short:'행동 속도', color:'#00A35C', q:'일을 밀어붙일 때, 내 모습과 닮은 그림인가요?', line:'액셀과 브레이크를 함께 쥔 손'},
   {id:'pleasure', name:'쾌락절제력', short:'유혹 앞',   color:'#8A2BE2', q:'유혹 앞에서, 내 모습과 닮은 그림인가요?',       line:'지금의 즐거움과 나중의 손해를 함께 재는 눈금'}
 ];
 var LEVELS = ['상','중','하'];
+/* 세부 15항목: 그림 3장(상·중·하)이 각각 세부 항목 하나. 하 그림은 '조절이 풀린 모습'이라 점수를 뒤집어 계산 */
+var SUBS={
+ anger:[{n:'분노억제력',s:'화가 치밀어 오르는 순간'},{n:'자극회복력',s:'화났던 일이 있은 후'},{n:'공격성자제력',s:'화가 극에 달했을 때'}],
+ decision:[{n:'신속결정력',s:'선택지 앞에서'},{n:'결정지속력',s:'한번 정한 것 앞에서'},{n:'위험감수조절력',s:'중요한 결정 앞에서'}],
+ speech:[{n:'발언자제력',s:'말 타이밍이 안 맞을 때'},{n:'감정표현력',s:'힘든 감정이 들 때'},{n:'경청균형력',s:'대화할 때'}],
+ speed:[{n:'조급억제력',s:'급한 상황에서'},{n:'지연내성력',s:'기다려야 할 때'},{n:'속도전환력',s:'속도를 바꿔야 할 때'}],
+ pleasure:[{n:'즉각만족지연력',s:'당장 하고 싶은 것 앞에서'},{n:'중독저항력',s:'게임·SNS 앞에서'},{n:'소비절제력',s:'사고 싶은 게 보이면'}]
+};
+/* 영역별 맞춤 훈련 프로그램 */
+var TRAIN={
+ anger:{p:'10초 브레이크 프로그램',w:'3주',h:'화가 나는 순간에도 침착함을 지키는 힘. 감정과 행동 사이에 틈을 만듭니다.',st:['1주차 · 신호 알아채기: 화가 올라올 때 몸에서 먼저 나타나는 신호를 하루 한 번 메모합니다.','2주차 · 10초 멈추기: 그 신호를 느끼는 즉시 숫자를 세며 10초간 멈춥니다.','3주차 · 감정 이름 바꾸기: “화났다” 대신 “서운했다”처럼 구체적인 단어로 바꿔 말합니다.']},
+ decision:{p:'5분 결정 루틴',w:'2주',h:'결정을 내려야 할 때 망설이지 않고 확실하게 정하는 힘.',st:['1단계 · 사소한 결정 훈련: 작은 결정을 5분 안에 정하고 번복하지 않습니다.','2단계 · 세 갈래 정리법: 최선·차선·최악 세 가지만 빠르게 떠올리고 고릅니다.','3단계 · 24시간 룰: 중요한 결정만 하루 유예를 두되, 그 이상 미루지 않습니다.']},
+ speech:{p:'감정 문장 완성 훈련',w:'3주',h:'하고 싶은 말을 알맞은 때와 수위로 표현하는 힘.',st:['1단계 · 감정 기록: 하루 한 번 “나는 지금 ___한 기분이다” 문장을 완성해 적습니다.','2단계 · 실제 표현 연습: 믿는 사람에게 그 문장을 소리 내어 말해 봅니다.','3단계 · 말하기 전 1초: 말이 나오려는 순간, 왜 하려는지 한 번 더 생각합니다.']},
+ speed:{p:'속도 게이지 체크 프로그램',w:'2주',h:'빠르게 갈 때와 천천히 갈 때를 스스로 조절하는 힘.',st:['1단계 · 하루 속도 선언: 아침마다 오늘 필요한 속도를 정하고 시작합니다.','2단계 · 급함과 중요함 분리: 급한 일과 급하지 않은 일을 나눠 적습니다.','3단계 · 의도적 속도 전환: 평소와 다른 속도로 하루 한 가지를 처리해 봅니다.']},
+ pleasure:{p:'한 단계 늦추기 프로그램',w:'3주',h:'눈앞의 즐거움보다 나중의 결과를 먼저 생각해 절제하는 힘.',st:['1단계 · 물리적 거리두기: 유혹 대상과 나 사이에 물리적 장벽을 만듭니다.','2단계 · 10분 미루기: 충동이 올라올 때 10분만 미뤄 봅니다.','3단계 · 절제를 성취로: 절제에 성공할 때마다 작은 보상을 줍니다.']}
+};
+/* 조합 이름(책 『조절력 브레이크』 시리즈와 같은 이름) */
+var NICK=['폭발','번복','침묵','서두름','도피'];
+var SAMEN=['불꽃과 불꽃','번복과 번복','침묵과 침묵','서두름과 서두름','도피와 도피'];
+var VOLN=['분노편','결정편','언어편','완급편','쾌락편'];
+var EMO=/^([\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\u{2B00}-\u{2BFF}][\uFE0F\u200D]?)\s*/u;
+/* 줄맞춤: 맨 앞 이모지가 있는 제목·박스는 이모지와 글을 나눠, 줄이 바뀌어도 글 시작선이 같게 맞춘다 */
+function fixAlign(root){
+  var els=root.querySelectorAll('.tsec,.pairbox h3,.cta h3,.pat h3,.safe .sh,.help,.bal,.book,.invite');
+  Array.prototype.forEach.call(els,function(el){
+    if(el.classList.contains('hang'))return;
+    var f=el.firstChild;if(!f||f.nodeType!==3)return;
+    var m=EMO.exec(f.nodeValue);if(!m)return;
+    var em=document.createElement('span');em.className='em';em.textContent=m[1];
+    var tx=document.createElement('span');tx.className='tx';
+    f.nodeValue=f.nodeValue.slice(m[0].length);
+    while(el.firstChild)tx.appendChild(el.firstChild);
+    el.appendChild(em);el.appendChild(tx);el.classList.add('hang');
+  });
+}
+/* 번호·글머리 목록: 줄이 바뀌어도 번호 밑이 아니라 글 시작선에 맞춘다 */
+function list(items,mark){var h='',i;for(i=0;i<items.length;i++)h+='<div class="li"><span class="n'+(mark?' b':'')+'">'+(mark||(i+1)+')')+'</span><span class="t">'+items[i]+'</span></div>';return h;}
+var PAID_ON=false;   /* true로 바꾸면 '유료' 항목이 잠깁니다. 지금은 오픈 기념 무료 */
+function freeTag(){return PAID_ON?'':'<span class="free">오픈 기념 무료</span>';}
+function gated(title,html){return PAID_ON?'<div class="box lockc"><h2>🔒 '+title+'</h2><p>유료 보고서에서 열립니다.</p></div>':html;}
+function balance(S){
+  var a=[],i,m=0,v=0;for(i=0;i<DOMAINS.length;i++){a.push(S[DOMAINS[i].id].score);m+=a[i];}m/=5;
+  for(i=0;i<5;i++)v+=(a[i]-m)*(a[i]-m);var sd=Math.sqrt(v/5),b=Math.max(0,Math.round(100-sd*2.2));
+  return {n:b,l:b>=80?'매우 균형적':(b>=65?'균형적':(b>=50?'다소 들쭉날쭉':'편차가 커요'))};
+}
+function subScores(id){var r=resp[id]||{},a=r['상']||3,b=r['중']||3,c=r['하']||3;return [a*20,b*20,(6-c)*20];}
+function subHTML(){
+  var h='',i,k;
+  for(i=0;i<DOMAINS.length;i++){var d=DOMAINS[i],sc=subScores(d.id);
+    h+='<div class="sub" style="--tc:'+d.color+'"><div class="sh2">'+d.name+' · '+RES.S[d.id].score+'점</div>';
+    for(k=0;k<3;k++)h+='<div class="sr"><img src="'+IMG[d.id][k]+'" alt=""><div class="sn"><b>'+SUBS[d.id][k].n+'</b>'+SUBS[d.id][k].s+'</div><div class="sv">'+sc[k]+'</div></div>';
+    h+='</div>';}
+  return h;
+}
+function progBlock(id){
+  var d=null,i;for(i=0;i<DOMAINS.length;i++){if(DOMAINS[i].id===id)d=DOMAINS[i];}var t=TRAIN[id];
+  return '<div class="prog" style="--tc:'+d.color+'"><div class="hang"><span class="em">🏋</span><span class="tx"><b>'+d.name+' · '+t.p+' ('+t.w+')</b></span></div><p style="margin:4px 0 6px">'+t.h+'</p>'+list(t.st,'▪')+'</div>';
+}
+function pairInfo(A,B){
+  function low(P){var m=0,i;for(i=1;i<5;i++){if(P.s[i]<P.s[m])m=i;}return m;}
+  var a=low(A),b=low(B),F=A,M=B,fi=a,mi=b;
+  if(A.g==='남'&&B.g==='여'){F=B;M=A;fi=b;mi=a;}
+  var title=(fi===mi)?SAMEN[fi]:(NICK[fi]+'과 '+NICK[mi]);
+  var book='';
+  if(A.g!==B.g){book=(fi===0)?'📘 책 『조절력 브레이크』 1권 '+VOLN[0]+' '+(mi+1)+'편 「'+title+'」 이야기':'📘 『조절력 브레이크』 시리즈 '+(fi+1)+'권 '+VOLN[fi]+' — 준비 중';}
+  return {title:title,book:book,a:a,b:b};
+}
+
 var INSIGHT = {
   anger:{high:'분노나 짜증이 일어나도 겉으로 잘 조절하는 편입니다.', low:'감정이 격해지면 표현이 즉각적으로 드러나는 편입니다.'},
   decision:{high:'결정을 내리고 승인하는 데 확신과 속도가 있습니다.', low:'결정을 미루거나 여러 번 재확인하려는 경향이 있습니다.'},
@@ -275,7 +400,8 @@ function tier(s){if(s>=70)return '우수';if(s>=55)return '양호';if(s>=45)retu
 /* ===== 상태 ===== */
 var user={}, deck=[], idx=0, resp={}, timer=null, left=5, gender='';
 function $(i){return document.getElementById(i);}
-function show(n){['s-intro','s-test','s-result','s-compare'].forEach(function(x){$(x).classList.add('hide');});$(n).classList.remove('hide');window.scrollTo(0,0);}
+var mode='solo',lastScr='s-result';
+function show(n){['s-intro','s-test','s-result','s-compare','s-report'].forEach(function(x){$(x).classList.add('hide');});$(n).classList.remove('hide');fixAlign($(n));window.scrollTo(0,0);}
 
 /* 인트로 구성 */
 (function init(){
@@ -288,14 +414,15 @@ function show(n){['s-intro','s-test','s-result','s-compare'].forEach(function(x)
   $('in-birth').innerHTML=o;
   var pills=document.querySelectorAll('.pill');
   for(i=0;i<pills.length;i++){pills[i].onclick=function(){for(var k=0;k<pills.length;k++)pills[k].classList.remove('on');this.classList.add('on');gender=this.getAttribute('data-g');};}
-  $('b-start').onclick=start;
+  $('b-solo').onclick=function(){start('solo');};
+  $('b-couple').onclick=function(){start('couple');};
   var bs=$('scale').querySelectorAll('button');
   for(i=0;i<bs.length;i++){bs[i].onclick=function(){answer(parseInt(this.getAttribute('data-v'),10));};}
   $('b-again').onclick=function(){show('s-intro');};
   $('b-save').onclick=saveCard;
 })();
 
-function start(){
+function start(m){mode=m||'solo';
   var name=$('in-name').value.replace(/^\s+|\s+$/g,''),birth=parseInt($('in-birth').value,10),e=$('err');
   var msg='';
   if(!name)msg='별명(이름)을 적어 주세요.';else if(!birth)msg='태어난 해를 골라 주세요.';else if(!gender)msg='성별을 골라 주세요.';
@@ -312,7 +439,7 @@ function render(){
   $('timg').src=IMG[d.id][LEVELS.indexOf(it.lv)];
   w.style.setProperty('--tc',d.color);w.style.borderColor=d.color;
   var c=$('dchip');c.textContent=d.short;c.style.background=d.color;
-  $('qtxt').textContent=d.q;
+  $('qtxt').textContent=SUBS[d.id][LEVELS.indexOf(it.lv)].s+', 내 모습과 닮은 그림인가요?';
   $('pfill').style.width=(idx/deck.length*100)+'%';$('pnum').textContent=idx+' / '+deck.length;
   clearT();left=5;var tm=$('timer');tm.textContent=left;tm.className='timer';
   timer=setInterval(function(){left--;tm.textContent=left;if(left<=2)tm.className='timer warn';if(left<=0){clearT();answer(3);}},1000);
@@ -339,15 +466,15 @@ function pattern(S){
   return {n:'🎯 '+lowest.name+'만 살짝 보강하면 좋은 모양',t:'전체 평균 '+avg+'점으로 무난합니다. 가장 낮은 '+lowest.name+'에 작은 연습 하나만 더하면 균형이 좋아집니다.'};
 }
 function radar(S){
-  var cx=200,cy=165,R=100,n=5,i,ptsU='',ptsA='',grid='',lab='';
+  var cx=200,cy=175,R=112,n=5,i,ptsU='',ptsA='',grid='',lab='';
   function pt(k,v){var a=-Math.PI/2+k*2*Math.PI/n;return [cx+Math.cos(a)*R*v/100,cy+Math.sin(a)*R*v/100];}
   var lv;for(lv=25;lv<=100;lv+=25){var p='';for(i=0;i<n;i++){var q=pt(i,lv);p+=q[0].toFixed(1)+','+q[1].toFixed(1)+' ';}grid+='<polygon points="'+p+'" fill="none" stroke="#999" stroke-width="1.5"/>';}
   for(i=0;i<n;i++){var e=pt(i,100);grid+='<line x1="'+cx+'" y1="'+cy+'" x2="'+e[0].toFixed(1)+'" y2="'+e[1].toFixed(1)+'" stroke="#999" stroke-width="1.5"/>';
     var u=pt(i,S[DOMAINS[i].id].score),a2=pt(i,S[DOMAINS[i].id].avg);
     ptsU+=u[0].toFixed(1)+','+u[1].toFixed(1)+' ';ptsA+=a2[0].toFixed(1)+','+a2[1].toFixed(1)+' ';
-    var l=pt(i,141);lab+='<text x="'+l[0].toFixed(1)+'" y="'+(l[1]+5).toFixed(1)+'" text-anchor="middle" font-size="17" font-weight="900" fill="'+DOMAINS[i].color+'">'+DOMAINS[i].name+'</text>';}
+    var l=pt(i,138);lab+='<text x="'+l[0].toFixed(1)+'" y="'+(l[1]+5).toFixed(1)+'" text-anchor="middle" font-size="17" font-weight="900" fill="'+DOMAINS[i].color+'">'+DOMAINS[i].name+'</text>';}
   var dots='';for(i=0;i<n;i++){var u2=pt(i,S[DOMAINS[i].id].score);dots+='<circle cx="'+u2[0].toFixed(1)+'" cy="'+u2[1].toFixed(1)+'" r="7" fill="'+DOMAINS[i].color+'" stroke="#111" stroke-width="2"/>';}
-  return '<svg viewBox="0 0 400 335" width="100%" role="img" aria-label="5대 조절력 레이더">'+grid+'<polygon points="'+ptsA+'" fill="none" stroke="#111" stroke-width="3" stroke-dasharray="6,5"/><polygon points="'+ptsU+'" fill="rgba(124,91,168,.35)" stroke="#7C5BA8" stroke-width="4"/>'+dots+lab+'</svg>';
+  return '<svg viewBox="0 0 400 322" width="100%" role="img" aria-label="5대 조절력 레이더">'+grid+'<polygon points="'+ptsA+'" fill="none" stroke="#111" stroke-width="3" stroke-dasharray="6,5"/><polygon points="'+ptsU+'" fill="rgba(124,91,168,.35)" stroke="#7C5BA8" stroke-width="4"/>'+dots+lab+'</svg>';
 }
 function result(){
   var S={},i,sum=0,asum=0;
@@ -358,7 +485,8 @@ function result(){
   var BR={'10s':'10대','20s':'20대','30s':'30대','40s':'40대','50s':'50대','60+':'60대 이상'};
   $('r-sub').textContent=BR[user.br]+' · '+user.gender+' · 연령대 평균과 비교';
   var dd=avg-aavg;
-  $('r-overall').innerHTML='<h2>종합 조절력</h2><div class="big"><div class="n">'+avg+'<small>점</small></div><div class="d"><span class="tag">'+tier(avg)+'</span><br>또래 평균 '+aavg+'점 '+devHTML(avg,aavg)+'<br>다섯 가지 조절력의 평균입니다.</div></div>';
+  var BAL=balance(S);RES.bal=BAL;
+  $('r-overall').innerHTML='<h2>종합 조절력</h2><div class="big"><div class="ring" style="--p:'+avg+'"><div><b>'+avg+'</b><small>/ 100</small></div></div><div class="d"><span class="tag">'+tier(avg)+'</span><br>또래 평균 '+aavg+'점 '+devHTML(avg,aavg)+'<br>다섯 조절력의 평균이에요.</div></div><div class="bal">⚖️ 5대 영역 균형도 '+BAL.n+'점 · '+BAL.l+'</div>';
   $('r-radar').innerHTML=radar(S);
   var P=pattern(S);$('r-pattern').innerHTML='<h3>'+P.n+'</h3><p>'+P.t+'</p><p>이 모양은 평가가 아니라 연습의 출발점입니다.</p>';
   var g='',order=DOMAINS.slice().sort(function(a,b){return S[a.id].score-S[b.id].score;});
@@ -367,15 +495,17 @@ function result(){
     g+='<div class="gauge" style="--tc:'+d2.color+'"><div class="gh"><img src="'+IMG[d2.id][lvImg]+'" alt=""><div class="gt"><b>'+d2.name+'</b><span class="tag">'+tier(s.score)+'</span><br><span>또래 평균 '+s.avg+'점 '+devHTML(s.score,s.avg)+'</span></div><div class="gs">'+s.score+'<small>/ 100점</small></div></div>'+
        '<div class="track"><i style="width:'+s.score+'%"></i><u style="left:calc('+s.avg+'% - 2px)"></u></div><div class="gx">'+ins+'</div></div>';}
   $('r-gauges').innerHTML=g;
+  $('r-sub15').innerHTML=gated('세부 15항목 점수',(function(){return '<div class="tsec">🧩 세부 15항목 점수'+freeTag()+'</div>'+subHTML();})());
   var sf='<div class="sh">🛡 나와 다른 사람을 지키는 안전 약속</div>',cnt=0;
   for(i=0;i<order.length;i++){var o=order[i],sc=S[o.id].score;
-    if(sc<=54){sf+='<div class="si" style="--tc:'+o.color+'"><b>'+o.name+' '+sc+'점 · 연습 3가지</b>1) '+SAFE[o.id][0]+'<br>2) '+SAFE[o.id][1]+'<br>3) '+SAFE[o.id][2]+'</div>';cnt++;}}
+    if(sc<=54){sf+='<div class="si" style="--tc:'+o.color+'"><b>'+o.name+' '+sc+'점 · 연습 3가지</b>'+list([SAFE[o.id][0],SAFE[o.id][1],SAFE[o.id][2]])+'</div>';cnt++;}}
   if(!cnt){var top=order[order.length-1];sf+='<div class="si" style="--tc:'+top.color+'"><b>지금은 모두 안정권입니다</b>'+HIGH_USE[top.id]+'<br>단, 수면 부족·음주·큰 스트레스가 겹치면 누구나 조절력이 떨어집니다. 그런 날은 큰 결정과 큰 대화를 미루세요.</div>';}
   $('r-safe').innerHTML=sf;
   var low=false;for(i=0;i<DOMAINS.length;i++){if(S[DOMAINS[i].id].score<=40)low=true;}
   var h=$('r-help');if(low){h.classList.remove('hide');h.innerHTML='📞 화를 참기 어렵거나 마음이 힘든 날, 혼자 두지 마세요.<br>정신건강 위기상담 <b>1577-0199</b> · 폭력 피해 상담 <b>1366</b> (24시간)';}else{h.classList.add('hide');}
   ME={n:user.name,g:user.gender,br:user.br,s:[S.anger.score,S.decision.score,S.speech.score,S.speed.score,S.pleasure.score]};
   renderPair();renderTrainSingle(S,order);
+  if(mode==='couple'&&!invite){$('s-result').insertBefore($('r-pair'),$('r-overall'));}else{$('s-result').insertBefore($('r-pair'),$('r-gauges'));}
   show('s-result');
 }
 
@@ -385,7 +515,7 @@ function saveCard(){
   var W=1080,H=1500,c=document.createElement('canvas');c.width=W;c.height=H;var x=c.getContext('2d'),i;
   x.fillStyle='#FFF7DD';x.fillRect(0,0,W,H);
   x.fillStyle='#7C5BA8';x.fillRect(0,0,W,170);
-  x.fillStyle='#fff';x.textAlign='center';x.font='900 56px sans-serif';x.fillText('한국뇌심리연구소 · 5대 조절력',W/2,110);
+  x.fillStyle='#fff';x.textAlign='center';x.font='900 56px sans-serif';x.fillText('한국뇌궁합연구소 · 조절력 브레이크',W/2,110);
   x.fillStyle='#111';x.font='900 72px sans-serif';
   var honor=(new Date().getFullYear()-user.birth)>=19?'님':'';
   x.fillText(user.name+honor+'의 조절 모양',W/2,290);
@@ -397,8 +527,8 @@ function saveCard(){
     x.fillStyle='#E6E6E6';x.fillRect(70,y+58,W-140,30);x.fillStyle=d.color;x.fillRect(70,y+58,(W-140)*s.score/100,30);
     x.fillStyle='#111';x.fillRect(70+(W-140)*s.avg/100-3,y+48,6,50);}
   x.textAlign='center';x.fillStyle='#111';x.font='900 46px sans-serif';x.fillText(pattern(RES.S).n.replace(/^\S+\s/,''),W/2,1330);
-  x.font='800 38px sans-serif';x.fillText('나도 해보기 ▶ 5CAS 5대 조절력 검사',W/2,1400);
-  x.font='700 30px sans-serif';x.fillStyle='#333';x.fillText('굵은 검정 막대 = 또래 평균 · 의학적 진단이 아닌 자기이해용',W/2,1455);
+  x.font='800 38px sans-serif';x.fillText('나도 해보기 ▶ k-brain.co.kr/5cas.html',W/2,1400);
+  x.font='700 30px sans-serif';x.fillStyle='#333';x.fillText('굵은 검정 막대 = 또래 평균',W/2,1455);
   c.toBlob(function(b){
     if(!b)return;var f=new File([b],'5CAS-조절력-결과.png',{type:'image/png'});
     if(navigator.canShare&&navigator.canShare({files:[f]})){navigator.share({files:[f],title:'내 5대 조절력'}).catch(function(){});}
@@ -442,27 +572,27 @@ function shareLink(list,text){
   else{window.prompt('아래 링크를 복사해 보내세요',url);}
 }
 function radarN(list,cols){
-  var cx=200,cy=165,R=100,n=5,i,k,grid='',lab='',polys='',dots='';
+  var cx=200,cy=175,R=112,n=5,i,k,grid='',lab='',polys='',dots='';
   function pt(a,v){var g=-Math.PI/2+a*2*Math.PI/n;return [cx+Math.cos(g)*R*v/100,cy+Math.sin(g)*R*v/100];}
   var lv;for(lv=25;lv<=100;lv+=25){var p='';for(i=0;i<n;i++){var q=pt(i,lv);p+=q[0].toFixed(1)+','+q[1].toFixed(1)+' ';}grid+='<polygon points="'+p+'" fill="none" stroke="#999" stroke-width="1.5"/>';}
   for(i=0;i<n;i++){var e=pt(i,100);grid+='<line x1="'+cx+'" y1="'+cy+'" x2="'+e[0].toFixed(1)+'" y2="'+e[1].toFixed(1)+'" stroke="#999" stroke-width="1.5"/>';
-    var l=pt(i,141);lab+='<text x="'+l[0].toFixed(1)+'" y="'+(l[1]+5).toFixed(1)+'" text-anchor="middle" font-size="17" font-weight="900" fill="'+DOMAINS[i].color+'">'+DOMAINS[i].name+'</text>';}
+    var l=pt(i,138);lab+='<text x="'+l[0].toFixed(1)+'" y="'+(l[1]+5).toFixed(1)+'" text-anchor="middle" font-size="17" font-weight="900" fill="'+DOMAINS[i].color+'">'+DOMAINS[i].name+'</text>';}
   for(k=0;k<list.length;k++){var pts='';for(i=0;i<n;i++){var u=pt(i,list[k].s[i]);pts+=u[0].toFixed(1)+','+u[1].toFixed(1)+' ';}
     polys+='<polygon points="'+pts+'" fill="'+cols[k]+'" fill-opacity="0.28" stroke="'+cols[k]+'" stroke-width="5"/>';
     for(i=0;i<n;i++){var u2=pt(i,list[k].s[i]);dots+='<circle cx="'+u2[0].toFixed(1)+'" cy="'+u2[1].toFixed(1)+'" r="6" fill="'+cols[k]+'" stroke="#111" stroke-width="2"/>';}}
-  return '<svg viewBox="0 0 400 335" width="100%" role="img" aria-label="두 사람의 5대 조절력 레이더">'+grid+polys+dots+lab+'</svg>';
+  return '<svg viewBox="0 0 400 322" width="100%" role="img" aria-label="두 사람의 5대 조절력 레이더">'+grid+polys+dots+lab+'</svg>';
 }
 function trainBox(id){
-  var d=null,i;for(i=0;i<DOMAINS.length;i++){if(DOMAINS[i].id===id)d=DOMAINS[i];}
-  return '<div class="tbox" style="--tc:'+d.color+'"><div class="th"><span class="ti">🏋</span><div class="tt"><b>'+d.name+' 훈련 박스</b><span>눌러서 이번 주 훈련 열기</span></div><span class="ar">▼</span></div>'+
-    '<div class="tb"><p><b>이번 주 훈련</b><br>'+TIP[id]+'</p><p><b>오늘부터 3가지</b><br>1) '+SAFE[id][0]+'<br>2) '+SAFE[id][1]+'<br>3) '+SAFE[id][2]+'</p>'+
+  var d=null,i;for(i=0;i<DOMAINS.length;i++){if(DOMAINS[i].id===id)d=DOMAINS[i];}var t=TRAIN[id];
+  return '<div class="tbox" style="--tc:'+d.color+'"><div class="th"><span class="ti">🏋</span><div class="tt"><b>'+t.p+' ('+t.w+')</b><span>'+d.name+' · 눌러서 열기</span></div><span class="ar">▼</span></div>'+
+    '<div class="tb"><p>'+t.h+'</p>'+list(t.st,'▪')+
     '<a class="btn2" href="'+BHC_URL+'" target="_blank" rel="noopener">한국뇌심리연구소 무료 BHC 뇌훈련 가기 ▶</a></div></div>';
 }
 document.addEventListener('click',function(ev){var n=ev.target;while(n&&n!==document){if(n.className&&(' '+n.className+' ').indexOf(' th ')>-1&&n.parentNode&&(' '+n.parentNode.className+' ').indexOf(' tbox ')>-1){var b=n.parentNode;if(b.className.indexOf('open')>-1)b.className=b.className.replace(' open','');else b.className+=' open';return;}n=n.parentNode;}});
 
 function renderTrainSingle(S,order){
   var ids=[],i;for(i=0;i<order.length&&ids.length<2;i++){if(S[order[i].id].score<=54)ids.push(order[i].id);}
-  if(!ids.length){$('r-train').innerHTML='';return;}
+  if(!ids.length)ids.push(order[0].id);
   var h='<div class="tsec">💪 훈련 박스 (눌러 보세요)</div>';for(i=0;i<ids.length;i++)h+=trainBox(ids[i]);
   $('r-train').innerHTML=h;
 }
@@ -509,13 +639,14 @@ function renderCompare(list){
       '<div class="pline"><b>'+esc(B.n)+'</b><div class="tk"><i style="width:'+b+'%;background:'+cols[1]+'"></i></div><em>'+b+'</em></div></div><div class="px">'+txt+'</div></div>';
   }
   var ov=Math.max(0,Math.round(100-sumd/5)),lbl=ov>=85?'닮은꼴 조합':(ov>=70?'닮고 다른 균형 조합':'다름이 큰 조합');
-  $('c-overall').innerHTML='<h2>조절력 닮음</h2><div class="big"><div class="n">'+ov+'<small>%</small></div><div class="d"><span class="tag">'+lbl+'</span><br>두 사람의 5대 조절력이 겹치는 정도입니다.<br>낮다고 나쁜 것이 아니라, 맞춰 갈 곳이 많다는 뜻입니다.</div></div>';
+  var PI=pairInfo(A,B);
+  $('c-overall').innerHTML='<h2>조절력 닮음</h2><div class="big"><div class="n">'+ov+'<small>%</small></div><div class="d"><span class="tag">'+lbl+'</span><br>두 사람의 5대 조절력이 겹치는 정도예요.<br>낮다고 나쁜 것이 아니라, 맞춰 갈 곳이 많다는 뜻이에요.</div></div><div class="bal">💞 우리 조합: '+PI.title+'</div>'+(PI.book?'<div class="book">'+PI.book+'</div>':'');
   $('c-radar').innerHTML=radarN([A,B],cols);
   $('c-rows').innerHTML=rows;
   diffs.sort(function(x,y){return y.df-x.df;});
   var pr='<h3>🤝 우리가 함께 정할 약속</h3>',cnt=0;
   for(i=0;i<diffs.length&&cnt<2;i++){var id=DOMAINS[diffs[i].i].id,mn=Math.min(A.s[diffs[i].i],B.s[diffs[i].i]);
-    if(diffs[i].df>=15||mn<=54){pr+='<p>'+(cnt+1)+') <b>'+DOMAINS[diffs[i].i].name+'</b> — '+PROMISE[id]+'</p>';cnt++;}}
+    if(diffs[i].df>=15||mn<=54){pr+='<div class="li"><span class="n">'+(cnt+1)+')</span><span class="t"><b>'+DOMAINS[diffs[i].i].name+'</b> — '+PROMISE[id]+'</span></div>';cnt++;}}
   if(!cnt)pr+='<p>두 사람 모두 큰 차이 없이 안정적입니다. 피곤하고 힘든 날에는 큰 대화와 큰 결정을 하루 미루기로 약속하세요.</p>';
   $('c-promise').innerHTML=pr;
   var hp=$('c-help');
@@ -527,15 +658,53 @@ function renderCompare(list){
   $('c-train').innerHTML=th;
   $('c-back').classList.toggle('hide',!ME);
 }
+
+function dateStr(){var d=new Date();return d.getFullYear()+'년 '+(d.getMonth()+1)+'월 '+d.getDate()+'일';}
+function coverHTML(title,subject){
+  return '<div class="a4"><div class="cover"><div class="cert">KBMI<br>인증</div><div class="seal">소장<br>印</div>'+
+   '<div class="org" style="margin-top:78px">KOREA BRAIN MATCHING INSTITUTE</div><div class="org2">한국뇌궁합연구소</div>'+
+   '<div class="rt">'+title+'</div><div class="rs">5 Control Ability System · 5CAS</div><hr>'+
+   '<div class="subj">'+subject+'</div><div class="dt">분석일 '+dateStr()+'</div><hr>'+
+   '<div class="dir"><b>임찬우 소장</b><br>📞 010-4119-0031<br>✉ brain.saboo@gmail.com</div></div></div>';
+}
+function openReport(kind){
+  var h='',i;lastScr=(kind==='pair')?'s-compare':'s-result';
+  if(kind==='pair'&&cmpList){
+    var A=cmpList[0],B=cmpList[1];
+    h=coverHTML('조절력 브레이크<br>두 사람 결과 보고서',esc(A.n)+' × '+esc(B.n));
+    h+='<div class="a4"><div class="legend">'+$('c-legend').innerHTML+'</div><div class="box">'+$('c-overall').innerHTML+'</div><div class="box" style="text-align:center;"><h2>겹쳐 본 조절 모양</h2>'+$('c-radar').innerHTML+'</div></div>';
+    h+='<div class="a4"><div class="tsec" style="margin-left:0">영역별로 어디가 다를까?</div>'+$('c-rows').innerHTML+'<div class="pat" style="margin-left:0;margin-right:0">'+$('c-promise').innerHTML+'</div></div>';
+    var ids=[];var df=[];for(i=0;i<5;i++)df.push({i:i,d:Math.abs(A.s[i]-B.s[i]),m:Math.min(A.s[i],B.s[i])});df.sort(function(x,y){return y.d-x.d;});
+    for(i=0;i<df.length&&ids.length<2;i++){ids.push(DOMAINS[df[i].i].id);}
+    var pg='';for(i=0;i<ids.length;i++)pg+=progBlock(ids[i]);
+    h+='<div class="a4"><div class="tsec" style="margin-left:0">💪 함께 할 맞춤 훈련 프로그램</div>'+pg+'</div>';
+  }else{
+    if(!RES)return;
+    var honor=(new Date().getFullYear()-user.birth)>=19?'님':'';
+    h=coverHTML('조절력 브레이크<br>결과 보고서',esc(user.name)+honor);
+    h+='<div class="a4"><div class="box">'+$('r-overall').innerHTML+'</div><div class="box" style="text-align:center;"><h2>내 조절 모양 (점선 = 또래 평균)</h2>'+$('r-radar').innerHTML+'</div><div class="pat" style="margin-left:0;margin-right:0">'+$('r-pattern').innerHTML+'</div></div>';
+    h+='<div class="a4">'+$('r-gauges').innerHTML+'</div>';
+    h+='<div class="a4"><div class="tsec" style="margin-left:0">🧩 세부 15항목 점수</div>'+subHTML()+'</div>';
+    var ord=DOMAINS.slice().sort(function(a,b){return RES.S[a.id].score-RES.S[b.id].score;}),pg2='';
+    for(i=0;i<2;i++)pg2+=progBlock(ord[i].id);
+    h+='<div class="a4"><div class="tsec" style="margin-left:0">💪 맞춤 훈련 프로그램</div>'+pg2+'</div>';
+  }
+  $('rp-body').innerHTML=h;show('s-report');
+}
 (function initPair(){
+  $('b-report').onclick=function(){openReport('single');};
+  $('c-report').onclick=function(){openReport('pair');};
+  $('rp-print').onclick=function(){window.print();};
+  $('rp-back').onclick=function(){show(lastScr);};
   $('c-share').onclick=function(){if(cmpList)shareLink(cmpList,cmpList[0].n+'님과 '+cmpList[1].n+'님의 5대 조절력 비교예요. 눌러서 두 사람의 레이더를 확인하세요.');};
   $('c-back').onclick=function(){show('s-result');};
   $('c-me').onclick=function(){show('s-intro');};
   var L=dec(location.hash||'');
   if(L&&L.length===2){openCompare(L);}
-  else if(L&&L.length===1){invite=L[0];var b=$('invite-banner');b.classList.remove('hide');b.innerHTML='💌 <b>'+esc(invite.n)+'</b>님이 5대 조절력 비교를 보냈어요.<br>아래에 입력하고 검사하면 두 사람의 레이더가 겹쳐 보여요.';}
+  else if(L&&L.length===1){invite=L[0];var b=$('invite-banner');b.classList.remove('hide');b.innerHTML='💌 <b>'+esc(invite.n)+'</b>님이 조절력 브레이크 비교를 보냈어요.<br>아래에 입력하고 검사하면 두 사람의 레이더가 겹쳐 보여요.';$('b-solo').classList.add('hide');$('b-couple').textContent='검사 시작하기 ▶';}
 })();
 
+fixAlign(document);
 </script>
 </body>
 </html>
