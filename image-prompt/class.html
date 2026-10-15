@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>수업용 안내 | 이미지 프롬프트 만들기</title>
+<style>
+:root{--blue:#0050FF;--red:#E3001B;--yellow:#FFC400;--green:#00A650;--ink:#111}
+*{box-sizing:border-box}
+body{margin:0;background:#FFF8E1;color:var(--ink);font-family:"Noto Sans KR","Malgun Gothic",sans-serif;font-weight:700;font-size:20px;line-height:2.1;text-align:center;-webkit-text-size-adjust:100%}
+header{background:var(--blue);color:#fff;padding:16px}
+header small{display:block;color:var(--yellow);font-size:16px;font-weight:900}
+header h1{margin:2px 0 0;font-size:28px;line-height:1.7;font-weight:900}
+.wrap{max-width:640px;margin:0 auto;padding:16px}
+.qr{background:#fff;border:4px solid var(--ink);border-radius:18px;padding:14px;margin-top:4px}
+.qr img{width:100%;max-width:340px;height:auto;image-rendering:pixelated;display:block;margin:0 auto}
+.qr p{margin:8px 0 0;font-size:22px;font-weight:900;color:var(--red)}
+.url{display:block;margin-top:8px;background:var(--yellow);border:3px solid var(--ink);border-radius:12px;padding:6px 8px;font-size:19px;font-weight:900;word-break:break-all;color:var(--ink);text-decoration:none;line-height:1.8}
+ol{list-style:none;margin:16px 0 0;padding:0;text-align:left}
+li{display:flex;gap:12px;align-items:flex-start;background:#fff;border:3px solid var(--ink);border-radius:14px;padding:8px 12px;margin-top:10px;line-height:1.8}
+li i{flex:0 0 40px;height:40px;border-radius:50%;background:var(--blue);color:#fff;font-style:normal;font-size:22px;font-weight:900;text-align:center;line-height:40px;margin-top:2px}
+li:nth-child(2) i{background:var(--red)}li:nth-child(3) i{background:var(--green)}
+.ok{margin-top:16px;background:var(--green);color:#fff;border:3px solid var(--ink);border-radius:14px;padding:8px 12px;font-size:20px;font-weight:900;line-height:1.9}
+footer{background:var(--ink);color:#fff;padding:12px;margin-top:20px;font-size:17px;line-height:1.9}
+@media print{body{font-size:18px}.noprint{display:none}}
+</style></head><body>
+<header><small>한국뇌심리연구소 · 전자책 만들기 수업</small><h1>이미지 프롬프트 만들기</h1></header>
+<div class="wrap">
+  <div class="qr"><img src="qr.png" alt="이미지 프롬프트 앱 QR코드"><p>휴대폰 카메라로 QR을 비추세요</p></div>
+  <a class="url" href="https://k-brain.co.kr/image-prompt/">https://k-brain.co.kr/image-prompt/</a>
+  <ol>
+    <li><i>1</i><span>QR을 찍어 나온 <b style="color:#E3001B">링크를 눌러</b> 엽니다. 설치도 가입도 필요 없습니다.</span></li>
+    <li><i>2</i><span>그림 종류와 스타일을 <b style="color:#0050FF">누르고</b>, 그릴 내용을 한 줄 씁니다.</span></li>
+    <li><i>3</i><span><b style="color:#00A650">복사하기</b> → <b style="color:#00A650">챗GPT 열기</b> → 붙여넣고 보냅니다.</span></li>
+  </ol>
+  <div class="ok">그림이 마음에 안 들면 챗GPT에게 "더 밝게"처럼 말로 고쳐 달라고 하세요.</div>
+</div>
+<footer>한국뇌심리연구소 · 임찬우 소장 · k-brain.co.kr</footer>
+</body></html>

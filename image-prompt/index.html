@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>전자책 이미지 프롬프트 만들기 | 한국뇌심리연구소</title>
+<style>
+:root{--blue:#0050FF;--red:#E3001B;--yellow:#FFC400;--green:#00A650;--ink:#111;--bg:#FFF8E1}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:"Noto Sans KR","Malgun Gothic",sans-serif;font-size:18px;line-height:2;font-weight:700;-webkit-text-size-adjust:100%}
+.wrap{max-width:560px;margin:0 auto;padding:0 16px 24px}
+header{background:var(--blue);color:#fff;padding:20px 16px;text-align:center}
+header .lab{font-size:15px;font-weight:700;color:var(--yellow)}
+header h1{margin:4px 0 0;font-size:25px;line-height:1.6;font-weight:900}
+.hero{background:var(--yellow);padding:12px 16px;text-align:center;font-size:17px;font-weight:900;line-height:1.9}
+.step{background:#fff;border:3px solid var(--ink);border-radius:16px;margin-top:16px;overflow:hidden}
+.step h2{margin:0;padding:8px 14px;font-size:20px;font-weight:900;color:#fff;line-height:1.8}
+.s1 h2{background:var(--red)}.s2 h2{background:var(--blue)}.s3 h2{background:var(--green)}.s4 h2{background:var(--red)}.s5 h2{background:var(--blue)}.s6 h2{background:var(--green)}
+.body{padding:12px 14px}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.opts.one{grid-template-columns:1fr}
+.opt{border:3px solid var(--ink);border-radius:12px;background:#fff;color:var(--ink);font:inherit;font-size:17px;font-weight:900;line-height:1.6;padding:10px 6px;text-align:center;cursor:pointer;min-height:56px}
+.opt.on{background:var(--yellow);box-shadow:inset 0 0 0 3px var(--red)}
+textarea{width:100%;border:3px solid var(--ink);border-radius:12px;font:inherit;font-size:18px;font-weight:700;line-height:1.8;padding:10px;resize:vertical;min-height:96px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.chip{border:2px solid var(--blue);background:#EAF0FF;color:var(--blue);border-radius:20px;font:inherit;font-size:15px;font-weight:900;padding:2px 12px;line-height:1.9;cursor:pointer}
+.check{display:flex;gap:10px;align-items:flex-start;line-height:1.7;margin-top:6px;font-size:17px}
+.check input{width:26px;height:26px;margin-top:4px;flex:0 0 26px}
+.go{display:block;width:100%;margin-top:16px;border:3px solid var(--ink);border-radius:16px;background:var(--red);color:#fff;font:inherit;font-size:22px;font-weight:900;line-height:1.6;padding:12px;cursor:pointer}
+.result{background:#fff;border:3px solid var(--green);border-radius:16px;margin-top:16px;display:none;overflow:hidden}
+.result h2{margin:0;background:var(--green);color:#fff;padding:8px 14px;font-size:20px;font-weight:900;line-height:1.8}
+.result pre{margin:0;padding:12px 14px;white-space:pre-wrap;word-break:keep-all;font:inherit;font-size:17px;font-weight:700;line-height:2;text-align:left}
+.btns{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0 14px 14px}
+.btn{border:3px solid var(--ink);border-radius:12px;font:inherit;font-size:18px;font-weight:900;line-height:1.5;padding:12px 6px;text-align:center;text-decoration:none;color:var(--ink);cursor:pointer;display:block}
+.b-copy{background:var(--yellow)}.b-gpt{background:var(--blue);color:#fff}
+.how{background:#fff;border:3px solid var(--ink);border-radius:16px;margin-top:16px;padding:12px 14px}
+.how ol{margin:0;padding-left:26px}
+.how li{line-height:2;padding-left:2px}
+.how b{color:var(--red)}
+footer{background:var(--ink);color:#fff;text-align:center;padding:16px;margin-top:20px;line-height:1.9}
+footer a{color:var(--yellow);font-weight:900}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--green);color:#fff;border:3px solid var(--ink);border-radius:14px;padding:8px 20px;font-size:19px;font-weight:900;display:none;z-index:9}
+</style>
+<meta name="theme-color" content="#0050FF">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="이미지 프롬프트">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<style>
+#inst{margin-top:16px}
+#inst .ib{display:none;width:100%;margin:8px 0;border:3px solid var(--ink);border-radius:14px;background:var(--green);color:#fff;font:inherit;font-size:20px;font-weight:900;line-height:1.6;padding:12px;cursor:pointer}
+#inst table{width:100%;border-collapse:collapse;margin-top:6px}
+#inst td{border:2px solid var(--ink);padding:6px 8px;vertical-align:top;line-height:1.8;font-size:16px;text-align:left}
+#inst td.k{background:var(--yellow);width:30%;font-weight:900;text-align:center}
+#inst .note{margin:8px 0 0;font-size:16px;line-height:1.9;color:var(--red);font-weight:900}
+</style>
+</head>
+<body>
+<header>
+  <div class="lab">한국뇌심리연구소 · 전자책 만들기 도우미</div>
+  <h1>이미지 프롬프트 만들기</h1>
+</header>
+<div class="hero">고르기만 하면 한글 요청문이 완성됩니다. 복사해서 챗GPT에 붙여넣으세요.</div>
+
+<div class="wrap">
+
+<section class="step s1"><h2>① 어디에 쓸 그림인가요?</h2><div class="body"><div class="opts" id="use"></div></div></section>
+
+<section class="step s2"><h2>② 무엇을 그릴까요?</h2><div class="body">
+  <textarea id="what" placeholder="예) 공원 벤치에서 손주와 웃으며 이야기하는 할머니"></textarea>
+  <div class="chips" id="ex"></div>
+</div></section>
+
+<section class="step s3"><h2>③ 그림 스타일</h2><div class="body"><div class="opts" id="style"></div></div></section>
+
+<section class="step s4"><h2>④ 색감</h2><div class="body"><div class="opts" id="tone"></div></div></section>
+
+<section class="step s5"><h2>⑤ 구도와 비율</h2><div class="body">
+  <div class="opts" id="comp"></div>
+  <div style="height:10px"></div>
+  <div class="opts" id="ratio"></div>
+</div></section>
+
+<section class="step s6"><h2>⑥ 사람이 나오나요?</h2><div class="body">
+  <div class="opts" id="people"></div>
+  <label class="check"><input type="checkbox" id="same"><span>한 책의 그림을 모두 같은 느낌으로 통일하기</span></label>
+</div></section>
+
+<button class="go" id="make">✨ 프롬프트 만들기</button>
+
+<section class="result" id="result">
+  <h2>완성된 요청문</h2>
+  <pre id="out"></pre>
+  <div class="btns">
+    <button class="btn b-copy" id="copy">📋 복사하기</button>
+    <a class="btn b-gpt" id="gpt" href="https://chatgpt.com/" target="_blank" rel="noopener">챗GPT 열기</a>
+  </div>
+</section>
+
+<section class="how">
+  <b>사용 순서</b>
+  <ol>
+    <li><b>복사하기</b>를 누릅니다.</li>
+    <li><b>챗GPT 열기</b>를 눌러 입력창에 붙여넣고 보냅니다.</li>
+    <li>마음에 안 들면 "더 밝게", "인물을 크게"처럼 말로 고쳐 달라고 하세요.</li>
+    <li>마음에 드는 그림은 길게 눌러 저장합니다.</li>
+  </ol>
+</section>
+
+<section class="how" id="inst">
+  <b>📲 내 폰·노트북에 앱처럼 설치 (선택)</b>
+  <button type="button" class="ib" id="ibtn">📲 지금 설치하기</button>
+  <table>
+    <tr><td class="k">안드로이드</td><td>크롬 오른쪽 위 점 3개 → <b>앱 설치</b> 또는 <b>홈 화면에 추가</b></td></tr>
+    <tr><td class="k">아이폰</td><td>사파리 아래 공유 버튼 → <b>홈 화면에 추가</b></td></tr>
+    <tr><td class="k">노트북</td><td>크롬·엣지 주소창 오른쪽의 <b>설치 아이콘</b> 클릭 → 바탕화면에 바로가기가 생깁니다</td></tr>
+  </table>
+  <p class="note">수업 중에는 설치하지 않아도 됩니다. QR만 찍으면 바로 사용할 수 있습니다.</p>
+</section>
+</div>
+
+<footer>
+  한국뇌심리연구소 · 임찬우 소장<br>
+  <a href="https://k-brain.co.kr" target="_blank" rel="noopener">k-brain.co.kr</a>
+</footer>
+<div class="toast" id="toast">복사되었습니다</div>
+
+<script>
+(function(){
+  var USE=[
+    {t:"📕 책 표지",d:"전자책 표지에 쓸 배경 그림",r:"세로 2:3"},
+    {t:"🖼 본문 삽화",d:"본문 중간에 들어갈 삽화",r:"가로 3:2"},
+    {t:"🔖 챕터 첫 장",d:"챕터가 시작되는 페이지의 그림",r:"정사각 1:1"},
+    {t:"🛒 판매 대표",d:"판매 페이지 대표 이미지",r:"가로 16:9"}
+  ];
+  var STYLE=[
+    {t:"🎨 따뜻한 수채화",d:"부드러운 수채화 스타일"},
+    {t:"🟦 깔끔한 일러스트",d:"단순하고 깔끔한 플랫 일러스트 스타일"},
+    {t:"🧸 3D 캐릭터",d:"귀여운 3D 캐릭터 스타일"},
+    {t:"📷 실제 사진",d:"실제 사진처럼 자연스러운 스타일"},
+    {t:"✏️ 연필 스케치",d:"손으로 그린 연필 스케치 스타일"},
+    {t:"🌈 파스텔 동화",d:"밝은 파스텔 색의 동화책 삽화 스타일"}
+  ];
+  var TONE=[
+    {t:"☀️ 밝고 선명하게",d:"밝고 선명한 색감"},
+    {t:"🍂 따뜻하게",d:"따뜻하고 포근한 색감"},
+    {t:"🌸 부드러운 파스텔",d:"부드러운 파스텔 색감"},
+    {t:"🌿 차분한 초록",d:"차분한 초록 계열 색감"}
+  ];
+  var COMP=[
+    {t:"중앙에 크게",d:"주인공을 화면 중앙에 크게 배치"},
+    {t:"글자 자리 여백",d:"제목 글자를 나중에 넣을 수 있도록 위쪽에 넓은 여백을 두는 구도"},
+    {t:"넓은 풍경",d:"넓게 펼쳐진 풍경 구도"},
+    {t:"가까이 확대",d:"대상을 가까이에서 확대한 구도"}
+  ];
+  var RATIO=[
+    {t:"세로 2:3",d:"세로로 긴 2:3 비율"},
+    {t:"정사각 1:1",d:"정사각형 1:1 비율"},
+    {t:"가로 3:2",d:"가로로 긴 3:2 비율"},
+    {t:"가로 16:9",d:"가로로 넓은 16:9 비율"}
+  ];
+  var PEOPLE=[
+    {t:"없음",d:""},
+    {t:"한국인 시니어",d:"한국인 시니어(60~70대)"},
+    {t:"한국인 성인",d:"한국인 성인"},
+    {t:"어린이",d:"한국인 어린이"}
+  ];
+  var EX=["아침 햇살이 들어오는 창가의 책상과 커피","휴대폰으로 글을 쓰는 중년 여성","마음을 편안하게 해 주는 숲길","가족이 둘러앉아 식사하는 따뜻한 식탁","전구가 켜진 아이디어 장면"];
+
+  var sel={use:0,style:0,tone:0,comp:0,ratio:0,people:0};
+  var DATA={use:USE,style:STYLE,tone:TONE,comp:COMP,ratio:RATIO,people:PEOPLE};
+
+  function $(id){return document.getElementById(id);}
+
+  function render(key){
+    var box=$(key);
+    box.innerHTML="";
+    DATA[key].forEach(function(o,i){
+      var b=document.createElement("button");
+      b.type="button";
+      b.className="opt"+(sel[key]===i?" on":"");
+      b.textContent=o.t;
+      b.onclick=function(){
+        sel[key]=i;
+        if(key==="use"){
+          for(var j=0;j<RATIO.length;j++){ if(RATIO[j].t===USE[i].r){sel.ratio=j;} }
+          render("ratio");
+        }
+        render(key);
+      };
+      box.appendChild(b);
+    });
+  }
+  ["use","style","tone","comp","ratio","people"].forEach(render);
+  for(var j=0;j<RATIO.length;j++){ if(RATIO[j].t===USE[0].r){sel.ratio=j;} }
+  render("ratio");
+
+  EX.forEach(function(e){
+    var c=document.createElement("button");
+    c.type="button";c.className="chip";c.textContent=e;
+    c.onclick=function(){$("what").value=e;};
+    $("ex").appendChild(c);
+  });
+
+  function build(){
+    var what=$("what").value.replace(/^\s+|\s+$/g,"");
+    if(!what){return null;}
+    var L=[];
+    L.push("다음 조건으로 이미지를 1장 만들어 주세요.");
+    L.push("");
+    L.push("- 용도: "+USE[sel.use].d);
+    L.push("- 그릴 내용: "+what);
+    L.push("- 스타일: "+STYLE[sel.style].d);
+    L.push("- 색감: "+TONE[sel.tone].d);
+    L.push("- 구도: "+COMP[sel.comp].d);
+    L.push("- 비율: "+RATIO[sel.ratio].d);
+    if(PEOPLE[sel.people].d){L.push("- 등장인물: "+PEOPLE[sel.people].d+", 자연스럽고 따뜻한 표정");}
+    else{L.push("- 등장인물: 사람은 넣지 않기");}
+    L.push("- 이미지 안에 글자, 숫자, 로고, 워터마크는 넣지 않기");
+    if($("same").checked){L.push("- 앞에서 만든 그림들과 같은 화풍과 색감을 유지하기");}
+    return L.join("\n");
+  }
+
+  function toast(msg){
+    var t=$("toast");t.textContent=msg;t.style.display="block";
+    setTimeout(function(){t.style.display="none";},1600);
+  }
+
+  $("make").onclick=function(){
+    var p=build();
+    if(!p){toast("②번에 그릴 내용을 적어 주세요");$("what").focus();return;}
+    $("out").textContent=p;
+    $("result").style.display="block";
+    $("result").scrollIntoView({behavior:"smooth",block:"start"});
+  };
+
+  $("copy").onclick=function(){
+    var text=$("out").textContent;
+    function fallback(){
+      var ta=document.createElement("textarea");
+      ta.value=text;ta.style.position="fixed";ta.style.opacity="0";
+      document.body.appendChild(ta);ta.focus();ta.select();
+      var ok=false;
+      try{ok=document.execCommand("copy");}catch(e){}
+      document.body.removeChild(ta);
+      toast(ok?"복사되었습니다":"글을 길게 눌러 직접 복사하세요");
+    }
+    if(navigator.clipboard&&navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(function(){toast("복사되었습니다");},fallback);
+    }else{fallback();}
+  };
+})();
+</script>
+<script>
+(function(){
+  if('serviceWorker' in navigator && (location.protocol==='https:'||location.hostname==='localhost')){
+    window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){});});
+  }
+  var dp=null,btn=document.getElementById('ibtn'),box=document.getElementById('inst');
+  var standalone=(window.matchMedia&&window.matchMedia('(display-mode: standalone)').matches)||window.navigator.standalone===true;
+  if(standalone&&box){box.style.display='none';}
+  window.addEventListener('beforeinstallprompt',function(e){
+    e.preventDefault();dp=e;if(btn){btn.style.display='block';}
+  });
+  if(btn){btn.onclick=function(){
+    if(!dp){return;}
+    dp.prompt();
+    dp.userChoice.then(function(){dp=null;btn.style.display='none';});
+  };}
+  window.addEventListener('appinstalled',function(){if(btn){btn.style.display='none';}});
+})();
+</script>
+</body>
+</html>
