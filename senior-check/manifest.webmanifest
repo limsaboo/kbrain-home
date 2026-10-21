@@ -1,7 +1,7 @@
 {
-  "name": "시니어 인지기능 체크 무료체험",
-  "short_name": "인지체크",
-  "description": "한국뇌심리연구소 시니어 인지기능 체크 무료체험",
+  "name": "뇌 활력 체크 - 한국뇌심리연구소",
+  "short_name": "뇌활력체크",
+  "description": "6가지 두뇌 미션으로 알아보는 시니어 뇌 활력 체크 무료체험",
   "lang": "ko",
   "start_url": "./index.html",
   "scope": "./",

@@ -1,5 +1,6 @@
-const CACHE = 'cogcheck-v2';
+const CACHE = 'cogcheck-v3';
 const FILES = ['./', './index.html', './manifest.webmanifest',
+  './assets/hero.jpg', './assets/logo-brain.png', './assets/cert-emblem.png', './assets/official-seal.png',
   './icons/icon-192.png', './icons/icon-512.png', './icons/icon-maskable-512.png', './icons/apple-touch-icon.png'];
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(FILES)).then(() => self.skipWaiting()));
