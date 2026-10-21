@@ -1,0 +1,17 @@
+{
+  "name": "시니어 인지기능 체크 무료체험",
+  "short_name": "인지체크",
+  "description": "한국뇌심리연구소 시니어 인지기능 체크 무료체험",
+  "lang": "ko",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#FDF6EA",
+  "theme_color": "#FDF6EA",
+  "icons": [
+    {"src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any"},
+    {"src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any"},
+    {"src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
+  ]
+}
