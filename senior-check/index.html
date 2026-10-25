@@ -304,6 +304,45 @@ footer{text-align:center;font-size:15px;font-weight:600;color:#6d6246;margin-top
   .noprint,.big-btn,footer{display:none !important;}
   .card,.train-card,.bf-card,.result-hero,.issue-block,.report-letterhead{break-inside:avoid;box-shadow:none !important;}
 }
+
+/* ---------- 시험 화면: 스크롤 없이 한 화면 맞춤 (문제·보기·버튼 동시 표시) ---------- */
+.wrap:has(#screen-test.active){padding-top:max(8px,env(safe-area-inset-top,0px));padding-bottom:max(8px,env(safe-area-inset-bottom,0px));padding-left:max(10px,env(safe-area-inset-left,0px));padding-right:max(10px,env(safe-area-inset-right,0px));}
+.wrap:has(#screen-test.active) footer{display:none;}
+#screen-test.active{display:flex;flex-direction:column;height:calc(100vh - 20px);height:calc(100dvh - 20px);min-height:0;}
+#screen-test .tracker{gap:5px;margin-bottom:6px;flex:none;}
+#screen-test .tk{padding:3px 2px 2px;border-radius:11px;}
+#screen-test .tk .tk-i{font-size:clamp(17px,3vh,24px);}
+#screen-test .tk .tk-n{font-size:clamp(10.5px,1.6vh,12.5px);}
+#screen-test .progress-wrap{margin-bottom:8px;flex:none;gap:10px;}
+#screen-test .progress-track{height:12px;}
+#screen-test .progress-label{font-size:18px;}
+#screen-test .q-card{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;justify-content:center;padding:clamp(8px,2.2vh,28px) 12px;border-width:3px;overflow:hidden;}
+#screen-test .domain-tag{align-self:center;font-size:clamp(15px,2.3vh,19px);padding:clamp(4px,.9vh,8px) 18px;margin-bottom:clamp(6px,1.4vh,14px);flex:none;}
+#screen-test .q-text{font-size:clamp(20px,4vh,32px);line-height:1.45;margin-bottom:clamp(8px,2.2vh,26px);flex:none;}
+#screen-test .q-visual{font-size:clamp(40px,10.5vh,92px);line-height:1.15;margin:0 0 clamp(8px,2.2vh,26px);letter-spacing:8px;flex:none;}
+#screen-test .q-visual-row{font-size:clamp(32px,7.4vh,62px);gap:10px;margin:0 0 clamp(8px,2.2vh,26px);flex:none;}
+#screen-test .shape-row{margin:0 0 clamp(6px,1.6vh,18px);gap:18px;flex:none;}
+#screen-test .shape-circle{transform:scale(var(--sc,1));transform-origin:bottom center;}
+#screen-test .icon-box{font-size:clamp(36px,7.6vh,68px);}
+#screen-test .options-grid{gap:clamp(8px,1.5vh,14px);flex:none;grid-auto-rows:clamp(54px,13vh,118px);}
+#screen-test .options-grid.one{grid-auto-rows:clamp(44px,9.5vh,84px);}
+#screen-test .opt-btn{min-height:0;height:100%;padding:2px 8px;font-size:clamp(20px,3.9vh,32px);border-width:3px;border-radius:18px;display:flex;align-items:center;justify-content:center;flex-direction:column;}
+#screen-test .opt-btn .opt-e{font-size:clamp(26px,5.6vh,48px);line-height:1.1;}
+#screen-test #recall-grid{grid-template-columns:1fr 1fr 1fr;grid-auto-rows:clamp(74px,17vh,150px);}
+#screen-test #recall-grid .opt-btn{font-size:clamp(17px,3.1vh,26px);}
+#screen-test .feedback-box{margin-top:clamp(4px,1vh,10px);font-size:clamp(15px,2.3vh,19px);min-height:clamp(20px,3.2vh,28px);flex:none;}
+#screen-test .big-btn{min-height:0;padding:clamp(12px,2.4vh,24px) 12px;font-size:clamp(19px,3.4vh,28px);margin:clamp(8px,2vh,22px) 0 0 !important;border-radius:20px;flex:none;}
+#screen-test .memory-word-card{padding:clamp(6px,1.2vh,14px) 12px;margin:4px;min-width:84px;border-radius:16px;}
+#screen-test .memory-word-card .mw-emoji{font-size:clamp(34px,7.6vh,68px);}
+#screen-test .memory-word-card .mw-text{font-size:clamp(17px,3vh,26px);margin-top:2px;}
+#screen-test .timer-circle{width:clamp(70px,13vh,124px);height:clamp(70px,13vh,124px);margin:clamp(6px,1.4vh,14px) auto;}
+#screen-test .timer-inner{width:calc(100% - 22px);height:calc(100% - 22px);font-size:clamp(26px,4.4vh,36px);}
+@media (max-height:600px){#screen-test .tk .tk-n{display:none;}#screen-test .domain-tag{margin-bottom:4px;}}
+@media (min-width:900px){
+  body{background-attachment:fixed;}
+  .wrap:has(#screen-test.active){max-width:720px;}
+  #screen-test.active{height:calc(100dvh - 32px);max-height:860px;margin:0 auto;}
+}
 </style>
 </head>
 <body>
@@ -589,14 +628,14 @@ function buildOrientation(){
   const dim=new Date(y,m+1,0).getDate();
   const sNow=seasonOf(m);
   const T={
-    season:()=>C('지남력','o:season',pick(['지금은 어느 계절에 가장 가까운가요?','오늘은 어떤 계절인가요?','지금 계절로 알맞은 것은 무엇일까요?']),sNow,SEASONS.filter(s=>s!==sNow),{visual:'🌤️'}),
-    ampm:()=>C('지남력','o:ampm',pick(['지금은 오전일까요, 오후일까요?','지금 시각은 오전과 오후 중 어디에 속할까요?']),h<12?'오전':'오후',[h<12?'오후':'오전'],{visual:'⏰'}),
-    weekday:()=>C('지남력','o:weekday',pick(['오늘은 무슨 요일인가요?','오늘 요일로 알맞은 것은 무엇일까요?','오늘은 어느 요일일까요?']),DAYS[w],sample(DAYS.filter((_,i)=>i!==w),3),{visual:'📅'}),
-    month:()=>C('지남력','o:month',pick(['지금은 몇 월일까요?','이번 달은 몇 월인가요?']),(m+1)+'월',sample([...Array(12).keys()].filter(i=>i!==m).map(i=>(i+1)+'월'),3),{visual:'🗓️'}),
+    season:()=>C('지남력','o:season',pick(['지금은 어느 계절에 가장 가까운가요?','오늘은 어떤 계절인가요?','지금 계절로 알맞은 것은 무엇일까요?']),sNow,SEASONS.filter(s=>s!==sNow),{visual:'🍃'}),
+    ampm:()=>C('지남력','o:ampm',pick(['지금은 오전일까요, 오후일까요?','지금 시각은 오전과 오후 중 어디에 속할까요?']),h<12?'오전':'오후',[h<12?'오후':'오전'],{visual:'🌗'}),
+    weekday:()=>C('지남력','o:weekday',pick(['오늘은 무슨 요일인가요?','오늘 요일로 알맞은 것은 무엇일까요?','오늘은 어느 요일일까요?']),DAYS[w],sample(DAYS.filter((_,i)=>i!==w),3),{visual:'🌞'}),
+    month:()=>C('지남력','o:month',pick(['지금은 몇 월일까요?','이번 달은 몇 월인가요?']),(m+1)+'월',sample([...Array(12).keys()].filter(i=>i!==m).map(i=>(i+1)+'월'),3),{visual:'🌙'}),
     year:()=>C('지남력','o:year',pick(['올해는 몇 년일까요?','지금은 몇 년도인가요?']),y+'년',sample([y-3,y-2,y-1,y+1,y+2].map(v=>v+'년'),3),{visual:'🎆'}),
     tomorrow:()=>C('지남력','o:tomorrow','내일은 무슨 요일일까요?',DAYS[(w+1)%7],sample(DAYS.filter((_,i)=>i!==(w+1)%7),3),{visual:'🌅'}),
     yesterday:()=>C('지남력','o:yesterday','어제는 무슨 요일이었을까요?',DAYS[(w+6)%7],sample(DAYS.filter((_,i)=>i!==(w+6)%7),3),{visual:'🌇'}),
-    dayofmonth:()=>C('지남력','o:day',pick(['오늘은 며칠일까요?','오늘 날짜는 며칠인가요?']),d+'일',sample([...Array(dim).keys()].map(i=>i+1).filter(i=>i!==d).map(i=>i+'일'),3),{visual:'📆'}),
+    dayofmonth:()=>C('지남력','o:day',pick(['오늘은 며칠일까요?','오늘 날짜는 며칠인가요?']),d+'일',sample([...Array(dim).keys()].map(i=>i+1).filter(i=>i!==d).map(i=>i+'일'),3),{visual:'🌸'}),
     nextseason:()=>C('지남력','o:nextseason','지금 계절 다음에 오는 계절은 무엇일까요?',SEASONS[(SEASONS.indexOf(sNow)+1)%4],SEASONS.filter(s=>s!==SEASONS[(SEASONS.indexOf(sNow)+1)%4]),{visual:'🔄'})
   };
   return sample(Object.keys(T),3).map(k=>T[k]());
@@ -727,7 +766,14 @@ function cardStyle(d){ return `--qc:${DOM[d].c};--qi:${DOM[d].ink};`; }
 function tagHtml(d,extra){ return `<div class="domain-tag${DOM[d].dark?' dark-text':''}">${DOM[d].icon} 미션 · ${DOM[d].mission}${extra?' · '+extra:''}</div>`; }
 function qTextHtml(q){ return esc(q).replace(/\n/g,'<br>'); }
 
-function renderQuestion(){
+function renderQuestion(){ _renderQuestion(); fitCard(); }
+function fitCard(){
+  const c=document.getElementById('test-card'); if(!c) return;
+  c.style.zoom=1; let z=1;
+  while(c.scrollHeight>c.clientHeight+1 && z>0.5){ z=Math.round((z-0.03)*100)/100; c.style.zoom=z; }
+}
+window.addEventListener('resize',()=>{ if(document.getElementById('screen-test').classList.contains('active')) fitCard(); });
+function _renderQuestion(){
   clearInterval(timerRef);
   if(qIndex>=TEST.length){ finishTest(); return; }
   updateProgress();
