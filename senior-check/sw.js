@@ -1,4 +1,4 @@
-const CACHE = 'cogcheck-v5';
+const CACHE = 'cogcheck-v6';
 const FILES = ['./', './index.html', './manifest.webmanifest',
   './assets/hero.jpg', './assets/logo-brain.png', './assets/cert-emblem.png', './assets/official-seal.png',
   './icons/icon-192.png', './icons/icon-512.png', './icons/icon-maskable-512.png', './icons/apple-touch-icon.png'];
