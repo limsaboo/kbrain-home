@@ -1,4 +1,4 @@
-const CACHE = 'cogcheck-v4';
+const CACHE = 'cogcheck-v5';
 const FILES = ['./', './index.html', './manifest.webmanifest',
   './assets/hero.jpg', './assets/logo-brain.png', './assets/cert-emblem.png', './assets/official-seal.png',
   './icons/icon-192.png', './icons/icon-512.png', './icons/icon-maskable-512.png', './icons/apple-touch-icon.png'];
@@ -19,6 +19,6 @@ self.addEventListener('fetch', e => {
       const copy = res.clone();
       caches.open(CACHE).then(c => c.put(e.request, copy));
       return res;
-    }).catch(() => caches.match(e.request).then(r => r || caches.match('./index.html')))
+    }).catch(() => caches.match(e.request,{ignoreSearch:true}).then(r => r || caches.match('./index.html')))
   );
 });
