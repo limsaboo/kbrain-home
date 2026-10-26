@@ -1,4 +1,4 @@
-const CACHE='kbrain-imgprompt-v1';
+const CACHE='kbrain-imgprompt-v2';
 const FILES=['./','./index.html','./manifest.json','./icon-192.png','./icon-512.png','./icon-maskable-512.png','./apple-touch-icon.png'];
 self.addEventListener('install',function(e){
   e.waitUntil(caches.open(CACHE).then(function(c){return c.addAll(FILES);}).then(function(){return self.skipWaiting();}));
@@ -20,7 +20,7 @@ self.addEventListener('fetch',function(e){
       return res;
     }).catch(function(){
       return caches.match(req).then(function(hit){
-        return hit||caches.match('./index.html');
+        return hit||(req.mode==='navigate'?caches.match('./index.html'):Response.error());
       });
     })
   );
