@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#FFFFFF">
 <meta name="robots" content="noindex">
-<title>나의 수행 성향 · 종지·충효열·삼강오륜</title>
+<title>가르침 이해도 확인 · 종지·충효열·삼강오륜</title>
 <style>
 :root{--bg:#FFFFFF;--ink:#000000;--sub:#222222;--line:#000000;--soft:#FFF4C2;
  --c0:#6A1B9A;--c1:#0033CC;--c2:#E00000;--c3:#E65100;--c4:#007A33;--c5:#C2006B;--c6:#00838F;--gold:#FFD400}
@@ -26,7 +26,7 @@ h1 span{color:var(--c2);font-size:1.3rem;display:block}
 .chips{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:14px 0}
 .chip{border:3px solid #000;border-radius:14px;padding:8px 6px;text-align:center;font-size:1rem;font-weight:900;line-height:1.5;background:var(--soft)}
 .seven{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin:16px 0}
-.seven div{border-radius:10px;color:#fff;text-align:center;padding:8px 0;font-size:.82rem;font-weight:900;line-height:1.5;writing-mode:horizontal-tb}
+.seven div{border-radius:10px;color:#fff;text-align:center;padding:8px 0;font-size:.82rem;font-weight:900;line-height:1.5}
 .btn{display:block;width:100%;border:4px solid #000;border-radius:18px;font:inherit;font-weight:900;font-size:1.25rem;line-height:1.5;padding:14px 10px;margin:12px 0;cursor:pointer;text-align:center;text-decoration:none;color:#000}
 .b-y{background:var(--gold)} .b-r{background:var(--c2);color:#fff} .b-w{background:#fff} .b-b{background:var(--c1);color:#fff}
 .note{font-size:.85rem;color:var(--sub);text-align:center;line-height:1.8}
@@ -34,9 +34,22 @@ h1 span{color:var(--c2);font-size:1.3rem;display:block}
 .prog i{display:block;height:100%;background:var(--c2);width:0}
 .pn{text-align:center;font-size:1rem;font-weight:900;margin:0 0 4px}
 .qtag{display:block;width:max-content;max-width:100%;margin:10px auto;border-radius:20px;padding:2px 16px;color:#fff;font-size:.95rem;font-weight:900;line-height:1.7}
-.q{font-size:1.45rem;line-height:1.8;text-align:center;font-weight:900;margin:8px 0 18px;min-height:7.2em;display:flex;align-items:center;justify-content:center;text-wrap:balance}
-.opt{display:block;width:100%;border:4px solid #000;border-radius:16px;background:#fff;color:#000;font:inherit;font-weight:900;font-size:1.15rem;line-height:1.5;padding:13px 10px;margin:10px 0;cursor:pointer;text-align:center}
+.q{font-size:1.3rem;line-height:1.75;text-align:center;font-weight:900;margin:8px 0 14px;display:flex;align-items:center;justify-content:center;text-wrap:balance}
+.q.long{font-size:1.15rem}
+.scene{margin:0 0 14px}
+.opt{display:flex;align-items:flex-start;gap:10px;width:100%;border:4px solid #000;border-radius:16px;background:#fff;color:#000;font:inherit;font-weight:900;font-size:1.05rem;line-height:1.55;padding:11px 12px;margin:10px 0;cursor:pointer;text-align:left}
+.opt b{flex:0 0 auto;width:1.8em;height:1.8em;border-radius:50%;border:3px solid #000;display:flex;align-items:center;justify-content:center;font-size:.9rem;line-height:1;background:var(--soft);margin-top:.05em}
+.opt span{flex:1;min-width:0;text-wrap:pretty}
 .opt:active,.opt.on{background:var(--gold)}
+.pic{display:block;position:relative;width:100%;border:4px solid #000;border-radius:18px;background:#fff;padding:0;margin:12px 0;overflow:hidden;cursor:pointer}
+.pic b{position:absolute;left:8px;top:8px;width:2em;height:2em;border-radius:50%;border:3px solid #000;background:var(--soft);display:flex;align-items:center;justify-content:center;font-size:1rem;line-height:1;font-weight:900;color:#000}
+.pic:active,.pic.on{background:var(--gold)}
+.pic.on svg rect:first-child{fill:#FFF0A0}
+.trio{margin:0 0 14px}
+.tr{display:flex;align-items:center;gap:12px;border:4px solid #000;border-radius:16px;padding:8px 12px;margin:8px 0;background:#fff}
+.tr em{font-style:normal;flex:0 0 auto;width:2.2em;text-align:center;font-size:1.05rem;font-weight:900;color:#000}
+.tr i{flex:0 0 auto;font-style:normal;font-size:2.1rem;line-height:1;width:64px;height:64px;border-radius:14px;border:3px solid #000;display:flex;align-items:center;justify-content:center}
+.tr span{flex:1;min-width:0;font-size:1rem;line-height:1.6;font-weight:900;text-wrap:pretty}
 .back{background:#fff;border:3px solid #000;border-radius:12px;font:inherit;font-weight:900;font-size:1rem;padding:6px 16px;margin-top:6px;cursor:pointer}
 .card{border:4px solid #000;border-radius:20px;padding:16px;margin:16px 0;background:#fff}
 .card h2{margin:0 0 6px;font-size:1.3rem;line-height:1.5;text-align:center;font-weight:900}
@@ -47,9 +60,17 @@ svg{display:block;width:100%;height:auto}
 .axs{font-size:1.5rem;font-weight:900;line-height:1.4}
 .bar{height:18px;border:3px solid #000;border-radius:10px;overflow:hidden;margin:6px 0;background:#fff}
 .bar i{display:block;height:100%}
-.axt{font-size:.95rem;line-height:1.8;margin:2px 0}
+.axt{font-size:.95rem;line-height:1.8;margin:2px 0;text-wrap:pretty}
 .axl{font-size:1rem;font-weight:900;line-height:1.7;margin-top:4px}
-.axa{font-size:.95rem;line-height:1.8;background:var(--soft);border-radius:10px;padding:6px 10px;margin-top:6px}
+.axa{font-size:.95rem;line-height:1.8;background:var(--soft);border-radius:10px;padding:6px 10px;margin-top:6px;text-wrap:pretty}
+.wr{font-size:.95rem;line-height:1.8;border:3px solid #000;border-radius:12px;padding:8px 10px;margin-top:8px;background:#fff;text-wrap:pretty}
+.wr u{display:block;text-decoration:none;font-weight:900;margin-bottom:2px}
+.wr .ok{display:block;color:#007A33;font-weight:900}
+.wr .no{display:block;color:#E00000;font-weight:900}
+.pp{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0}
+.pp>div{min-width:0}
+.pp span{display:block;margin-bottom:2px;font-size:.9rem}
+.pp em{font-style:normal;font-size:.9rem}
 .str{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:8px 0}
 .str div{border-radius:16px;color:#fff;text-align:center;padding:12px 6px;font-size:1.2rem;line-height:1.6;font-weight:900}
 .str small{display:block;font-size:.85rem;font-weight:900}
@@ -58,23 +79,26 @@ svg{display:block;width:100%;height:auto}
 .src a{color:#0033CC;font-weight:900;text-decoration:underline;overflow-wrap:anywhere}
 .foot span,.note{text-wrap:balance}
 .foot{font-size:.8rem;text-align:center;color:#222;line-height:1.8;margin-top:14px}
+.warn{border:3px solid #E00000;border-radius:12px;padding:8px 10px;margin:12px 0 0;font-size:.8rem;line-height:1.8;color:#000}
+.warn span{display:block;text-wrap:balance}
 </style>
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><clipPath id="kclip"><rect x="2" y="2" width="296" height="186" rx="16"/></clipPath></defs></svg>
 <div class="wrap">
 <div class="top"><div class="brand">한국뇌심리연구소<br>대순진리회 강의용</div>
  <div class="fs" role="group" aria-label="글씨 크기"><button data-f="1" aria-pressed="true">가</button><button data-f="2" aria-pressed="false" style="font-size:19px">가</button><button data-f="3" aria-pressed="false" style="font-size:22px">가</button></div></div>
 
 <!-- 시작 -->
 <section id="s-home">
- <h1>나의 수행 성향<br><span>종지 · 충효열 · 삼강오륜</span></h1>
- <p class="lead">일상에서 실천하는 모습을<br>서른두 문항으로 돌아봅니다</p>
+ <h1>가르침 이해도 확인<br><span>종지 · 충효열 · 삼강오륜</span></h1>
+ <p class="lead">상황과 그림을 보고 고르는<br>스물네 문제로 확인합니다</p>
  <div class="seven">
   <div style="background:var(--c0)">음양<br>합덕</div><div style="background:var(--c1)">신인<br>조화</div><div style="background:var(--c2)">해원<br>상생</div><div style="background:var(--c3)">도통<br>진경</div><div style="background:var(--c4)">충</div><div style="background:var(--c5)">효</div><div style="background:var(--c6)">열</div><div style="background:#7B3F00">삼강<br>오륜</div>
  </div>
- <div class="chips"><div class="chip">32문항</div><div class="chip">약 4분</div><div class="chip">가입 없음</div><div class="chip">기록 저장 안 함</div></div>
+ <div class="chips"><div class="chip">24문제</div><div class="chip">약 10분</div><div class="chip">가입 없음</div><div class="chip">기록 저장 안 함</div></div>
  <button class="btn b-y" id="start">▶ 시작하기</button>
- <p class="note">신앙의 깊이를 재는 검사가 아닙니다.<br>내 일상의 실천을 돌아보고 가꾸는 도구입니다.<br>맞고 틀린 답은 없습니다.</p>
+ <p class="note"><span style="display:block">신앙의 깊이를 재는 검사가 아닙니다.</span><span style="display:block">가르침을 얼마나 아는지 확인합니다.</span><span style="display:block">틀린 문제는 해설로 함께 배웁니다.</span></p>
 </section>
 
 <!-- 문항 -->
@@ -83,81 +107,267 @@ svg{display:block;width:100%;height:auto}
  <div class="pn" id="pn"></div>
  <span class="qtag" id="qtag"></span>
  <div class="q" id="qt"></div>
+ <div id="qs"></div>
  <div id="opts"></div>
- <button class="back" id="back">← 이전 문항</button>
+ <button class="back" id="back">← 이전 문제</button>
 </section>
 
 <!-- 결과 -->
 <section id="s-r" class="hide">
- <h1 style="font-size:1.55rem">나의 수행 성향</h1>
- <p class="lead" id="rdate"></p>
- <div class="card"><h2>여덟 가지 모양</h2><div id="radar"></div></div>
- <div class="card"><h2>지금 가장 뚜렷한 모습</h2><div class="str" id="str"></div></div>
+ <h1 style="font-size:1.55rem">나의 이해도</h1>
+ <p class="lead" id="rdate" style="margin-bottom:4px"></p>
+ <p class="lead" id="rtot" style="font-size:1.25rem;font-weight:900"></p>
+ <div class="card"><h2>여덟 가지 이해도</h2><div id="radar"></div></div>
+ <div class="card"><h2>가장 잘 아는 부분</h2><div class="str" id="str"></div></div>
  <div id="axes"></div>
  <button class="btn b-y" id="save">🖼 결과 그림 저장·공유</button>
  <button class="btn b-w" id="again">↻ 다시 해 보기</button>
- <div class="card src"><h2 style="font-size:1.1rem">참고한 자료</h2>
-  <p style="margin:4px 0">종지 4가지의 이름과 뜻풀이는 대순진리회 공식 웹진과 『전경』 교운 2장 32절을 인용한 논문을 따랐습니다. 충·효·열은 『전경』 행록 5장 38절의 "세무충 세무효 세무열 시고천하개병"에 나오는 인륜도덕의 대표 덕목입니다. 삼강오륜은 무극도 취지서의 "삼강오륜은 천륜" 구절과 수도인의 매일 훈회·수칙 낭독에 근거하되, 문항은 높낮이 없는 상호 존중과 상생의 뜻으로 풀어 썼습니다.</p>
+ <div class="card src"><h2 style="font-size:1.1rem">정답의 근거 자료</h2>
+  <p style="margin:4px 0">문제의 정답은 아래 자료에 실린 『전경』·『대순지침』·무극도 취지·도전님 훈시와 연구 논문의 설명에 근거합니다. 일상 상황에 적용해 보는 일부 문제는 일반적인 덕목의 뜻을 바탕으로 만들었습니다.</p>
   <ul style="padding-left:18px;margin:6px 0">
+   <li><a href="https://koreascience.or.kr/article/JAKO200934037651335.pdf" target="_blank" rel="noopener">황의동, 「대순사상의 유교적 이해」, 대순사상논총 20집 (2009)</a></li>
+   <li><a href="https://koreascience.or.kr/article/JAKO200934037714348.pdf" target="_blank" rel="noopener">이거룡, 「인도철학의 관점에서 본 대순사상」, 대순사상논총 20집 (2009)</a></li>
    <li><a href="https://webzine.daesoon.org/m/view.asp?webzine=315&menu_no=5268&bno=9731&page=1" target="_blank" rel="noopener">도통진경의 실천적 의미 이해 (대순회보 웹진)</a></li>
    <li><a href="https://webzine.daesoon.org/m/view.asp?webzine=299&menu_no=5052&bno=9360&page=1" target="_blank" rel="noopener">훈회ㆍ수칙의 역사적 이해 (대순회보 웹진)</a></li>
    <li><a href="http://webzine.daesoon.org/m/view.asp?webzine=176&menu_no=2879&bno=5126&page=1" target="_blank" rel="noopener">마음의 양식, 孝 (대순회보 웹진)</a></li>
-   <li><a href="https://koreascience.or.kr/article/JAKO200934037709347.pdf" target="_blank" rel="noopener">최영진, 「대순사상의 역학적 조명」(KoreaScience)</a></li>
   </ul>
  </div>
  </section>
 
-<div class="foot"><span>한국뇌심리연구소 제작</span><br><span>대순진리회 공식 앱이 아닙니다</span><br><span>문항은 일상 실천 중심으로 썼습니다</span><br><span>답은 기기 밖으로 나가지 않습니다</span></div>
+<div class="foot"><span>한국뇌심리연구소 / 한국뇌궁합연구소 제작</span><br><span>답은 기기 밖으로 나가지 않습니다</span></div>
+<div class="warn"><span>⚠ 이 프로그램의 문항·채점·디자인은 한국뇌심리연구소 / 한국뇌궁합연구소의 저작물입니다.</span><span>무단 복제·캡처 배포·쿠폰 공유는 민·형사상 법적 책임을 집니다.</span><span>© 한국뇌심리연구소 / 한국뇌궁합연구소 소장 임찬우</span></div>
 </div>
 
 <script>
 (function(){
 'use strict';
+/* ===== 여덟 항목 ===== */
 var AX=[
- {n:'음양합덕',c:'#6A1B9A',t:'서로 다른 점을 지키면서 장단점을 보완해 함께 이루는 태도',a:'오늘 생각이 다른 한 사람의 장점을 찾아 말해 주기'},
- {n:'신인조화',c:'#0033CC',t:'하늘과 사람이 서로 의지하며 조화를 이룬다고 여기는 감사와 정성의 마음',a:'잠들기 전에 감사한 일 세 가지 떠올리기'},
- {n:'해원상생',c:'#E00000',t:'쌓인 원망을 풀고 서로를 살리는 길을 찾는 태도',a:'마음에 걸리는 한 사람에게 안부 문자 보내기'},
- {n:'도통진경',c:'#E65100',t:'도를 통할 수 있는 참된 경지를 향해, 가르침을 생활에 옮기고 마음의 욕심을 덜어 가며 꾸준히 닦는 태도',a:'하루 5분, 같은 시간에 마음 닦는 시간 정하기(욕심이 앞서는 순간 한 번 쉬어 가기)'},
- {n:'충',c:'#007A33',t:'인륜도덕의 대표 덕목 · 맡은 일에 정성과 책임을 다하고 신의를 지키는 마음',a:'오늘 맡은 일 하나를 약속한 시간 안에 정성껏 끝내기'},
- {n:'효',c:'#C2006B',t:'인륜도덕의 대표 덕목 · 모든 덕의 근본으로 일컬어지며, 부모와 어른을 공경하고 은혜에 보답하려는 마음',a:'부모님이나 가까운 어른께 안부 전화 한 통 드리기'},
- {n:'열',c:'#00838F',t:'인륜도덕의 대표 덕목 · 어려운 때에도 한결같이 지조와 신의를 지키는 마음',a:'내가 정한 약속 하나를 이번 주 끝까지 지키기'},
- {n:'삼강오륜',c:'#7B3F00',t:'부모·부부·어른과 젊은이·벗 사이에서 높낮이 없이 서로 존중하며 인륜의 도리를 다해 상생하는 마음',a:'오늘 가까운 한 사람에게 "고맙습니다" 또는 "미안합니다"를 먼저 말하기'}
+ {n:'음양합덕',c:'#6A1B9A',t:'음과 양, 서로 다른 둘이 대립하지 않고 서로 보완하며 조화를 이루는 것. 종지 가운데 출발점입니다.',a:'오늘 생각이 다른 한 사람의 장점을 찾아 말해 주기'},
+ {n:'신인조화',c:'#0033CC',t:'신(神)과 사람이 서로 의지하고 협력하며 돕는 관계. 후천은 사람의 역할이 커지는 인존시대입니다.',a:'잠들기 전에 감사한 일 세 가지 떠올리기'},
+ {n:'해원상생',c:'#E00000',t:'쌓인 원(冤)을 풀어서 서로가 잘되게 하는 것. 내가 먼저 풀면 상대의 마음도 풀립니다.',a:'마음에 걸리는 한 사람에게 안부 문자 보내기'},
+ {n:'도통진경',c:'#E65100',t:'도를 통한 참된 경지. 마음을 거울처럼 닦아 진실을 회복하고 언행을 일치시켜 욕심 없이 맑아질 때 이릅니다.',a:'하루 5분, 같은 시간에 마음 닦는 시간 정하기(욕심이 앞서는 순간 한 번 쉬어 가기)'},
+ {n:'충',c:'#007A33',t:'『전경』은 세상에 충·효·열이 없어 병들었다고 하였습니다. 충은 나라와 공동체에 대한 윤리로 설명되며, 맡은 일에 정성과 책임을 다하는 마음입니다.',a:'오늘 맡은 일 하나를 약속한 시간 안에 정성껏 끝내기'},
+ {n:'효',c:'#C2006B',t:'모든 덕의 근본이라 일컬어집니다. 부모에 대한 고마움·사랑·존경에서 시작해 이웃과 사회로 넓어집니다.',a:'부모님이나 가까운 어른께 안부 전화 한 통 드리기'},
+ {n:'열',c:'#00838F',t:'충·효와 함께 병든 세상의 처방으로 꼽힌 덕목. 개인·가정·국가를 함께 아우르는 윤리로 설명되며, 어려움에도 뜻을 굳게 지키는 마음입니다.',a:'내가 정한 약속 하나를 이번 주 끝까지 지키기'},
+ {n:'삼강오륜',c:'#7B3F00',t:'무극도 취지는 삼강오륜을 하늘이 준 도리인 천륜이라 하였고, 도전님은 수도를 인륜을 바로 행하고 도덕을 밝혀 나가는 것이라 하셨습니다.',a:'오늘 가까운 한 사람에게 "고맙습니다" 또는 "미안합니다"를 먼저 말하기'}
 ];
-/* 문항: 라운드(4) x 항목(7) 순서 */
-var ITEMS=[
- ['나와 생각이 다른 사람의 장점을 먼저 찾아보려 한다.','모임에서 각자 잘하는 일을 나눠 맡으면 더 잘된다고 느낀다.','가족이나 동료가 서로 부족한 부분을 채우도록 돕는다.','내 방식만 고집하기보다 상대의 방식도 받아들여 본다.'],
- ['하루를 시작하거나 마칠 때 감사한 마음으로 돌아본다.','일이 잘 풀리면 내 힘만이 아니라 보이지 않는 도움이 있었다고 생각한다.','중요한 일을 앞두고 마음을 가다듬고 정성을 들인다.','어려운 일이 닥쳐도 사람의 도리를 다하면 길이 열린다고 믿는다.'],
- ['서운했던 사람과 먼저 마음을 풀려고 한다.','지난 일로 쌓인 미움이나 원망을 오래 붙들지 않으려 한다.','내가 이기는 것보다 서로 잘되는 길을 먼저 찾는다.','남을 살리고 돕는 일에서 보람을 느낀다.'],
- ['정해 둔 시간에 마음을 닦는 공부나 수행을 이어 가려 한다.','나 자신을 속이지 않으려고 스스로를 돌아보는 시간을 갖는다.','들은 가르침과 내 말·행동이 어긋나지 않게 하려 한다.','욕심이 앞설 때 마음을 가라앉히고 다시 맑게 하려 한다.'],
- ['맡은 일은 보는 사람이 없어도 성실하게 끝낸다.','한 약속은 손해가 나도 지키려 한다.','나보다 가정·직장·모임에 필요한 일을 먼저 챙긴다.','한번 맺은 의리와 신의를 소중히 여긴다.'],
- ['부모님이나 어른께 자주 안부를 묻고 마음을 전한다.','부모님 말씀이 서운해도 먼저 공손히 듣는다.','낳아 주고 길러 주신 은혜를 자주 떠올린다.','가까운 어른을 위해 시간과 정성을 내는 편이다.'],
- ['어려운 때에도 한 번 정한 마음을 쉽게 바꾸지 않는다.','유혹이 와도 지켜야 할 선을 지킨다.','소중한 사람에게 한결같이 신의를 지킨다.','옳다고 믿는 길을 남의 시선 때문에 접지 않는다.'],
- ['부모와 자녀가 서로 존중하고 은혜를 나누는 관계를 만들려 한다.','부부 사이에 위아래를 두지 않고 서로 다름을 존중하며 도리를 다하려 한다.','나이나 지위에 상관없이 누구에게나 예의를 지키고 존중한다.','친구와 이웃에게 한 약속과 신의를 지키며 서로 돕는다.']
+
+/* ===== 그림 도구 ===== */
+var SKIN='#FFD9B0';
+function frame(inner,bg,fr){
+  return '<svg viewBox="0 0 300 190" role="img" aria-label="상황 그림"><g clip-path="url(#kclip)"><rect x="0" y="0" width="300" height="190" fill="'+(bg||'#FFF4C2')+'"/>'+inner+'</g>'+(fr===false?'':'<rect x="2" y="2" width="296" height="186" rx="16" fill="none" stroke="#000" stroke-width="4"/>')+'</svg>';
+}
+function ground(y,col){return '<rect x="0" y="'+y+'" width="300" height="'+(190-y)+'" fill="'+(col||'#BFE3A8')+'"/><line x1="0" y1="'+y+'" x2="300" y2="'+y+'" stroke="#000" stroke-width="3"/>';}
+function person(x,g,o){
+  o=o||{};var s=o.s||1,col=o.col||'#0033CC',hair=o.hair||'#222',m=o.m||'smile';
+  var la=o.la||[-24,-24],ra=o.ra||[24,-24];
+  var mouth=m==='smile'?'<path d="M-5 -60 Q0 -54 5 -60" fill="none" stroke="#000" stroke-width="2.6" stroke-linecap="round"/>':
+            m==='sad'?'<path d="M-5 -56 Q0 -62 5 -56" fill="none" stroke="#000" stroke-width="2.6" stroke-linecap="round"/>':
+            m==='o'?'<circle cx="0" cy="-58" r="3.4" fill="#000"/>':
+            '<line x1="-5" y1="-58" x2="5" y2="-58" stroke="#000" stroke-width="2.6" stroke-linecap="round"/>';
+  var hairP=o.long?'<path d="M-14 -66 Q-16 -84 0 -84 Q16 -84 14 -66 L16 -48 Q8 -46 8 -54 Q8 -72 0 -74 Q-8 -72 -8 -54 Q-8 -46 -16 -48 Z" fill="'+hair+'" stroke="#000" stroke-width="3" stroke-linejoin="round"/>':
+                  '<path d="M-14 -68 Q-14 -83 0 -83 Q14 -83 14 -68 Q8 -75 0 -75 Q-8 -75 -14 -68 Z" fill="'+hair+'" stroke="#000" stroke-width="3" stroke-linejoin="round"/>';
+  var cane=o.cane?'<line x1="'+ra[0]+'" y1="'+ra[1]+'" x2="'+(ra[0]+4)+'" y2="0" stroke="#000" stroke-width="5" stroke-linecap="round"/>':'';
+  var t='translate('+x+' '+g+')'+(o.r?' rotate('+o.r+')':'')+' scale('+(o.flip?-s:s)+' '+s+')';
+  return '<g transform="'+t+'">'+
+   '<path d="M-7 -14 L-9 0 M7 -14 L9 0" stroke="#000" stroke-width="6" stroke-linecap="round" fill="none"/>'+
+   '<rect x="-13" y="-52" width="26" height="40" rx="9" fill="'+col+'" stroke="#000" stroke-width="4"/>'+
+   cane+
+   '<path d="M-12 -46 L'+la[0]+' '+la[1]+' M12 -46 L'+ra[0]+' '+ra[1]+'" stroke="#000" stroke-width="6" stroke-linecap="round" fill="none"/>'+
+   '<circle cx="'+la[0]+'" cy="'+la[1]+'" r="4.5" fill="'+SKIN+'" stroke="#000" stroke-width="2"/><circle cx="'+ra[0]+'" cy="'+ra[1]+'" r="4.5" fill="'+SKIN+'" stroke="#000" stroke-width="2"/>'+
+   '<circle cx="0" cy="-66" r="13" fill="'+SKIN+'" stroke="#000" stroke-width="4"/>'+hairP+
+   '<circle cx="-5" cy="-67" r="1.9" fill="#000"/><circle cx="5" cy="-67" r="1.9" fill="#000"/>'+mouth+
+   (o.halo?'<ellipse cx="0" cy="-90" rx="14" ry="5" fill="none" stroke="#E0A800" stroke-width="4"/>':'')+
+   '</g>';
+}
+function tw(l){var w=0;for(var i=0;i<l.length;i++){var ch=l.charAt(i);w+=ch===' '?0.32:(/[0-9A-Za-z]/.test(ch)?0.62:(/[.,…!?]/.test(ch)?0.5:1.03));}return w;}
+function bub(cx,y,lines,tx,ty,fs){
+  fs=fs||15;var w=0;lines.forEach(function(l){w=Math.max(w,tw(l)*fs);});w+=20;
+  var h=lines.length*(fs+6)+10,x=cx-w/2;
+  if(x<6)x=6;if(x+w>294)x=294-w;
+  var t='<polygon points="'+(cx-7)+','+(y+h-2)+' '+(cx+7)+','+(y+h-2)+' '+tx+','+ty+'" fill="#fff" stroke="#000" stroke-width="3" stroke-linejoin="round"/>'+
+        '<rect x="'+x.toFixed(1)+'" y="'+y+'" width="'+w.toFixed(1)+'" height="'+h+'" rx="12" fill="#fff" stroke="#000" stroke-width="3"/>'+
+        '<polygon points="'+(cx-5)+','+(y+h-3)+' '+(cx+5)+','+(y+h-3)+' '+tx+','+(ty-1)+'" fill="#fff"/>';
+  lines.forEach(function(l,i){t+='<text x="'+cx+'" y="'+(y+5+(i+1)*(fs+6)-4)+'" font-size="'+fs+'" font-weight="900" text-anchor="middle" fill="#000">'+l+'</text>';});
+  return t;
+}
+function em(ch,x,y,sz){return '<text x="'+x+'" y="'+y+'" font-size="'+sz+'" text-anchor="middle">'+ch+'</text>';}
+
+/* ===== 상황 그림 ===== */
+var SC={
+ couple:function(){return frame(ground(150)+
+   person(80,150,{col:'#0033CC',m:'flat',la:[-20,-26],ra:[22,-34]})+person(220,150,{col:'#C2006B',hair:'#5A3A1A',long:true,m:'flat',la:[-22,-34],ra:[20,-26]})+
+   bub(80,8,['차근차근','알아보고 정하자'],80,70,14)+bub(222,8,['일단 먼저','시작하자'],222,70,14));},
+ neighbors:function(){return frame(ground(150)+em('🏠',34,130,46)+em('🏠',266,130,46)+
+   person(110,150,{col:'#E65100',m:'sad',la:[14,-34],ra:[-14,-34],flip:true})+person(190,150,{col:'#007A33',m:'sad',la:[14,-34],ra:[-14,-34]})+
+   bub(110,22,['…'],110,68,16)+bub(190,22,['…'],190,68,16)+em('💢',150,70,30));},
+ study:function(){return frame(ground(150)+
+   person(100,150,{col:'#6A1B9A',m:'smile',la:[-26,-24],ra:[28,-50]})+em('📜',134,86,34)+em('📖',232,140,46)+em('🕯️',270,100,30)+
+   bub(190,10,['배운 말씀대로','살고 싶다'],120,64,15));},
+ duty:function(){return frame(ground(150)+em('🎪',150,128,36)+
+   person(66,150,{col:'#007A33',m:'flat',la:[-22,-26],ra:[26,-30]})+em('📋',92,116,26)+
+   person(236,150,{col:'#E65100',hair:'#5A3A1A',m:'smile',la:[-24,-40],ra:[22,-26],flip:true})+
+   bub(78,8,['행사 준비는','내가 맡았는데…'],66,66,14)+bub(228,8,['토요일에','놀러 가자!'],236,66,15));},
+ parent:function(){return frame(ground(150)+em('🏥',150,132,32)+
+   person(78,150,{s:.92,col:'#8E6BB5',hair:'#DDDDDD',long:true,cane:true,m:'smile',la:[-20,-24],ra:[24,-26]})+
+   person(224,150,{col:'#0033CC',m:'flat',la:[-22,-28],ra:[22,-24],flip:true})+
+   bub(80,8,['병원은 혼자','다녀오마'],78,68,15)+bub(222,8,['오늘 일정이','빡빡한데…'],224,66,15));},
+ friend:function(){return frame(ground(150)+
+   person(100,150,{col:'#C2006B',hair:'#5A3A1A',long:true,m:'smile',la:[-20,-26],ra:[48,-30]})+
+   person(200,150,{col:'#0033CC',m:'smile',la:[-48,-30],ra:[20,-26],flip:false})+em('🤝',150,112,26)+
+   bub(96,6,['다음 주 토요일에','꼭 올게!'],100,66,14)+bub(220,20,['그래, 기다릴게'],206,66,14));}
+};
+/* 그림 고르기 */
+var PC={
+ sin_a:function(){return frame('<rect x="0" y="120" width="300" height="70" fill="#BFE3A8"/>'+
+   '<ellipse cx="96" cy="100" rx="52" ry="12" fill="#fff" stroke="#000" stroke-width="3"/>'+
+   person(96,96,{col:'#E0A800',halo:true,m:'smile',s:.9,la:[-22,-26],ra:[56,-30]})+
+   person(212,160,{col:'#0033CC',m:'smile',s:.95,la:[-20,-26],ra:[-52,-64]})+em('✨',156,68,28),'#CFE8FF',false);},
+ sin_b:function(){return frame('<rect x="0" y="150" width="300" height="40" fill="#BFE3A8"/>'+
+   '<ellipse cx="150" cy="86" rx="62" ry="11" fill="#fff" stroke="#000" stroke-width="3"/>'+
+   person(150,84,{col:'#E0A800',halo:true,m:'flat',s:.8,la:[-30,-30],ra:[30,-30]})+
+   '<path d="M150 98 L150 124" stroke="#E00000" stroke-width="7" stroke-linecap="round"/><polygon points="137,120 163,120 150,140" fill="#E00000"/>'+
+   person(150,178,{col:'#0033CC',m:'sad',s:.5,la:[-14,-30],ra:[14,-30]}),'#CFE8FF',false);},
+ sin_c:function(){return frame('<rect x="0" y="140" width="300" height="50" fill="#BFE3A8"/>'+
+   em('☁️',60,50,40)+em('☁️',230,36,34)+em('🪨',112,150,56)+
+   person(196,162,{col:'#0033CC',m:'sad',s:.95,la:[-40,-30],ra:[-34,-20],flip:false})+em('💦',226,92,24),'#CFE8FF',false);},
+ sang_a:function(){return frame('<rect x="0" y="150" width="300" height="40" fill="#BFE3A8"/><rect x="156" y="104" width="144" height="46" fill="#E8C98E" stroke="#000" stroke-width="3"/>'+
+   person(112,152,{col:'#C2006B',hair:'#5A3A1A',long:true,m:'smile',s:.95,la:[-20,-26],ra:[42,-66]})+
+   person(204,106,{col:'#0033CC',m:'smile',s:.95,la:[-42,-32],ra:[20,-26]})+em('💞',158,60,26),'#FFF4C2',false);},
+ sang_b:function(){return frame('<rect x="0" y="150" width="300" height="40" fill="#BFE3A8"/><line x1="150" y1="20" x2="150" y2="150" stroke="#000" stroke-width="3" stroke-dasharray="8 7"/>'+
+   person(86,152,{col:'#C2006B',hair:'#5A3A1A',long:true,m:'flat',s:.95,flip:true,la:[-20,-22],ra:[20,-22]})+
+   person(214,152,{col:'#0033CC',m:'flat',s:.95,la:[-20,-22],ra:[20,-22]})+
+   em('◀',40,180,20)+em('▶',260,180,20),'#FFF4C2',false);},
+ sang_c:function(){return frame('<rect x="0" y="150" width="300" height="40" fill="#BFE3A8"/>'+
+   person(222,150,{col:'#C2006B',hair:'#5A3A1A',long:true,m:'sad',s:.9,r:-90,la:[-14,-22],ra:[14,-22]})+
+   person(150,120,{col:'#0033CC',m:'smile',s:.95,la:[-26,-30],ra:[24,-62]})+em('😣',98,134,28),'#FFF4C2',false);},
+ yeol_a:function(){return frame('<rect x="0" y="150" width="300" height="40" fill="#BFE3A8"/>'+
+   em('🌳',228,146,104)+em('💨',40,92,38)+em('🍃',80,60,22)+em('🍃',130,40,20)+
+   person(170,152,{col:'#007A33',m:'smile',s:.95,la:[18,-52],ra:[52,-56],r:-5}),'#D6EEFF',false);},
+ yeol_b:function(){return frame('<rect x="0" y="150" width="300" height="40" fill="#BFE3A8"/>'+
+   em('💨',40,96,38)+em('🍃',92,60,22)+em('🍃',250,60,22)+
+   person(172,128,{col:'#007A33',m:'o',s:.95,r:24,la:[-26,-52],ra:[30,-54]}),'#D6EEFF',false);},
+ yeol_c:function(){return frame('<rect x="0" y="150" width="300" height="40" fill="#BFE3A8"/>'+
+   em('💨',46,96,38)+em('🍃',92,56,22)+em('🏠',250,134,50)+
+   person(160,152,{col:'#007A33',m:'sad',s:.9,r:10,la:[-8,-84],ra:[8,-86]})+em('😨',112,108,26),'#D6EEFF',false);}
+};
+/* 짝짓기 카드(열 2번 문제) */
+var TRIO=[['(가)','📋','#C9F0D4','맡은 일을 끝까지 책임지고 해낸다'],['(나)','🏥','#FFD3E8','연로한 부모님의 병원길에 함께한다'],['(다)','⛈️','#CFEFF2','어려운 형편에서도 한 번 한 약속을 굳게 지킨다']];
+
+/* ===== 24문제 (정답은 원래 순서의 0번, 보기는 풀 때마다 섞임) ===== */
+var ALL=[
+ /* 1회전 */
+ {a:0,r:0,k:'t',q:'음양합덕(陰陽合德)의 뜻으로 가장 알맞은 것은?',
+  o:['서로 다른 둘이 서로 보완하며 조화를 이루는 것','힘이 센 쪽이 약한 쪽을 이겨서 하나로 합치는 것','서로 다른 둘이 간섭하지 않고 각자 따로 지내는 것','서로 다른 둘이 똑같아지도록 한쪽을 바꾸는 것'],
+  w:'음과 양은 대립하는 적대 관계가 아니라 서로를 보완하는 관계입니다. 음양합덕은 대순사상의 출발점입니다.',s:'황의동 2009'},
+ {a:1,r:0,k:'p',q:'그림 세 장 가운데 신인조화(神人調化)를 가장 잘 나타낸 것은?',
+  o:['sin_a','sin_b','sin_c'],
+  w:'신(神)과 사람이 서로 손을 맞잡고 힘을 합치는 모습입니다. 신이 일방적으로 시키거나, 사람이 홀로 애쓰는 모습은 아닙니다.',s:'황의동 2009 · 이거룡 2009'},
+ {a:2,r:0,k:'t',q:'해원상생(解冤相生)의 뜻으로 가장 알맞은 것은?',
+  o:['쌓인 원(冤)을 풀어서 서로가 잘되게 하는 것','당한 만큼 똑같이 되갚아 주어 공평하게 하는 것','불편한 사람은 마주치지 않고 따로 지내는 것','원한이 생기지 않도록 누구와도 가까이하지 않는 것'],
+  w:'원(冤)은 채워지지 못한 바람에서 생긴 원망과 한이고, 해원은 그 척(慼)을 푸는 일입니다. 원을 풀어야 서로 살리는 상생이 됩니다.',s:'황의동 2009 · 이거룡 2009'},
+ {a:3,r:0,k:'s',sc:'study',q:'한 수도인이 "배운 말씀대로 살고 싶다"고 합니다. 『대순지침』이 말한 도통진경의 조건에 가장 가까운 것은?',L:1,
+  o:['말씀을 새겨 언행이 일치하게 살며, 욕심을 덜어 마음을 맑게 한다','말씀은 잘 외우되, 생활은 그때그때 형편에 맞게 달리하며 지낸다','눈에 띄는 큰일을 이루어 이름을 널리 알리는 데 힘을 쏟는다','말씀을 아는 사람을 찾아다니며 많이 듣는 데 힘을 쏟는다'],
+  w:'『대순지침』 39쪽: 상제님의 말씀을 마음에 새겨 언행과 처사가 일치되게 생활하고, 마음이 무욕청정(無慾淸淨)이 되었을 때 도통진경에 이릅니다.',s:'대순회보 웹진(도통진경)'},
+ {a:4,r:0,k:'t',q:'『전경』 행록 5장 38절의 "세무충 세무효 세무열 시고천하개병(世無忠 世無孝 世無烈 是故天下皆病)"은 무슨 뜻일까요?',L:1,
+  o:['세상에 충도 효도 열도 없어서 천하가 모두 병들었다','충·효·열을 너무 지나치게 따지다 보니 천하가 병들었다','충·효·열이 모두 잘 지켜져서 천하가 병들지 않고 편안하다','충·효·열은 옛 풍속이라 이제는 굳이 필요하지 않게 되었다'],
+  w:'상제님께서는 세상이 병든 까닭을 충도 효도 열도 없는 데서 보셨습니다. 충·효·열은 인륜도덕의 대표 덕목입니다.',s:'『전경』 행록 5장 38절 · 대순회보 웹진(훈회·수칙)'},
+ {a:5,r:0,k:'s',sc:'parent',q:'연세 드신 어머니가 "병원은 혼자 다녀오마" 하십니다. 오늘 내 일정도 빡빡합니다. 효(孝)의 마음에 가장 가까운 선택은?',L:1,
+  o:['일정을 조정해 함께 가며 어머니의 몸과 마음을 살핀다','병원비를 넉넉히 보내 드리고 내 일정은 그대로 지킨다','혼자 가신다니 그대로 두고 저녁에 안부 전화만 드린다','형제에게 미루고 나는 신경 쓰지 않고 내 일을 한다'],
+  w:'효는 부모에 대한 고마움과 사랑·존경을 마음에만 두지 않고 행동으로 드러내는 것입니다.',s:'일반 덕목 적용 · 대순회보 웹진(孝)'},
+ {a:6,r:0,k:'t',q:'충·효·열 가운데 열(烈)을 윤리의 영역으로 풀 때 가장 알맞은 설명은?',
+  o:['개인·가정·국가를 함께 아우르는 윤리','오직 나라에 대한 일에만 해당하는 윤리','오직 가정 안에서만 지키면 되는 윤리','오직 형제 사이에서만 지키면 되는 윤리'],
+  w:'한 연구는 충을 국가윤리, 효를 가정윤리로 보고, 열은 개인·가정·국가를 함께 아우르는 윤리로 설명합니다.',s:'황의동 2009 (연구자의 설명)'},
+ {a:7,r:0,k:'s',sc:'friend',q:'친구가 "다음 주 토요일에 꼭 올게!" 하고 약속했습니다. 이 약속을 지키는 마음과 짝이 되는 오륜(五倫)은?',L:1,
+  o:['붕우유신(朋友有信)','부자유친(父子有親)','군신유의(君臣有義)','장유유서(長幼有序)'],
+  w:'벗 사이에는 믿음(信)이 있어야 한다는 것이 붕우유신입니다. 오륜은 부자유친·군신유의·부부유별·장유유서·붕우유신입니다.',s:'일반 유교 상식'},
+ /* 2회전 */
+ {a:0,r:1,k:'s',sc:'couple',q:'같은 일을 두고 부부의 성향이 다릅니다. 음양합덕에 가장 가까운 모습은?',
+  o:['서로의 다른 성향으로 부족한 부분을 채우며 함께 정한다','둘 중 말이 더 논리적인 사람의 뜻을 따라 정한다','의견이 다르니 간섭하지 않고 각자 하고 싶은 대로 한다','한 사람이 자기 성향을 버리고 상대와 똑같이 맞춘다'],
+  w:'음양합덕은 다른 점을 없애는 것이 아니라, 다른 점이 서로를 보완해 조화를 이루는 것입니다.',s:'황의동 2009 (일상 적용)'},
+ {a:1,r:1,k:'t',q:'신인조화(神人調化)의 뜻으로 가장 알맞은 것은?',
+  o:['신(神)과 사람이 서로 의지하고 협력하며 돕는 관계','신이 일방적으로 사람을 다스리고 사람은 따르기만 하는 관계','사람이 신이 되어 신을 대신하는 것','신과 사람은 서로 상관없이 각자의 길을 가는 것'],
+  w:'신과 사람이 하나가 되어 협력하고 돕는 유기적인 관계입니다. 한쪽이 다른 쪽을 지배하는 관계가 아닙니다.',s:'황의동 2009 · 이거룡 2009'},
+ {a:2,r:1,k:'p',q:'그림 세 장 가운데 상생(相生)을 가장 잘 나타낸 것은?',
+  o:['sang_a','sang_b','sang_c'],
+  w:'상생은 같은 자리에 함께 있는 것(공존)만이 아니라, 서로를 잘되게 해 주는 적극적인 관계입니다.',s:'이거룡 2009'},
+ {a:3,r:1,k:'t',q:'도통진경(道通眞境)의 뜻으로 가장 알맞은 것은?',
+  o:['도를 통한 참된 경지로, 앞의 세 종지가 실현된 세계','신비한 힘을 얻어 남보다 높은 자리에 오르는 경지','세속을 떠나 혼자 조용히 살아가는 것을 이르는 말','어려운 경전을 한 글자도 틀리지 않고 모두 외우는 것'],
+  w:'도를 통한 참된 경지입니다. 앞의 세 종지가 온전히 실현된 이상세계를 뜻합니다.',s:'황의동 2009 · 대순회보 웹진(도통진경)'},
+ {a:4,r:1,k:'s',sc:'duty',q:'마을 행사의 준비를 맡았는데, 같은 날 친구가 놀러 가자고 합니다. 충(忠)의 마음에 가장 가까운 선택은?',L:1,
+  o:['맡은 책임을 먼저 다하고, 내 일정은 뒤로 조정한다','친구와 놀러 가고, 행사 준비는 다른 사람에게 맡긴다','행사에는 이름만 올려 두고 몸은 빠진다','하기 쉬운 일만 골라 하고, 어려운 일은 남긴다'],
+  w:'충은 나라와 공동체, 맡은 일에 정성과 책임을 다하는 마음입니다.',s:'일반 덕목 적용 · 황의동 2009'},
+ {a:5,r:1,k:'t',q:'효(孝)에 대한 설명으로 옳은 것은?',
+  o:['부모에 대한 사랑·존경에서 시작해 이웃과 사회로 넓어진다','부모에 대한 일에만 해당하고, 이웃이나 사회와는 관계가 없다','살림이 넉넉하고 여유가 있을 때에만 지키면 되는 것이다','자식이 다 자라 어른이 된 뒤에는 따로 지키지 않아도 된다'],
+  w:'효는 가르침을 받지 않아도 사람이 본래 지닌 마음으로, 부모를 넘어 이웃과 사회를 맑게 하는 도덕의 표준으로 넓어진다고 설명합니다.',s:'대순회보 웹진(孝)'},
+ {a:6,r:1,k:'p',q:'그림 세 장 가운데 열(烈)의 굳은 마음을 가장 잘 나타낸 것은?',
+  o:['yeol_a','yeol_b','yeol_c'],
+  w:'거센 바람에도 뜻을 굳게 지키며 흔들리지 않는 모습입니다.',s:'일반 덕목 적용'},
+ {a:7,r:1,k:'t',q:'무극도 취지는 삼강오륜(三綱五倫)을 어떻게 일컬었을까요?',
+  o:['하늘이 준 도리인 천륜이라 반드시 지켜야 한다','옛날 풍속이라서 시대가 변하면 바꾸어도 되는 것이다','나이 많은 어른들만 갖추어 지키면 되는 예법이다','마음이 내킬 때에만 따르면 되는 선택 사항이다'],
+  w:'무극도 취지는 "하늘로부터 부여된 인의예지신을 수행하고 삼강오륜은 천륜이라 반드시 지키고…"라 하였습니다.',s:'대순회보 웹진(훈회·수칙) 인용'},
+ /* 3회전 */
+ {a:0,r:2,k:'t',q:'음양합덕에 대한 설명으로 옳은 것은?',L:1,
+  o:['선천에서는 음양이 부딪쳐 갈등이 생겼고, 음양합덕은 이를 푸는 출발점이다','선천에서는 음과 양이 이미 완전히 합해져서 대립이나 갈등이 전혀 없었다','음양합덕은 양이 음을 대신하여 세상의 주인이 되는 것을 뜻한다','음양합덕은 네 가지 종지 가운데 맨 마지막에 이르는 단계이다'],
+  w:'선천의 음양 상극으로 대립과 갈등이 생겼고, 음양이 합해야 신인조화·해원상생·도통진경에 이른다고 봅니다. 그래서 음양합덕은 출발점이고, 도통진경은 그 완성입니다.',s:'황의동 2009 · 이거룡 2009'},
+ {a:1,r:2,k:'t',q:'『전경』에는 "천존(天尊)과 지존(地尊)보다 ( )이 크니, 이제는 ( )시대라"는 말씀이 있습니다. ( )에 들어갈 말은?',L:1,
+  o:['인존(人尊)','신존(神尊)','왕존(王尊)','도존(道尊)'],
+  w:'『전경』 244쪽의 말씀입니다. 후천은 사람의 역할이 커지는 인존시대입니다.',s:'『전경』 · 황의동 2009'},
+ {a:2,r:2,k:'s',sc:'neighbors',q:'오래 다투고 서먹해진 이웃이 있습니다. 해원상생에 가장 가까운 행동은?',
+  o:['내가 먼저 마음의 응어리를 풀고 인사를 건넨다','상대가 먼저 찾아와 사과할 때까지 가만히 기다린다','서로 마주치지 않도록 일부러 길을 돌아서 다닌다','상대의 잘못을 주변 사람들에게 알려 내 편을 모은다'],
+  w:'내가 먼저 풀면 상대의 원도 풀려 함께 살아가는 상생에 이릅니다. 『전경』은 "원수의 원을 풀고 그를 은인과 같이 사랑하라"고 하였습니다.',s:'황의동 2009 (『전경』 231쪽)'},
+ {a:3,r:2,k:'t',q:'『대순지침』은 어떤 때에 도통에 이른다고 하였을까요?',
+  o:['마음을 거울처럼 닦아 진실하고 정직한 본질을 회복했을 때','많은 사람들 앞에서 가르침을 크게 소리 내어 알렸을 때','세상과 말을 끊고 오랜 시간 홀로 조용히 지냈을 때','수도한 햇수가 정해진 기간을 모두 채웠을 때'],
+  w:'『대순지침』 38쪽: 내 마음을 거울과 같이 닦아서 진실하고 정직한 인간의 본질을 회복했을 때 도통에 이릅니다.',s:'『대순지침』 · 황의동 2009 · 대순회보 웹진'},
+ {a:4,r:2,k:'t',q:'충(忠)·효(孝)·열(烈)을 윤리의 영역으로 풀 때, 충은 어느 쪽으로 설명될까요?',
+  o:['나라와 공동체에 대한 윤리','가정 안에서만 지키는 윤리','나 혼자의 수양에만 관한 윤리','종교 의례에서만 쓰는 윤리'],
+  w:'한 연구는 충을 국가윤리, 효를 가정윤리, 열을 개인·가정·국가를 함께 아우르는 윤리로 설명합니다.',s:'황의동 2009 (연구자의 설명)'},
+ {a:5,r:2,k:'t',q:'대순회보 글이 인용한 『효경』의 "夫孝 德之本也(부효 덕지본야)"는 무슨 뜻일까요?',L:1,
+  o:['효는 모든 덕의 근본이다','효는 덕 가운데 가장 작은 것이다','효는 집 밖에서는 필요하지 않다','효는 배워야만 알 수 있다'],
+  w:'효는 모든 덕의 근본이며, 가르침이 거기서 비롯된다는 뜻입니다.',s:'대순회보 웹진(孝)'},
+ {a:6,r:2,k:'t6',q:'세 장면과 덕목을 바르게 짝지은 것은?',
+  o:['(가) 충  (나) 효  (다) 열','(가) 효  (나) 충  (다) 열','(가) 열  (나) 효  (다) 충','(가) 충  (나) 열  (다) 효'],
+  w:'(가)는 맡은 일에 책임을 다하는 충, (나)는 부모에 대한 사랑과 존경을 행동으로 보이는 효, (다)는 어려움에도 한 번 세운 뜻과 약속을 굳게 지키는 열입니다.',s:'일반 덕목 적용'},
+ {a:7,r:2,k:'t',q:'도전님 훈시(1986.10.28.)는 수도(修道)를 무엇이라 하셨을까요?',
+  o:['인륜을 바로 행하고 도덕을 밝혀 나가는 것','세속의 인연을 끊고 산속에서 홀로 닦는 것','신비한 체험을 얻기 위해 애쓰는 것','학문을 깊이 쌓아 이름을 얻는 것'],
+  w:'수도란 인륜을 바로 행하고 도덕을 밝혀 나가는 것이라 하셨습니다. 『대순진리회요람』은 삼강오륜을 도덕의 근원이라 하였습니다.',s:'대순회보 웹진(훈회·수칙) 인용'}
 ];
-var Q=[];
-for(var r=0;r<4;r++)for(var a=0;a<8;a++)Q.push({a:a,t:ITEMS[a][r]});
-var OPT=['전혀 그렇지 않다','별로 그렇지 않다','보통이다','대체로 그렇다','매우 그렇다'];
-var ans=[],cur=0,scores=[];
+var Q=ALL.slice().sort(function(x,y){return x.r-y.r||x.a-y.a;});
+var ans=[],ord=[],cur=0,scores=[],hits=[];
 
 function $(id){return document.getElementById(id);}
 function show(id){['s-home','s-q','s-r'].forEach(function(x){$(x).classList.toggle('hide',x!==id);});window.scrollTo(0,0);}
+function shuf(n){var a=[],i,j,t;for(i=0;i<n;i++)a.push(i);for(i=n-1;i>0;i--){j=Math.floor(Math.random()*(i+1));t=a[i];a[i]=a[j];a[j]=t;}return a;}
+var NUM=['①','②','③','④'];
 
 function renderQ(){
   var q=Q[cur],ax=AX[q.a];
   $('pbar').style.width=(cur/Q.length*100)+'%';
   $('pn').textContent=(cur+1)+' / '+Q.length;
   var tg=$('qtag');tg.textContent=ax.n;tg.style.background=ax.c;
-  $('qt').textContent=q.t;
-  var h='';OPT.forEach(function(o,i){h+='<button class="opt'+(ans[cur]===i+1?' on':'')+'" data-v="'+(i+1)+'">'+o+'</button>';});
+  var qt=$('qt');qt.textContent=q.q;qt.className='q'+(q.L?' long':'');
+  var qs='';
+  if(q.k==='s')qs='<div class="scene">'+SC[q.sc]()+'</div>';
+  if(q.k==='t6'){qs='<div class="trio">'+TRIO.map(function(t){return '<div class="tr"><em>'+t[0]+'</em><i style="background:'+t[2]+'">'+t[1]+'</i><span>'+t[3]+'</span></div>';}).join('')+'</div>';}
+  $('qs').innerHTML=qs;
+  var h='';
+  ord[cur].forEach(function(oi,di){
+    var on=ans[cur]===oi?' on':'';
+    if(q.k==='p')h+='<button class="pic'+on+'" data-v="'+oi+'"><b>'+NUM[di]+'</b>'+PC[q.o[oi]]()+'</button>';
+    else h+='<button class="opt'+on+'" data-v="'+oi+'"><b>'+NUM[di]+'</b><span>'+q.o[oi]+'</span></button>';
+  });
   $('opts').innerHTML=h;
   $('back').style.visibility=cur===0?'hidden':'visible';
 }
+function level(s){return s>=100?'아주 잘 알아요':s>=67?'잘 알아요':s>=33?'조금 알아요':'함께 알아봐요';}
 function calc(){
-  var sum=AX.map(function(){return 0;});
-  Q.forEach(function(q,i){sum[q.a]+=ans[i]||3;});
-  scores=sum.map(function(s){return Math.round((s-4)/16*100);});
+  var ok=AX.map(function(){return 0;});hits=[];
+  Q.forEach(function(q,i){var h=(ans[i]===0);hits[i]=h;if(h)ok[q.a]++;});
+  scores=ok.map(function(n){return Math.round(n/3*100);});
+  return ok;
 }
-function level(s){return s>=80?'아주 뚜렷해요':s>=60?'잘 나타나요':s>=40?'고르게 있어요':'가꾸면 자라요';}
+function total(){return hits.filter(Boolean).length;}
 
 function radar(){
   var n=8,W=360,H=380,cx=180,cy=192,R=88,out='',i;
@@ -175,20 +385,31 @@ function radar(){
   $('radar').innerHTML='<svg viewBox="-24 0 '+(W+48)+' '+H+'" role="img" aria-label="여덟 항목 레이더">'+out+'</svg>';
 }
 function result(){
-  calc();
+  var ok=calc();
   var d=new Date();$('rdate').textContent=d.getFullYear()+'년 '+(d.getMonth()+1)+'월 '+d.getDate()+'일';
+  $('rtot').textContent='스물네 문제 중 '+total()+'문제를 맞혔어요';
   radar();
   var idx=scores.map(function(s,i){return i;}).sort(function(a,b){return scores[b]-scores[a]||a-b;});
   var top=idx.slice(0,2),low=idx[idx.length-1];
-  $('str').innerHTML=top.map(function(i){return '<div style="background:'+AX[i].c+'">'+AX[i].n+'<small>'+scores[i]+'점<br>'+level(scores[i])+'</small></div>';}).join('');
+  $('str').innerHTML=top.map(function(i){return '<div style="background:'+AX[i].c+'">'+AX[i].n+'<small>'+ok[i]+'/3 · '+scores[i]+'점<br>'+level(scores[i])+'</small></div>';}).join('');
   var h='';
   idx.forEach(function(i){
     var s=scores[i];
     h+='<div class="ax" style="border-color:'+AX[i].c+'"><div class="axh"><span class="axn" style="color:'+AX[i].c+'">'+AX[i].n+'</span><span class="axs" style="color:'+AX[i].c+'">'+s+'점</span></div>'+
       '<div class="bar"><i style="width:'+Math.max(s,3)+'%;background:'+AX[i].c+'"></i></div>'+
-      '<div class="axl" style="color:'+AX[i].c+'">'+level(s)+(i===low?' · 이번에 가꿔 볼 부분':'')+'</div>'+
-      '<div class="axt">'+AX[i].t+'</div>'+
-      '<div class="axa">이번 주 실천 한 가지<br>'+AX[i].a+'</div></div>';
+      '<div class="axl" style="color:'+AX[i].c+'">3문제 중 '+ok[i]+'문제 · '+level(s)+(i===low&&s<100?' · 이번에 더 알아볼 부분':'')+'</div>'+
+      '<div class="axt">'+AX[i].t+'</div>';
+    Q.forEach(function(q,qi){
+      if(q.a!==i||hits[qi])return;
+      var body;
+      if(q.k==='p'){
+        body='<div class="pp"><div><span class="no">내가 고른 그림</span>'+(ans[qi]==null?'<em>답하지 않았어요</em>':PC[q.o[ans[qi]]]())+'</div><div><span class="ok">정답 그림</span>'+PC[q.o[0]]()+'</div></div>';
+      }else{
+        body='<span class="no">내가 고른 답: '+(ans[qi]==null?'답하지 않았어요':q.o[ans[qi]])+'</span><span class="ok">정답: '+q.o[0]+'</span>';
+      }
+      h+='<div class="wr"><u>다시 볼 문제 · '+(qi+1)+'번</u>'+q.q+body+q.w+'<br><small>근거: '+q.s+'</small></div>';
+    });
+    h+='<div class="axa">이번 주 실천 한 가지<br>'+AX[i].a+'</div></div>';
   });
   $('axes').innerHTML=h;
   show('s-r');
@@ -199,9 +420,10 @@ function draw(){
   var W=1080,H=1500,c=document.createElement('canvas');c.width=W;c.height=H;var g=c.getContext('2d');
   g.fillStyle='#fff';g.fillRect(0,0,W,H);
   g.fillStyle='#FFD400';g.fillRect(0,0,W,30);g.fillRect(0,H-30,W,30);
-  g.textAlign='center';g.fillStyle='#000';g.font='900 52px "Noto Sans KR",sans-serif';g.fillText('나의 수행 성향',W/2,130);
-  g.font='900 34px "Noto Sans KR",sans-serif';g.fillStyle='#E00000';g.fillText('종지 · 충효열 · 삼강오륜',W/2,186);
-  var cx=W/2,cy=626,R=262,n=8;
+  g.textAlign='center';g.fillStyle='#000';g.font='900 52px "Noto Sans KR",sans-serif';g.fillText('나의 이해도',W/2,120);
+  g.font='900 34px "Noto Sans KR",sans-serif';g.fillStyle='#E00000';g.fillText('종지 · 충효열 · 삼강오륜',W/2,172);
+  g.font='900 38px "Noto Sans KR",sans-serif';g.fillStyle='#000';g.fillText('스물네 문제 중 '+total()+'문제',W/2,228);
+  var cx=W/2,cy=650,R=262,n=8;
   function pt(k,rad){var a=-Math.PI/2+k*2*Math.PI/n;return [cx+rad*Math.cos(a),cy+rad*Math.sin(a)];}
   [25,50,75,100].forEach(function(p){g.beginPath();for(var i=0;i<n;i++){var q=pt(i,R*p/100);if(i)g.lineTo(q[0],q[1]);else g.moveTo(q[0],q[1]);}g.closePath();g.strokeStyle=p===50?'#777':'#BBB';g.lineWidth=p===50?3:2;g.stroke();});
   for(var i=0;i<n;i++){var q=pt(i,R);g.beginPath();g.moveTo(cx,cy);g.lineTo(q[0],q[1]);g.strokeStyle='#999';g.lineWidth=2;g.stroke();}
@@ -210,28 +432,29 @@ function draw(){
   scores.forEach(function(v,k){var q=pt(k,R*Math.max(v,4)/100);g.beginPath();g.arc(q[0],q[1],14,0,7);g.fillStyle=AX[k].c;g.fill();g.lineWidth=4;g.strokeStyle='#000';g.stroke();});
   for(i=0;i<n;i++){var l=pt(i,R+92);g.textAlign='center';g.fillStyle=AX[i].c;g.font='900 40px "Noto Sans KR",sans-serif';g.fillText(AX[i].n,l[0],l[1]+8);g.fillStyle='#000';g.font='900 36px "Noto Sans KR",sans-serif';g.fillText(scores[i]+'',l[0],l[1]+52);}
   var idx=scores.map(function(s,i){return i;}).sort(function(a,b){return scores[b]-scores[a]||a-b;});
-  g.textAlign='center';g.fillStyle='#000';g.font='900 38px "Noto Sans KR",sans-serif';g.fillText('가장 뚜렷한 모습',W/2,1112);
-  [0,1].forEach(function(k){var i=idx[k],x=W/2+(k?250:-250);g.fillStyle=AX[i].c;g.fillRect(x-220,1140,440,150);g.fillStyle='#fff';g.font='900 56px "Noto Sans KR",sans-serif';g.fillText(AX[i].n,x,1208);g.font='900 34px "Noto Sans KR",sans-serif';g.fillText(scores[i]+'점 · '+level(scores[i]),x,1262);});
-  g.fillStyle='#000';g.font='900 30px "Noto Sans KR",sans-serif';g.fillText('한국뇌심리연구소 · 신앙의 깊이를 재는 검사가 아닙니다',W/2,1390);
-  g.font='700 26px "Noto Sans KR",sans-serif';g.fillText('일상 실천을 돌아보는 도구 · 대순진리회 공식 앱이 아닙니다',W/2,1436);
+  g.textAlign='center';g.fillStyle='#000';g.font='900 38px "Noto Sans KR",sans-serif';g.fillText('가장 잘 아는 부분',W/2,1130);
+  [0,1].forEach(function(k){var i=idx[k],x=W/2+(k?250:-250);g.fillStyle=AX[i].c;g.fillRect(x-220,1158,440,150);g.fillStyle='#fff';g.font='900 56px "Noto Sans KR",sans-serif';g.fillText(AX[i].n,x,1226);g.font='900 34px "Noto Sans KR",sans-serif';g.fillText(scores[i]+'점 · '+level(scores[i]),x,1280);});
+  g.fillStyle='#000';g.font='900 30px "Noto Sans KR",sans-serif';g.fillText('한국뇌심리연구소 / 한국뇌궁합연구소',W/2,1396);
+  g.font='700 26px "Noto Sans KR",sans-serif';g.fillText('신앙의 깊이를 재는 검사가 아닙니다 · 가르침 이해도 확인',W/2,1440);
   return c;
 }
 function saveImg(){
   var c=draw();
   c.toBlob(function(b){
     if(!b)return;
-    var f;try{f=new File([b],'나의_수행_성향.png',{type:'image/png'});}catch(e){f=null;}
-    if(f&&navigator.canShare&&navigator.canShare({files:[f]})){navigator.share({files:[f],title:'나의 수행 성향'}).catch(function(){});return;}
-    var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='나의_수행_성향.png';document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove();},1500);
+    var f;try{f=new File([b],'나의_이해도.png',{type:'image/png'});}catch(e){f=null;}
+    if(f&&navigator.canShare&&navigator.canShare({files:[f]})){navigator.share({files:[f],title:'나의 이해도'}).catch(function(){});return;}
+    var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='나의_이해도.png';document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove();},1500);
   },'image/png');
 }
 
-$('start').onclick=function(){ans=[];cur=0;show('s-q');renderQ();};
-$('back').onclick=function(){if(cur>0){cur--;renderQ();}};
+function begin(){ans=[];cur=0;ord=Q.map(function(q){return shuf(q.o.length);});show('s-q');renderQ();}
+$('start').onclick=begin;
+$('back').onclick=function(){if(cur>0){cur--;renderQ();window.scrollTo(0,0);}};
 $('opts').addEventListener('click',function(e){
-  var b=e.target.closest('.opt');if(!b)return;
+  var b=e.target.closest('.opt,.pic');if(!b)return;
   ans[cur]=+b.dataset.v;b.classList.add('on');
-  setTimeout(function(){if(cur<Q.length-1){cur++;renderQ();window.scrollTo(0,0);}else{result();}},160);
+  setTimeout(function(){if(cur<Q.length-1){cur++;renderQ();window.scrollTo(0,0);}else{result();}},180);
 });
 $('again').onclick=function(){ans=[];cur=0;show('s-home');};
 $('save').onclick=saveImg;
@@ -239,7 +462,7 @@ document.querySelectorAll('.fs button').forEach(function(b){b.onclick=function()
   document.documentElement.className=b.dataset.f==='1'?'':'f'+b.dataset.f;
   document.querySelectorAll('.fs button').forEach(function(x){x.setAttribute('aria-pressed',x===b);});
 };});
-window.__KDS={Q:Q,AX:AX};
+window.__KDS={Q:Q,AX:AX,PC:PC,SC:SC,begin:begin,setAns:function(a){ans=a;},result:result};
 })();
 </script>
 </body>
