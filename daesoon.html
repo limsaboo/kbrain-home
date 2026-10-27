@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#FFFFFF">
+<meta name="robots" content="noindex">
+<title>나의 수행 성향 · 종지·충효열·삼강오륜</title>
+<style>
+:root{--bg:#FFFFFF;--ink:#000000;--sub:#222222;--line:#000000;--soft:#FFF4C2;
+ --c0:#6A1B9A;--c1:#0033CC;--c2:#E00000;--c3:#E65100;--c4:#007A33;--c5:#C2006B;--c6:#00838F;--gold:#FFD400}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{font-size:18px}
+html.f2{font-size:21px}
+html.f3{font-size:24px}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif;font-weight:700;line-height:1.9;word-break:keep-all;overflow-wrap:break-word}
+.wrap{max-width:560px;margin:0 auto;padding:0 16px 40px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:12px 0;border-bottom:4px solid var(--ink)}
+.brand{font-size:15px;font-weight:900;line-height:1.5;white-space:nowrap}
+.fs{display:flex;gap:6px}
+.fs button{font:inherit;font-weight:900;border:3px solid #000;background:#fff;color:#000;border-radius:10px;padding:0;height:40px;width:42px;font-size:16px;cursor:pointer;line-height:1}
+.fs button[aria-pressed=true]{background:var(--gold)}
+h1{margin:18px 0 6px;font-size:1.7rem;line-height:1.5;text-align:center;font-weight:900}
+h1 span{color:var(--c2);font-size:1.3rem;display:block}
+.lead{text-align:center;font-size:1.05rem;margin:0 0 14px;text-wrap:balance}
+.chips{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:14px 0}
+.chip{border:3px solid #000;border-radius:14px;padding:8px 6px;text-align:center;font-size:1rem;font-weight:900;line-height:1.5;background:var(--soft)}
+.seven{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin:16px 0}
+.seven div{border-radius:10px;color:#fff;text-align:center;padding:8px 0;font-size:.82rem;font-weight:900;line-height:1.5;writing-mode:horizontal-tb}
+.btn{display:block;width:100%;border:4px solid #000;border-radius:18px;font:inherit;font-weight:900;font-size:1.25rem;line-height:1.5;padding:14px 10px;margin:12px 0;cursor:pointer;text-align:center;text-decoration:none;color:#000}
+.b-y{background:var(--gold)} .b-r{background:var(--c2);color:#fff} .b-w{background:#fff} .b-b{background:var(--c1);color:#fff}
+.note{font-size:.85rem;color:var(--sub);text-align:center;line-height:1.8}
+.prog{height:16px;border:3px solid #000;border-radius:10px;overflow:hidden;margin:14px 0 6px;background:#fff}
+.prog i{display:block;height:100%;background:var(--c2);width:0}
+.pn{text-align:center;font-size:1rem;font-weight:900;margin:0 0 4px}
+.qtag{display:block;width:max-content;max-width:100%;margin:10px auto;border-radius:20px;padding:2px 16px;color:#fff;font-size:.95rem;font-weight:900;line-height:1.7}
+.q{font-size:1.45rem;line-height:1.8;text-align:center;font-weight:900;margin:8px 0 18px;min-height:7.2em;display:flex;align-items:center;justify-content:center;text-wrap:balance}
+.opt{display:block;width:100%;border:4px solid #000;border-radius:16px;background:#fff;color:#000;font:inherit;font-weight:900;font-size:1.15rem;line-height:1.5;padding:13px 10px;margin:10px 0;cursor:pointer;text-align:center}
+.opt:active,.opt.on{background:var(--gold)}
+.back{background:#fff;border:3px solid #000;border-radius:12px;font:inherit;font-weight:900;font-size:1rem;padding:6px 16px;margin-top:6px;cursor:pointer}
+.card{border:4px solid #000;border-radius:20px;padding:16px;margin:16px 0;background:#fff}
+.card h2{margin:0 0 6px;font-size:1.3rem;line-height:1.5;text-align:center;font-weight:900}
+svg{display:block;width:100%;height:auto}
+.ax{border:4px solid;border-radius:18px;padding:12px 14px;margin:14px 0;background:#fff}
+.axh{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.axn{font-size:1.25rem;font-weight:900;line-height:1.5}
+.axs{font-size:1.5rem;font-weight:900;line-height:1.4}
+.bar{height:18px;border:3px solid #000;border-radius:10px;overflow:hidden;margin:6px 0;background:#fff}
+.bar i{display:block;height:100%}
+.axt{font-size:.95rem;line-height:1.8;margin:2px 0}
+.axl{font-size:1rem;font-weight:900;line-height:1.7;margin-top:4px}
+.axa{font-size:.95rem;line-height:1.8;background:var(--soft);border-radius:10px;padding:6px 10px;margin-top:6px}
+.str{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:8px 0}
+.str div{border-radius:16px;color:#fff;text-align:center;padding:12px 6px;font-size:1.2rem;line-height:1.6;font-weight:900}
+.str small{display:block;font-size:.85rem;font-weight:900}
+.hide{display:none}
+.src{font-size:.85rem;line-height:1.8;font-weight:700}
+.src a{color:#0033CC;font-weight:900;text-decoration:underline;overflow-wrap:anywhere}
+.foot span,.note{text-wrap:balance}
+.foot{font-size:.8rem;text-align:center;color:#222;line-height:1.8;margin-top:14px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="top"><div class="brand">한국뇌심리연구소<br>대순진리회 강의용</div>
+ <div class="fs" role="group" aria-label="글씨 크기"><button data-f="1" aria-pressed="true">가</button><button data-f="2" aria-pressed="false" style="font-size:19px">가</button><button data-f="3" aria-pressed="false" style="font-size:22px">가</button></div></div>
+
+<!-- 시작 -->
+<section id="s-home">
+ <h1>나의 수행 성향<br><span>종지 · 충효열 · 삼강오륜</span></h1>
+ <p class="lead">일상에서 실천하는 모습을<br>서른두 문항으로 돌아봅니다</p>
+ <div class="seven">
+  <div style="background:var(--c0)">음양<br>합덕</div><div style="background:var(--c1)">신인<br>조화</div><div style="background:var(--c2)">해원<br>상생</div><div style="background:var(--c3)">도통<br>진경</div><div style="background:var(--c4)">충</div><div style="background:var(--c5)">효</div><div style="background:var(--c6)">열</div><div style="background:#7B3F00">삼강<br>오륜</div>
+ </div>
+ <div class="chips"><div class="chip">32문항</div><div class="chip">약 4분</div><div class="chip">가입 없음</div><div class="chip">기록 저장 안 함</div></div>
+ <button class="btn b-y" id="start">▶ 시작하기</button>
+ <p class="note">신앙의 깊이를 재는 검사가 아닙니다.<br>내 일상의 실천을 돌아보고 가꾸는 도구입니다.<br>맞고 틀린 답은 없습니다.</p>
+</section>
+
+<!-- 문항 -->
+<section id="s-q" class="hide">
+ <div class="prog"><i id="pbar"></i></div>
+ <div class="pn" id="pn"></div>
+ <span class="qtag" id="qtag"></span>
+ <div class="q" id="qt"></div>
+ <div id="opts"></div>
+ <button class="back" id="back">← 이전 문항</button>
+</section>
+
+<!-- 결과 -->
+<section id="s-r" class="hide">
+ <h1 style="font-size:1.55rem">나의 수행 성향</h1>
+ <p class="lead" id="rdate"></p>
+ <div class="card"><h2>여덟 가지 모양</h2><div id="radar"></div></div>
+ <div class="card"><h2>지금 가장 뚜렷한 모습</h2><div class="str" id="str"></div></div>
+ <div id="axes"></div>
+ <button class="btn b-y" id="save">🖼 결과 그림 저장·공유</button>
+ <button class="btn b-w" id="again">↻ 다시 해 보기</button>
+ <div class="card src"><h2 style="font-size:1.1rem">참고한 자료</h2>
+  <p style="margin:4px 0">종지 4가지의 이름과 뜻풀이는 대순진리회 공식 웹진과 『전경』 교운 2장 32절을 인용한 논문을 따랐습니다. 충·효·열은 『전경』 행록 5장 38절의 "세무충 세무효 세무열 시고천하개병"에 나오는 인륜도덕의 대표 덕목입니다. 삼강오륜은 무극도 취지서의 "삼강오륜은 천륜" 구절과 수도인의 매일 훈회·수칙 낭독에 근거하되, 문항은 높낮이 없는 상호 존중과 상생의 뜻으로 풀어 썼습니다.</p>
+  <ul style="padding-left:18px;margin:6px 0">
+   <li><a href="https://webzine.daesoon.org/m/view.asp?webzine=315&menu_no=5268&bno=9731&page=1" target="_blank" rel="noopener">도통진경의 실천적 의미 이해 (대순회보 웹진)</a></li>
+   <li><a href="https://webzine.daesoon.org/m/view.asp?webzine=299&menu_no=5052&bno=9360&page=1" target="_blank" rel="noopener">훈회ㆍ수칙의 역사적 이해 (대순회보 웹진)</a></li>
+   <li><a href="http://webzine.daesoon.org/m/view.asp?webzine=176&menu_no=2879&bno=5126&page=1" target="_blank" rel="noopener">마음의 양식, 孝 (대순회보 웹진)</a></li>
+   <li><a href="https://koreascience.or.kr/article/JAKO200934037709347.pdf" target="_blank" rel="noopener">최영진, 「대순사상의 역학적 조명」(KoreaScience)</a></li>
+  </ul>
+ </div>
+ </section>
+
+<div class="foot"><span>한국뇌심리연구소 제작</span><br><span>대순진리회 공식 앱이 아닙니다</span><br><span>문항은 일상 실천 중심으로 썼습니다</span><br><span>답은 기기 밖으로 나가지 않습니다</span></div>
+</div>
+
+<script>
+(function(){
+'use strict';
+var AX=[
+ {n:'음양합덕',c:'#6A1B9A',t:'서로 다른 점을 지키면서 장단점을 보완해 함께 이루는 태도',a:'오늘 생각이 다른 한 사람의 장점을 찾아 말해 주기'},
+ {n:'신인조화',c:'#0033CC',t:'하늘과 사람이 서로 의지하며 조화를 이룬다고 여기는 감사와 정성의 마음',a:'잠들기 전에 감사한 일 세 가지 떠올리기'},
+ {n:'해원상생',c:'#E00000',t:'쌓인 원망을 풀고 서로를 살리는 길을 찾는 태도',a:'마음에 걸리는 한 사람에게 안부 문자 보내기'},
+ {n:'도통진경',c:'#E65100',t:'도를 통할 수 있는 참된 경지를 향해, 가르침을 생활에 옮기고 마음의 욕심을 덜어 가며 꾸준히 닦는 태도',a:'하루 5분, 같은 시간에 마음 닦는 시간 정하기(욕심이 앞서는 순간 한 번 쉬어 가기)'},
+ {n:'충',c:'#007A33',t:'인륜도덕의 대표 덕목 · 맡은 일에 정성과 책임을 다하고 신의를 지키는 마음',a:'오늘 맡은 일 하나를 약속한 시간 안에 정성껏 끝내기'},
+ {n:'효',c:'#C2006B',t:'인륜도덕의 대표 덕목 · 모든 덕의 근본으로 일컬어지며, 부모와 어른을 공경하고 은혜에 보답하려는 마음',a:'부모님이나 가까운 어른께 안부 전화 한 통 드리기'},
+ {n:'열',c:'#00838F',t:'인륜도덕의 대표 덕목 · 어려운 때에도 한결같이 지조와 신의를 지키는 마음',a:'내가 정한 약속 하나를 이번 주 끝까지 지키기'},
+ {n:'삼강오륜',c:'#7B3F00',t:'부모·부부·어른과 젊은이·벗 사이에서 높낮이 없이 서로 존중하며 인륜의 도리를 다해 상생하는 마음',a:'오늘 가까운 한 사람에게 "고맙습니다" 또는 "미안합니다"를 먼저 말하기'}
+];
+/* 문항: 라운드(4) x 항목(7) 순서 */
+var ITEMS=[
+ ['나와 생각이 다른 사람의 장점을 먼저 찾아보려 한다.','모임에서 각자 잘하는 일을 나눠 맡으면 더 잘된다고 느낀다.','가족이나 동료가 서로 부족한 부분을 채우도록 돕는다.','내 방식만 고집하기보다 상대의 방식도 받아들여 본다.'],
+ ['하루를 시작하거나 마칠 때 감사한 마음으로 돌아본다.','일이 잘 풀리면 내 힘만이 아니라 보이지 않는 도움이 있었다고 생각한다.','중요한 일을 앞두고 마음을 가다듬고 정성을 들인다.','어려운 일이 닥쳐도 사람의 도리를 다하면 길이 열린다고 믿는다.'],
+ ['서운했던 사람과 먼저 마음을 풀려고 한다.','지난 일로 쌓인 미움이나 원망을 오래 붙들지 않으려 한다.','내가 이기는 것보다 서로 잘되는 길을 먼저 찾는다.','남을 살리고 돕는 일에서 보람을 느낀다.'],
+ ['정해 둔 시간에 마음을 닦는 공부나 수행을 이어 가려 한다.','나 자신을 속이지 않으려고 스스로를 돌아보는 시간을 갖는다.','들은 가르침과 내 말·행동이 어긋나지 않게 하려 한다.','욕심이 앞설 때 마음을 가라앉히고 다시 맑게 하려 한다.'],
+ ['맡은 일은 보는 사람이 없어도 성실하게 끝낸다.','한 약속은 손해가 나도 지키려 한다.','나보다 가정·직장·모임에 필요한 일을 먼저 챙긴다.','한번 맺은 의리와 신의를 소중히 여긴다.'],
+ ['부모님이나 어른께 자주 안부를 묻고 마음을 전한다.','부모님 말씀이 서운해도 먼저 공손히 듣는다.','낳아 주고 길러 주신 은혜를 자주 떠올린다.','가까운 어른을 위해 시간과 정성을 내는 편이다.'],
+ ['어려운 때에도 한 번 정한 마음을 쉽게 바꾸지 않는다.','유혹이 와도 지켜야 할 선을 지킨다.','소중한 사람에게 한결같이 신의를 지킨다.','옳다고 믿는 길을 남의 시선 때문에 접지 않는다.'],
+ ['부모와 자녀가 서로 존중하고 은혜를 나누는 관계를 만들려 한다.','부부 사이에 위아래를 두지 않고 서로 다름을 존중하며 도리를 다하려 한다.','나이나 지위에 상관없이 누구에게나 예의를 지키고 존중한다.','친구와 이웃에게 한 약속과 신의를 지키며 서로 돕는다.']
+];
+var Q=[];
+for(var r=0;r<4;r++)for(var a=0;a<8;a++)Q.push({a:a,t:ITEMS[a][r]});
+var OPT=['전혀 그렇지 않다','별로 그렇지 않다','보통이다','대체로 그렇다','매우 그렇다'];
+var ans=[],cur=0,scores=[];
+
+function $(id){return document.getElementById(id);}
+function show(id){['s-home','s-q','s-r'].forEach(function(x){$(x).classList.toggle('hide',x!==id);});window.scrollTo(0,0);}
+
+function renderQ(){
+  var q=Q[cur],ax=AX[q.a];
+  $('pbar').style.width=(cur/Q.length*100)+'%';
+  $('pn').textContent=(cur+1)+' / '+Q.length;
+  var tg=$('qtag');tg.textContent=ax.n;tg.style.background=ax.c;
+  $('qt').textContent=q.t;
+  var h='';OPT.forEach(function(o,i){h+='<button class="opt'+(ans[cur]===i+1?' on':'')+'" data-v="'+(i+1)+'">'+o+'</button>';});
+  $('opts').innerHTML=h;
+  $('back').style.visibility=cur===0?'hidden':'visible';
+}
+function calc(){
+  var sum=AX.map(function(){return 0;});
+  Q.forEach(function(q,i){sum[q.a]+=ans[i]||3;});
+  scores=sum.map(function(s){return Math.round((s-4)/16*100);});
+}
+function level(s){return s>=80?'아주 뚜렷해요':s>=60?'잘 나타나요':s>=40?'고르게 있어요':'가꾸면 자라요';}
+
+function radar(){
+  var n=8,W=360,H=380,cx=180,cy=192,R=88,out='',i;
+  function pt(k,rad){var ang=-Math.PI/2+k*2*Math.PI/n;return [cx+rad*Math.cos(ang),cy+rad*Math.sin(ang)];}
+  [25,50,75,100].forEach(function(p){var ps=[];for(i=0;i<n;i++){var q=pt(i,R*p/100);ps.push(q[0].toFixed(1)+','+q[1].toFixed(1));}
+    out+='<polygon points="'+ps.join(' ')+'" fill="none" stroke="'+(p===50?'#777':'#BBB')+'" stroke-width="'+(p===50?2:1.5)+'"/>';});
+  for(i=0;i<n;i++){var q=pt(i,R);out+='<line x1="'+cx+'" y1="'+cy+'" x2="'+q[0].toFixed(1)+'" y2="'+q[1].toFixed(1)+'" stroke="#999" stroke-width="1.5"/>';}
+  var ps=scores.map(function(v,k){var q=pt(k,R*Math.max(v,4)/100);return q[0].toFixed(1)+','+q[1].toFixed(1);});
+  out+='<polygon points="'+ps.join(' ')+'" fill="#FFD400" fill-opacity=".45" stroke="#000" stroke-width="4" stroke-linejoin="round"/>';
+  scores.forEach(function(v,k){var q=pt(k,R*Math.max(v,4)/100);out+='<circle cx="'+q[0].toFixed(1)+'" cy="'+q[1].toFixed(1)+'" r="7" fill="'+AX[k].c+'" stroke="#000" stroke-width="2.5"/>';});
+  for(i=0;i<n;i++){var l=pt(i,R+40),anc='middle';if(l[0]<cx-18)anc='end';else if(l[0]>cx+18)anc='start';
+    var lx=l[0]+(anc==='end'?10:anc==='start'?-10:0);
+    out+='<text x="'+lx.toFixed(1)+'" y="'+(l[1]+4).toFixed(1)+'" font-size="17" font-weight="900" fill="'+AX[i].c+'" text-anchor="'+anc+'" font-family="inherit">'+AX[i].n+'</text>';
+    out+='<text x="'+lx.toFixed(1)+'" y="'+(l[1]+24).toFixed(1)+'" font-size="16" font-weight="900" fill="#000" text-anchor="'+anc+'" font-family="inherit">'+scores[i]+'</text>';}
+  $('radar').innerHTML='<svg viewBox="-24 0 '+(W+48)+' '+H+'" role="img" aria-label="여덟 항목 레이더">'+out+'</svg>';
+}
+function result(){
+  calc();
+  var d=new Date();$('rdate').textContent=d.getFullYear()+'년 '+(d.getMonth()+1)+'월 '+d.getDate()+'일';
+  radar();
+  var idx=scores.map(function(s,i){return i;}).sort(function(a,b){return scores[b]-scores[a]||a-b;});
+  var top=idx.slice(0,2),low=idx[idx.length-1];
+  $('str').innerHTML=top.map(function(i){return '<div style="background:'+AX[i].c+'">'+AX[i].n+'<small>'+scores[i]+'점<br>'+level(scores[i])+'</small></div>';}).join('');
+  var h='';
+  idx.forEach(function(i){
+    var s=scores[i];
+    h+='<div class="ax" style="border-color:'+AX[i].c+'"><div class="axh"><span class="axn" style="color:'+AX[i].c+'">'+AX[i].n+'</span><span class="axs" style="color:'+AX[i].c+'">'+s+'점</span></div>'+
+      '<div class="bar"><i style="width:'+Math.max(s,3)+'%;background:'+AX[i].c+'"></i></div>'+
+      '<div class="axl" style="color:'+AX[i].c+'">'+level(s)+(i===low?' · 이번에 가꿔 볼 부분':'')+'</div>'+
+      '<div class="axt">'+AX[i].t+'</div>'+
+      '<div class="axa">이번 주 실천 한 가지<br>'+AX[i].a+'</div></div>';
+  });
+  $('axes').innerHTML=h;
+  show('s-r');
+}
+
+/* 결과 그림 */
+function draw(){
+  var W=1080,H=1500,c=document.createElement('canvas');c.width=W;c.height=H;var g=c.getContext('2d');
+  g.fillStyle='#fff';g.fillRect(0,0,W,H);
+  g.fillStyle='#FFD400';g.fillRect(0,0,W,30);g.fillRect(0,H-30,W,30);
+  g.textAlign='center';g.fillStyle='#000';g.font='900 52px "Noto Sans KR",sans-serif';g.fillText('나의 수행 성향',W/2,130);
+  g.font='900 34px "Noto Sans KR",sans-serif';g.fillStyle='#E00000';g.fillText('종지 · 충효열 · 삼강오륜',W/2,186);
+  var cx=W/2,cy=626,R=262,n=8;
+  function pt(k,rad){var a=-Math.PI/2+k*2*Math.PI/n;return [cx+rad*Math.cos(a),cy+rad*Math.sin(a)];}
+  [25,50,75,100].forEach(function(p){g.beginPath();for(var i=0;i<n;i++){var q=pt(i,R*p/100);if(i)g.lineTo(q[0],q[1]);else g.moveTo(q[0],q[1]);}g.closePath();g.strokeStyle=p===50?'#777':'#BBB';g.lineWidth=p===50?3:2;g.stroke();});
+  for(var i=0;i<n;i++){var q=pt(i,R);g.beginPath();g.moveTo(cx,cy);g.lineTo(q[0],q[1]);g.strokeStyle='#999';g.lineWidth=2;g.stroke();}
+  g.beginPath();scores.forEach(function(v,k){var q=pt(k,R*Math.max(v,4)/100);if(k)g.lineTo(q[0],q[1]);else g.moveTo(q[0],q[1]);});g.closePath();
+  g.fillStyle='rgba(255,212,0,.5)';g.fill();g.strokeStyle='#000';g.lineWidth=7;g.lineJoin='round';g.stroke();
+  scores.forEach(function(v,k){var q=pt(k,R*Math.max(v,4)/100);g.beginPath();g.arc(q[0],q[1],14,0,7);g.fillStyle=AX[k].c;g.fill();g.lineWidth=4;g.strokeStyle='#000';g.stroke();});
+  for(i=0;i<n;i++){var l=pt(i,R+92);g.textAlign='center';g.fillStyle=AX[i].c;g.font='900 40px "Noto Sans KR",sans-serif';g.fillText(AX[i].n,l[0],l[1]+8);g.fillStyle='#000';g.font='900 36px "Noto Sans KR",sans-serif';g.fillText(scores[i]+'',l[0],l[1]+52);}
+  var idx=scores.map(function(s,i){return i;}).sort(function(a,b){return scores[b]-scores[a]||a-b;});
+  g.textAlign='center';g.fillStyle='#000';g.font='900 38px "Noto Sans KR",sans-serif';g.fillText('가장 뚜렷한 모습',W/2,1112);
+  [0,1].forEach(function(k){var i=idx[k],x=W/2+(k?250:-250);g.fillStyle=AX[i].c;g.fillRect(x-220,1140,440,150);g.fillStyle='#fff';g.font='900 56px "Noto Sans KR",sans-serif';g.fillText(AX[i].n,x,1208);g.font='900 34px "Noto Sans KR",sans-serif';g.fillText(scores[i]+'점 · '+level(scores[i]),x,1262);});
+  g.fillStyle='#000';g.font='900 30px "Noto Sans KR",sans-serif';g.fillText('한국뇌심리연구소 · 신앙의 깊이를 재는 검사가 아닙니다',W/2,1390);
+  g.font='700 26px "Noto Sans KR",sans-serif';g.fillText('일상 실천을 돌아보는 도구 · 대순진리회 공식 앱이 아닙니다',W/2,1436);
+  return c;
+}
+function saveImg(){
+  var c=draw();
+  c.toBlob(function(b){
+    if(!b)return;
+    var f;try{f=new File([b],'나의_수행_성향.png',{type:'image/png'});}catch(e){f=null;}
+    if(f&&navigator.canShare&&navigator.canShare({files:[f]})){navigator.share({files:[f],title:'나의 수행 성향'}).catch(function(){});return;}
+    var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='나의_수행_성향.png';document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove();},1500);
+  },'image/png');
+}
+
+$('start').onclick=function(){ans=[];cur=0;show('s-q');renderQ();};
+$('back').onclick=function(){if(cur>0){cur--;renderQ();}};
+$('opts').addEventListener('click',function(e){
+  var b=e.target.closest('.opt');if(!b)return;
+  ans[cur]=+b.dataset.v;b.classList.add('on');
+  setTimeout(function(){if(cur<Q.length-1){cur++;renderQ();window.scrollTo(0,0);}else{result();}},160);
+});
+$('again').onclick=function(){ans=[];cur=0;show('s-home');};
+$('save').onclick=saveImg;
+document.querySelectorAll('.fs button').forEach(function(b){b.onclick=function(){
+  document.documentElement.className=b.dataset.f==='1'?'':'f'+b.dataset.f;
+  document.querySelectorAll('.fs button').forEach(function(x){x.setAttribute('aria-pressed',x===b);});
+};});
+window.__KDS={Q:Q,AX:AX};
+})();
+</script>
+</body>
+</html>
