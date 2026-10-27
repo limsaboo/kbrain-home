@@ -1,4 +1,4 @@
-const CACHE = 'cogcheck-v8';
+const CACHE = 'cogcheck-v9';
 const FILES = ['./', './index.html', './manifest.webmanifest',
   './icons/icon-192.png', './icons/icon-512.png', './icons/icon-maskable-512.png', './icons/apple-touch-icon.png'];
 self.addEventListener('install', e => {
