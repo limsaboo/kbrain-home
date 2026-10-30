@@ -927,7 +927,7 @@ let verifiedCouponCode = null;
 let couponConsumed = false;
 
 /* ---------- 텔레그램 사용 알림 ---------- */
-const TG_BOT_TOKEN = "8837564107:AAGmu99kf9sfijKcWBQxTxR3WplWmeb99to";
+const TG_BOT_TOKEN = "";
 const TG_CHAT_ID = "8767965326";
 
 function notifyCouponUse({systemName, couponCode, couponType, buyerMemo, remainAfter}){
@@ -943,6 +943,7 @@ function notifyCouponUse({systemName, couponCode, couponType, buyerMemo, remainA
     `사용시각: ${now}`
   ].filter(Boolean).join('\n');
 
+  if(!TG_BOT_TOKEN){return;}
   const url = `https://api.telegram.org/bot${TG_BOT_TOKEN}/sendMessage`;
   fetch(url, {
     method: 'POST',

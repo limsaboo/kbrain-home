@@ -1952,7 +1952,7 @@ function supaFetch(path, method, body) {
 }
 
 // ── 텔레그램 쿠폰 사용 알림 ──
-var TG_BOT_TOKEN = "8837564107:AAGmu99kf9sfijKcWBQxTxR3WplWmeb99to";
+var TG_BOT_TOKEN = "";
 var TG_CHAT_ID = "8767965326";
 
 function notifyCouponUse(opts) {
@@ -1970,6 +1970,7 @@ function notifyCouponUse(opts) {
     "사용시각: " + now
   ].filter(function(v){ return v; }).join("\n");
 
+  if(!TG_BOT_TOKEN){return;}
   var url = "https://api.telegram.org/bot" + TG_BOT_TOKEN + "/sendMessage";
   fetch(url, {
     method: "POST",
