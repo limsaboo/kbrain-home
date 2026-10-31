@@ -2311,10 +2311,10 @@ function doPrint(){
       var sc2c=sim>=80?"#2e7d32":sim>=60?"#e65100":"#b71c1c";
       rows+="<tr>"
         +"<td style='color:"+catColor[k]+";font-weight:700;padding-left:8px;'>"+k+"</td>"
-        +"<td><div style='display:flex;align-items:center;gap:4px;justify-content:center;'>"
+        +"<td><div style='display:flex;align-items:center;gap:4px;justify-content:flex-start;width:128px;margin:0 auto;'>"
         +"<div style='width:"+bA+"px;height:6px;background:"+catColor[k]+";border-radius:3px;'></div>"
         +"<span style='font-weight:700;color:"+catColor[k]+";min-width:20px;font-size:9pt;'>"+sc1[k]+"</span></div></td>"
-        +"<td><div style='display:flex;align-items:center;gap:4px;justify-content:center;'>"
+        +"<td><div style='display:flex;align-items:center;gap:4px;justify-content:flex-start;width:128px;margin:0 auto;'>"
         +"<div style='width:"+bB+"px;height:6px;background:#c62828;border-radius:3px;'></div>"
         +"<span style='font-weight:700;color:#c62828;min-width:20px;font-size:9pt;'>"+sc2[k]+"</span></div></td>"
         +"<td style='text-align:center;font-weight:600;color:"+sc2c+";font-size:9pt;'>"+sim+"%</td>"
@@ -2328,9 +2328,9 @@ function doPrint(){
     var catEmoji={"좌뇌":"🔵","우뇌":"🟣","전뇌":"🟡","컨디션":"🟢","조절력":"🔴"};
     var html2="<table style='width:100%;font-size:9pt;border-collapse:collapse;margin-top:6px;'>";
     html2+="<tr><th style='width:60px;'></th>"
-      +"<th style='text-align:left;color:#4fc3f7;'>나 ("+esc(myName)+")</th>"
-      +"<th style='text-align:left;color:#ffd54f;'>이상적 파트너</th>"
-      +"<th style='color:#888;'>차이</th></tr>";
+      +"<th style='text-align:left;color:#0277bd;'>나 ("+esc(myName)+")</th>"
+      +"<th style='text-align:left;color:#8a6d00;'>이상적 파트너</th>"
+      +"<th style='color:#555;'>차이</th></tr>";
     keys.forEach(function(k){
       var diff=ideal[k]-myScore[k];
       var dc=diff>0?"#2e7d32":diff===0?"#888":"#b71c1c";
@@ -2366,7 +2366,7 @@ function doPrint(){
   function renderSec(s){
     if(!s.title&&!s.body) return "";
     var h=s.title?"<div class='sec-t'>"+esc(s.title)+"</div>":"";
-    var b=s.body?"<div class='sec-b'>"+esc(s.body)+"</div>":"";
+    var b=s.body?"<div class='sec-b'>"+s.body.split("\n").map(function(l){var t=l.trim();if(!t)return "<div class='gap'></div>";var hang=/^(✅|⚡|⚠️|⚠|💡|💫|🔹|▶|▪|•|·|[-*]\s|\d+[.)]\s|[①-⑩])/.test(t);return "<div class='ln"+(hang?" hg":"")+"'>"+esc(t)+"</div>";}).join("")+"</div>":"";
     return "<div class='sec'>"+h+b+"</div>";
   }
 
@@ -2399,7 +2399,7 @@ function doPrint(){
 
     return "<div class='partner-block'>"
       +"<div class='sec-t' style='color:#6d28d9;'>💫 "+esc(personName)+"님에게 뇌궁합이 가장 잘 맞는 파트너 프로필</div>"
-      +"<p style='font-size:8.5pt;color:#777;margin-bottom:8px;'>Winch(1958) 상보성 · Aron(1992) 자기확장 · Gottman(1994) 부부관계 기반</p>"
+      +"<p style='font-size:8.5pt;color:#777;margin-bottom:5px;'>Winch(1958) 상보성 · Aron(1992) 자기확장 · Gottman(1994) 부부관계 기반</p>"
       // 바 차트 + 레이더 나란히
       +"<div style='display:flex;gap:14px;align-items:flex-start;'>"
         +"<div style='flex:1;'>"
@@ -2408,7 +2408,7 @@ function doPrint(){
         +"</div>"
         +"<div style='flex-shrink:0;text-align:center;'>"
         +"<div style='font-size:8.5pt;font-weight:700;color:#0d1a4a;margin-bottom:4px;'>이상적 파트너 레이더</div>"
-        +"<img src='"+partnerRadar+"' width='160' height='160'>"
+        +"<img src='"+partnerRadar+"' width='132' height='132'>"
         +"<div style='display:flex;gap:8px;justify-content:center;margin-top:3px;font-size:7.5pt;color:#555;'>"
         +"<span style='display:inline-flex;align-items:center;gap:2px;'><span style='display:inline-block;width:8px;height:3px;background:#4fc3f7;border-radius:1px;'></span>나</span>"
         +"<span style='display:inline-flex;align-items:center;gap:2px;'><span style='display:inline-block;width:8px;height:3px;background:#ffd54f;border-radius:1px;'></span>이상적</span>"
@@ -2416,7 +2416,7 @@ function doPrint(){
       +"</div>"
       +"<div style='margin-top:7px;'>"
       +"<div style='font-size:9pt;font-weight:700;color:#0d1a4a;margin-bottom:4px;'>이상적 파트너 5가지 특성</div>"
-      +"<ul style='padding-left:16px;font-size:9pt;line-height:1.85;color:#1a1a2e;'>"+traits.join("")+"</ul>"
+      +"<ul style='padding-left:16px;font-size:9pt;line-height:1.6;color:#1a1a2e;'>"+traits.join("")+"</ul>"
       +"</div>"
       +"</div>";
   }
@@ -2429,7 +2429,7 @@ function doPrint(){
     +".pb{page-break-before:auto;margin-top:8px;}"
     +".no-break{page-break-inside:avoid;}"
     +".rh{display:flex;align-items:center;justify-content:space-between;"
-    +"border-bottom:3px solid #0d1a4a;padding-bottom:8px;margin-bottom:10px;}"
+    +"border-bottom:1.5px solid #9fb0e0;padding-bottom:8px;margin-bottom:10px;}"
     +".rh-logo{display:flex;flex-direction:column;align-items:center;gap:2px;}"
     +".rh-logo img{width:50px;height:50px;object-fit:contain;}"
     +".rh-lbl{font-size:7pt;color:#666;font-weight:600;text-align:center;}"
@@ -2437,8 +2437,8 @@ function doPrint(){
     +".rh-title{font-size:16pt;font-weight:900;color:#0d1a4a;letter-spacing:-.3px;}"
     +".rh-sub{font-size:8pt;color:#777;margin-top:2px;}"
     +".gb{display:flex;align-items:center;justify-content:space-between;"
-    +"background:linear-gradient(135deg,#f0f4ff,#e8f0ff);"
-    +"border:2.5px solid #0d1a4a;border-radius:10px;padding:10px 16px;margin-bottom:9px;}"
+    +"background:#f6f8ff;"
+    +"border:1.5px solid #9fb0e0;border-radius:10px;padding:10px 16px;margin-bottom:9px;}"
     +".gb .gl .grade-letter{font-size:40pt;font-weight:900;line-height:1;}"
     +".gb .gl .grade-type{font-size:11pt;font-weight:700;color:#0d1a4a;}"
     +".gb .gl .grade-score{font-size:9.5pt;color:#555;margin-top:2px;}"
@@ -2458,24 +2458,26 @@ function doPrint(){
     +"padding:2px;background:#fff;}"
     +".pbox .pqr span{font-size:6.5pt;color:#888;display:block;text-align:center;margin-top:1px;}"
     +"table{width:100%;border-collapse:collapse;font-size:9.5pt;}"
-    +"th{background:#0d1a4a;color:#fff;padding:5px 8px;font-size:8.5pt;font-weight:700;}"
+    +"th{background:#e9eefb;color:#0d1a4a;border-bottom:1.5px solid #9fb0e0;padding:5px 8px;font-size:8.5pt;font-weight:700;}"
     +"td{padding:5px 8px;border-bottom:1px solid #e4e8f0;vertical-align:middle;}"
     +".charts-row{display:flex;gap:12px;align-items:flex-start;margin-bottom:8px;}"
     +".chart-box{text-align:center;}"
     +".chart-box .ct{font-size:8.5pt;font-weight:700;color:#0d1a4a;margin-bottom:3px;}"
     +".chart-leg{display:flex;gap:10px;justify-content:center;margin-top:3px;font-size:7.5pt;color:#555;}"
     +".leg-dot{width:7px;height:7px;border-radius:50%;display:inline-block;}"
-    +".sec{margin-bottom:9px;}"
+    +".sec{margin-bottom:6px;}"
     +".sec-t{font-size:10pt;font-weight:800;color:#0d1a4a;"
     +"padding:4px 0;border-bottom:1.5px solid #c5cae9;margin-bottom:6px;}"
     +".sec-b{font-size:9pt;line-height:1.78;color:#1a1a2e;"
-    +"white-space:pre-wrap;word-break:keep-all;word-wrap:break-word;}"
+    +"text-align:left;word-break:keep-all;word-wrap:break-word;}"
+    +".sec-b .ln{margin:0;}.sec-b .hg{padding-left:1.7em;text-indent:-1.7em;}.sec-b .gap{height:5px;}"
+    +".partner-block,.sec,.no-break{page-break-inside:avoid;break-inside:avoid;}"
     +".partner-block{background:#fdf8ff;border:1px solid rgba(109,40,217,.2);"
-    +"border-radius:8px;padding:10px 12px;margin-bottom:10px;}"
-    +".pair-hdr{background:#0d1a4a;color:#fff;font-size:10pt;font-weight:800;"
+    +"border-radius:8px;padding:8px 12px;margin-bottom:6px;}"
+    +".pair-hdr{background:#e9eefb;color:#0d1a4a;border:1px solid #9fb0e0;font-size:10pt;font-weight:800;"
     +"padding:7px 12px;border-radius:7px 7px 0 0;margin-bottom:8px;}"
     +".sign{display:flex;align-items:center;justify-content:space-between;"
-    +"border-top:2px solid #0d1a4a;margin-top:12px;padding-top:8px;}"
+    +"border-top:1.5px solid #9fb0e0;margin-top:8px;padding-top:6px;page-break-inside:avoid;}"
     +".sign-left{font-size:8pt;color:#555;line-height:1.65;}"
     +".sign-right{display:flex;gap:8px;align-items:center;}"
     +".sign-right img{height:40px;object-fit:contain;}"
@@ -2491,7 +2493,7 @@ function doPrint(){
     +"<style>"+css+"</style></head><body>";
 
   // ══ 1페이지: 헤더 + 등급 + 소장 + 표 + 레이더 + 앞부분 ══
-  doc+="<div style='page-break-after:always;min-height:100%;background:linear-gradient(160deg,#0a1040 0%,#0d1a4a 45%,#1a2a6e 100%);color:#fff;padding:24mm 20mm;display:flex;flex-direction:column;box-sizing:border-box;position:relative;overflow:hidden;'>"+"<div style='position:absolute;top:-60px;right:-60px;width:320px;height:320px;border-radius:50%;background:rgba(201,168,76,.06);'></div>"+"<div style='position:absolute;bottom:-80px;left:-40px;width:280px;height:280px;border-radius:50%;background:rgba(79,195,247,.05);'></div>"+"<div style='display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid rgba(201,168,76,.5);padding-bottom:12px;margin-bottom:18px;'>"+"<div style='text-align:center;'>"+"<img src='"+CERT+"' style='width:72px;height:72px;object-fit:contain;filter:drop-shadow(0 0 8px rgba(201,168,76,.6));'>"+"<div style='font-size:7pt;color:#c9a84c;margin-top:3px;font-weight:700;'>공인인증마크</div></div>"+"<div style='flex:1;text-align:center;'>"+"<div style='font-size:9pt;color:#90caf9;letter-spacing:2px;margin-bottom:4px;'>KOREA BRAIN PSYCHOLOGY RESEARCH INSTITUTE</div>"+"<div style='font-size:20pt;font-weight:900;color:#f0d080;letter-spacing:-0.5px;line-height:1.2;'>뇌궁합 검사 결과<br>분석 보고서</div>"+"<div style='font-size:8pt;color:rgba(255,255,255,.6);margin-top:5px;'>Brain Compatibility Analysis Report</div></div>"+"<div style='text-align:center;'>"+"<img src='"+SEAL+"' style='width:68px;height:72px;object-fit:contain;filter:drop-shadow(0 0 6px rgba(198,40,40,.5));'>"+"<div style='font-size:7pt;color:#ef9a9a;margin-top:3px;font-weight:700;'>소장 관인</div></div>"+"</div>"+"<div style='display:flex;align-items:flex-start;gap:20px;flex:1;'>"+"<div style='flex-shrink:0;'>"+"<img src='"+PROF_CARD+"' style='width:165px;height:200px;object-fit:cover;object-position:center 10%;border-radius:12px;border:2.5px solid #c9a84c;box-shadow:0 8px 32px rgba(0,0,0,.4);'>"+"</div>"+"<div style='flex:1;'>"+"<div style='font-size:10pt;color:#90caf9;font-weight:600;letter-spacing:1px;margin-bottom:2px;'>한국뇌심리연구소</div>"+"<div style='font-size:7.5pt;color:rgba(255,255,255,.5);margin-bottom:12px;'>Korea Brain Psychology Research Institute</div>"+"<div style='font-size:22pt;font-weight:900;color:#f0d080;letter-spacing:-0.5px;margin-bottom:4px;'>임 찬 우 소장</div>"+"<div style='width:100%;height:1px;background:rgba(201,168,76,.4);margin-bottom:10px;'></div>"+"<div style='font-size:9pt;color:rgba(255,255,255,.8);line-height:1.9;margin-bottom:10px;'>"+"📞 010 4119 0031<br>📧 brain.saboo@gmail.com</div>"+"<div style='background:rgba(201,168,76,.12);border:1px solid rgba(201,168,76,.35);border-radius:8px;padding:8px 12px;margin-bottom:10px;'>"+"<div style='font-size:9pt;font-weight:800;color:#f0d080;margin-bottom:3px;'>2009년부터 이어온 임상 경험이 담긴 검사 프로그램</div>"+"<div style='font-size:8pt;color:rgba(255,255,255,.7);line-height:1.7;'>뇌궁합 검사시스템 · 뇌컨디션 체크시스템 · 뇌능력다중검사시스템</div></div>"+"<div style='font-size:9pt;font-weight:700;color:#c9a84c;margin-bottom:6px;'>저 서</div>"+"<div style='display:flex;gap:10px;'>"+"<div style='text-align:center;'>"+"<img src='"+BOOK1+"' style='width:68px;height:80px;object-fit:cover;border-radius:4px;box-shadow:0 4px 12px rgba(0,0,0,.5);'>"+"<div style='font-size:6.5pt;color:rgba(255,255,255,.6);margin-top:3px;word-break:keep-all;width:68px;'>임사부가 들려주는 32가지 인성교육</div></div>"+"<div style='text-align:center;'>"+"<img src='"+BOOK2+"' style='width:68px;height:80px;object-fit:cover;border-radius:4px;box-shadow:0 4px 12px rgba(0,0,0,.5);'>"+"<div style='font-size:6.5pt;color:rgba(255,255,255,.6);margin-top:3px;word-break:keep-all;width:68px;'>지문(指紋)이 알고 있는 뇌과학</div></div>"+"<div style='text-align:center;'>"+"<div style='width:68px;height:80px;background:rgba(201,168,76,.15);border:1px solid rgba(201,168,76,.4);border-radius:4px;display:flex;align-items:center;justify-content:center;'>"+"<div style='font-size:7.5pt;color:#f0d080;font-weight:700;text-align:center;padding:4px;'>뇌가<br>먼저다<br><span style=\'font-size:6pt;color:rgba(255,255,255,.5);\'>(예정)</span></div></div>"+"<div style='font-size:6.5pt;color:rgba(255,255,255,.6);margin-top:3px;word-break:keep-all;width:68px;'>뇌가 먼저다 (출간예정)</div></div>"+"</div>"+"</div>"+"</div>"+"<div style='margin-top:auto;padding-top:14px;border-top:1px solid rgba(201,168,76,.3);'>"+"<div style='display:flex;align-items:center;justify-content:space-between;'>"+"<div style='background:rgba(255,255,255,.06);border:1px solid rgba(201,168,76,.4);border-radius:10px;padding:10px 16px;flex:1;margin-right:14px;'>"+"<div style='font-size:8pt;color:rgba(255,255,255,.6);margin-bottom:4px;'>검사 결과 요약</div>"+"<div style='display:flex;align-items:center;gap:14px;'>"+"<div style='font-size:28pt;font-weight:900;color:"+gColor+";'>"+gr+"등급</div>"+"<div>"+"<div style='font-size:11pt;font-weight:700;color:#f0d080;'>"+esc(ty)+"</div>"+"<div style='font-size:9pt;color:rgba(255,255,255,.7);'>궁합 지수 <b style=\'color:#f0d080;\'>"+sc+"%</b></div>"+"<div style='font-size:8pt;color:rgba(255,255,255,.5);margin-top:2px;'>"+esc(state.A.name)+" × "+esc(state.B.name)+(state.numPeople===3?" × "+esc(state.C.name):"")+" &nbsp;|&nbsp; 관계: "+esc(state.relation)+"</div>"+"</div></div></div>"+"<div style='text-align:center;'>"+"<img src='"+QR+"' style='width:72px;height:72px;background:#fff;border-radius:6px;padding:4px;'>"+"<div style='font-size:7pt;color:rgba(255,255,255,.6);margin-top:3px;'>💬 카카오톡 오픈채팅</div>"+"<div style='font-size:6.5pt;color:rgba(255,255,255,.4);'>한국뇌심리연구소</div></div>"+"</div>"+"<div style='text-align:center;font-size:8pt;color:rgba(255,255,255,.35);margin-top:8px;'>검사일: "+new Date().toLocaleDateString("ko-KR")+" &nbsp;|&nbsp; © 2025 Korea Brain Psychology Research Institute</div>"+"</div>"+"</div>";
+  doc+="<div style='page-break-after:always;min-height:100%;background:#fff;color:#1a1a2e;border:1.5px solid #c9a84c;border-radius:10px;padding:12mm 14mm;min-height:255mm;display:flex;flex-direction:column;box-sizing:border-box;'>"+"<div style='display:flex;align-items:center;justify-content:space-between;border-bottom:1.5px solid #d9c27a;padding-bottom:12px;margin-bottom:18px;'>"+"<div style='text-align:center;'>"+"<img src='"+CERT+"' style='width:72px;height:72px;object-fit:contain;filter:drop-shadow(0 0 8px rgba(201,168,76,.6));'>"+"<div style='font-size:7pt;color:#8a6d1a;margin-top:3px;font-weight:700;'>공인인증마크</div></div>"+"<div style='flex:1;text-align:center;'>"+"<div style='font-size:9pt;color:#1565c0;letter-spacing:2px;margin-bottom:4px;'>KOREA BRAIN PSYCHOLOGY RESEARCH INSTITUTE</div>"+"<div style='font-size:20pt;font-weight:900;color:#7a5c00;letter-spacing:-0.5px;line-height:1.2;'>뇌궁합 검사 결과<br>분석 보고서</div>"+"<div style='font-size:8pt;color:#555;margin-top:5px;'>Brain Compatibility Analysis Report</div></div>"+"<div style='text-align:center;'>"+"<img src='"+SEAL+"' style='width:68px;height:72px;object-fit:contain;filter:drop-shadow(0 0 6px rgba(198,40,40,.5));'>"+"<div style='font-size:7pt;color:#b71c1c;margin-top:3px;font-weight:700;'>소장 관인</div></div>"+"</div>"+"<div style='display:flex;align-items:flex-start;gap:20px;flex:1;'>"+"<div style='flex-shrink:0;'>"+"<img src='"+PROF_CARD+"' style='width:165px;height:200px;object-fit:cover;object-position:center 10%;border-radius:12px;border:1.5px solid #c9a84c;'>"+"</div>"+"<div style='flex:1;'>"+"<div style='font-size:10pt;color:#1565c0;font-weight:600;letter-spacing:1px;margin-bottom:2px;'>한국뇌심리연구소</div>"+"<div style='font-size:7.5pt;color:#666;margin-bottom:12px;'>Korea Brain Psychology Research Institute</div>"+"<div style='font-size:22pt;font-weight:900;color:#7a5c00;letter-spacing:-0.5px;margin-bottom:4px;'>임 찬 우 소장</div>"+"<div style='width:100%;height:1px;background:#d9c27a;margin-bottom:10px;'></div>"+"<div style='font-size:9pt;color:#333;line-height:1.9;margin-bottom:10px;'>"+"📞 010 4119 0031<br>📧 brain.saboo@gmail.com</div>"+"<div style='background:#fbf7ea;border:1px solid #d9c27a;border-radius:8px;padding:8px 12px;margin-bottom:10px;'>"+"<div style='font-size:9pt;font-weight:800;color:#7a5c00;margin-bottom:3px;'>2009년부터 이어온 임상 경험이 담긴 검사 프로그램</div>"+"<div style='font-size:8pt;color:#444;line-height:1.7;'>뇌궁합 검사시스템 · 뇌컨디션 체크시스템 · 뇌능력다중검사시스템</div></div>"+"<div style='font-size:9pt;font-weight:700;color:#8a6d1a;margin-bottom:6px;'>저 서</div>"+"<div style='display:flex;gap:10px;'>"+"<div style='text-align:center;'>"+"<img src='"+BOOK1+"' style='width:68px;height:80px;object-fit:cover;border-radius:4px;'>"+"<div style='font-size:6.5pt;color:#555;margin-top:3px;word-break:keep-all;width:68px;'>임사부가 들려주는 32가지 인성교육</div></div>"+"<div style='text-align:center;'>"+"<img src='"+BOOK2+"' style='width:68px;height:80px;object-fit:cover;border-radius:4px;'>"+"<div style='font-size:6.5pt;color:#555;margin-top:3px;word-break:keep-all;width:68px;'>지문(指紋)이 알고 있는 뇌과학</div></div>"+"<div style='text-align:center;'>"+"<div style='width:68px;height:80px;background:#fbf7ea;border:1px solid #d9c27a;border-radius:4px;display:flex;align-items:center;justify-content:center;'>"+"<div style='font-size:7.5pt;color:#7a5c00;font-weight:700;text-align:center;padding:4px;'>뇌가<br>먼저다<br><span style=\'font-size:6pt;color:#666;\'>(예정)</span></div></div>"+"<div style='font-size:6.5pt;color:#555;margin-top:3px;word-break:keep-all;width:68px;'>뇌가 먼저다 (출간예정)</div></div>"+"</div>"+"</div>"+"</div>"+"<div style='margin-top:auto;padding-top:14px;border-top:1px solid #d9c27a;'>"+"<div style='display:flex;align-items:center;justify-content:space-between;'>"+"<div style='background:#fbfcff;border:1px solid #c5cae9;border-radius:10px;padding:10px 16px;flex:1;margin-right:14px;'>"+"<div style='font-size:8pt;color:#555;margin-bottom:4px;'>검사 결과 요약</div>"+"<div style='display:flex;align-items:center;gap:14px;'>"+"<div style='font-size:28pt;font-weight:900;color:"+gColor+";'>"+gr+"등급</div>"+"<div>"+"<div style='font-size:11pt;font-weight:700;color:#7a5c00;'>"+esc(ty)+"</div>"+"<div style='font-size:9pt;color:#444;'>궁합 지수 <b style=\'color:#7a5c00;\'>"+sc+"%</b></div>"+"<div style='font-size:8pt;color:#666;margin-top:2px;'>"+esc(state.A.name)+" × "+esc(state.B.name)+(state.numPeople===3?" × "+esc(state.C.name):"")+" &nbsp;|&nbsp; 관계: "+esc(state.relation)+"</div>"+"</div></div></div>"+"<div style='text-align:center;'>"+"<img src='"+QR+"' style='width:72px;height:72px;background:#fff;border-radius:6px;padding:4px;'>"+"<div style='font-size:7pt;color:#555;margin-top:3px;'>💬 카카오톡 오픈채팅</div>"+"<div style='font-size:6.5pt;color:#777;'>한국뇌심리연구소</div></div>"+"</div>"+"<div style='text-align:center;font-size:8pt;color:#777;margin-top:8px;'>검사일: "+new Date().toLocaleDateString("ko-KR")+" &nbsp;|&nbsp; © 2025 Korea Brain Psychology Research Institute</div>"+"</div>"+"</div>";
   doc+="<div class='rh'>"
     +"<div class='rh-logo'><img src='"+CERT+"'><div class='rh-lbl'>공인인증마크</div></div>"
     +"<div class='rh-c'><div class='rh-title'>뇌궁합 검사 결과 분석 보고서</div>"
@@ -2578,12 +2580,12 @@ function doPrint(){
   // ══ 2페이지: 나머지 분석 섹션 ══
   var p2Secs=sections.slice(5);
   if(p2Secs.length>0){
-    doc+="<hr style='border:none;border-top:2px solid #c5cae9;margin:14px 0;'>";
+    doc+="<hr style='border:none;border-top:2px solid #c5cae9;margin:8px 0;'>";
     doc+=p2Secs.map(renderSec).join("");
   }
 
   // ══ 파트너 프로필 페이지: 각 인원별 ══
-  doc+="<hr style='border:none;border-top:2px solid #c5cae9;margin:14px 0;'>";
+  doc+="<hr style='border:none;border-top:2px solid #c5cae9;margin:8px 0;'>";
   var personScores=[
     {name:state.A.name, score:sA},
     {name:state.B.name, score:sB}
@@ -2591,7 +2593,7 @@ function doPrint(){
   if(state.numPeople===3 && sC) personScores.push({name:state.C.name, score:sC});
 
   personScores.forEach(function(p,idx){
-    if(idx>0) doc+="<hr style='border:none;border-top:2px solid #c5cae9;margin:14px 0;'>";
+    if(idx>0) doc+="<hr style='border:none;border-top:2px solid #c5cae9;margin:8px 0;'>";
     doc+=partnerProfileBlock(p.name, p.score);
   });
 
@@ -2643,10 +2645,10 @@ function doPrint(){
 
     // 뇌 유형 배지
     html2 += "<div style='display:flex;align-items:center;gap:14px;margin-bottom:10px;'>";
-    html2 += "<div style='background:linear-gradient(135deg,#0d1a4a,#1a2a6e);"
-           + "color:#f0d080;border:2px solid #c9a84c;border-radius:10px;"
+    html2 += "<div style='background:#fbf7ea;"
+           + "color:#7a5c00;border:2px solid #c9a84c;border-radius:10px;"
            + "padding:8px 16px;text-align:center;flex-shrink:0;'>"
-           + "<div style='font-size:8pt;color:#90caf9;'>뇌 유형</div>"
+           + "<div style='font-size:8pt;color:#1565c0;'>뇌 유형</div>"
            + "<div style='font-size:13pt;font-weight:900;'>" + brainType + "</div>"
            + "</div>";
     html2 += "<div style='font-size:9pt;color:#333;line-height:1.7;'>" + esc(brainDesc) + "</div>";
@@ -2654,7 +2656,7 @@ function doPrint(){
 
     // 5개 영역 레이더+바 통합
     html2 += "<table style='width:100%;font-size:9pt;border-collapse:collapse;margin-bottom:8px;'>";
-    html2 += "<tr style='background:#0d1a4a;color:#fff;'>"
+    html2 += "<tr style='background:#e9eefb;color:#0d1a4a;'>"
            + "<th style='padding:5px 8px;text-align:left;'>영역</th>"
            + "<th style='padding:5px 8px;'>점수</th>"
            + "<th style='padding:5px 8px;text-align:left;'>수준</th>"
@@ -2743,15 +2745,15 @@ function doPrint(){
     html2 += "<div style='display:flex;gap:12px;align-items:stretch;margin-bottom:10px;'>";
 
     // 뇌 나이 큰 숫자
-    html2 += "<div style='background:linear-gradient(135deg,#0d1a4a,#1a2a6e);"
+    html2 += "<div style='background:#fbf7ea;"
            + "border:2px solid #c9a84c;border-radius:12px;padding:12px 18px;"
            + "text-align:center;flex-shrink:0;min-width:110px;'>"
-           + "<div style='font-size:8pt;color:#90caf9;'>뇌 나이</div>"
-           + "<div style='font-size:34pt;font-weight:900;color:#f0d080;line-height:1;'>"
+           + "<div style='font-size:8pt;color:#1565c0;'>뇌 나이</div>"
+           + "<div style='font-size:34pt;font-weight:900;color:#7a5c00;line-height:1;'>"
            + brainAge + "</div>"
-           + "<div style='font-size:8pt;color:#f0d080;'>세</div>";
+           + "<div style='font-size:8pt;color:#7a5c00;'>세</div>";
     if(realAge){
-      html2 += "<div style='font-size:7pt;color:rgba(255,255,255,.5);margin-top:4px;'>"
+      html2 += "<div style='font-size:7pt;color:#555;margin-top:4px;'>"
              + "실제 나이 " + realAge + "세</div>";
     }
     html2 += "</div>";
@@ -2904,32 +2906,32 @@ function doPrint(){
   var simAB2 = calcSim(sA, sB);
 
   // A 인포그래픽 + 뇌나이
-  doc += "<hr style='border:none;border-top:2px solid #c5cae9;margin:14px 0;'>";
+  doc += "<hr style='border:none;border-top:2px solid #c5cae9;margin:8px 0;'>";
   doc += makeBrainTypeInfographic(state.A.name, sA);
   doc += makeBrainAge(state.A.name, sA, state.A.birthYear);
 
   // B 인포그래픽 + 뇌나이
-  doc += "<hr style='border:none;border-top:2px solid #c5cae9;margin:14px 0;'>";
+  doc += "<hr style='border:none;border-top:2px solid #c5cae9;margin:8px 0;'>";
   doc += makeBrainTypeInfographic(state.B.name, sB);
   doc += makeBrainAge(state.B.name, sB, state.B.birthYear);
 
   // 3인이면 C도
   if(state.numPeople===3 && sC){
-    doc += "<hr style='border:none;border-top:2px solid #c5cae9;margin:14px 0;'>";
+    doc += "<hr style='border:none;border-top:2px solid #c5cae9;margin:8px 0;'>";
     doc += makeBrainTypeInfographic(state.C.name, sC);
     doc += makeBrainAge(state.C.name, sC, state.C.birthYear);
   }
 
   // 타임라인 — A×B
-  doc += "<hr style='border:none;border-top:2px solid #c5cae9;margin:14px 0;'>";
+  doc += "<hr style='border:none;border-top:2px solid #c5cae9;margin:8px 0;'>";
   doc += makeCompatTimeline(state.A.name, state.B.name, sA, sB, simAB2, state.relation);
 
   // 3인이면 추가 타임라인
   if(state.numPeople===3 && sC){
     var simAC2=calcSim(sA,sC), simBC2=calcSim(sB,sC);
-    doc += "<hr style='border:none;border-top:2px solid #c5cae9;margin:14px 0;'>";
+    doc += "<hr style='border:none;border-top:2px solid #c5cae9;margin:8px 0;'>";
     doc += makeCompatTimeline(state.A.name, state.C.name, sA, sC, simAC2, state.relation);
-    doc += "<hr style='border:none;border-top:2px solid #c5cae9;margin:14px 0;'>";
+    doc += "<hr style='border:none;border-top:2px solid #c5cae9;margin:8px 0;'>";
     doc += makeCompatTimeline(state.B.name, state.C.name, sB, sC, simBC2, state.relation);
   }
 
