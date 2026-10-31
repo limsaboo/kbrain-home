@@ -541,7 +541,7 @@ tr:hover {
 </div>
 
 <script>
-const ADMIN_PASSWORD = 'brain2025!'; // 임박사님만 아는 비밀번호
+/* 관리자 비밀번호는 서버에서 확인합니다(화면 코드에 두지 않음) */
 const SUPABASE_URL = 'https://grxqfaeznqqohnlltged.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_Sgv6BVPo1dOnVICcX1tfzA_gf7T5Z4I';
 const SESSION_TIMEOUT = 30 * 60 * 1000; // 30분
@@ -563,29 +563,13 @@ function maskEmail(email) {
 }
 
 function validatePassword() {
-  const pwd = document.getElementById('password').value;
-  const passwordInput = document.getElementById('password');
-  const statusEl = document.getElementById('passwordStatus');
-  const loginBtn = document.getElementById('loginBtn');
-  
-  if (pwd.length === 0) {
-    passwordInput.classList.remove('valid', 'invalid');
-    statusEl.classList.remove('show');
-    loginBtn.disabled = true;
-  } else if (pwd === ADMIN_PASSWORD) {
-    passwordInput.classList.remove('invalid');
-    passwordInput.classList.add('valid');
-    statusEl.classList.add('show', 'valid');
-    statusEl.innerHTML = '🟢 <strong>비밀번호 확인됨</strong> - 로그인 가능합니다.';
-    loginBtn.disabled = false;
-    document.getElementById('loginError').textContent = '';
-  } else {
-    passwordInput.classList.remove('valid');
-    passwordInput.classList.add('invalid');
-    statusEl.classList.add('show', 'invalid');
-    statusEl.innerHTML = '🔴 <strong>비밀번호 오류</strong> - 다시 확인해주세요.';
-    loginBtn.disabled = true;
-  }
+  const pwd = document.getElementById("password").value;
+  const passwordInput = document.getElementById("password");
+  const statusEl = document.getElementById("passwordStatus");
+  const loginBtn = document.getElementById("loginBtn");
+  passwordInput.classList.remove('valid', 'invalid');
+  statusEl.classList.remove('show', 'valid', 'invalid');
+  loginBtn.disabled = (pwd.length === 0);
 }
 
 function getClientIP() {
@@ -611,11 +595,14 @@ async function logAdminAccess(action) {
   }
 }
 
-function login() {
+async function login() {
   const pwd = document.getElementById('password').value;
   const errorEl = document.getElementById('loginError');
   
-  if (pwd !== ADMIN_PASSWORD) {
+  if (!supabaseClient) initSupabase();
+  let _ok = false;
+  try { const _r = await supabaseClient.rpc('kbpi_admin_check', { p_pw: pwd }); _ok = !!(_r && _r.data === true); } catch (e) {}
+  if (!_ok) {
     errorEl.textContent = '❌ 비밀번호가 올바르지 않습니다. 무단 접근 시도는 기록됩니다.';
     logAdminAccess('로그인 실패 (잘못된 비밀번호)');
     return;

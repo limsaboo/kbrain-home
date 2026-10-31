@@ -1458,7 +1458,7 @@ function closeCouponModal(){
   document.getElementById('coupon-overlay').classList.remove('active');
 }
 
-const ADMIN_PASS = "brain2025!";
+/* 관리자 비밀번호는 서버에서 확인합니다(화면 코드에 두지 않음) */
 
 function adminLogin(){
   closeCouponModal();
@@ -1486,11 +1486,14 @@ function toggleAdminPwVisible(){
   input.focus();
 }
 
-function submitAdminPw(){
+async function submitAdminPw(){
   const pw = document.getElementById('admin-pw-input').value;
   if(!pw) return;
   const msg = document.getElementById('admin-pw-msg');
-  if(pw === ADMIN_PASS){
+  msg.textContent = '확인 중...'; msg.className = 'coupon-msg';
+  let _ok = false;
+  try{ const _r = await sb.rpc('kbpi_admin_check', { p_pw: pw }); _ok = !!(_r && _r.data === true); }catch(e){}
+  if(_ok){
     closeAdminPwModal();
     couponVerified = true;
     verifiedCouponCode = "ADMIN-FREE";
@@ -1524,54 +1527,26 @@ async function verifyCoupon(){
   msg.className = 'coupon-msg';
 
   try{
-    const { data, error } = await sb
-      .from('coupons')
-      .select('*')
-      .eq('coupon_code', code)
-      .eq('is_active', true)
-      .in('system_type', ['btpa','all'])
-      .maybeSingle();
-
-    if(error || !data){
-      msg.textContent = '유효하지 않은 쿠폰입니다. 코드를 다시 확인해주세요.';
+    const { data: chk, error: chkErr } = await sb.rpc('kbpi_coupon_check', { p_code: code, p_sys: 'btpa' });
+    if(chkErr || !chk || !chk.ok){
+      msg.textContent = (chk && chk.reason==='used_up') ? '이미 모두 사용된 쿠폰입니다.' : (chk && chk.reason==='expired') ? '유효기간이 지난 쿠폰입니다.' : '유효하지 않은 쿠폰입니다. 코드를 다시 확인해주세요.';
       msg.className = 'coupon-msg err';
       btn.disabled = false;
       return;
     }
-
-    if(data.remain_count <= 0){
-      msg.textContent = '이미 모두 사용된 쿠폰입니다.';
+    const { data: use, error: useErr } = await sb.rpc('kbpi_coupon_use', { p_code: code, p_sys: 'btpa' });
+    if(useErr || !use || !use.ok){
+      msg.textContent = '쿠폰을 사용하지 못했습니다. 코드를 다시 확인해주세요.';
       msg.className = 'coupon-msg err';
       btn.disabled = false;
       return;
     }
-
-    if(data.expire_date && new Date(data.expire_date) < new Date()){
-      msg.textContent = '유효기간이 지난 쿠폰입니다.';
-      msg.className = 'coupon-msg err';
-      btn.disabled = false;
-      return;
-    }
-
-    await sb.from('coupons').update({
-      used_count: (data.used_count||0)+1,
-      remain_count: data.remain_count-1
-    }).eq('coupon_code', code);
-
-    await sb.from('coupon_usage').insert({
-      coupon_code: code,
-      coupon_type: data.coupon_type,
-      buyer_type: data.buyer_type,
-      system_type: 'btpa',
-      remain_after: data.remain_count-1
-    });
-
     notifyCouponUse({
       systemName: '뇌기반진로적성 탐색시스템 (BTPA)',
       couponCode: code,
-      couponType: data.coupon_type,
-      buyerMemo: data.buyer_memo,
-      remainAfter: data.remain_count-1
+      couponType: use.coupon_type,
+      buyerMemo: '',
+      remainAfter: use.remain_after
     });
 
     couponVerified = true;
@@ -3087,5 +3062,26 @@ function closeA4Report(){
 
 <!-- 방문·체류 기록(개인정보 없음) KB-001 우선조치③ -->
 <script src="/assets/js/kbpi-track.js" defer></script>
+<script>
+/* 강의 QR·링크 자동 입력(?c=번호): 번호를 채워 주기만 하고, 쿠폰 사용은 어르신이 버튼을 눌렀을 때만 일어난다 */
+(function(){
+  try{
+    var u = new URL(window.location.href);
+    var c = (u.searchParams.get('c') || u.searchParams.get('coupon') || '').trim();
+    if(!c) return;
+    u.searchParams.delete('c'); u.searchParams.delete('coupon');
+    try{ history.replaceState(null, '', u.pathname + (u.search || '') + u.hash); }catch(e){}
+    window.addEventListener('load', function(){
+      setTimeout(function(){
+        try{
+          startTest();
+          var i = document.getElementById('coupon-input'); i.value = c.toUpperCase().slice(0, 40);
+          var m = document.getElementById('coupon-msg'); m.textContent = '번호가 입력되어 있어요. 아래 확인 버튼을 눌러 주세요'; m.className = 'coupon-msg ok';
+        }catch(e){}
+      }, 450);
+    });
+  }catch(e){}
+})();
+</script>
 </body>
 </html>

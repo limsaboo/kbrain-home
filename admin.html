@@ -198,7 +198,7 @@ textarea.fi{min-height:110px;resize:vertical;line-height:1.7}
 <script>
 var SUPABASE_URL = "https://grxqfaeznqqohnlltged.supabase.co";
 var SUPABASE_KEY = "sb_publishable_Sgv6BVPo1dOnVICcX1tfzA_gf7T5Z4I";
-var ADMIN_PW = "brain2025!";
+var ADMIN_PW = ""; // 로그인에 성공한 뒤 메모리에만 보관(화면 코드에 두지 않음)
 var sb = null, DAYS = 30, DATA = null, CHARTS = {};
 try { sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY); } catch (e) {}
 
@@ -207,7 +207,14 @@ function n(v){ return (v===null||v===undefined) ? 0 : v; }
 function fmt(v){ return Number(n(v)).toLocaleString('ko-KR'); }
 
 function doLogin(){
-  if ($("pw").value !== ADMIN_PW){ $("loginMsg").textContent="비밀번호가 일치하지 않습니다."; return; }
+  var _pw = $("pw").value; if(!_pw){ return; }
+  $("loginMsg").textContent = "확인 중...";
+  sb.rpc("kbpi_admin_check", { p_pw: _pw }).then(function(r){
+    if(!(r && r.data === true)){ $("loginMsg").textContent = "비밀번호가 일치하지 않습니다."; return; }
+    ADMIN_PW = _pw; _afterLogin();
+  }, function(){ $("loginMsg").textContent = "확인하지 못했습니다. 다시 시도해주세요."; });
+}
+function _afterLogin(){
   $("login").style.display="none"; $("app").style.display="block";
   try{ sb.from("admin_access_logs").insert([{action:"로그인",detail:navigator.userAgent.slice(0,120)}]).then(function(){},function(){}); }catch(e){}
   loadAll();

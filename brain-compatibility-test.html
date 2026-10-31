@@ -1834,32 +1834,20 @@ function checkCoupon() {
 
   showToast("쿠폰 확인 중...");
 
-  supaFetch("/rest/v1/coupons?coupon_code=eq." + encodeURIComponent(code)
-    + "&is_active=eq.true&select=*")
-    .then(function(rows) {
-      if(!rows || rows.length === 0) {
-        showToast("❌ 유효하지 않은 쿠폰입니다");
+  supaFetch("/rest/v1/rpc/kbpi_coupon_check", "POST", { p_code: code, p_sys: "goonghap" })
+    .then(function(r) {
+      if(!r || !r.ok) {
+        showToast(r && r.reason === "used_up" ? "❌ 사용 횟수가 모두 소진된 쿠폰입니다" : (r && r.reason === "expired" ? "❌ 만료된 쿠폰입니다" : "❌ 유효하지 않은 쿠폰입니다"));
         return;
       }
-      var c = rows[0];
-
-      // 만료일 확인
-      if(c.expire_date && new Date(c.expire_date) < new Date()) {
-        showToast("❌ 만료된 쿠폰입니다");
-        return;
-      }
-      // 잔여 횟수 확인
-      if(c.remain_count <= 0) {
-        showToast("❌ 사용 횟수가 모두 소진된 쿠폰입니다");
-        return;
-      }
-
+      var c = { coupon_code: code, coupon_type: r.coupon_type, buyer_type: r.buyer_type,
+                remain_count: r.remain, used_count: r.used, expire_date: r.expire_date, buyer_name: "" };
       _coupon = c;
 
       // 쿠폰 정보 표시
       var isFree = c.coupon_type === "free";
       var nameEl = document.getElementById("couponBuyerName");
-      nameEl.textContent = c.buyer_name || "미확인";
+      nameEl.textContent = c.buyer_name || "쿠폰 확인됨";
 
       var badge = document.getElementById("couponTypeBadge");
       badge.textContent = isFree ? "무료 증정" : "유료 구매";
@@ -1898,36 +1886,26 @@ function useCoupon(examineeName, systemType, diagnosisId) {
     ? examineeName + " (무료 " + _coupon.remain_count + "회*)"
     : examineeName;
 
-  // 쿠폰 사용 횟수 차감
+  // 쿠폰 사용 횟수 차감 + 이력 기록(서버 함수 한 번으로 처리)
   var newRemain = _coupon.remain_count - 1;
-  var newUsed   = _coupon.used_count + 1;
-
-  // coupons 테이블 업데이트
-  supaFetch("/rest/v1/coupons?coupon_code=eq." + encodeURIComponent(_coupon.coupon_code),
-    "PATCH",
-    { remain_count: newRemain, used_count: newUsed }
-  ).then(function() {
-    _coupon.remain_count = newRemain;
-    _coupon.used_count   = newUsed;
-  });
-
-  // coupon_usage 이력 기록
-  supaFetch("/rest/v1/coupon_usage", "POST", {
-    coupon_code:      _coupon.coupon_code,
-    coupon_type:      _coupon.coupon_type,
-    buyer_type:       _coupon.buyer_type,
-    examinee_name:    examineeName,
-    examinee_display: displayName,
-    system_type:      systemType || "goonghap",
-    diagnosis_id:     diagnosisId || null,
-    remain_after:     newRemain
+  supaFetch("/rest/v1/rpc/kbpi_coupon_use_ex", "POST", {
+    p_code: _coupon.coupon_code,
+    p_sys: systemType || "goonghap",
+    p_name: examineeName,
+    p_display: displayName,
+    p_diag: diagnosisId || null
+  }).then(function(r) {
+    if(r && r.ok) {
+      _coupon.remain_count = r.remain_after;
+      _coupon.used_count   = (_coupon.used_count || 0) + 1;
+    }
   });
 
   notifyCouponUse({
     systemName: "뇌궁합",
     couponCode: _coupon.coupon_code,
     couponType: _coupon.coupon_type,
-    buyerMemo: _coupon.buyer_memo,
+    buyerMemo: "",
     remainAfter: newRemain
   });
 
@@ -2108,7 +2086,7 @@ function loadAndShowResult(r) {
 
 
 // ── 관리자 쿠폰 발행 ──
-var _adminPass = "brain2025!"; // 관리자 비밀번호
+var _adminPw = ""; // 확인된 비밀번호(메모리에만 보관, 새로고침하면 사라짐) — 서버에서 확인합니다
 var _adminUnlocked = false;
 var _adminLoginPurpose = "login"; // "login" 또는 "tool"
 
@@ -2142,13 +2120,17 @@ function toggleAdminPwVisible() {
   input.focus();
 }
 
-function submitAdminLogin() {
+async function submitAdminLogin() {
   var pw = document.getElementById("adminLoginPw").value;
   if(!pw) return;
-  if(pw !== _adminPass) {
+  showToast("확인 중...");
+  var _ok = false;
+  try{ _ok = (await supaFetch("/rest/v1/rpc/kbpi_admin_check", "POST", { p_pw: pw })) === true; }catch(e){}
+  if(!_ok) {
     showToast("❌ 비밀번호가 틀렸습니다");
     return;
   }
+  _adminPw = pw;
   _adminUnlocked = true;
   closeAdminLoginModal();
   if(_adminLoginPurpose === "tool") {
@@ -2228,8 +2210,14 @@ function issueCoupon() {
   };
 
   showToast("쿠폰 발행 중...");
-  supaFetch("/rest/v1/coupons", "POST", data)
-    .then(function(res) {
+  supaFetch("/rest/v1/rpc/kbpi_coupon_issue", "POST", {
+      p_pw: _adminPw, p_code: code, p_coupon_type: data.coupon_type, p_buyer_name: name, p_buyer_type: type,
+      p_buyer_contact: contact, p_buyer_memo: memo, p_total_uses: uses, p_system_type: system,
+      p_amount: amount, p_expire: expire.toISOString()
+    })
+    .then(function(r) {
+      var res = [];
+      if(r && r.ok) { code = r.code; res = [{ id: 1 }]; }
       if(res && res[0] && res[0].id) {
         document.getElementById("issuedCode").textContent = code;
         document.getElementById("issuedCouponResult").style.display = "block";
@@ -3036,5 +3024,25 @@ function doPrint(){
 
 <!-- 방문·체류 기록(개인정보 없음) KB-001 우선조치③ -->
 <script src="/assets/js/kbpi-track.js" defer></script>
+<script>
+/* 강의 QR·링크 자동 입력(?c=번호): 번호를 채워 주기만 하고, 쿠폰 사용은 어르신이 버튼을 눌렀을 때만 일어난다 */
+(function(){
+  try{
+    var u = new URL(window.location.href);
+    var c = (u.searchParams.get('c') || u.searchParams.get('coupon') || '').trim();
+    if(!c) return;
+    u.searchParams.delete('c'); u.searchParams.delete('coupon');
+    try{ history.replaceState(null, '', u.pathname + (u.search || '') + u.hash); }catch(e){}
+    window.addEventListener('load', function(){
+      setTimeout(function(){
+        try{
+          var i = document.getElementById('couponInput'); i.value = c.toUpperCase().slice(0, 20);
+          checkCoupon();
+        }catch(e){}
+      }, 450);
+    });
+  }catch(e){}
+})();
+</script>
 </body>
 </html>
