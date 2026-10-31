@@ -1997,9 +1997,9 @@ function saveResult() {
   };
 
   showToast("저장 중...");
-  supaFetch("/rest/v1/brain_diagnosis", "POST", data)
+  supaFetch("/rest/v1/rpc/kbpi_diag_save", "POST", {p_data: data})
     .then(function(res) {
-      if(res && res[0] && res[0].id) {
+      if(res && res.ok && res.id) {
         showToast("✅ 저장 완료! 코드: " + code);
         document.getElementById("btnSave").textContent = "✅ 저장됨 (코드: " + code + ")";
         document.getElementById("btnSave").disabled = true;
