@@ -550,6 +550,7 @@ let supabaseClient;
 let isLoggedIn = false;
 let sessionTimer;
 let allVisits = [];
+let _adminPw = '';
 let visitChart;
 
 function initSupabase() {
@@ -609,6 +610,7 @@ async function login() {
   }
   
   // 비밀번호 정확 - 로그인 진행
+  _adminPw = pwd;
   isLoggedIn = true;
   document.getElementById('loginScreen').style.display = 'none';
   document.getElementById('dashboardScreen').style.display = 'block';
@@ -660,13 +662,8 @@ function updateTime() {
 async function loadDashboard() {
   try {
     // 방문 통계
-    const { data: visits } = await supabaseClient
-      .from('page_visits')
-      .select('*')
-      .order('created_at', { ascending: false })
-      .limit(1000);
-
-    allVisits = visits || [];
+    const { data: _vr } = await supabaseClient.rpc('kbpi_visits', { p_pw: _adminPw });
+    allVisits = (_vr && _vr.ok && _vr.rows) ? _vr.rows : [];
     const totalVisits = allVisits.length;
     const todayVisits = allVisits.filter(v => {
       const visitDate = new Date(v.created_at).toDateString();

@@ -2018,9 +2018,7 @@ function searchResult() {
   document.getElementById("searchResults").innerHTML =
     "<div style='text-align:center;color:var(--tx2);padding:10px;'>검색 중...</div>";
 
-  supaFetch("/rest/v1/brain_diagnosis?or=(name_a.ilike.*" + encodeURIComponent(name)
-    + "*,name_b.ilike.*" + encodeURIComponent(name) + "*,name_c.ilike.*"
-    + encodeURIComponent(name) + "*)&order=created_at.desc&limit=20")
+  supaFetch("/rest/v1/rpc/kbpi_diag_search", "POST", {p_name: name})
     .then(function(rows) {
       var div = document.getElementById("searchResults");
       if(!rows || rows.length===0) {
