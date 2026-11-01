@@ -1834,7 +1834,7 @@ var QRM = ["111111100011101000000110001111111", "1000001010100110010001000010000
 #bmsGate .msg.err{color:#D00000}#bmsGate .msg.ok{color:#007A33}
 #bmsGate .help{font-size:14px;font-weight:700;color:#333;margin-top:12px}
 body{padding-bottom:58px}
-#bmsBar{position:fixed;left:50%;transform:translateX(-50%);bottom:10px;z-index:900;background:#000;color:#FFD400;border-radius:999px;padding:7px 16px;font-size:14px;font-weight:900;display:none;max-width:92%;text-align:center}
+#bmsBar{position:fixed;left:0;right:0;margin:0 auto;width:max-content;max-width:94%;bottom:10px;z-index:900;background:#000;color:#FFD400;border-radius:999px;padding:7px 18px;font-size:15px;font-weight:900;line-height:1.3;white-space:nowrap;display:none;text-align:center}
 </style>
 <div id="bmsGate"><div class="gbox">
   <h1>뇌궁합 검사 시스템</h1>
@@ -1857,8 +1857,8 @@ body{padding-bottom:58px}
   function rpc(fn,body){return fetch(URL_+"/rest/v1/rpc/"+fn,{method:"POST",headers:{"apikey":KEY,"Authorization":"Bearer "+KEY,"Content-Type":"application/json"},body:JSON.stringify(body)}).then(function(r){return r.json();});}
   function msg(t,cls){var m=$("bmsMsg");m.textContent=t;m.className="msg "+(cls||"");}
   function bar(){var b=$("bmsBar");if(!b)return;
-    if(ADMIN){b.textContent="🔐 관리자 모드 · 차감 없음";b.style.display="block";}
-    else if(C){b.textContent="🎟 쿠폰 "+C.remain+"회 남음"+(C.expire?" · 만료 "+new Date(C.expire).toLocaleDateString("ko-KR"):"");b.style.display="block";}
+    if(ADMIN){b.textContent="관리자 모드 · 차감 없음";b.style.display="block";}
+    else if(C){b.textContent="쿠폰 "+C.remain+"회 남음"+(C.expire?" · "+new Date(C.expire).toLocaleDateString("ko-KR",{month:"numeric",day:"numeric"})+"까지":"");b.style.display="block";}
     else{b.style.display="none";}}
   function open_(){$("bmsGate").style.display="none";bar();}
   function show_(){$("bmsGate").style.display="flex";}
@@ -1896,7 +1896,7 @@ body{padding-bottom:58px}
     var names=S.group?(S.group.res||[]).map(function(x){return x&&x.nick||"";}).filter(Boolean).join("·"):(S.me&&S.me.nick||"");
     rpc("kbpi_coupon_use_ex",{p_code:C.code,p_sys:SYS,p_name:names||"-",p_display:names||"-",p_diag:null}).then(function(r){
       if(r&&r.ok){C.remain=r.remain_after;bar();
-        if(C.remain<=0){var b=$("bmsBar");if(b){b.textContent="🎟 쿠폰을 모두 사용했습니다";}}}
+        if(C.remain<=0){var b=$("bmsBar");if(b){b.textContent="쿠폰을 모두 사용했습니다";}}}
     }).catch(function(){});
   };
   // 새로 시작하려는데 쿠폰이 없으면 관문으로 되돌림
