@@ -1092,15 +1092,65 @@ html[lang="ko"] .top .nm{flex:1 1 auto;min-width:0}html[lang="ko"] .top .nt{disp
     h += '<button class="btn ghost" data-act="saveimg">보고서를 그림으로 저장</button>';
     return h;
   }
+  /* 보고서 그림 저장: 꼭 필요한 4장(요약·레이더·뇌 지도·영역별 점수)만 만들고,
+     공유창(갤러리 저장 선택)을 먼저 열며, 안 되는 폰에서는 한 장씩 저장합니다. */
   function saveImgs() {
     var run = function () {
-      var els = Array.prototype.slice.call(document.querySelectorAll('#wrap .sec > .card, #wrap .sec > .type, #wrap .sec > .rep'));
-      var blobs = [], i = 0;
+      var root = document.getElementById('wrap') || document;
+      var rep = root.querySelector('.sec > .rep'), typ = root.querySelector('.sec > .type');
+      var cards = Array.prototype.slice.call(root.querySelectorAll('.sec > .card'));
+      var jobs = [
+        { n: 'summary', l: LN('요약', 'Summary'), els: [rep, typ] },
+        { n: 'radar', l: LN('레이더', 'Radar'), els: [cards[0]] },
+        { n: 'brainmap', l: LN('뇌 지도', 'Brain map'), els: [cards[1]] },
+        { n: 'scores', l: LN('영역별 점수', 'Scores'), els: [cards[2]] }
+      ].map(function (j) { j.els = j.els.filter(function (e) { return !!e; }); return j; }).filter(function (j) { return j.els.length > 0; });
+      if (!jobs.length) { toast(LN('저장할 그림을 찾지 못했어요', 'Nothing to save')); return; }
+      toast(LN('그림을 만드는 중이에요', 'Making pictures...'));
+      var out = [], i = 0;
+      var snap = function (el) { return window.html2canvas(el, { scale: 2, backgroundColor: '#EAF0FF' }); };
       var next = function () {
-        if (i >= els.length) { var j = blobs.length - 1, dl = function () { if (j < 0) { return; } var u = URL.createObjectURL(blobs[j]), a = document.createElement('a'); a.href = u; a.download = 'brain-report_' + (j + 1) + '_' + blobs.length + '.png'; document.body.appendChild(a); a.click(); document.body.removeChild(a); setTimeout(function () { URL.revokeObjectURL(u); j--; dl(); }, 500); }; dl(); toast('그림 ' + blobs.length + '장을 저장합니다'); return; }
-        window.html2canvas(els[i], { scale: 2, backgroundColor: '#EAF0FF' }).then(function (c) { c.toBlob(function (b) { blobs.push(b); i++; next(); }); });
+        if (i >= jobs.length) { showSave(out); return; }
+        var j = jobs[i], k = 0, cs = [];
+        var one = function () {
+          if (k >= j.els.length) {
+            var w = 0, h = 0, gap = 24;
+            cs.forEach(function (c) { w = Math.max(w, c.width); h += c.height + (h ? gap : 0); });
+            var cv = document.createElement('canvas'); cv.width = w; cv.height = h;
+            var cx = cv.getContext('2d'); cx.fillStyle = '#EAF0FF'; cx.fillRect(0, 0, w, h);
+            var y = 0; cs.forEach(function (c) { cx.drawImage(c, Math.round((w - c.width) / 2), y); y += c.height + gap; });
+            cv.toBlob(function (b) { out.push({ blob: b, name: 'brain-report_' + (i + 1) + '_' + j.n + '.png', label: j.l }); i++; next(); });
+            return;
+          }
+          snap(j.els[k]).then(function (c) { cs.push(c); k++; one(); }).catch(function () { i++; next(); });
+        };
+        one();
       };
       next();
+    };
+    var showSave = function (list) {
+      if (!list.length) { toast(LN('그림을 만들지 못했어요', 'Could not make pictures')); return; }
+      var old = document.getElementById('svBox'); if (old) { old.parentNode.removeChild(old); }
+      var urls = list.map(function (x) { return URL.createObjectURL(x.blob); });
+      var files = []; try { files = list.map(function (x) { return new File([x.blob], x.name, { type: 'image/png' }); }); } catch (eF) { files = []; }
+      var canShare = !!(files.length && navigator.canShare && navigator.share && navigator.canShare({ files: files }));
+      var box = document.createElement('div'); box.id = 'svBox';
+      box.style.cssText = 'position:fixed;left:0;top:0;right:0;bottom:0;z-index:998;background:rgba(0,0,0,.78);overflow:auto;padding:14px';
+      var h = '<div style="background:#FFD400;color:#000;border:4px solid #000;border-radius:20px;max-width:440px;margin:0 auto;padding:18px 14px;line-height:1.7;font-weight:900">' +
+        '<div style="font-size:21px;text-align:center">' + LN('저장할 그림 ' + list.length + '장', list.length + ' pictures to save') + '</div>';
+      if (canShare) { h += '<button id="svShare" style="width:100%;margin-top:12px;font-size:19px;font-weight:900;border:4px solid #000;border-radius:14px;padding:13px;background:#E00000;color:#fff">' + LN('모두 공유 · 갤러리에 저장', 'Share all · save to gallery') + '</button>'; }
+      h += '<p style="font-size:14px;margin:10px 4px 0;font-weight:800">' + LN('공유창에서 "갤러리" 또는 "사진"을 고르면 갤러리에 저장돼요. 아래 그림을 길게 눌러 "이미지 저장"을 눌러도 됩니다.', 'Choose "Gallery" or "Photos" in the share sheet. You can also long-press a picture and tap "Save image".') + '</p>';
+      list.forEach(function (x, n) {
+        h += '<div style="background:#fff;border:3px solid #000;border-radius:14px;margin-top:12px;padding:8px;text-align:center"><div style="font-size:16px;margin-bottom:6px">' + (n + 1) + '. ' + esc(x.label) + '</div>' +
+          '<img src="' + urls[n] + '" alt="' + esc(x.label) + '" style="width:100%;border-radius:8px;display:block">' +
+          '<a href="' + urls[n] + '" download="' + x.name + '" style="display:block;margin-top:8px;font-size:17px;font-weight:900;border:3px solid #000;border-radius:12px;padding:10px;background:#007A33;color:#fff;text-decoration:none">' + LN('이 그림 저장', 'Save this picture') + '</a></div>';
+      });
+      h += '<button id="svClose" style="width:100%;margin-top:14px;font-size:18px;font-weight:900;border:4px solid #000;border-radius:14px;padding:12px;background:#fff;color:#000">' + LN('닫기', 'Close') + '</button></div>';
+      box.innerHTML = h; document.body.appendChild(box);
+      var close = function () { urls.forEach(function (u) { URL.revokeObjectURL(u); }); if (box.parentNode) { box.parentNode.removeChild(box); } };
+      document.getElementById('svClose').addEventListener('click', close);
+      var sh = document.getElementById('svShare');
+      if (sh) { sh.addEventListener('click', function () { navigator.share({ files: files, title: LN('뇌 성향 분석', 'Brain report') }).catch(function () { }); }); }
     };
     if (window.html2canvas) { run(); return; }
     var sc = document.createElement('script');
