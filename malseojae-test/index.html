@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="robots" content="noindex,nofollow">
-<title>말서재 · 음성 일기장 (시험판 v1.2)</title>
+<title>말서재 · 음성 일기장 (시험판 v1.3)</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:"Noto Sans KR",system-ui,sans-serif;background:#FFF4D6;color:#111;font-size:20px;line-height:1.9;font-weight:700;padding:12px 12px 40px}
@@ -42,7 +42,7 @@ select{width:100%;border:3px solid #0033CC;border-radius:14px;font-size:20px;fon
 
 <div class="top">
 <h1>말서재 · 음성 일기장</h1>
-<p>한국뇌심리연구소 부설 · 시험판 v1.2</p>
+<p>한국뇌심리연구소 부설 · 시험판 v1.3</p>
 </div>
 
 <div class="box">
@@ -70,6 +70,8 @@ select{width:100%;border:3px solid #0033CC;border-radius:14px;font-size:20px;fon
 <select id="voice"></select>
 <div class="lab">기계 목소리 높낮이 (낮게 = 굵은 목소리)</div>
 <select id="pitch">
+<option value="0.3">가장 낮게</option>
+<option value="0.5">아주 낮게</option>
 <option value="0.6">낮게</option>
 <option value="0.8">조금 낮게</option>
 <option value="1" selected>보통</option>
@@ -104,7 +106,7 @@ var KEY='malseojae_diary_v0';
 var $=function(i){return document.getElementById(i)};
 var st=$('status'),mic=$('mic'),txt=$('txt');
 var mood='';
-var listening=false,rec=null,base='',finalText='',errCount=0;
+var listening=false,rec=null,base='',finalText='',errCount=0,recStarted=false;
 var diag=[];
 function log(m){diag.push(new Date().toTimeString().slice(0,8)+' '+m);if(diag.length>16)diag.shift();$('diag').innerHTML=diag.join('<br>');}
 function p2(n){return n<10?'0'+n:''+n}
@@ -209,7 +211,7 @@ function fillVoices(){
  $('voice').innerHTML=h;
  $('voice').value=cur;
  if($('voice').value!==cur)$('voice').value='me';
- log('한국어 기계 목소리 '+voices.length+'개');
+ log('한국어 기계 목소리 '+voices.length+'개: '+voices.map(function(v){return v.name+'/'+v.lang+(v.localService?'/기기':'/인터넷')}).join(' , '));
 }
 if(window.speechSynthesis){fillVoices();speechSynthesis.onvoiceschanged=fillVoices}
 else $('voice').innerHTML='<option value="me">🙂 내 목소리 (기본)</option>';
@@ -240,7 +242,10 @@ function build(){
  rec.continuous=($('mode').value==='1');
  rec.interimResults=true;
  rec.maxAlternatives=1;
- rec.onstart=function(){setStatus('듣고 있습니다... 말씀하세요','rec');log('듣기 시작')};
+ rec.onstart=function(){
+  setStatus('듣고 있습니다... 말씀하세요','rec');log('듣기 시작');
+  if(!recStarted){recStarted=true;startRecorder(function(){})}
+ };
  rec.onresult=function(e){
   if(rec.continuous){
    var full='';
@@ -295,8 +300,8 @@ function start(){
  if(!SR)return;
  stopPlay();
  base=txt.value?txt.value.replace(/\s+$/,'')+' ':'';
- finalText='';errCount=0;
- startRecorder(begin);
+ finalText='';errCount=0;recStarted=false;
+ begin();
 }
 function stop(quiet){
  listening=false;
