@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="robots" content="noindex,nofollow">
-<title>말서재 · 음성 일기장 (시험판 v1.3)</title>
+<title>말서재 · 음성 일기장 (시험판 v1.4)</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:"Noto Sans KR",system-ui,sans-serif;background:#FFF4D6;color:#111;font-size:20px;line-height:1.9;font-weight:700;padding:12px 12px 40px}
@@ -42,7 +42,7 @@ select{width:100%;border:3px solid #0033CC;border-radius:14px;font-size:20px;fon
 
 <div class="top">
 <h1>말서재 · 음성 일기장</h1>
-<p>한국뇌심리연구소 부설 · 시험판 v1.3</p>
+<p>한국뇌심리연구소 부설 · 시험판 v1.4</p>
 </div>
 
 <div class="box">
@@ -152,7 +152,7 @@ function startRecorder(done){
   m.ondataavailable=function(e){if(e.data&&e.data.size)ch.push(e.data)};
   m.onstop=function(){
    s.getTracks().forEach(function(t){t.stop()});
-   if(ch.length){var b=new Blob(ch,{type:m.mimeType||'audio/webm'});curBlobs.push(b);log('내 목소리 녹음 '+Math.round(b.size/1024)+'KB')}
+   if(ch.length){var b=new Blob(ch,{type:m.mimeType||'audio/webm'});curBlobs.push(b);getEl(b).load();log('내 목소리 녹음 '+Math.round(b.size/1024)+'KB')}
    else log('녹음 데이터 없음');
    mr=null;flushing=false;
    if(pendingSave){pendingSave=false;doSave()}
@@ -171,16 +171,34 @@ function stopPlay(){
  try{if(curAudio){curAudio.pause();curAudio=null}}catch(e){}
  try{window.speechSynthesis&&speechSynthesis.cancel()}catch(e){}
 }
+var elCache=new WeakMap(),blobCache={};
+function getEl(b){
+ var a=elCache.get(b);
+ if(!a){a=new Audio();a.preload='auto';a.src=URL.createObjectURL(b);elCache.set(b,a)}
+ return a;
+}
 function playBlobs(arr){
  stopPlay();
- var i=0;
+ var t0=performance.now(),i=0;
  function next(){
   if(i>=arr.length)return;
-  var a=new Audio(URL.createObjectURL(arr[i++]));
+  var first=(i===0);
+  var a=getEl(arr[i++]);
+  try{a.currentTime=0}catch(e){}
   curAudio=a;a.onended=next;
+  a.onplaying=function(){a.onplaying=null;if(first)log('재생 시작까지 '+Math.round(performance.now()-t0)+'ms')};
   a.play().catch(function(e){log('재생 오류: '+e.name)});
  }
  next();
+}
+function warm(list){
+ var n=0;
+ list.forEach(function(e){
+  if(!e.audio||n>=5)return;
+  n++;
+  if(blobCache[e.id])return;
+  getAudio(e.id,function(bl){if(bl){blobCache[e.id]=bl;bl.forEach(function(b){getEl(b).load()})}});
+ });
 }
 function speak(t){
  if(!window.speechSynthesis){setStatus('읽어주기가 안 되는 기기입니다.','bad');return}
@@ -320,6 +338,7 @@ function doSave(){
  var blobs=curBlobs.slice();
  function finish(hasAudio){
   var a=load();
+  if(hasAudio)blobCache[id]=blobs;
   a.push({id:id,ts:id,mood:mood,text:t,audio:hasAudio});
   if(store(a)){txt.value='';curBlobs=[];base='';finalText='';setStatus('저장했습니다 ('+stamp(new Date())+')'+(hasAudio?' · 내 목소리 포함':''));render()}
  }
@@ -351,12 +370,16 @@ function render(){
  $('list').querySelectorAll('[data-r]').forEach(function(b){b.onclick=function(){
   var f=load().filter(function(x){return String(x.id)===b.dataset.r})[0];
   if(!f)return;
-  if(f.audio)getAudio(f.id,function(bl){readText(f.text,bl)});
+  if(f.audio){
+   if(blobCache[f.id])readText(f.text,blobCache[f.id]);
+   else getAudio(f.id,function(bl){if(bl)blobCache[f.id]=bl;readText(f.text,bl)});
+  }
   else readText(f.text,null);
  }});
+ warm(a);
  $('list').querySelectorAll('[data-x]').forEach(function(b){b.onclick=function(){
   if(!confirm('이 일기를 지울까요?'))return;
-  store(load().filter(function(x){if(String(x.id)===b.dataset.x){delAudio(x.id);return false}return true}));render()}});
+  store(load().filter(function(x){if(String(x.id)===b.dataset.x){delAudio(x.id);delete blobCache[x.id];return false}return true}));render()}});
 }
 $('dl').onclick=function(){
  var a=load().sort(function(x,y){return x.ts-y.ts});
