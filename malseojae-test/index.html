@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="robots" content="noindex,nofollow">
-<title>말서재 · 음성 일기장 (시험판 v1.1)</title>
+<title>말서재 · 음성 일기장 (시험판 v1.2)</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:"Noto Sans KR",system-ui,sans-serif;background:#FFF4D6;color:#111;font-size:20px;line-height:1.9;font-weight:700;padding:12px 12px 40px}
@@ -42,7 +42,7 @@ select{width:100%;border:3px solid #0033CC;border-radius:14px;font-size:20px;fon
 
 <div class="top">
 <h1>말서재 · 음성 일기장</h1>
-<p>한국뇌심리연구소 부설 · 시험판 v1.1</p>
+<p>한국뇌심리연구소 부설 · 시험판 v1.2</p>
 </div>
 
 <div class="box">
@@ -78,6 +78,11 @@ select{width:100%;border:3px solid #0033CC;border-radius:14px;font-size:20px;fon
 <select id="recon">
 <option value="1">내 목소리 녹음 켜기 (기본)</option>
 <option value="0">내 목소리 녹음 끄기</option>
+</select>
+<div class="lab">듣기 방식 (끊김이 심하면 "이어 듣기"를 써 보세요)</div>
+<select id="mode">
+<option value="0">안정 듣기 (기본)</option>
+<option value="1">이어 듣기 (실험, 끊김 적음)</option>
 </select>
 <p class="note">기본은 내가 말한 목소리 그대로 다시 들려줍니다. 글을 고쳐 쓰면 녹음은 고치기 전 말 그대로입니다. 목소리를 바꾸면 고친 글이 기계 목소리로 읽힙니다.</p>
 </div>
@@ -213,6 +218,8 @@ $('pitch').value=pref('pitch')||'1';
 $('pitch').onchange=function(){pref('pitch',$('pitch').value)};
 $('recon').value=pref('recon')||'1';
 $('recon').onchange=function(){pref('recon',$('recon').value)};
+$('mode').value=pref('mode')||'0';
+$('mode').onchange=function(){pref('mode',$('mode').value);log('듣기 방식: '+$('mode').options[$('mode').selectedIndex].text)};
 
 document.querySelectorAll('#moods button').forEach(function(b){
  b.onclick=function(){mood=b.dataset.m;document.querySelectorAll('#moods button').forEach(function(x){x.classList.remove('sel')});b.classList.add('sel')}
@@ -230,11 +237,23 @@ openDB();
 function build(){
  rec=new SR();
  rec.lang='ko-KR';
- rec.continuous=false;
+ rec.continuous=($('mode').value==='1');
  rec.interimResults=true;
  rec.maxAlternatives=1;
  rec.onstart=function(){setStatus('듣고 있습니다... 말씀하세요','rec');log('듣기 시작')};
  rec.onresult=function(e){
+  if(rec.continuous){
+   var full='';
+   for(var k=0;k<e.results.length;k++){full+=e.results[k][0].transcript}
+   errCount=0;
+   var lf=e.results[e.results.length-1].isFinal;
+   if(lf&&/저장\s*$/.test(full.trim())){
+    txt.value=(base+full.replace(/\s*저장\s*$/,'')).trim();
+    stop();doSave();return;
+   }
+   txt.value=(base+full).replace(/\s+$/,'');
+   return;
+  }
   var interim='';
   for(var i=e.resultIndex;i<e.results.length;i++){
    var r=e.results[i];
@@ -262,7 +281,8 @@ function build(){
   log('듣기 끝');
   if(listening){
    if(errCount>=8){stop();setStatus('말씀이 들리지 않아 멈췄습니다.','bad');return}
-   setTimeout(function(){if(listening){try{rec.start()}catch(x){log('재시작 실패: '+x.message)}}},120);
+   if(rec.continuous){base=txt.value.replace(/\s+$/,'');base=base?base+' ':''}
+   try{rec.start()}catch(x){setTimeout(function(){if(listening){try{rec.start()}catch(y){log('재시작 실패: '+y.message)}}},100)}
   }
  };
 }
