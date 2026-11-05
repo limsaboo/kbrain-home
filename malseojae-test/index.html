@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="robots" content="noindex,nofollow">
-<title>말서재 · 음성 일기장 (시험판 v1)</title>
+<title>말서재 · 음성 일기장 (시험판 v1.1)</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:"Noto Sans KR",system-ui,sans-serif;background:#FFF4D6;color:#111;font-size:20px;line-height:1.9;font-weight:700;padding:12px 12px 40px}
@@ -42,7 +42,7 @@ select{width:100%;border:3px solid #0033CC;border-radius:14px;font-size:20px;fon
 
 <div class="top">
 <h1>말서재 · 음성 일기장</h1>
-<p>한국뇌심리연구소 부설 · 시험판 v1</p>
+<p>한국뇌심리연구소 부설 · 시험판 v1.1</p>
 </div>
 
 <div class="box">
@@ -99,7 +99,7 @@ var KEY='malseojae_diary_v0';
 var $=function(i){return document.getElementById(i)};
 var st=$('status'),mic=$('mic'),txt=$('txt');
 var mood='';
-var listening=false,rec=null,base='',errCount=0;
+var listening=false,rec=null,base='',finalText='',errCount=0;
 var diag=[];
 function log(m){diag.push(new Date().toTimeString().slice(0,8)+' '+m);if(diag.length>16)diag.shift();$('diag').innerHTML=diag.join('<br>');}
 function p2(n){return n<10?'0'+n:''+n}
@@ -230,20 +230,23 @@ openDB();
 function build(){
  rec=new SR();
  rec.lang='ko-KR';
- rec.continuous=true;
+ rec.continuous=false;
  rec.interimResults=true;
  rec.maxAlternatives=1;
  rec.onstart=function(){setStatus('듣고 있습니다... 말씀하세요','rec');log('듣기 시작')};
  rec.onresult=function(e){
-  var full='';
-  for(var i=0;i<e.results.length;i++){full+=e.results[i][0].transcript}
-  errCount=0;
-  var lastFinal=e.results[e.results.length-1].isFinal;
-  if(lastFinal&&/저장\s*$/.test(full.trim())){
-   txt.value=(base+full.replace(/\s*저장\s*$/,'')).trim();
-   stop();doSave();return;
+  var interim='';
+  for(var i=e.resultIndex;i<e.results.length;i++){
+   var r=e.results[i];
+   if(r.isFinal){finalText+=r[0].transcript+' ';errCount=0;log('인식: '+r[0].transcript)}
+   else interim+=r[0].transcript;
   }
-  txt.value=(base+full).replace(/\s+$/,'');
+  txt.value=(base+finalText+interim).replace(/\s+$/,'');
+  if(/저장\s*$/.test(finalText.trim())){
+   finalText=finalText.replace(/\s*저장\s*$/,'')+' ';
+   txt.value=(base+finalText).trim();
+   stop();doSave();
+  }
  };
  rec.onerror=function(e){
   log('오류: '+e.error);
@@ -259,9 +262,7 @@ function build(){
   log('듣기 끝');
   if(listening){
    if(errCount>=8){stop();setStatus('말씀이 들리지 않아 멈췄습니다.','bad');return}
-   base=txt.value.replace(/\s+$/,'');
-   base=base?base+' ':'';
-   try{build();rec.start()}catch(x){log('재시작 실패: '+x.message)}
+   setTimeout(function(){if(listening){try{rec.start()}catch(x){log('재시작 실패: '+x.message)}}},120);
   }
  };
 }
@@ -274,7 +275,7 @@ function start(){
  if(!SR)return;
  stopPlay();
  base=txt.value?txt.value.replace(/\s+$/,'')+' ':'';
- errCount=0;
+ finalText='';errCount=0;
  startRecorder(begin);
 }
 function stop(quiet){
@@ -295,13 +296,13 @@ function doSave(){
  function finish(hasAudio){
   var a=load();
   a.push({id:id,ts:id,mood:mood,text:t,audio:hasAudio});
-  if(store(a)){txt.value='';curBlobs=[];base='';setStatus('저장했습니다 ('+stamp(new Date())+')'+(hasAudio?' · 내 목소리 포함':''));render()}
+  if(store(a)){txt.value='';curBlobs=[];base='';finalText='';setStatus('저장했습니다 ('+stamp(new Date())+')'+(hasAudio?' · 내 목소리 포함':''));render()}
  }
  if(blobs.length){putAudio(id,blobs,function(ok){if(!ok)log('녹음 저장 실패 (글만 저장)');finish(ok)})}
  else finish(false);
 }
 $('save').onclick=function(){if(listening)stop();doSave()};
-$('clear').onclick=function(){if(listening)stop();txt.value='';curBlobs=[];base='';stopPlay();setStatus('비웠습니다.')};
+$('clear').onclick=function(){if(listening)stop();txt.value='';curBlobs=[];base='';finalText='';stopPlay();setStatus('비웠습니다.')};
 $('read').onclick=function(){
  if(listening)stop();
  var t=txt.value.trim();
