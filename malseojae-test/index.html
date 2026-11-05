@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="robots" content="noindex,nofollow">
-<title>말서재 · 음성 일기장 (시험판 v1.4)</title>
+<title>말서재 · 음성 일기장 (시험판 v1.5)</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:"Noto Sans KR",system-ui,sans-serif;background:#FFF4D6;color:#111;font-size:20px;line-height:1.9;font-weight:700;padding:12px 12px 40px}
@@ -42,7 +42,7 @@ select{width:100%;border:3px solid #0033CC;border-radius:14px;font-size:20px;fon
 
 <div class="top">
 <h1>말서재 · 음성 일기장</h1>
-<p>한국뇌심리연구소 부설 · 시험판 v1.4</p>
+<p>한국뇌심리연구소 부설 · 시험판 v1.5</p>
 </div>
 
 <div class="box">
@@ -152,7 +152,7 @@ function startRecorder(done){
   m.ondataavailable=function(e){if(e.data&&e.data.size)ch.push(e.data)};
   m.onstop=function(){
    s.getTracks().forEach(function(t){t.stop()});
-   if(ch.length){var b=new Blob(ch,{type:m.mimeType||'audio/webm'});curBlobs.push(b);getEl(b).load();log('내 목소리 녹음 '+Math.round(b.size/1024)+'KB')}
+   if(ch.length){var b=new Blob(ch,{type:m.mimeType||'audio/webm'});curBlobs.push(b);log('내 목소리 녹음 '+Math.round(b.size/1024)+'KB')}
    else log('녹음 데이터 없음');
    mr=null;flushing=false;
    if(pendingSave){pendingSave=false;doSave()}
@@ -173,9 +173,7 @@ function stopPlay(){
 }
 var elCache=new WeakMap(),blobCache={};
 function getEl(b){
- var a=elCache.get(b);
- if(!a){a=new Audio();a.preload='auto';a.src=URL.createObjectURL(b);elCache.set(b,a)}
- return a;
+ return new Audio(URL.createObjectURL(b));
 }
 function playBlobs(arr){
  stopPlay();
@@ -184,8 +182,8 @@ function playBlobs(arr){
   if(i>=arr.length)return;
   var first=(i===0);
   var a=getEl(arr[i++]);
-  try{a.currentTime=0}catch(e){}
   curAudio=a;a.onended=next;
+  a.onerror=function(){log('재생 파일 오류')};
   a.onplaying=function(){a.onplaying=null;if(first)log('재생 시작까지 '+Math.round(performance.now()-t0)+'ms')};
   a.play().catch(function(e){log('재생 오류: '+e.name)});
  }
@@ -197,7 +195,7 @@ function warm(list){
   if(!e.audio||n>=5)return;
   n++;
   if(blobCache[e.id])return;
-  getAudio(e.id,function(bl){if(bl){blobCache[e.id]=bl;bl.forEach(function(b){getEl(b).load()})}});
+  getAudio(e.id,function(bl){if(bl)blobCache[e.id]=bl});
  });
 }
 function speak(t){
