@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="robots" content="noindex,nofollow">
-<title>말서재 · 음성 일기장 (시험판 v1.5)</title>
+<title>말서재 · 음성 일기장 (시험판 v1.6)</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:"Noto Sans KR",system-ui,sans-serif;background:#FFF4D6;color:#111;font-size:20px;line-height:1.9;font-weight:700;padding:12px 12px 40px}
@@ -42,7 +42,7 @@ select{width:100%;border:3px solid #0033CC;border-radius:14px;font-size:20px;fon
 
 <div class="top">
 <h1>말서재 · 음성 일기장</h1>
-<p>한국뇌심리연구소 부설 · 시험판 v1.5</p>
+<p>한국뇌심리연구소 부설 · 시험판 v1.6</p>
 </div>
 
 <div class="box">
@@ -151,12 +151,15 @@ function startRecorder(done){
   var m=new MediaRecorder(s,mt?{mimeType:mt}:{});
   m.ondataavailable=function(e){if(e.data&&e.data.size)ch.push(e.data)};
   m.onstop=function(){
-   s.getTracks().forEach(function(t){t.stop()});
-   if(ch.length){var b=new Blob(ch,{type:m.mimeType||'audio/webm'});curBlobs.push(b);log('내 목소리 녹음 '+Math.round(b.size/1024)+'KB')}
-   else log('녹음 데이터 없음');
    mr=null;flushing=false;
+   try{s.getTracks().forEach(function(t){t.stop()})}catch(e){}
+   try{
+    if(ch.length){var b=new Blob(ch,{type:m.mimeType||'audio/webm'});curBlobs.push(b);log('내 목소리 녹음 '+Math.round(b.size/1024)+'KB')}
+    else log('녹음 데이터 없음');
+   }catch(e){log('녹음 처리 오류: '+e.message)}
    if(pendingSave){pendingSave=false;doSave()}
   };
+  m.onerror=function(e){log('녹음기 오류: '+(e.error&&e.error.name||'?'));mr=null;flushing=false};
   mr=m;m.start();log('내 목소리 녹음 시작');
   done();
  }).catch(function(e){log('녹음 실패: '+e.name+' (글자 변환만 진행)');done()});
