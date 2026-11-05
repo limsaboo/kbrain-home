@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="robots" content="noindex,nofollow">
-<title>말서재 · 음성 일기장 (시험판)</title>
+<title>말서재 · 음성 일기장 (시험판 v1)</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:"Noto Sans KR",system-ui,sans-serif;background:#FFF4D6;color:#111;font-size:20px;line-height:1.9;font-weight:700;padding:12px 12px 40px}
@@ -25,6 +25,8 @@ body{font-family:"Noto Sans KR",system-ui,sans-serif;background:#FFF4D6;color:#1
 .moods button{flex:1;border:3px solid #0033CC;background:#fff;border-radius:14px;font-size:30px;line-height:1.4;padding:6px 0}
 .moods button.sel{background:#FFD600;border-color:#D50000}
 textarea{width:100%;min-height:200px;border:3px solid #111;border-radius:14px;font-size:22px;line-height:2;font-weight:700;padding:10px;font-family:inherit;color:#111}
+select{width:100%;border:3px solid #0033CC;border-radius:14px;font-size:20px;font-weight:900;line-height:1.6;padding:12px 8px;background:#fff;color:#111;margin-bottom:8px;font-family:inherit}
+.lab{font-size:18px;line-height:1.7;color:#D50000;font-weight:900}
 .entry{border:3px solid #00A651;border-radius:14px;padding:10px;margin-bottom:10px;background:#F2FFF7}
 .entry .d{color:#D50000;font-size:18px;line-height:1.6;font-weight:900}
 .entry .t{font-size:20px;line-height:1.9;white-space:pre-wrap;word-break:break-all}
@@ -40,7 +42,7 @@ textarea{width:100%;min-height:200px;border:3px solid #111;border-radius:14px;fo
 
 <div class="top">
 <h1>말서재 · 음성 일기장</h1>
-<p>한국뇌심리연구소 부설 · 시험판 v0</p>
+<p>한국뇌심리연구소 부설 · 시험판 v1</p>
 </div>
 
 <div class="box">
@@ -64,13 +66,30 @@ textarea{width:100%;min-height:200px;border:3px solid #111;border-radius:14px;fo
 </div>
 
 <div class="box">
-<h2>③ 내 일기 (연·월·일·시 순서)</h2>
+<h2>③ 읽어주는 목소리</h2>
+<select id="voice"></select>
+<div class="lab">기계 목소리 높낮이 (낮게 = 굵은 목소리)</div>
+<select id="pitch">
+<option value="0.6">낮게</option>
+<option value="0.8">조금 낮게</option>
+<option value="1" selected>보통</option>
+<option value="1.25">높게</option>
+</select>
+<select id="recon">
+<option value="1">내 목소리 녹음 켜기 (기본)</option>
+<option value="0">내 목소리 녹음 끄기</option>
+</select>
+<p class="note">기본은 내가 말한 목소리 그대로 다시 들려줍니다. 글을 고쳐 쓰면 녹음은 고치기 전 말 그대로입니다. 목소리를 바꾸면 고친 글이 기계 목소리로 읽힙니다.</p>
+</div>
+
+<div class="box">
+<h2>④ 내 일기 (연·월·일·시 순서)</h2>
 <div id="list"></div>
 <button class="dl" id="dl">📥 전체를 파일로 내려받기 (.md)</button>
 </div>
 
 <div class="box">
-<h2>④ 시험 결과 확인용</h2>
+<h2>⑤ 시험 결과 확인용</h2>
 <div id="diag"></div>
 </div>
 
@@ -80,93 +99,216 @@ var KEY='malseojae_diary_v0';
 var $=function(i){return document.getElementById(i)};
 var st=$('status'),mic=$('mic'),txt=$('txt');
 var mood='';
-var listening=false,rec=null,base='',finalText='',errCount=0;
+var listening=false,rec=null,base='',errCount=0;
 var diag=[];
-function log(m){diag.push(new Date().toTimeString().slice(0,8)+' '+m);if(diag.length>12)diag.shift();$('diag').innerHTML=diag.join('<br>');}
+function log(m){diag.push(new Date().toTimeString().slice(0,8)+' '+m);if(diag.length>16)diag.shift();$('diag').innerHTML=diag.join('<br>');}
 function p2(n){return n<10?'0'+n:''+n}
 function stamp(d){return d.getFullYear()+'-'+p2(d.getMonth()+1)+'-'+p2(d.getDate())+' '+p2(d.getHours())+':'+p2(d.getMinutes())}
 function load(){try{return JSON.parse(localStorage.getItem(KEY)||'[]')}catch(e){return []}}
 function store(a){try{localStorage.setItem(KEY,JSON.stringify(a));return true}catch(e){log('저장 오류: '+e.message);return false}}
+function pref(k,v){try{if(v===undefined)return localStorage.getItem('malseojae_'+k);localStorage.setItem('malseojae_'+k,v)}catch(e){}return null}
 function setStatus(t,c){st.textContent=t;st.className=c||''}
+
+/* ---------- 녹음 보관소 (IndexedDB) ---------- */
+var DB=null;
+function openDB(){
+ try{
+  var r=indexedDB.open('malseojae',1);
+  r.onupgradeneeded=function(){r.result.createObjectStore('audio')};
+  r.onsuccess=function(){DB=r.result;log('녹음 보관소 준비')};
+  r.onerror=function(){log('녹음 보관소 오류')};
+ }catch(e){log('녹음 보관소 사용 불가')}
+}
+function putAudio(id,blobs,cb){
+ if(!DB){cb(false);return}
+ try{var tx=DB.transaction('audio','readwrite');tx.objectStore('audio').put(blobs,id);tx.oncomplete=function(){cb(true)};tx.onerror=function(){cb(false)}}catch(e){cb(false)}
+}
+function getAudio(id,cb){
+ if(!DB){cb(null);return}
+ try{var q=DB.transaction('audio').objectStore('audio').get(id);q.onsuccess=function(){cb(q.result||null)};q.onerror=function(){cb(null)}}catch(e){cb(null)}
+}
+function delAudio(id){
+ if(!DB)return;
+ try{DB.transaction('audio','readwrite').objectStore('audio').delete(id)}catch(e){}
+}
+
+/* ---------- 내 목소리 녹음 ---------- */
+var mr=null,curBlobs=[],flushing=false,pendingSave=false;
+function recOn(){return $('recon').value==='1'&&!!window.MediaRecorder&&!!navigator.mediaDevices}
+function startRecorder(done){
+ if(!recOn()){done();return}
+ navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true}}).then(function(s){
+  var mt='';
+  ['audio/webm;codecs=opus','audio/webm','audio/mp4'].forEach(function(t){if(!mt&&MediaRecorder.isTypeSupported(t))mt=t});
+  var ch=[];
+  var m=new MediaRecorder(s,mt?{mimeType:mt}:{});
+  m.ondataavailable=function(e){if(e.data&&e.data.size)ch.push(e.data)};
+  m.onstop=function(){
+   s.getTracks().forEach(function(t){t.stop()});
+   if(ch.length){var b=new Blob(ch,{type:m.mimeType||'audio/webm'});curBlobs.push(b);log('내 목소리 녹음 '+Math.round(b.size/1024)+'KB')}
+   else log('녹음 데이터 없음');
+   mr=null;flushing=false;
+   if(pendingSave){pendingSave=false;doSave()}
+  };
+  mr=m;m.start();log('내 목소리 녹음 시작');
+  done();
+ }).catch(function(e){log('녹음 실패: '+e.name+' (글자 변환만 진행)');done()});
+}
+function stopRecorder(){
+ if(mr&&mr.state!=='inactive'){flushing=true;try{mr.stop()}catch(x){flushing=false}}
+}
+
+/* ---------- 읽어주기 ---------- */
+var curAudio=null,voices=[];
+function stopPlay(){
+ try{if(curAudio){curAudio.pause();curAudio=null}}catch(e){}
+ try{window.speechSynthesis&&speechSynthesis.cancel()}catch(e){}
+}
+function playBlobs(arr){
+ stopPlay();
+ var i=0;
+ function next(){
+  if(i>=arr.length)return;
+  var a=new Audio(URL.createObjectURL(arr[i++]));
+  curAudio=a;a.onended=next;
+  a.play().catch(function(e){log('재생 오류: '+e.name)});
+ }
+ next();
+}
+function speak(t){
+ if(!window.speechSynthesis){setStatus('읽어주기가 안 되는 기기입니다.','bad');return}
+ stopPlay();
+ var u=new SpeechSynthesisUtterance(t);
+ u.lang='ko-KR';u.rate=0.9;
+ u.pitch=parseFloat($('pitch').value)||1;
+ var sel=$('voice').value;
+ if(sel!=='me'){
+  for(var i=0;i<voices.length;i++){if(voices[i].voiceURI===sel){u.voice=voices[i];break}}
+ }
+ speechSynthesis.speak(u);
+}
+function readText(t,blobs){
+ var sel=$('voice').value;
+ if(sel==='me'){
+  if(blobs&&blobs.length){playBlobs(blobs);return}
+  setStatus('내 목소리 녹음이 없어 기계 목소리로 읽습니다.','bad');
+ }
+ speak(t);
+}
+function fillVoices(){
+ var all=window.speechSynthesis?speechSynthesis.getVoices():[];
+ voices=all.filter(function(v){return /^ko/i.test(v.lang)});
+ var cur=pref('voice')||'me';
+ var h='<option value="me">🙂 내 목소리 (기본)</option>';
+ voices.forEach(function(v,i){h+='<option value="'+v.voiceURI+'">기계 목소리 '+(i+1)+' · '+v.name+'</option>'});
+ $('voice').innerHTML=h;
+ $('voice').value=cur;
+ if($('voice').value!==cur)$('voice').value='me';
+ log('한국어 기계 목소리 '+voices.length+'개');
+}
+if(window.speechSynthesis){fillVoices();speechSynthesis.onvoiceschanged=fillVoices}
+else $('voice').innerHTML='<option value="me">🙂 내 목소리 (기본)</option>';
+$('voice').onchange=function(){pref('voice',$('voice').value);log('목소리 선택: '+$('voice').options[$('voice').selectedIndex].text)};
+$('pitch').value=pref('pitch')||'1';
+$('pitch').onchange=function(){pref('pitch',$('pitch').value)};
+$('recon').value=pref('recon')||'1';
+$('recon').onchange=function(){pref('recon',$('recon').value)};
 
 document.querySelectorAll('#moods button').forEach(function(b){
  b.onclick=function(){mood=b.dataset.m;document.querySelectorAll('#moods button').forEach(function(x){x.classList.remove('sel')});b.classList.add('sel')}
 });
 
+/* ---------- 음성 인식 ---------- */
 var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
 log('주소: '+location.protocol+'//'+(location.host||'(파일)'));
 log('음성인식 지원: '+(SR?'예':'아니오'));
-log('읽어주기 지원: '+(window.speechSynthesis?'예':'아니오'));
+log('녹음 지원: '+(window.MediaRecorder?'예':'아니오'));
 if(!SR){setStatus('이 브라우저는 음성 입력이 안 됩니다. 크롬으로 열어 주세요.','bad');mic.disabled=true}
 else setStatus('준비됐습니다. 빨간 버튼을 누르세요.');
+openDB();
 
 function build(){
  rec=new SR();
  rec.lang='ko-KR';
- rec.continuous=false;
+ rec.continuous=true;
  rec.interimResults=true;
  rec.maxAlternatives=1;
  rec.onstart=function(){setStatus('듣고 있습니다... 말씀하세요','rec');log('듣기 시작')};
  rec.onresult=function(e){
-  var interim='';
-  for(var i=e.resultIndex;i<e.results.length;i++){
-   var r=e.results[i];
-   if(r.isFinal){finalText+=r[0].transcript+' ';errCount=0;log('인식: '+r[0].transcript)}
-   else interim+=r[0].transcript;
+  var full='';
+  for(var i=0;i<e.results.length;i++){full+=e.results[i][0].transcript}
+  errCount=0;
+  var lastFinal=e.results[e.results.length-1].isFinal;
+  if(lastFinal&&/저장\s*$/.test(full.trim())){
+   txt.value=(base+full.replace(/\s*저장\s*$/,'')).trim();
+   stop();doSave();return;
   }
-  txt.value=(base+finalText+interim).replace(/\s+$/,'');
-  if(/저장\s*$/.test(finalText.trim())){
-   finalText=finalText.replace(/\s*저장\s*$/,'')+' ';
-   txt.value=(base+finalText).trim();
-   stop();doSave();
-  }
+  txt.value=(base+full).replace(/\s+$/,'');
  };
  rec.onerror=function(e){
   log('오류: '+e.error);
-  if(e.error==='not-allowed'||e.error==='service-not-allowed'){setStatus(location.protocol==='https:'?'마이크 허용이 필요합니다. 주소창 왼쪽 자물쇠에서 마이크를 허용하세요.':'파일로 직접 연 화면에서는 마이크가 막힙니다. 인터넷 주소(https)로 열어야 합니다.','bad');listening=false;mic.textContent='🎤 말하기 시작';mic.classList.remove('on')}
-  else if(e.error==='network'){setStatus('인터넷 연결이 필요합니다.','bad');listening=false;mic.textContent='🎤 말하기 시작';mic.classList.remove('on')}
+  if(e.error==='not-allowed'||e.error==='service-not-allowed'){
+   setStatus(location.protocol==='https:'?'마이크 허용이 필요합니다. 주소창 왼쪽 자물쇠에서 마이크를 허용하세요.':'파일로 직접 연 화면에서는 마이크가 막힙니다. 인터넷 주소(https)로 열어야 합니다.','bad');
+   stop(true);
+  }
+  else if(e.error==='network'){setStatus('인터넷 연결이 필요합니다.','bad');stop(true)}
+  else if(e.error==='audio-capture'){setStatus('마이크를 쓸 수 없습니다. 녹음을 끄고 다시 해 보세요.','bad');stop(true)}
   else if(e.error==='no-speech'){errCount++}
  };
  rec.onend=function(){
   log('듣기 끝');
   if(listening){
-   if(errCount>=4){stop();setStatus('말씀이 들리지 않아 멈췄습니다.','bad');return}
-   setTimeout(function(){try{rec.start()}catch(x){log('재시작 실패: '+x.message)}},250);
+   if(errCount>=8){stop();setStatus('말씀이 들리지 않아 멈췄습니다.','bad');return}
+   base=txt.value.replace(/\s+$/,'');
+   base=base?base+' ':'';
+   try{build();rec.start()}catch(x){log('재시작 실패: '+x.message)}
   }
  };
 }
-function start(){
- if(!SR)return;
- base=txt.value?txt.value.replace(/\s+$/,'')+' ':'';
- finalText='';errCount=0;
+function begin(){
  build();
  listening=true;mic.textContent='⏹ 말하기 끝내기';mic.classList.add('on');
- try{rec.start()}catch(x){log('시작 실패: '+x.message);listening=false;mic.textContent='🎤 말하기 시작';mic.classList.remove('on')}
+ try{rec.start()}catch(x){log('시작 실패: '+x.message);stop(true)}
 }
-function stop(){
+function start(){
+ if(!SR)return;
+ stopPlay();
+ base=txt.value?txt.value.replace(/\s+$/,'')+' ':'';
+ errCount=0;
+ startRecorder(begin);
+}
+function stop(quiet){
  listening=false;
  try{rec&&rec.stop()}catch(x){}
+ stopRecorder();
  mic.textContent='🎤 말하기 시작';mic.classList.remove('on');
- setStatus('멈췄습니다. 글을 확인하고 저장하세요.');
+ if(!quiet)setStatus('멈췄습니다. 글을 확인하고 저장하세요.');
 }
 mic.onclick=function(){listening?stop():start()};
 
 function doSave(){
+ if(flushing){pendingSave=true;return}
  var t=txt.value.trim();
  if(!t){setStatus('저장할 글이 없습니다.','bad');return}
- var a=load();
- a.push({id:Date.now(),ts:Date.now(),mood:mood,text:t});
- if(store(a)){txt.value='';finalText='';base='';setStatus('저장했습니다 ('+stamp(new Date())+')');render()}
+ var id=Date.now();
+ var blobs=curBlobs.slice();
+ function finish(hasAudio){
+  var a=load();
+  a.push({id:id,ts:id,mood:mood,text:t,audio:hasAudio});
+  if(store(a)){txt.value='';curBlobs=[];base='';setStatus('저장했습니다 ('+stamp(new Date())+')'+(hasAudio?' · 내 목소리 포함':''));render()}
+ }
+ if(blobs.length){putAudio(id,blobs,function(ok){if(!ok)log('녹음 저장 실패 (글만 저장)');finish(ok)})}
+ else finish(false);
 }
 $('save').onclick=function(){if(listening)stop();doSave()};
-$('clear').onclick=function(){if(listening)stop();txt.value='';finalText='';base='';setStatus('비웠습니다.')};
-function speak(t){
- if(!window.speechSynthesis){setStatus('읽어주기가 안 되는 기기입니다.','bad');return}
- speechSynthesis.cancel();
- var u=new SpeechSynthesisUtterance(t);u.lang='ko-KR';u.rate=0.9;
- speechSynthesis.speak(u);
-}
-$('read').onclick=function(){if(txt.value.trim())speak(txt.value);else setStatus('읽을 글이 없습니다.','bad')};
+$('clear').onclick=function(){if(listening)stop();txt.value='';curBlobs=[];base='';stopPlay();setStatus('비웠습니다.')};
+$('read').onclick=function(){
+ if(listening)stop();
+ var t=txt.value.trim();
+ if(!t){setStatus('읽을 글이 없습니다.','bad');return}
+ if(flushing){setTimeout(function(){readText(t,curBlobs)},400)}
+ else readText(t,curBlobs);
+};
 
 function esc(s){return s.replace(/[&<>]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c]})}
 function render(){
@@ -176,14 +318,19 @@ function render(){
  a.forEach(function(e){
   var d=new Date(e.ts),ym=d.getFullYear()+'년 '+(d.getMonth()+1)+'월';
   if(ym!==cur){h+='<div class="mon">'+ym+'</div>';cur=ym}
-  h+='<div class="entry"><div class="d">'+stamp(d)+' '+(e.mood||'')+'</div><div class="t">'+esc(e.text)+'</div>'+
+  h+='<div class="entry"><div class="d">'+stamp(d)+' '+(e.mood||'')+(e.audio?' 🎙':'')+'</div><div class="t">'+esc(e.text)+'</div>'+
   '<div class="a"><button style="background:#0033CC" data-r="'+e.id+'">🔊 읽기</button><button style="background:#D50000" data-x="'+e.id+'">🗑 지우기</button></div></div>';
  });
  $('list').innerHTML=h;
- $('list').querySelectorAll('[data-r]').forEach(function(b){b.onclick=function(){var f=load().filter(function(x){return String(x.id)===b.dataset.r})[0];if(f)speak(f.text)}});
+ $('list').querySelectorAll('[data-r]').forEach(function(b){b.onclick=function(){
+  var f=load().filter(function(x){return String(x.id)===b.dataset.r})[0];
+  if(!f)return;
+  if(f.audio)getAudio(f.id,function(bl){readText(f.text,bl)});
+  else readText(f.text,null);
+ }});
  $('list').querySelectorAll('[data-x]').forEach(function(b){b.onclick=function(){
   if(!confirm('이 일기를 지울까요?'))return;
-  store(load().filter(function(x){return String(x.id)!==b.dataset.x}));render()}});
+  store(load().filter(function(x){if(String(x.id)===b.dataset.x){delAudio(x.id);return false}return true}));render()}});
 }
 $('dl').onclick=function(){
  var a=load().sort(function(x,y){return x.ts-y.ts});
