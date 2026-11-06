@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="robots" content="noindex,nofollow">
-<title>말서재 · 음성 일기장 (시험판 v1.8)</title>
+<title>말서재 · 음성 일기장 (시험판 v1.9)</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:"Noto Sans KR",system-ui,sans-serif;background:#FFF4D6;color:#111;font-size:20px;line-height:1.9;font-weight:700;padding:12px 12px 40px;word-break:keep-all;overflow-wrap:break-word}
@@ -46,7 +46,7 @@ select{width:100%;border:3px solid #0033CC;border-radius:14px;font-size:20px;fon
 
 <div class="top">
 <h1>말서재 · 음성 일기장</h1>
-<p>한국뇌심리연구소 부설 · 시험판 v1.8</p>
+<p>한국뇌심리연구소 부설 · 시험판 v1.9</p>
 </div>
 
 <div class="box">
@@ -83,8 +83,9 @@ select{width:100%;border:3px solid #0033CC;border-radius:14px;font-size:20px;fon
 <option value="1.25">높게</option>
 </select>
 <select id="recon">
-<option value="1">내 목소리 녹음 켜기 (기본)</option>
-<option value="0">내 목소리 녹음 끄기</option>
+<option value="0">글자로 받아쓰기 (기본)</option>
+<option value="2">내 목소리만 녹음 (글자는 직접)</option>
+<option value="1">둘 다 (실험, 폰에 따라 안 될 수 있음)</option>
 </select>
 <div class="lab">듣기 방식 (끊김이 심하면 "이어 듣기"를 써 보세요)</div>
 <select id="mode">
@@ -146,10 +147,15 @@ function delAudio(id){
 
 /* ---------- 내 목소리 녹음 ---------- */
 var mr=null,curBlobs=[],flushing=false,pendingSave=false;
-function recOn(){return $('recon').value==='1'&&!!window.MediaRecorder&&!!navigator.mediaDevices}
+function rmode(){return $('recon').value}
+function recOn(){return rmode()!=='0'&&!!window.MediaRecorder&&!!navigator.mediaDevices}
 function startRecorder(done){
  if(!recOn()){done();return}
+ var got=false;
+ log('녹음용 마이크 요청 중...');
+ setTimeout(function(){if(!got)log('녹음용 마이크 응답 없음 (글자 변환과 충돌 가능)')},4000);
  navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true}}).then(function(s){
+  got=true;
   var mt='';
   ['audio/webm;codecs=opus','audio/webm','audio/mp4'].forEach(function(t){if(!mt&&MediaRecorder.isTypeSupported(t))mt=t});
   var ch=[];
@@ -167,7 +173,11 @@ function startRecorder(done){
   m.onerror=function(e){log('녹음기 오류: '+(e.error&&e.error.name||'?'));mr=null;flushing=false};
   mr=m;m.start();log('내 목소리 녹음 시작');
   done();
- }).catch(function(e){log('녹음 실패: '+e.name+' (글자 변환만 진행)');done()});
+ }).catch(function(e){
+  got=true;log('녹음 실패: '+e.name);
+  if(rmode()==='2'){stop(true);setStatus('마이크를 쓸 수 없습니다. 마이크 허용을 확인하세요.','bad')}
+  done();
+ });
 }
 function stopRecorder(){
  if(mr&&mr.state!=='inactive'){flushing=true;try{mr.stop()}catch(x){flushing=false}}
@@ -242,8 +252,8 @@ else $('voice').innerHTML='<option value="me">🙂 내 목소리 (기본)</optio
 $('voice').onchange=function(){pref('voice',$('voice').value);log('목소리 선택: '+$('voice').options[$('voice').selectedIndex].text)};
 $('pitch').value=pref('pitch')||'1';
 $('pitch').onchange=function(){pref('pitch',$('pitch').value)};
-$('recon').value=pref('recon')||'1';
-$('recon').onchange=function(){pref('recon',$('recon').value)};
+$('recon').value=pref('rmode')||'0';
+$('recon').onchange=function(){pref('rmode',$('recon').value);log('말하기 방식: '+$('recon').options[$('recon').selectedIndex].text)};
 $('mode').value=pref('mode')||'0';
 $('mode').onchange=function(){pref('mode',$('mode').value);log('듣기 방식: '+$('mode').options[$('mode').selectedIndex].text)};
 
@@ -263,7 +273,7 @@ openDB();
 function build(){
  rec=new SR();
  rec.lang='ko-KR';
- rec.continuous=!forceStable&&($('mode').value==='1'||recOn());
+ rec.continuous=!forceStable&&($('mode').value==='1'||rmode()==='1');
  rec.interimResults=true;
  rec.maxAlternatives=1;
  rec.onstart=function(){
@@ -333,8 +343,14 @@ function begin(){
  try{rec.start()}catch(x){log('시작 실패: '+x.message);stop(true)}
 }
 function start(){
- if(!SR)return;
  stopPlay();
+ if(rmode()==='2'){
+  listening=true;mic.textContent='⏹ 말하기 끝내기';mic.classList.add('on');
+  setStatus('내 목소리를 녹음하고 있습니다.\n끝나면 아래 버튼을 누르세요.','rec');
+  startRecorder(function(){});
+  return;
+ }
+ if(!SR)return;
  base=txt.value?txt.value.replace(/\s+$/,'')+' ':'';
  finalText='';errCount=0;recStarted=false;gotResult=false;forceStable=false;
  begin();
@@ -351,6 +367,7 @@ mic.onclick=function(){listening?stop():start()};
 function doSave(){
  if(flushing){pendingSave=true;return}
  var t=txt.value.trim();
+ if(!t&&curBlobs.length)t='(내 목소리 일기)';
  if(!t){setStatus('저장할 글이 없습니다.','bad');return}
  var id=Date.now();
  var blobs=curBlobs.slice();
@@ -368,8 +385,8 @@ $('clear').onclick=function(){if(listening)stop();txt.value='';curBlobs=[];base=
 $('read').onclick=function(){
  if(listening)stop();
  var t=txt.value.trim();
- if(!t){setStatus('읽을 글이 없습니다.','bad');return}
- if(flushing){setTimeout(function(){readText(t,curBlobs)},400)}
+ if(!t&&!curBlobs.length&&!flushing){setStatus('읽을 글이나 녹음이 없습니다.','bad');return}
+ if(flushing){setTimeout(function(){readText(t,curBlobs)},500)}
  else readText(t,curBlobs);
 };
 
