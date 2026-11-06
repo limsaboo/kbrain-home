@@ -4,22 +4,25 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="robots" content="noindex,nofollow">
-<title>말서재 · 음성 일기장 (시험판 v1.7)</title>
+<title>말서재 · 음성 일기장 (시험판 v1.8)</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:"Noto Sans KR",system-ui,sans-serif;background:#FFF4D6;color:#111;font-size:20px;line-height:1.9;font-weight:700;padding:12px 12px 40px}
+body{font-family:"Noto Sans KR",system-ui,sans-serif;background:#FFF4D6;color:#111;font-size:20px;line-height:1.9;font-weight:700;padding:12px 12px 40px;word-break:keep-all;overflow-wrap:break-word}
+#status,.note,.lab,.box h2,.top p,.top h1,.mon{text-wrap:balance}
+.note,.lab{text-align:left}
+textarea{word-break:keep-all}
 .top{background:#D50000;color:#fff;border-radius:18px;padding:16px;text-align:center;margin-bottom:12px}
 .top h1{font-size:26px;line-height:1.5;font-weight:900}
 .top p{font-size:17px;line-height:1.7}
 .box{background:#fff;border:4px solid #0033CC;border-radius:18px;padding:14px;margin-bottom:12px}
 .box h2{font-size:21px;line-height:1.6;color:#0033CC;margin-bottom:6px;font-weight:900}
-#status{background:#00A651;color:#fff;border-radius:14px;padding:10px 12px;text-align:center;font-size:19px;line-height:1.7;margin-bottom:10px;font-weight:900}
+#status{white-space:pre-line;background:#00A651;color:#fff;border-radius:14px;padding:10px 12px;text-align:center;font-size:19px;line-height:1.7;margin-bottom:10px;font-weight:900}
 #status.bad{background:#D50000}
 #status.rec{background:#FF6A00}
 .mic{display:block;width:100%;border:none;border-radius:60px;background:#D50000;color:#fff;font-size:30px;font-weight:900;line-height:1.5;padding:26px 10px;margin-bottom:10px}
 .mic.on{background:#FF6A00}
 .row{display:flex;gap:8px;margin-bottom:10px}
-.row button{flex:1;border:none;border-radius:16px;font-size:20px;font-weight:900;line-height:1.5;padding:16px 4px;color:#fff}
+.row button{flex:1;border:none;border-radius:16px;font-size:19px;font-weight:900;line-height:1.5;padding:16px 2px;color:#fff;white-space:nowrap}
 .b-save{background:#00A651}.b-read{background:#0033CC}.b-clear{background:#7A00CC}
 .moods{display:flex;gap:6px;margin-bottom:10px}
 .moods button{flex:1;border:3px solid #0033CC;background:#fff;border-radius:14px;font-size:30px;line-height:1.4;padding:6px 0}
@@ -29,21 +32,21 @@ select{width:100%;border:3px solid #0033CC;border-radius:14px;font-size:20px;fon
 .lab{font-size:18px;line-height:1.7;color:#D50000;font-weight:900}
 .entry{border:3px solid #00A651;border-radius:14px;padding:10px;margin-bottom:10px;background:#F2FFF7}
 .entry .d{color:#D50000;font-size:18px;line-height:1.6;font-weight:900}
-.entry .t{font-size:20px;line-height:1.9;white-space:pre-wrap;word-break:break-all}
+.entry .t{font-size:20px;line-height:1.9;white-space:pre-wrap;word-break:keep-all;overflow-wrap:anywhere}
 .entry .a{display:flex;gap:6px;margin-top:6px}
 .entry .a button{flex:1;border:none;border-radius:12px;font-size:17px;font-weight:900;padding:10px 2px;color:#fff;line-height:1.4}
 .mon{background:#0033CC;color:#fff;border-radius:12px;padding:6px 12px;font-size:20px;line-height:1.6;margin:8px 0;font-weight:900}
 .dl{display:block;width:100%;border:none;border-radius:16px;background:#FF6A00;color:#fff;font-size:21px;font-weight:900;line-height:1.5;padding:16px;margin-top:6px}
 .note{font-size:16px;line-height:1.8;color:#111}
-#live{font-size:15px;line-height:1.6;color:#7A00CC;font-weight:900;margin-bottom:8px;word-break:break-all}
-#diag{font-size:16px;line-height:1.8;word-break:break-all}
+#live{font-size:15px;line-height:1.6;color:#7A00CC;font-weight:900;margin-bottom:8px;word-break:keep-all;overflow-wrap:anywhere;text-align:left}
+#diag{font-size:16px;line-height:1.8;word-break:keep-all;overflow-wrap:anywhere;text-align:left}
 </style>
 </head>
 <body>
 
 <div class="top">
 <h1>말서재 · 음성 일기장</h1>
-<p>한국뇌심리연구소 부설 · 시험판 v1.7</p>
+<p>한국뇌심리연구소 부설 · 시험판 v1.8</p>
 </div>
 
 <div class="box">
@@ -254,7 +257,7 @@ log('주소: '+location.protocol+'//'+(location.host||'(파일)'));
 log('음성인식 지원: '+(SR?'예':'아니오'));
 log('녹음 지원: '+(window.MediaRecorder?'예':'아니오'));
 if(!SR){setStatus('이 브라우저는 음성 입력이 안 됩니다. 크롬으로 열어 주세요.','bad');mic.disabled=true}
-else setStatus('준비됐습니다. 빨간 버튼을 누르세요.');
+else setStatus('준비됐습니다.\n빨간 버튼을 누르세요.');
 openDB();
 
 function build(){
