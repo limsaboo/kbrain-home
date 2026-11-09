@@ -158,7 +158,7 @@
     .insight-item { padding: 6px 0; font-size: 11px; font-weight: 700; color: #333; }
     .insight-item:last-child { border-bottom: none; }
     .insight-item.strength:before { content: "✓ "; color: #4CAF50; margin-right: 4px; font-weight: 900; }
-    .insight-item.weakness:before { content: "⚠ "; color: #FF9800; margin-right: 4px; font-weight: 900; }
+    .insight-item.weakness:before { content: "🌱 "; color: #FF9800; margin-right: 4px; font-weight: 900; }
 
     .roadmap-box { background: #f5f5f5; border-radius: 12px; padding: 12px; margin-bottom: 12px; }
     .roadmap-item { padding: 6px 0; font-size: 11px; color: #333; }
@@ -317,6 +317,38 @@
     }
 
     .print-section { display: none; }
+
+    /* ===== 어르신용 모드 (큰 글씨 · 넉넉한 시간) ===== */
+    .mode-group { display: flex; gap: 8px; margin-bottom: 16px; }
+    .mode-btn { flex: 1; padding: 12px 6px; border: 2px solid #DDD; border-radius: 12px; background: #fff; font-size: 14px; font-weight: 800; color: #333; cursor: pointer; line-height: 1.4; }
+    .mode-btn.on { border-color: #00BCD4; background: linear-gradient(135deg, #E0F7FA 0%, #B2EBF2 100%); color: #00695C; }
+    @media screen {
+      body.senior .header-title p { font-size: 20px; }
+      body.senior .input-group label { font-size: 20px; }
+      body.senior .input-group input, body.senior .input-group select { font-size: 22px; padding: 16px; }
+      body.senior .info-box { font-size: 18px; line-height: 1.8; }
+      body.senior .mode-btn { font-size: 18px; padding: 16px 6px; }
+      body.senior #questionScreen.active { padding: 16px 14px; }
+      body.senior .question-num { font-size: 17px; }
+      body.senior .domain-tag { font-size: 17px; padding: 5px 14px; }
+      body.senior #quickHint { font-size: 17px !important; }
+      body.senior .timer-circle { width: 72px; height: 72px; font-size: 34px; }
+      body.senior .stimulus-container { height: 190px; }
+      body.senior .stimulus-svg { max-width: 170px; max-height: 170px; }
+      body.senior .question-text { font-size: 22px; line-height: 1.5; padding: 12px; }
+      body.senior .choices { gap: 12px; }
+      body.senior .choice-btn { font-size: 21px; min-height: 64px; padding: 12px 8px; }
+      body.senior .btn { font-size: 20px; padding: 18px; }
+      body.senior .result-content * { font-size: 16px !important; line-height: 1.7 !important; }
+      body.senior .result-content .section-title { font-size: 20px !important; }
+      body.senior .result-content .domain-name { font-size: 19px !important; }
+      body.senior .result-content .domain-score { font-size: 22px !important; }
+      body.senior .result-content .brain-age-number { font-size: 64px !important; line-height: 1.2 !important; }
+      body.senior .result-content .brain-age-label { font-size: 18px !important; }
+      body.senior .result-content .status-badge { font-size: 20px !important; }
+      body.senior .result-content .btn { font-size: 20px !important; }
+    }
+
   </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
@@ -328,13 +360,14 @@
         <h1>BHC 5.0</h1>
         <p>뇌 건강 체크 시스템</p>
       </div>
-      <div class="info-box">
+      <div class="info-box" id="startInfo">
         <strong>🧪 검사 방법</strong><br>
         • 총 48개 문항 (약 7~8분 소요)<br>
         • 각 문항당 7~10초 시간 제한<br>
         • 시간이 끝나면 자동으로 다음 문항으로 진행<br>
         • 직관적으로 빠르게 응답해주세요<br>
-        • 깊게 생각하지 않고 첫 느낌으로 선택하세요
+        • 깊게 생각하지 않고 첫 느낌으로 선택하세요<br>
+        • 진단이 아닌 재미있는 뇌 체험 활동입니다
       </div>
       <div class="input-group">
         <label>이름</label>
@@ -352,6 +385,10 @@
           <option value="F">여성</option>
         </select>
       </div>
+      <div class="mode-group">
+        <button type="button" class="mode-btn on" id="modeNormal" onclick="setMode(false)">일반</button>
+        <button type="button" class="mode-btn" id="modeSenior" onclick="setMode(true)">👵 어르신용<br>(큰 글씨·천천히)</button>
+      </div>
       <button class="btn btn-primary" onclick="startTest()">시작</button>
     </div>
 
@@ -361,8 +398,7 @@
       <div class="question-header">
         <div class="question-num" id="questionNum">Q. 1/48</div>
         <div class="domain-tag" id="domainTag">기억</div>
-        <div class="mechanism-label" id="mechanismLabel">DMN</div>
-        <div style="font-size: 11px; color: #00897B; margin-top: 6px; font-weight: 700;">💡 직관적으로 빠르게 선택하세요</div>
+        <div id="quickHint" style="font-size: 11px; color: #00897B; margin-top: 6px; font-weight: 700;">💡 직관적으로 빠르게 선택하세요</div>
       </div>
       <div class="timer-section"><div class="timer-circle" id="timerCircle">3</div></div>
       <div class="stimulus-container"><svg class="stimulus-svg" id="stimulusSvg" viewBox="0 0 240 240"></svg></div>
@@ -374,10 +410,10 @@
     <!-- 결과 화면 -->
     <div id="resultScreen" class="screen result-container">
       <div class="result-header">
-        <div class="result-title">검사 완료</div>
+        <div class="result-title">내 뇌 사용설명서<br>도착했어요 🎉</div>
       </div>
       <div class="result-content">
-        <div class="section-title">🧠 뇌 나이 분석</div>
+        <div class="section-title">🧠 내 뇌, 지금 몇 살?</div>
         <div class="brain-age-box" id="brainAgeBox">
           <div class="brain-age-label">당신의 뇌 나이는</div>
           <div class="brain-age-number" id="brainAge">00</div>
@@ -408,7 +444,7 @@
         <div class="section-title">🏆 강점 (TOP 3)</div>
         <div class="insight-box" id="strengthAnalysis"></div>
 
-        <div class="section-title">⚠️ 개선 필요 (TOP 3)</div>
+        <div class="section-title">🌱 키우면 좋은 영역 (TOP 3)</div>
         <div class="insight-box" id="weaknessAnalysis"></div>
 
         <div class="section-title">📈 뇌나이 상세 분석</div>
@@ -417,21 +453,14 @@
         <div class="section-title">🗓️ 성장 로드맵</div>
         <div class="roadmap-box" id="roadmap"></div>
 
-        <div class="section-title">🧬 신경과학 근거</div>
+        <div class="section-title">🧬 뇌과학 참고 정보</div>
         <div class="neuroscience-box" id="neuroscience"></div>
 
         <div class="section-title">✅ 권고사항</div>
         <div class="recommendation-box" id="recommendations"></div>
 
-        <!-- [KB-001 우선조치②] 결과 후 다음 단계 CTA 1개 (결과 계산 로직 무수정, 2026-10-03) -->
-        <div class="next-step-box" style="background:#E0F7FA;border:2px solid #00897B;border-radius:12px;padding:14px;margin:4px 0 14px;">
-          <div style="font-weight:900;color:#00695C;font-size:16px;margin-bottom:6px;">👉 다음 단계</div>
-          <p style="margin:0 0 10px;color:#003D33;font-weight:700;line-height:1.7;">위 ‘개선 필요’ 영역을 하루 10분씩 꾸준히 연습해 보세요. 무료 뇌훈련 프로그램에서 바로 시작할 수 있습니다.</p>
-          <a href="/brain_training.html?from=bhc_result" class="btn btn-primary" style="display:block;text-align:center;text-decoration:none;margin-bottom:0;">🧠 BHC 뇌훈련 무료로 시작하기</a>
-        </div>
-
         <div class="button-group">
-          <a href="brainmind.html" class="btn btn-secondary" style="display:block;text-align:center;text-decoration:none;">🎵 BrainMind 무료 감상실 가기</a>
+          <a href="brainmind.html" class="btn btn-primary" style="display:block;text-align:center;text-decoration:none;background:linear-gradient(135deg,#0E8F86,#0a6e67);">🎵 BrainMind 무료 감상실 가기</a>
           <button class="btn btn-primary" onclick="printReport()">📄 인쇄/PDF</button>
           <button class="btn btn-secondary" onclick="restartTest()">다시</button>
           <button class="btn btn-secondary" onclick="goToStart()">처음</button>
@@ -445,6 +474,26 @@
     let answers = [];
     let userData = {};
     let timerInterval = null;
+
+    let seniorMode = false;
+    let startInfoNormalHtml = null;
+
+    function setMode(isSenior) {
+      seniorMode = !!isSenior;
+      document.body.classList.toggle('senior', seniorMode);
+      document.getElementById('modeNormal').classList.toggle('on', !seniorMode);
+      document.getElementById('modeSenior').classList.toggle('on', seniorMode);
+      var info = document.getElementById('startInfo');
+      if (startInfoNormalHtml === null) startInfoNormalHtml = info.innerHTML;
+      if (seniorMode) {
+        info.innerHTML = '<strong>🧪 검사 방법</strong><br>• 총 48개 문항 (약 15분 소요)<br>• 문항마다 20초 안에 골라 주세요<br>• 시간이 지나면 다음으로 넘어갑니다<br>• 편안하게, 눈에 보이는 대로 선택하세요<br>• 진단이 아닌 재미있는 뇌 체험 활동입니다';
+        document.getElementById('quickHint').textContent = '💡 천천히 편하게 선택하세요';
+      } else {
+        info.innerHTML = startInfoNormalHtml;
+        document.getElementById('quickHint').textContent = '💡 직관적으로 빠르게 선택하세요';
+      }
+    }
+    try { if (new URLSearchParams(location.search).get('mode') === 'senior') setMode(true); } catch (e) {}
 
     const DOMAINS = ['기억', '속도', '집중', '감정', '판단', '실행', '조절', '공간'];
 
@@ -626,7 +675,6 @@
       document.getElementById('progressBar').style.width = progress + '%';
       document.getElementById('questionNum').textContent = `Q. ${currentIdx + 1}/48`;
       document.getElementById('domainTag').textContent = q.domain;
-      document.getElementById('mechanismLabel').textContent = q.mechanism;
       document.getElementById('questionText').textContent = q.q;
 
       renderSvg();
@@ -645,7 +693,7 @@
 
     function startTimer() {
       clearInterval(timerInterval);
-      const randomTime = Math.random() < 0.5 ? 7 : 10; // 7~10초 (충분한 시간)
+      const randomTime = seniorMode ? 20 : (Math.random() < 0.5 ? 7 : 10); // 일반 7~10초 / 어르신용 20초
       let remaining = randomTime;
       
       const update = () => {
@@ -659,13 +707,10 @@
         if (remaining < 0) {
           clearInterval(timerInterval);
           if (answers[currentIdx] === undefined) {
-            // 시간 끝났을 때 첫 번째 선택 자동 선택
-            selectChoice(0);
-            // 500ms 후 다음 문항으로 진행 (사용자가 인식할 수 있도록)
-            setTimeout(() => {
-              console.log('자동으로 다음 문항으로 진행합니다');
-              nextQuestion();
-            }, 500);
+            // 시간 초과: 무응답(-1)으로 기록하고 다음 문항으로 (자동 정답 처리 방지)
+            answers[currentIdx] = -1;
+            document.getElementById('nextBtn').disabled = false;
+            setTimeout(() => { nextQuestion(); }, 500);
           }
         }
       };
@@ -792,35 +837,36 @@
 
       const ageDifference = brainAge - userData.age;
       let statusClass = 'normal';
-      let statusText = '✅ 정상';
+      let statusText = '✅ 균형형';
       let messageText = '';
 
       // 판정 기준을 화면에 표시되는 '나이 차이(ageDifference)'로 통일
       // (이전 버전은 avg 기준으로 별도 판정하여, 차이가 0세인데도 '주의'가 뜨는 모순이 있었음 — 수정함)
       if (ageDifference <= -3) {
         statusClass = 'normal';
-        statusText = '✅ 우수';
-        messageText = '전반적인 인지 기능이 매우 우수한 상태입니다';
+        statusText = '✅ 우수형';
+        messageText = '여러 영역이 활발하게 쓰이는 모습이에요';
       } else if (ageDifference <= 2) {
         statusClass = 'normal';
-        statusText = '✅ 정상';
+        statusText = '✅ 균형형';
         messageText = '현재 수준을 유지해 주세요';
       } else if (ageDifference <= 5) {
         statusClass = 'caution';
-        statusText = '⚠️ 보통';
+        statusText = '🔶 성장 여지형';
         messageText = '약한 영역 중심의 인지 활동을 권장합니다';
       } else if (ageDifference <= 8) {
         statusClass = 'warning';
-        statusText = '⚠️ 주의';
-        messageText = '보완 훈련을 시작해 보세요';
+        statusText = '🔶 활동 추천형';
+        messageText = '약한 영역 활동을 시작해 보세요';
       } else {
         statusClass = 'danger';
-        statusText = '🔴 관심 필요';
-        messageText = '전문기관 상담을 권장합니다';
+        statusText = '🔶 집중 활동형';
+        messageText = '꾸준한 활동으로 변화를 확인해 보세요. 마음에 걸리면 담당 선생님과 이야기 나눠 보세요';
       }
 
       // 결과 저장 (실패해도 화면에 영향 없음)
-      try { saveBhcResult(avgScores, avg, brainAge, statusText); } catch (e) { console.warn(e); }
+      const legacyGrade = ageDifference <= -3 ? '우수' : ageDifference <= 2 ? '정상' : ageDifference <= 5 ? '보통' : ageDifference <= 8 ? '주의' : '관심 필요';
+      try { saveBhcResult(avgScores, avg, brainAge, legacyGrade); } catch (e) { console.warn(e); }
       // BrainMind 감상실 게이트 해제 — 검사를 실제로 완료했다는 표시
       try { localStorage.setItem('bhc_test_completed', 'true'); } catch (e) { console.warn(e); }
 
@@ -891,47 +937,61 @@
           <strong>기준 참고값 비교:</strong> 나의 점수 ${Math.round(avg)}점 / 기준 참고값 ${REF_BASELINE}점 → <span style="color:${overallDev>=0?'#0E8F86':'#D6820A'};font-weight:800;">${overallDevText}</span><br>
           <span style="font-size:10px;color:#888;">※ 위 기준 참고값은 본 검사(BHC)의 자체 환산 기준이며, 통계적으로 조사된 또래 실측 평균이 아닙니다. BHC는 자체 개발한 자기이해 교육 도구로, 표준화된 규준 데이터가 존재하지 않습니다.</span><br><br>
           <strong>의미:</strong> 뇌 건강도 ${Math.round(avg)}점으로, 실제 나이 대비 ${ageDifference > 0 ? ageDifference + '세 높은' : (ageDifference < 0 ? (-ageDifference) + '세 낮은' : '동일한')} 수준입니다. (교육용 환산 지표이며 의학적 판정이 아닙니다.)<br><br>
-          <strong>신경가소성을 통한 개선:</strong><br>
-          • 현재 상태 유지 시: ${brainAge + 8}세 수준으로 진행<br>
-          • 인지 훈련 시작 시: 3개월 내 ${Math.max(brainAge - 5, brainAge - 7)}세 개선<br>
-          • 지속적 훈련 시: 6개월 내 정상 수준 회복 가능
+          <strong>변화 확인하기:</strong><br>
+          • 약한 영역 중심의 활동을 꾸준히 이어가 보세요<br>
+          • 3개월 후 다시 체크해서 변화를 비교해 보세요
         </div>
       `;
       document.getElementById('brainAgeAnalysis').innerHTML = brainAgeAnalysis;
 
-      // 성장 로드맵
-      // gap = 뇌나이가 실제나이보다 많은 정도(개선이 필요한 만큼). 이미 정상/우수하면 0으로 처리.
-      const roadmapGap = Math.max(brainAge - userData.age, 0);
-      let t3, t6, t12, label12;
-      if (roadmapGap === 0) {
-        t3 = t6 = t12 = brainAge;
-        label12 = brainAge + '세 수준 유지 (이미 정상 범위)';
-      } else {
-        t3 = brainAge - Math.max(1, Math.round(roadmapGap * 0.3));
-        t6 = brainAge - Math.max(1, Math.round(roadmapGap * 0.6));
-        t12 = userData.age;
-        label12 = t12 + '세 수준 (정상화)';
-      }
+      // 성장 로드맵 (동기부여형: 이 검사의 환산 기준으로 '다음 체크 목표 뇌 나이'를 단계별로 제시. 실제 뇌 변화를 약속하는 문구는 쓰지 않음)
+      const DOMAIN_TIP = {
+        '기억': '오늘 있었던 일 세 가지를 소리 내어 말해 보기',
+        '속도': '끝말잇기·숫자 세기 게임을 하루 5분 즐기기',
+        '집중': '한 가지 일에 10분 푹 빠져 보는 시간 만들기',
+        '감정': '하루 한 번, 오늘 기분을 한 줄로 적어 보기',
+        '판단': '퍼즐·장기·바둑 같은 규칙 놀이 즐기기',
+        '실행': '내일 할 일 세 가지를 미리 적고 해내기',
+        '조절': '천천히 숨 쉬며 3분 멈춤 시간 갖기',
+        '공간': '산책길을 그림으로 그려 보고 퍼즐 맞추기'
+      };
       const todayStr = new Date().toISOString().slice(0, 10);
+      const w1 = sorted[sorted.length - 1];
+      const w2 = sorted[sorted.length - 2];
+      const s1 = sorted[0];
+      // 이 검사에서 만점(평균 100점)일 때 나오는 뇌 나이 = 실제 나이 - 6세 (환산식 한계)
+      const bestAge = Math.max(20, userData.age - Math.round((100 - 70) * 0.2));
+      const gapToBest = Math.max(brainAge - bestAge, 0);
+      const d3 = gapToBest === 0 ? 0 : Math.min(gapToBest, Math.max(1, Math.round(gapToBest * 0.4)));
+      const d6 = gapToBest === 0 ? 0 : Math.min(gapToBest, Math.max(d3, Math.round(gapToBest * 0.7)));
+      // 목표 뇌 나이에 닿기 위해 필요한 평균 점수 (환산식: 나이 - round((평균-70)*0.2))
+      const needAvg = (d) => Math.min(100, Math.ceil(70 + 5 * (userData.age - (brainAge - d)) - 2.5));
+      const scoreTxt = (d) => d === 0 ? '지금 점수 유지' : `목표 점수: 평균 ${needAvg(d)}점 (지금 ${Math.round(avg)}점)`;
+      const goalTxt = (d, age) => d === 0 ? `뇌 나이 ${age}세 유지 도전` : `뇌 나이 <strong>${age - d}세</strong> 도전 (-${d}세)`;
 
       const roadmap = `
-        <div style="font-size: 11px; line-height: 1.6;">
+        <div style="font-size: 11px; line-height: 1.7;">
+          <div style="font-size:12px;font-weight:800;color:#00695C;margin-bottom:8px;">한 걸음씩, 나만의 뇌 성장 여정 🌟</div>
           <div class="roadmap-item">
-            <span class="roadmap-time">현재 (${todayStr}):</span><br>
-            <span class="roadmap-goal">뇌 나이 ${brainAge}세</span>
+            <span class="roadmap-time">🌱 지금 (${todayStr})</span><br>
+            <span class="roadmap-goal">뇌 나이 ${brainAge}세 · ${w1.score >= 100 ? '모든 영역 만점!' : '가장 키울 영역은 <strong>' + w1.domain + '</strong> (' + w1.score + '%)'}<br>이 검사의 최고 기록은 <strong>${bestAge}세</strong>예요. 도전해 볼까요?</span>
           </div>
           <div class="roadmap-item">
-            <span class="roadmap-time">3개월 후:</span><br>
-            <span class="roadmap-goal">목표: ${t3}세 수준</span>
+            <span class="roadmap-time">🌿 3개월 후 목표</span><br>
+            <span class="roadmap-goal">${goalTxt(d3, brainAge)}<br>${scoreTxt(d3)}<br>집중 영역: ${w1.domain}<br>오늘 해볼 일: ${DOMAIN_TIP[w1.domain]}</span>
           </div>
           <div class="roadmap-item">
-            <span class="roadmap-time">6개월 후:</span><br>
-            <span class="roadmap-goal">목표: ${t6}세 수준</span>
+            <span class="roadmap-time">🌳 6개월 후 목표</span><br>
+            <span class="roadmap-goal">${goalTxt(d6, brainAge)}<br>${scoreTxt(d6)}<br>집중 영역: ${w2.domain}<br>오늘 해볼 일: ${DOMAIN_TIP[w2.domain]}</span>
           </div>
           <div class="roadmap-item">
-            <span class="roadmap-time">12개월 후:</span><br>
-            <span class="roadmap-goal">목표: ${label12}</span>
+            <span class="roadmap-time">🏆 12개월 후 목표</span><br>
+            <span class="roadmap-goal">${goalTxt(gapToBest, brainAge)}<br>${scoreTxt(gapToBest)}<br>${gapToBest === 0 ? '최고 기록을 지켜 내세요!' : '이 검사 최고 기록에 도전!'}<br>${s1.score >= 50 ? '강점 <strong>' + s1.domain + '</strong> (' + s1.score + '%)은 계속 뽐내세요!' : '잘 풀린 문제를 하나씩 늘려 가요!'}</span>
           </div>
+          <div style="margin-top:8px;padding:8px 10px;background:#E0F7FA;border-radius:8px;font-weight:700;color:#00695C;">
+            3개월마다 다시 체크해서<br>목표에 얼마나 가까워졌는지 확인해 보세요!
+          </div>
+          <div style="margin-top:6px;font-size:10px;color:#888;">※ 목표 뇌 나이는 이 검사의 점수 환산 기준입니다.</div>
         </div>
       `;
       document.getElementById('roadmap').innerHTML = roadmap;
