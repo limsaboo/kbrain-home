@@ -3,7 +3,6 @@ Allow: /
 Disallow: /admin.html
 Disallow: /admin-analytics.html
 Disallow: /admin-manifest.json
-Disallow: /bhc-admin-dashboard.html
 Disallow: /bhc-backup-20260822.html
 Disallow: /bhc-backup-b-20260822.html
 Disallow: /bhc-prod-system.html
