@@ -183,7 +183,7 @@ set search_path = public
 as $$
 declare v_id bigint;
 begin
-  if pw is distinct from 'brain2025!' then
+  if pw is distinct from '__ADMIN_PW__' then
     return json_build_object('ok', false, 'error', '비밀번호 불일치');
   end if;
   if p_id is null or p_id = 0 then
@@ -208,7 +208,7 @@ language sql
 security definer
 set search_path = public
 as $$
-  select case when pw is distinct from 'brain2025!' then '[]'::json
+  select case when pw is distinct from '__ADMIN_PW__' then '[]'::json
     else coalesce((select json_agg(t) from (
       select id, category, title, body, link_url, starts_on, ends_on,
              is_published, created_at
