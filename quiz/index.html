@@ -14,7 +14,7 @@ body{max-width:480px;margin:0 auto;min-height:100vh;overflow-x:hidden;word-break
 button{font-family:inherit;border:0;cursor:pointer}
 .scr{display:none;padding:18px 16px 36px}
 .scr.on{display:block}
-#s-start.on,#s-quiz.on{display:flex;flex-direction:column;min-height:100vh}
+#s-start.on,#s-quiz.on{display:flex;flex-direction:column;min-height:min(100vh,900px)}
 #s-quiz .acard{flex:1;display:flex;flex-direction:column}
 #s-quiz .opts{flex:1;align-content:space-evenly}
 .nw{white-space:nowrap}
@@ -25,7 +25,7 @@ button{font-family:inherit;border:0;cursor:pointer}
 .ttl{margin-top:14px;text-align:center;font-size:46px;font-weight:900;line-height:1.25;color:var(--tealD);white-space:nowrap}
 .sub{margin-top:8px;text-align:center;font-size:21px;font-weight:900;color:var(--orangeD);white-space:nowrap}
 .ask{margin-top:22px;text-align:center;font-size:21px;font-weight:900;white-space:nowrap}
-.gender{margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:12px;flex:1;min-height:250px}
+.gender{margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:12px;flex:1;min-height:250px;max-height:430px}
 .gcard{position:relative;border-radius:26px;border:5px solid;padding:0;height:100%;min-height:250px;overflow:hidden;text-align:left}
 .gcard.m{background:#D6ECFF;border-color:#7DBEF5}
 .gcard.f{background:#FFDCEA;border-color:#F59BC2}
