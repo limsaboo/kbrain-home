@@ -145,7 +145,7 @@ const QUIZ_URL='https://k-brain.co.kr/quiz/'; /* 퀴즈를 인터넷에 올리�
 function rr(c,x,y,w,h,r){c.beginPath();c.moveTo(x+r,y);c.arcTo(x+w,y,x+w,y+h,r);c.arcTo(x+w,y+h,x,y+h,r);c.arcTo(x,y+h,x,y,r);c.arcTo(x,y,x+w,y,r);c.closePath()}
 function loadImg(src){return new Promise((ok,no)=>{const im=new Image();im.onload=()=>ok(im);im.onerror=no;im.src=src})}
 async function buildCard(o){
- const W=1080,H=1560,cv=document.createElement('canvas');cv.width=W;cv.height=H;const c=cv.getContext('2d');
+ const W=1080,NL=o.T.d.split('<br>').length,H=1560+(NL-3)*68,cv=document.createElement('canvas');cv.width=W;cv.height=H;const c=cv.getContext('2d');
  const F='"Noto Sans KR","Malgun Gothic","Apple SD Gothic Neo",sans-serif',m=o.G==='m';
  const bg=m?'#D6ECFF':'#FFDDEA',bd=m?'#7FB8F5':'#F29BBE';
  c.fillStyle='#fff';c.fillRect(0,0,W,H);
