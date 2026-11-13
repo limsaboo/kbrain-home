@@ -272,6 +272,7 @@ h2,.s{text-wrap:balance}
 .admd{font-size:14px;font-weight:800;color:#fff;line-height:1.7;margin:6px 0 8px}
 .admcode{font-size:30px;font-weight:900;color:#fff;text-align:center;letter-spacing:3px;margin:10px 0}
 .admbox .btn{height:56px;line-height:56px;font-size:17px}
+.bank{margin-top:8px;border:2px solid #FFC83D;border-radius:12px;padding:8px 10px;font-size:15px;font-weight:900;color:#FFE08A;line-height:1.6;white-space:nowrap;text-align:center}
 </style>
 </head>
 <body>
@@ -779,6 +780,7 @@ function bindCommon(){
 
 /* ===== 이름·작명·유료 풀이 모듈 (Lim's Brain Group · 사주·작명 챕터) ===== */
 const KBG_SALT="KBG-saju-2026-ZxQ9m4";            /* 바꾸면 이전 코드가 모두 무효 · 발급기 파일과 반드시 같아야 함 */
+const BANK_TXT="농협 39612003391 (예금주 임찬우)";
 const KAKAO_URL="https://open.kakao.com/o/sUbgNQWi";
 const PRODUCTS=[
  {id:"name",ico:"📝",t:"이름 사이다 풀이 (전체)",d:"내 이름이 사주를 돕는지 글자·소리·획수까지 팩트로",p:2900},
@@ -1174,7 +1176,7 @@ function renderName(p){
 const MENU_SEL=new Set();
 function menuHTML(p){
   const rows=PRODUCTS.map(x=>'<div class="prod'+(x.id==="all"?" pkg":"")+'" data-id="'+x.id+'" role="checkbox" aria-checked="false" tabindex="0"><span class="ck"></span><span class="pt"><b>'+x.ico+' '+x.t+'</b><small>'+x.d+'</small></span><span class="pp" id="pp_'+x.id+'">'+won(x.p)+'</span></div>').join("");
-  return '<div class="card full" id="menu"><h2>🛒 풀이 메뉴 · 필요한 것만 골라요</h2><div class="teaser" style="font-size:15px">가격은 임시예요 · 신청하면 입금 확인 후 해제코드를 보내 드려요</div>'
+  return '<div class="card full" id="menu"><h2>🛒 풀이 메뉴 · 필요한 것만 골라요</h2><div class="teaser" style="font-size:15px">신청하면 입금 확인 후<br>해제코드를 보내 드려요</div><div class="bank">입금 계좌 · '+BANK_TXT+'</div>'
    +'<label>내 이름 (이름·작명 풀이용)</label><input id="nm_in" class="in" type="text" maxlength="5" placeholder="예: 김민준" autocomplete="off" value="'+(p.name?p.name.full:"")+'">'
    +(isAdmin()?admBox(p):'')
    +'<div class="plist">'+rows+'</div>'
@@ -1205,7 +1207,7 @@ function applyText(p){
   const ids=[...MENU_SEL],all=ids.includes("all"),use=all?["all"]:ids,sum=use.reduce((s,i)=>s+PROD_BY[i].p,0),nm=curName();
   const lun=p.lun?"음력 "+p.lun.y+"."+(p.lun.leap?"윤":"")+p.lun.m+"."+p.lun.d:"";
   return "[한국뇌궁합연구소 풀이 신청]\n신청: "+use.map(i=>PROD_BY[i].t).join(", ")+"\n금액: "+won(sum)+" (임시가)\n성별: "+p.who_t+"\n양력 생일: "+p.sol.y+"-"+pad2(p.sol.m)+"-"+pad2(p.sol.d)+(lun?" ("+lun+")":"")
-   +"\n태어난 시간: "+(p.hIdx==null?"모름":SIJIN[p.hIdx][0])+"\n이름: "+(nm?nm.full:"(미입력)")+"\n\n입금 확인 후 해제코드를 받으면 이 화면에서 ‘해제코드’ 칸에 넣어 주세요.";
+   +"\n태어난 시간: "+(p.hIdx==null?"모름":SIJIN[p.hIdx][0])+"\n이름: "+(nm?nm.full:"(미입력)")+"\n\n입금 계좌: "+BANK_TXT+"\n입금 확인 후 해제코드를 받으면 이 화면에서 ‘해제코드’ 칸에 넣어 주세요.";
 }
 function recalcMenu(p){
   const un=getUnlocked(p),allOpen=un.includes("all");
