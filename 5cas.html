@@ -353,9 +353,9 @@ function pairInfo(A,B){
   function low(P){var m=0,i;for(i=1;i<5;i++){if(P.s[i]<P.s[m])m=i;}return m;}
   var a=low(A),b=low(B),F=A,M=B,fi=a,mi=b;
   if(A.g==='남'&&B.g==='여'){F=B;M=A;fi=b;mi=a;}
-  var title=(fi===mi)?SAMEN[fi]:(NICK[fi]+'과 '+NICK[mi]);
+  var title=(fi===mi)?SAMEN[fi]:(NICK[fi]+(((NICK[fi].charCodeAt(NICK[fi].length-1)-0xAC00)%28)?'과 ':'와 ')+NICK[mi]);
   var book='';
-  if(A.g!==B.g){book=(fi===0)?'📘 책 『조절력 브레이크』 1권 '+VOLN[0]+' '+(mi+1)+'편 「'+title+'」 이야기':'📘 『조절력 브레이크』 시리즈 '+(fi+1)+'권 '+VOLN[fi]+' — 준비 중';}
+  if(A.g!==B.g){book='📘 『우리, 왜 멈추지 못할까?』 제'+(fi+2)+'부 '+VOLN[fi]+' '+(mi+1)+'편 「'+title+'」 이야기';}
   return {title:title,book:book,a:a,b:b};
 }
 
@@ -608,6 +608,7 @@ function renderPair(){
     $('b-invite').onclick=function(){shareLink([ME],ME.n+'님이 5대 조절력 비교를 보냈어요. 눌러서 검사하면 우리 두 사람의 조절력이 겹쳐 보여요.');};
   }
 }
+function eunneun(n){var c=String(n).charCodeAt(String(n).length-1)-0xAC00;return (c>=0&&c<11172&&c%28)?'은':'는';}
 var DIFF_T={
   anger:'{H}은(는) 화를 눌러 두는 편이고, {L}은(는) 화가 바로 겉으로 나오는 편입니다. 서로 “왜 저렇게 쉽게 화내지”, “왜 말이 없지”로 오해하기 쉽습니다.',
   decision:'{H}은(는) 빨리 결정하고, {L}은(는) 오래 재 봅니다. 한쪽은 “왜 안 정해”, 다른 쪽은 “왜 서둘러”가 되기 쉽습니다.',
@@ -630,7 +631,7 @@ function renderCompare(list){
   for(i=0;i<5;i++){
     var d=DOMAINS[i],a=A.s[i],b=B.s[i],df=Math.abs(a-b);sumd+=df;diffs.push({i:i,df:df});
     var H=a>=b?A:B,L=a>=b?B:A,lab,txt;
-    if(df>=15){lab=df>=25?'차이 커요':'차이 있어요';txt=DIFF_T[d.id].replace('{H}',esc(H.n)).replace('{L}',esc(L.n));}
+    if(df>=15){lab=df>=25?'차이 커요':'차이 있어요';txt=DIFF_T[d.id].replace(/\{H\}은\(는\)/g,esc(H.n)+eunneun(H.n)).replace(/\{L\}은\(는\)/g,esc(L.n)+eunneun(L.n));}
     else if(a<=45&&b<=45){lab='둘 다 약해요';txt='두 사람 모두 이 브레이크가 약해, 서로 막아 주기 어렵습니다. 규칙·알림·믿는 제3자 같은 바깥 장치를 먼저 세우세요.';}
     else if(a>=60&&b>=60){lab='둘 다 든든해요';txt='두 사람 모두 이 조절력이 든든합니다. 서로의 안전망이 되어 줍니다.';}
     else{lab='비슷해요';txt='두 사람의 수준이 비슷해 이 영역에서는 크게 부딪히지 않습니다.';}
